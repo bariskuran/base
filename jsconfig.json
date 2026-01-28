@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "src/*": ["./src/*"],
+            "libs/*": ["./src/libs/*"]
+        },
+        "allowJs": true
+    },
+    "exclude": [
+        "_RAW",
+        "_backUp",
+        "_ui",
+        ".storybook",
+        ".vscode",
+        ".git",
+        ".app-cache",
+        ".npm",
+        "dist",
+        "node_modules",
+        "makeFileCodes.cjs",
+        "Makefile"
+    ]
+}

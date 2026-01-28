@@ -1,0 +1,100 @@
+// ${({ theme }) => theme.responsive( "phone,tablet", css` background: red; `, )}
+
+import { css } from "styled-components";
+import { DEFAULT_BREAKPOINTS } from "../../../constants/DEFAULT_BREAKPOINTS";
+import { DEFAULT_MAX_ASP_RATIO } from "../../../constants/DEFAULT_MAX_ASP_RATIO";
+import { DEFAULT_MIN_ASP_RATIO } from "../../../constants/DEFAULT_MIN_ASP_RATIO";
+
+export const generateMediaFunctions = ({
+    breakpoints = DEFAULT_BREAKPOINTS,
+    maxAspRatio = DEFAULT_MAX_ASP_RATIO,
+    minAspRatio = DEFAULT_MIN_ASP_RATIO,
+}) => {
+    const mediaFunctions = {
+        phone: (content) => {
+            return css`
+                @media (max-aspect-ratio: ${maxAspRatio}),
+                    (min-aspect-ratio: ${minAspRatio}),
+                    (max-width: ${breakpoints.tablet[0] + "px"}) {
+                    ${content}
+                }
+            `;
+        },
+        // prettier-ignore
+        tablet: (content) => css`
+        @media (min-aspect-ratio: ${maxAspRatio})
+            and (max-aspect-ratio: ${minAspRatio})
+            and (min-width: ${breakpoints.tablet[0] + "px"})
+            and (max-width: ${breakpoints.desktop[0] + "px"}) {
+                ${content}
+            }
+    `,
+        // prettier-ignore
+        desktop: (content) => css`
+        @media (min-aspect-ratio: ${maxAspRatio})
+            and (max-aspect-ratio: ${minAspRatio})
+            and (min-width: ${breakpoints.desktop[0] + "px"})
+            and (max-width: ${breakpoints.large[0] + "px"}) {
+                ${content}
+            }
+    `,
+        // prettier-ignore
+        large: (content) => css`
+            @media (min-aspect-ratio: ${maxAspRatio})
+            and (max-aspect-ratio: ${minAspRatio})
+            and (min-width: ${breakpoints.large[0] + "px"})
+            and (max-width: ${breakpoints.uhd[0] + "px"}) {
+                ${content}
+            }
+    `,
+        // prettier-ignore
+        uhd: (content) => css`
+            @media (min-aspect-ratio: ${maxAspRatio}) 
+            and (max-aspect-ratio: ${minAspRatio})
+            and (min-width: ${breakpoints.uhd[0] + "px"})
+            and (max-width: ${breakpoints.uhd8[0] + "px"}) {
+                ${content}
+            }
+    `,
+        // prettier-ignore
+        uhd8: (content) => css`
+            @media (min-aspect-ratio: ${maxAspRatio})
+            and (max-aspect-ratio: ${minAspRatio})
+            and (min-width: ${breakpoints.uhd8[0] + "px"}) {
+                ${content}
+            }
+    `,
+    };
+
+    mediaFunctions.responsive = (arrStr = "", content) => {
+        const arr = arrStr.replace(/\s/g, "").split?.(",");
+        return css`
+            ${arr.includes("phone") && mediaFunctions.phone(content)}
+            ${arr.includes("tablet") && mediaFunctions.tablet(content)}
+        ${arr.includes("desktop") && mediaFunctions.desktop(content)}
+        ${arr.includes("large") && mediaFunctions.large(content)}
+        ${arr.includes("uhd") && mediaFunctions.uhd(content)}
+        ${arr.includes("uhd8") && mediaFunctions.uhd8(content)}
+        `;
+    };
+
+    mediaFunctions.freeBpMixin = (prop, obj) => {
+        let styles = "";
+        for (let i = 0; i < obj.length; i++) {
+            const bpRange = obj[i];
+            const min = bpRange[0];
+            const max = bpRange[1];
+            const value = obj[i][2];
+            styles += `
+      @media (min-width: ${min}px) and (max-width: ${max}px) {
+        ${prop}: ${value};
+      }
+    `;
+        }
+        return css`
+            ${styles}
+        `;
+    };
+
+    return mediaFunctions;
+};
