@@ -4,7 +4,7 @@ import { use } from "../use";
 
 /*
 
-const { x, y, store } = useLocalCoreStore({ x: 0, y: 0 });
+const { x, y, setLocal } = useLocal({ x: 0, y: 0 });
 
 */
 

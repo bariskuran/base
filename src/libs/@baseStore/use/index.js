@@ -1,38 +1,6 @@
 import { useRef, useSyncExternalStore, useMemo } from "react";
+import { shallowEqual } from "../../shallowEqual";
 
-/*
-
-const [x, a] = useCoreStore(baseStore, (s) => [s.x, s.a]);
-const state = useCoreStore(baseStore);
-
-*/
-
-const shallowEqual = (a, b) => {
-    if (Object.is(a, b)) return true;
-    if (a === null || b === null || typeof a !== "object" || typeof b !== "object") return false;
-    if (Array.isArray(a) && Array.isArray(b)) {
-        if (a.length !== b.length) return false;
-        for (let i = 0; i < a.length; i++) {
-            if (!Object.is(a[i], b[i])) return false;
-        }
-        return true;
-    }
-    if (Array.isArray(a) || Array.isArray(b)) return false;
-    const keysA = Object.keys(a);
-    const keysB = Object.keys(b);
-    if (keysA.length !== keysB.length) return false;
-    for (const key of keysA) {
-        if (!Object.is(a[key], b[key])) return false;
-    }
-    return true;
-};
-
-/**
- * @typedef {Object} UseCoreStoreSettings
- * @property {Object} store - Core store instance
- * @property {Function} selector - Selector function
- * @property {Function} equalityFn - Equality function
- */
 export const use = (store, selector, equalityFn) => {
     if (!store || typeof store.subscribe !== "function" || typeof store.get !== "function") {
         throw new Error("Unknown baseStore.");
@@ -40,16 +8,39 @@ export const use = (store, selector, equalityFn) => {
 
     const cacheRef = useRef({
         has: false,
+        base: undefined,
         value: undefined,
         stateVersion: undefined,
     });
 
     const getStoreVersion = store.getVersion || (() => undefined);
 
+    const attachSet = (selected) => {
+        const set = store.set;
+
+        if (Array.isArray(selected)) return [...selected, set];
+
+        if (selected && typeof selected === "object") {
+            if ("set" in selected) return selected;
+            return { ...selected, set };
+        }
+
+        return [selected, set];
+    };
+
     const getSnapshot = useMemo(() => {
         return () => {
             const state = store.get();
             const currentVersion = getStoreVersion();
+
+            const isEqual =
+                equalityFn ||
+                ((a, b) => {
+                    if (!a || typeof a !== "object" || !b || typeof b !== "object") {
+                        return Object.is(a, b);
+                    }
+                    return shallowEqual(a, b);
+                });
 
             if (typeof selector !== "function") {
                 if (
@@ -58,32 +49,34 @@ export const use = (store, selector, equalityFn) => {
                 ) {
                     return cacheRef.current.value;
                 }
+
+                const base = state;
+                const value = attachSet(base);
+
                 cacheRef.current.has = true;
-                cacheRef.current.value = state;
+                cacheRef.current.base = base;
+                cacheRef.current.value = value;
                 cacheRef.current.stateVersion = currentVersion;
-                return state;
+
+                return value;
             }
 
-            const selected = selector(state);
-            const isEqual = equalityFn
-                ? equalityFn
-                : (a, b) => {
-                      if (!a || typeof a !== "object" || !b || typeof b !== "object") {
-                          return Object.is(a, b);
-                      }
-                      return shallowEqual(a, b);
-                  };
+            const baseSelected = selector(state);
 
             if (cacheRef.current.has) {
-                if (isEqual(cacheRef.current.value, selected)) {
+                if (isEqual(cacheRef.current.base, baseSelected)) {
                     return cacheRef.current.value;
                 }
             }
 
+            const value = attachSet(baseSelected);
+
             cacheRef.current.has = true;
-            cacheRef.current.value = selected;
+            cacheRef.current.base = baseSelected;
+            cacheRef.current.value = value;
             cacheRef.current.stateVersion = currentVersion;
-            return selected;
+
+            return value;
         };
     }, [store, selector, equalityFn, getStoreVersion]);
 

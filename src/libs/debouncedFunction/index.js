@@ -1,4 +1,4 @@
-import { generateRandomText } from "../generateRandomText";
+import { generateRandom } from "../generateRandom";
 
 /**
  
@@ -7,7 +7,7 @@ import { generateRandomText } from "../generateRandomText";
     isThrottle = false,
     getFirst = false,
     getPrevious = false,
-    functionName = generateRandomText(16),
+    functionName = generateRandom.text(16),
    });
    debounced();
  
@@ -48,7 +48,7 @@ export const debouncedFunction = (
         delay = 500,
         isThrottle = false,
         getFirst = false,
-        functionName = generateRandomText(16),
+        functionName = generateRandom.text(16),
     } = {},
 ) => {
     if (!delay || delay < 100) return fn;

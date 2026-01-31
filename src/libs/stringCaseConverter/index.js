@@ -46,23 +46,21 @@
 export const stringCaseConverter = (string, output = "camel", input = "auto") => {
     if (!string) return "";
 
-    // Otomatik input tanımlama
     if (input === "auto") {
-        if (/^[a-z]+(?:[A-Z][a-z]*)*$/.test(string)) input = "camel";
-        else if (/^[A-Z][a-z]+(?:[A-Z][a-z]*)*$/.test(string)) input = "pascal";
-        else if (/^[a-z]+(?:-[a-z]+)*$/.test(string)) input = "kebab";
-        else if (/^[a-z]+(?:_[a-z]+)*$/.test(string)) input = "snake";
-        else if (/^[A-Z]+(?:_[A-Z]+)*$/.test(string)) input = "constant";
-        else if (/^[a-z]+(?:\.[a-z]+)*$/.test(string)) input = "dot";
-        else if (/^[a-z]+(?:\/[a-z]+)*$/.test(string)) input = "path";
-        else if (/^[a-z\s]+$/.test(string)) input = "lower";
-        else if (/^[A-Z][a-z\s]*$/.test(string)) input = "sentence";
-        else if (/^(?:[A-Z][a-z]*\s*)+$/.test(string)) input = "title";
-        else if (/^[A-Z][a-z]*(?:\s[A-Z][a-z]*)*$/.test(string)) input = "spaced";
-        else input = "sentence"; // Varsayılan olarak sentence kabul edelim
+        if (/^[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)*$/.test(string)) input = "camel";
+        else if (/^[A-Z][a-z0-9]*(?:[A-Z][a-z0-9]*)*$/.test(string)) input = "pascal";
+        else if (/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(string)) input = "kebab";
+        else if (/^[a-z0-9]+(?:_[a-z0-9]+)*$/.test(string)) input = "snake";
+        else if (/^[A-Z0-9]+(?:_[A-Z0-9]+)*$/.test(string)) input = "constant";
+        else if (/^[a-z0-9]+(?:\.[a-z0-9]+)*$/.test(string)) input = "dot";
+        else if (/^[a-z0-9]+(?:\/[a-z0-9]+)*$/.test(string)) input = "path";
+        else if (/^[a-z0-9\s]+$/.test(string)) input = "lower";
+        else if (/^[A-Z][a-z0-9\s]*$/.test(string)) input = "sentence";
+        else if (/^(?:[A-Z][a-z0-9]*\s*)+$/.test(string)) input = "title";
+        else if (/^[A-Z][a-z0-9]*(?:\s[A-Z][a-z0-9]*)*$/.test(string)) input = "spaced";
+        else input = "sentence";
     }
 
-    // Input'u sentence case'e çevirme
     let sentenceCase = string;
     switch (input) {
         case "camel":
@@ -83,12 +81,10 @@ export const stringCaseConverter = (string, output = "camel", input = "auto") =>
         case "spaced":
             sentenceCase = string.replace(/([A-Z])/g, " $1").trim();
             break;
-        // sentence case için ek işlem gerekmez
     }
 
     const words = sentenceCase.trim().split(/\s+/);
 
-    // Output işlemleri (değişmedi)
     switch (output) {
         case "camel":
             return words
@@ -132,10 +128,6 @@ export const stringCaseConverter = (string, output = "camel", input = "auto") =>
                 .join(" ");
 
         case "title":
-            return words
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(" ");
-
         case "spaced":
             return words
                 .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())

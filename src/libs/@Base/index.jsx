@@ -1,10 +1,13 @@
 import { ErrorWrapper } from "./errorBoundary";
-import { SuspenseWrapper } from "./suspense";
-import { StyledComponentsWrapper } from "./styling/styledComponentsWrapper";
+import { SuspenseWrapper } from "./Suspense";
+import { StyledComponentsWrapper } from "./styling";
 import { GlobalDataProvider } from "./GlobalDataProvider";
 import { ClientDataProvider } from "./ClientDataProvider";
 import { RouterProviderWrapper } from "./RouterProviderWrapper";
 import { useEffects } from "./useEffects";
+import { useTheme } from "./styling/useTheme";
+import { NotifierProvider } from "./NotifierProvider";
+import { BaseDateProvider } from "./BaseDateProvider";
 
 /**
  *  * @example
@@ -26,6 +29,7 @@ import { useEffects } from "./useEffects";
  *      breakpoints
  *      theme
  *      router
+ *      baseDateSettings
  * />
  */
 
@@ -54,8 +58,15 @@ const Base = (props) => {
 
         // ROUTER
         routes,
+
+        // NOTIFIER
+        notifierSettings,
+
+        // BASE DATE
+        baseDateSettings,
     } = props || {};
 
+    const themesData = useTheme({ theme });
     useEffects();
 
     /* */
@@ -68,15 +79,16 @@ const Base = (props) => {
                 suspenseFallback={suspenseFallback}
                 otherSuspenseProps={otherSuspenseProps}
             >
-                <GlobalDataProvider
-                    globalCoreStoreVariables={globalCoreStoreVariables}
-                    theme={theme}
-                />
+                <GlobalDataProvider globalCoreStoreVariables={globalCoreStoreVariables} />
                 <ClientDataProvider
                     breakpoints={breakpoints}
                     maxAspRatio={maxAspRatio}
                     minAspRatio={minAspRatio}
                 />
+                <NotifierProvider notifierSettings={notifierSettings} />
+                {!baseDateSettings?.disable && (
+                    <BaseDateProvider baseDateSettings={baseDateSettings} />
+                )}
                 <StyledComponentsWrapper
                     globalStyle={globalStyle}
                     maxAspRatio={maxAspRatio}
@@ -85,7 +97,7 @@ const Base = (props) => {
                     otherStyledComponentsProps={otherStyledComponentsProps}
                     primaryFont={primaryFont}
                     remSettings={remSettings}
-                    theme={theme}
+                    theme={themesData || {}}
                 >
                     <RouterProviderWrapper routes={routes} />
                 </StyledComponentsWrapper>

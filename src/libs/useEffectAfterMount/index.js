@@ -33,7 +33,6 @@ export const useEffectAfterMount = (callback, dependencies = []) => {
             return;
         }
         callbackRef.current?.();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, dependencies);
 
     return null;

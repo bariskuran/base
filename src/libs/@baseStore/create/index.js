@@ -1,45 +1,24 @@
+import { shallowEqual } from "../../shallowEqual";
+import { isPlainObject, isContainer } from "../../isPlainObject";
+import { typeOf } from "../../typeOf";
+
 let __baseStoreSeq = 0;
 
-const isObjectLike = (v) => v !== null && typeof v === "object";
+export const deepClonePlain = (value) => {
+    const t = typeOf(value);
 
-const isPlainObject = (v) => {
-    if (!isObjectLike(v)) return false;
-    const proto = Object.getPrototypeOf(v);
-    return proto === Object.prototype || proto === null;
-};
-
-const isContainer = (v) => Array.isArray(v) || isPlainObject(v);
-
-const shallowEqual = (a, b) => {
-    if (Object.is(a, b)) return true;
-    if (!isObjectLike(a) || !isObjectLike(b)) return false;
-    if (Array.isArray(a) && Array.isArray(b)) {
-        if (a.length !== b.length) return false;
-        for (let i = 0; i < a.length; i++) {
-            if (!Object.is(a[i], b[i])) return false;
-        }
-        return true;
+    if (t === "array") {
+        return value.map(deepClonePlain);
     }
-    if (isPlainObject(a) && isPlainObject(b)) {
-        const keysA = Object.keys(a);
-        const keysB = Object.keys(b);
-        if (keysA.length !== keysB.length) return false;
-        for (const key of keysA) {
-            if (!Object.is(a[key], b[key])) return false;
-        }
-        return true;
-    }
-    return false;
-};
 
-const deepClonePlain = (value) => {
-    if (!isObjectLike(value)) return value;
-    if (Array.isArray(value)) return value.map(deepClonePlain);
-    if (isPlainObject(value)) {
+    if (t === "object" && isPlainObject(value)) {
         const out = {};
-        for (const k of Object.keys(value)) out[k] = deepClonePlain(value[k]);
+        for (const k of Object.keys(value)) {
+            out[k] = deepClonePlain(value[k]);
+        }
         return out;
     }
+
     return value;
 };
 
@@ -49,6 +28,7 @@ const createDraftProxy = (root, markChanged) => {
 
     const materializeChild = (parent, prop) => {
         let child = parent[prop];
+
         if (child === undefined) {
             child = {};
             parent[prop] = child;
@@ -58,6 +38,7 @@ const createDraftProxy = (root, markChanged) => {
                 `CoreStore: cannot create deep path at "${String(prop)}" because it is not an object/array.`,
             );
         }
+
         return child;
     };
 
@@ -77,7 +58,6 @@ const createDraftProxy = (root, markChanged) => {
 
         const p = new Proxy(sentinel, {
             get(_t, nextProp) {
-                // Eğer primitive davranış isteniyorsa sentinel halletsin
                 if (nextProp === Symbol.toPrimitive) return sentinel[Symbol.toPrimitive];
                 if (nextProp === "valueOf") return sentinel.valueOf;
                 if (nextProp === "toString") return sentinel.toString;
@@ -102,14 +82,15 @@ const createDraftProxy = (root, markChanged) => {
     };
 
     const proxify = (target) => {
-        if (!isObjectLike(target) || !isContainer(target)) return target;
+        if (!isContainer(target)) return target;
         if (proxyCache.has(target)) return proxyCache.get(target);
 
         const p = new Proxy(target, {
             get(t, prop) {
                 const value = t[prop];
-                if (value === undefined && typeof prop !== "symbol")
+                if (value === undefined && typeof prop !== "symbol") {
                     return getMissingProxy(t, prop);
+                }
                 return proxify(value);
             },
             set(t, prop, value) {

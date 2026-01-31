@@ -7,6 +7,8 @@ import { useClient } from "./useClient";
 import { useGlobal } from "./useGlobal";
 import { useLocal } from "./useLocal";
 import { useReactRouterDom } from "./useReactRouterDom";
+import { notifierData } from "./notifierData";
+import { useNotifier } from "./useNotifier";
 
 /**
  * baseStore namespace object.
@@ -71,19 +73,25 @@ import { useReactRouterDom } from "./useReactRouterDom";
  * const { setLocal, ...allValues } = baseStore.useLocal(initialValues || {});
  * setLocal... // set method is the same.
  *
- * @example for CLIENT DATA & GLOBALDATA
+ * @example for CLIENT DATA & GLOBALDATA & NOTIFIER DATA
  * const cd = baseStore.clientData();
  * const global = baseStore.useGlobal();
  * const [ winW ] = baseStore.clientData(s=>[s.winW]);
+ * const notifier = baseStore.useNotifier();
+ * const [ A , set ] = baseStore.useNotifier(s=>[s.A]);
+ * const { A, B, C, set } = baseStore.useNotifier();
+ *
  */
 export const baseStore = {
     create,
     clientData,
     globalData,
+    notifierData,
     reactRouterDomData,
     use,
     useClient,
     useGlobal,
     useLocal,
     useReactRouterDom,
+    useNotifier,
 };
