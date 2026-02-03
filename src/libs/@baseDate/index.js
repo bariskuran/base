@@ -1,309 +1,13 @@
 import { DATE_DEFAULTS } from "../../constants/DATE_DEFAULTS";
-import { baseStore } from "../@baseStore";
-
-const parseOffsetMinutes = (tz) => {
-    if (typeof tz === "number" && Number.isFinite(tz)) return Math.trunc(tz * 60);
-
-    if (typeof tz !== "string") return null;
-
-    const s = tz.trim();
-    if (!s) return null;
-
-    const m = s.match(/^([+-])(\d{1,2})(?::?(\d{2}))?$/);
-    if (!m) return null;
-
-    const sign = m[1] === "-" ? -1 : 1;
-    const hh = Number(m[2] || 0);
-    const mm = Number(m[3] || 0);
-
-    if (hh > 23 || mm > 59) return null;
-    return sign * (hh * 60 + mm);
-};
-
-const getPartsForOffset = (date, offsetMinutes) => {
-    const shifted = new Date(date.getTime() + offsetMinutes * 60_000);
-
-    const pad2 = (n) => String(n).padStart(2, "0");
-
-    return {
-        year: String(shifted.getUTCFullYear()),
-        month: pad2(shifted.getUTCMonth() + 1),
-        day: pad2(shifted.getUTCDate()),
-        hour: pad2(shifted.getUTCHours()),
-        minute: pad2(shifted.getUTCMinutes()),
-        second: pad2(shifted.getUTCSeconds()),
-        millisecond: String(shifted.getUTCMilliseconds()).padStart(3, "0"),
-    };
-};
-
-const safeIntlParts = (date, timeZone) => {
-    if (!timeZone || typeof Intl === "undefined" || !Intl.DateTimeFormat) return null;
-    try {
-        const dtf = new Intl.DateTimeFormat("en-US", {
-            timeZone,
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-            weekday: "long",
-        });
-        const parts = dtf.formatToParts(date);
-        const out = {};
-        for (const p of parts) {
-            if (p.type === "year") out.year = Number(p.value);
-            if (p.type === "month") out.month = Number(p.value);
-            if (p.type === "day") out.day = Number(p.value);
-            if (p.type === "hour") out.hour = Number(p.value);
-            if (p.type === "minute") out.minute = Number(p.value);
-            if (p.type === "second") out.second = Number(p.value);
-            if (p.type === "weekday") out.weekdayLong = p.value;
-        }
-        return out;
-    } catch {
-        return null;
-    }
-};
-
-const getTzOffsetMinutesForInstant = (timeZone, dateUTC) => {
-    const parts = safeIntlParts(dateUTC, timeZone);
-    if (!parts) return 0;
-
-    const asUTC = Date.UTC(
-        parts.year,
-        (parts.month || 1) - 1,
-        parts.day || 1,
-        parts.hour || 0,
-        parts.minute || 0,
-        parts.second || 0,
-        0,
-    );
-
-    return Math.round((asUTC - dateUTC.getTime()) / 60000);
-};
-
-const makeDateFromPartsInTz = (parts, timeZone) => {
-    const y = Number.isFinite(parts.year) ? parts.year : DATE_DEFAULTS.year;
-    const m = Number.isFinite(parts.month) ? parts.month : DATE_DEFAULTS.month;
-    const d = Number.isFinite(parts.day) ? parts.day : DATE_DEFAULTS.day;
-
-    const hh = Number.isFinite(parts.hour) ? parts.hour : 0;
-    const nn = Number.isFinite(parts.minute) ? parts.minute : 0;
-    const ss = Number.isFinite(parts.second) ? parts.second : 0;
-    const ms = Number.isFinite(parts.millisecond) ? parts.millisecond : 0;
-
-    const utcGuess = new Date(Date.UTC(y, (m || 1) - 1, d || 1, hh, nn, ss, ms));
-
-    const offsetStr = parseOffsetMinutes(timeZone);
-    if (typeof offsetStr === "number") {
-        return new Date(utcGuess.getTime() - offsetStr * 60000);
-    }
-
-    if (timeZone && typeof timeZone === "string") {
-        const off = getTzOffsetMinutesForInstant(timeZone, utcGuess);
-        return new Date(utcGuess.getTime() - off * 60000);
-    }
-
-    return new Date(y, (m || 1) - 1, d || 1, hh, nn, ss, ms);
-};
-
-const parseInitialString = (str) => {
-    const s = String(str || "").trim();
-    if (!s) return null;
-
-    /* eslint-disable no-useless-escape */
-    const m = s.match(
-        /^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})(?:\s+(\d{1,2})(?::(\d{1,2})(?::(\d{1,2}))?)?)?$/,
-    );
-    /* eslint-enable no-useless-escape */
-
-    if (m) {
-        let day = Number(m[1]);
-        let month = Number(m[2]);
-        let year = Number(m[3]);
-        if (String(m[3]).length === 2) year = 2000 + year;
-
-        const hour = m[4] != null ? Number(m[4]) : 0;
-        const minute = m[5] != null ? Number(m[5]) : 0;
-        const second = m[6] != null ? Number(m[6]) : 0;
-
-        return { year, month, day, hour, minute, second, millisecond: 0 };
-    }
-
-    const dt = new Date(s);
-    if (!Number.isNaN(dt.getTime())) return dt;
-
-    return null;
-};
-
-const pad = (n, len = 2) => String(Math.trunc(n)).padStart(len, "0");
-
-const formatWithTokens = (date, format, timeZone) => {
-    const fmt = String(format || "");
-    const offsetMinutes = parseOffsetMinutes(timeZone);
-
-    const has24h = fmt.includes("HH") || fmt.includes("hh");
-    const has12h = fmt.includes("ZZ") || fmt.includes("zz");
-    const useAmPm = has12h && !has24h;
-
-    let year, month, day, hour24, minute, second, ms;
-    let weekdayLong, weekdayShort, monthLong, monthShort;
-
-    if (typeof offsetMinutes === "number") {
-        const shifted = new Date(date.getTime() + offsetMinutes * 60_000);
-        const parts = getPartsForOffset(date, offsetMinutes);
-
-        year = Number(parts.year);
-        month = Number(parts.month);
-        day = Number(parts.day);
-        hour24 = Number(parts.hour);
-        minute = Number(parts.minute);
-        second = Number(parts.second);
-        ms = Number(parts.millisecond ?? shifted.getUTCMilliseconds());
-
-        const safeFmt = (opt) => {
-            try {
-                return new Intl.DateTimeFormat("default", { timeZone: "UTC", ...opt }).format(
-                    shifted,
-                );
-            } catch {
-                return "";
-            }
-        };
-
-        weekdayLong = safeFmt({ weekday: "long" }) || shifted.toUTCString().split(",")[0] || "";
-        weekdayShort = safeFmt({ weekday: "short" }) || "";
-        monthLong = safeFmt({ month: "long" }) || "";
-        monthShort = safeFmt({ month: "short" }) || "";
-    } else {
-        const p = safeIntlParts(date, timeZone);
-
-        year = p?.year ?? date.getFullYear();
-        month = p?.month ?? date.getMonth() + 1;
-        day = p?.day ?? date.getDate();
-        hour24 = p?.hour ?? date.getHours();
-        minute = p?.minute ?? date.getMinutes();
-        second = p?.second ?? date.getSeconds();
-        ms = date.getMilliseconds();
-
-        weekdayLong = p?.weekdayLong ?? date.toLocaleDateString("default", { weekday: "long" });
-
-        weekdayShort =
-            typeof Intl !== "undefined"
-                ? (() => {
-                      try {
-                          return new Intl.DateTimeFormat("default", {
-                              timeZone: timeZone || undefined,
-                              weekday: "short",
-                          }).format(date);
-                      } catch {
-                          return date.toLocaleDateString("default", { weekday: "short" });
-                      }
-                  })()
-                : date.toLocaleDateString("default", { weekday: "short" });
-
-        monthLong =
-            typeof Intl !== "undefined"
-                ? (() => {
-                      try {
-                          return new Intl.DateTimeFormat("default", {
-                              timeZone: timeZone || undefined,
-                              month: "long",
-                          }).format(date);
-                      } catch {
-                          return date.toLocaleString("default", { month: "long" });
-                      }
-                  })()
-                : date.toLocaleString("default", { month: "long" });
-
-        monthShort =
-            typeof Intl !== "undefined"
-                ? (() => {
-                      try {
-                          return new Intl.DateTimeFormat("default", {
-                              timeZone: timeZone || undefined,
-                              month: "short",
-                          }).format(date);
-                      } catch {
-                          return date.toLocaleString("default", { month: "short" });
-                      }
-                  })()
-                : date.toLocaleString("default", { month: "short" });
-    }
-
-    const hour12 = hour24 % 12 || 12;
-
-    const map = {
-        YYYY: () => pad(year, 4),
-        YY: () => pad(year % 100, 2),
-
-        MM: () => pad(month, 2),
-        mm: () => String(month),
-
-        OO: () => monthLong,
-        oo: () => monthShort,
-
-        DD: () => pad(day, 2),
-        dd: () => String(day),
-
-        AA: () => weekdayLong,
-        aa: () => weekdayShort,
-
-        HH: () => pad(hour24, 2),
-        hh: () => String(hour24),
-
-        ZZ: () => pad(hour12, 2),
-        zz: () => String(hour12),
-
-        AP: () => (useAmPm ? (hour24 >= 12 ? "PM" : "AM") : ""),
-        ap: () => (useAmPm ? (hour24 >= 12 ? "pm" : "am") : ""),
-
-        NN: () => pad(minute, 2),
-        nn: () => String(minute),
-
-        SS: () => pad(second, 2),
-        ss: () => String(second),
-
-        LL: () => pad(ms, 3),
-        ll: () => String(ms),
-    };
-
-    const TOKENS = Object.keys(map).sort((a, b) => b.length - a.length);
-
-    const hasDelimited = /\|[A-Za-z]{2,4}\|/.test(fmt);
-
-    if (hasDelimited) {
-        return fmt.replace(/\|([A-Za-z]{2,4})\|/g, (full, token) => {
-            const fn = map[token];
-            return fn ? String(fn()) : full;
-        });
-    }
-
-    let out = fmt;
-    for (const t of TOKENS) {
-        if (!out.includes(t)) continue;
-        out = out.split(t).join(String(map[t]()));
-    }
-    return out;
-};
-
-const resolveDefaultsFromStore = () => {
-    const gd = baseStore?.globalData?.get?.() || {};
-    const cd = baseStore?.clientData?.get?.() || {};
-    const bs = gd.baseDateSettings || {};
-    const defaultFormat =
-        typeof bs.defaultFormat === "string" && bs.defaultFormat
-            ? bs.defaultFormat
-            : DATE_DEFAULTS.defaultFormat;
-
-    const firstDayOfWeek = typeof bs.firstDayOfWeek === "number" ? bs.firstDayOfWeek : 1;
-
-    const timeZone = typeof cd.timeZone === "string" && cd.timeZone ? cd.timeZone : undefined;
-
-    return { defaultFormat, firstDayOfWeek, timeZone };
-};
+import {
+    resolveDefaultsFromStore,
+    parseInitialString,
+    makeDateFromPartsInTz,
+    parseOffsetMinutes,
+    getPartsForOffset,
+    safeIntlParts,
+    formatWithTokens,
+} from "./tools";
 
 /**
  * Creates a Date (or timestamp) from multiple input shapes, with flexible formatting.
@@ -340,6 +44,7 @@ const resolveDefaultsFromStore = () => {
  * @param {boolean} [settings.returnTimeStamp=false]
  * @param {string} [settings.format]
  * @param {string|number} [settings.timeZone]
+ * @param {Object} [settings.calculate]
  *
  * @returns {string|number}
  *
@@ -413,11 +118,118 @@ const resolveDefaultsFromStore = () => {
  *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
  * });
  * // "28/03/1982 09:15"
+ *
+ * @example
+ * // Add 5 days
+ * baseDate({
+ *   initial: "10/03/2024",
+ *   calculate: { day: 5 },
+ *   format: "|DD|/|MM|/|YYYY|",
+ * });
+ * // "15/03/2024"
+ *
+ * @example
+ * // Subtract 10 days (crossing month boundary)
+ * baseDate({
+ *   initial: "05/03/2024",
+ *   calculate: { day: -10 },
+ *   format: "|DD|/|MM|/|YYYY|",
+ * });
+ * // "24/02/2024"
+ *
+ * @example
+ * // Subtract 1 month from May 31
+ * baseDate({
+ *   initial: "31/05/2024",
+ *   calculate: { month: -1 },
+ *   format: "|DD|/|MM|/|YYYY|",
+ * });
+ * // "30/04/2024"
+ *
+ * @example
+ * // Subtract 1 month from March 31 (leap year aware)
+ * baseDate({
+ *   initial: "31/03/2024",
+ *   calculate: { month: -1 },
+ *   format: "|DD|/|MM|/|YYYY|",
+ * });
+ * // "29/02/2024"
+ *
+ * @example
+ * // Subtract 1 month from March 31 (non-leap year)
+ * baseDate({
+ *   initial: "31/03/2023",
+ *   calculate: { month: -1 },
+ *   format: "|DD|/|MM|/|YYYY|",
+ * });
+ * // "28/02/2023"
+ *
+ * @example
+ * // Add 1 year to Feb 29 (leap year normalization)
+ * baseDate({
+ *   initial: "29/02/2024",
+ *   calculate: { year: 1 },
+ *   format: "|DD|/|MM|/|YYYY|",
+ * });
+ * // "28/02/2025"
+ *
+ * @example
+ * // Add 6 hours
+ * baseDate({
+ *   initial: "01/04/2024 10:30",
+ *   calculate: { hour: 6 },
+ *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
+ * });
+ * // "01/04/2024 16:30"
+ *
+ * @example
+ * // Subtract 20 minutes (crossing hour boundary)
+ * baseDate({
+ *   initial: "01/04/2024 10:10",
+ *   calculate: { minute: -20 },
+ *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
+ * });
+ * // "01/04/2024 09:50"
+ *
+ * @example
+ * // Subtract 5000 seconds (~1h 23m 20s)
+ * baseDate({
+ *   initial: "01/04/2024 12:00:00",
+ *   calculate: { seconds: -5000 },
+ *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|:|SS|",
+ * });
+ * // "01/04/2024 10:36:40"
+ *
+ * @example
+ * // Complex calculation
+ * baseDate({
+ *   initial: "31/12/2023 23:30",
+ *   calculate: {
+ *     year: 1,
+ *     month: -1,
+ *     day: 2,
+ *     hour: 1,
+ *     minute: -45,
+ *   },
+ *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
+ * });
+ * // "02/12/2024 23:45"
+ *
+ * @example
+ * // Invalid calculate input is ignored
+ * baseDate({
+ *   initial: "10/03/2024",
+ *   calculate: "invalid",
+ *   format: "|DD|/|MM|/|YYYY|",
+ * });
+ * // "10/03/2024"
+ *
+ *
  */
 export const baseDate = (opts = {}) => {
     const { defaultFormat, timeZone: storeTz } = resolveDefaultsFromStore();
 
-    const { initial, returnTimeStamp = false, format, timeZone } = opts || {};
+    const { initial, returnTimeStamp = false, format, timeZone, calculate } = opts || {};
 
     const tz =
         typeof timeZone === "number" && Number.isFinite(timeZone)
@@ -460,9 +272,108 @@ export const baseDate = (opts = {}) => {
 
     if (!dateObj || Number.isNaN(dateObj.getTime())) dateObj = new Date();
 
+    const calc = calculate && typeof calculate === "object" ? calculate : null;
+
+    if (calc) {
+        const toInt = (v) => (typeof v === "number" && Number.isFinite(v) ? Math.trunc(v) : 0);
+
+        const addYears = toInt(calc.year);
+        const addMonths = toInt(calc.month);
+        const addDays = toInt(calc.day);
+
+        const addHours = toInt(calc.hour);
+        const addMinutes = toInt(calc.minute);
+        const addSeconds = toInt(calc.second) + toInt(calc.seconds);
+        const addMs = toInt(calc.millisecond);
+
+        const getTzParts = (d, tzValue) => {
+            const off = parseOffsetMinutes(tzValue);
+            if (typeof off === "number") {
+                const p = getPartsForOffset(d, off);
+                return {
+                    year: Number(p.year),
+                    month: Number(p.month),
+                    day: Number(p.day),
+                    hour: Number(p.hour),
+                    minute: Number(p.minute),
+                    second: Number(p.second),
+                    millisecond: Number(p.millisecond ?? 0),
+                };
+            }
+            const p = safeIntlParts(d, tzValue);
+            return {
+                year: p?.year ?? d.getFullYear(),
+                month: p?.month ?? d.getMonth() + 1,
+                day: p?.day ?? d.getDate(),
+                hour: p?.hour ?? d.getHours(),
+                minute: p?.minute ?? d.getMinutes(),
+                second: p?.second ?? d.getSeconds(),
+                millisecond: d.getMilliseconds(),
+            };
+        };
+
+        const daysInMonth = (y, m1to12) => {
+            const mm = Math.max(1, Math.min(12, m1to12));
+            return new Date(Date.UTC(y, mm, 0)).getUTCDate();
+        };
+
+        const normalizeYearMonth = (y, m1to12) => {
+            let year = y;
+            let month = m1to12;
+            if (!Number.isFinite(year)) year = DATE_DEFAULTS.year;
+            if (!Number.isFinite(month)) month = DATE_DEFAULTS.month;
+
+            month -= 1;
+            year += Math.floor(month / 12);
+            month = ((month % 12) + 12) % 12;
+            month += 1;
+
+            return { year, month };
+        };
+
+        const parts0 = getTzParts(dateObj, tz);
+
+        let y = parts0.year;
+        let m = parts0.month;
+        let d = parts0.day;
+
+        const hh = parts0.hour;
+        const nn = parts0.minute;
+        const ss = parts0.second;
+        const ms = parts0.millisecond;
+
+        if (addYears || addMonths) {
+            const nm = normalizeYearMonth(y + addYears, m + addMonths);
+            y = nm.year;
+            m = nm.month;
+
+            const dim = daysInMonth(y, m);
+            d = Math.min(d, dim);
+        }
+
+        if (addDays) {
+            const tmp = new Date(Date.UTC(y, (m || 1) - 1, (d || 1) + addDays, hh, nn, ss, ms));
+            y = tmp.getUTCFullYear();
+            m = tmp.getUTCMonth() + 1;
+            d = tmp.getUTCDate();
+        }
+
+        if (addYears || addMonths || addDays) {
+            dateObj = makeDateFromPartsInTz(
+                { year: y, month: m, day: d, hour: hh, minute: nn, second: ss, millisecond: ms },
+                tz,
+            );
+        }
+
+        const durationMs = addMs + addSeconds * 1000 + addMinutes * 60_000 + addHours * 3_600_000;
+
+        if (durationMs) {
+            dateObj = new Date(dateObj.getTime() + durationMs);
+        }
+    }
+
     if (returnTimeStamp) return dateObj.getTime();
 
     const fmt = typeof format === "string" && format ? format : defaultFormat;
-
     return formatWithTokens(dateObj, fmt, tz);
 };

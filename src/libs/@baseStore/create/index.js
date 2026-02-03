@@ -1,5 +1,6 @@
 import { shallowEqual } from "../../shallowEqual";
-import { isPlainObject, isContainer } from "../../isPlainObject";
+import { isPlainObject } from "../../isPlainObject";
+import { isContainer } from "../../isContainer";
 import { typeOf } from "../../typeOf";
 
 let __baseStoreSeq = 0;

@@ -1,4 +1,4 @@
-import { isContainer } from "../isPlainObject";
+import { isContainer } from "../isContainer";
 
 /**
  * Utilities to work with nested values via dot-separated paths.

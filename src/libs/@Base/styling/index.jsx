@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import { ThemeProvider } from "styled-components";
+import { useTheme } from "./useTheme";
 import { generateMediaFunctions } from "./generateMediaFunctions";
 import { prepareRemSettings } from "./prepareRemSettings";
 import { GlobalStyle } from "./GlobalStyle";
 import { DEFAULT_PRIMARY_FONT } from "../../../constants/DEFAULT_PRIMARY_FONT";
 import { DEFAULT_GLOBAL_STYLE } from "../../../constants/DEFAULT_GLOBAL_STYLE";
 
-export const StyledComponentsWrapper = ({ children, ...props }) => {
+export const StyledComponentsWrapper = ({ children, styledSettings }) => {
     const {
         globalStyle,
         maxAspRatio,
@@ -15,8 +16,9 @@ export const StyledComponentsWrapper = ({ children, ...props }) => {
         primaryFont,
         remSettings,
         breakpoints,
-        theme,
-    } = props || {};
+        themes,
+    } = styledSettings || {};
+    const theme = useTheme({ theme: themes });
 
     const mediaFunctions = useMemo(
         () => generateMediaFunctions({ maxAspRatio, minAspRatio, breakpoints }),

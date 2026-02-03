@@ -65,15 +65,15 @@ export const isEqual = (a, b, settings = {}, level = 0, seen) => {
     const t2 = typeOf(b);
     if (t1 !== t2) return false;
 
+    if (t1 === "date") return a.getTime() === b.getTime();
+
+    if (t1 === "regexp") return a.source === b.source && a.flags === b.flags;
+
     if (t1 === "function") return a.toString() === b.toString();
 
-    if (t1 !== "object" && t1 !== "array") {
-        return false;
-    }
+    if (t1 !== "object" && t1 !== "array") return false;
 
-    if (a && b && opts.useHashShortcut && a.hash && b.hash && a.hash === b.hash) {
-        return true;
-    }
+    if (a && b && opts.useHashShortcut && a.hash && b.hash && a.hash === b.hash) return true;
 
     if (a && b && typeof a === "object" && typeof b === "object") {
         if (!seen) seen = new WeakMap();
@@ -84,6 +84,7 @@ export const isEqual = (a, b, settings = {}, level = 0, seen) => {
     }
 
     if (a instanceof Date) return b instanceof Date && a.getTime() === b.getTime();
+
     if (a instanceof RegExp)
         return b instanceof RegExp && a.source === b.source && a.flags === b.flags;
 
@@ -99,11 +100,13 @@ export const isEqual = (a, b, settings = {}, level = 0, seen) => {
     const keysA = Object.keys(a || {});
     const keysB = Object.keys(b || {});
     if (keysA.length !== keysB.length) return false;
+
     if (keysA.length > opts.maxKeys) return false;
 
     for (const k of keysA) {
         if (!Object.prototype.hasOwnProperty.call(b, k)) return false;
         if (!isEqual(a[k], b[k], opts, level + 1, seen)) return false;
     }
+
     return true;
 };

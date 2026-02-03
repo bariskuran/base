@@ -11,7 +11,19 @@
         "functions",
         "pxa",
         "base",
-        "bariskuran"
+        "bariskuran",
+        "store",
+        "baseStore",
+        "date",
+        "time",
+        "baseDate",
+        "icons",
+        "baseIcons",
+        "form",
+        "baseForm",
+        "fetch",
+        "baseFetch",
+        "helpers"
     ],
     "author": "Baris Kuran <bariskuran@gmail.com> (thepxa.co.uk)",
     "repository": {
@@ -33,10 +45,7 @@
         "test:watch": "vitest --watch",
         "test:ui": "vitest --ui"
     },
-    "dependencies": {
-        "immer": "11.1.3",
-        "react-error-boundary": "^6.1.0"
-    },
+    "dependencies": {},
     "devDependencies": {
         "@eslint/compat": "2.0.1",
         "@eslint/eslintrc": "3.3.0",

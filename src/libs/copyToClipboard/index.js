@@ -55,7 +55,7 @@ import { baseStore } from "../@baseStore";
  *   onSuccess: () => console.log("Number copied"),
  * });
  */
-export const copyToClipboard = async (text, { onSuccess, onError, addToNotifier = false }) => {
+export const copyToClipboard = async (text, { onSuccess, onError, addToNotifier = false } = {}) => {
     if (text == null) return false;
     const value = typeof text === "string" ? text : String(text);
     const canUseClipboard =

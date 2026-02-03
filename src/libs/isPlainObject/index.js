@@ -30,5 +30,3 @@ export const isPlainObject = (v) => {
     const proto = Object.getPrototypeOf(v);
     return proto === Object.prototype || proto === null;
 };
-
-export const isContainer = (v) => Array.isArray(v) || isPlainObject(v);

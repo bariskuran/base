@@ -1,14 +1,8 @@
-import { clientData } from "./clientData";
 import { create } from "./create";
 import { globalData } from "./globalData";
-import { reactRouterDomData } from "./reactRouterDomData";
 import { use } from "./use";
-import { useClient } from "./useClient";
 import { useGlobal } from "./useGlobal";
 import { useLocal } from "./useLocal";
-import { useReactRouterDom } from "./useReactRouterDom";
-import { notifierData } from "./notifierData";
-import { useNotifier } from "./useNotifier";
 
 /**
  * baseStore namespace object.
@@ -18,14 +12,10 @@ import { useNotifier } from "./useNotifier";
  *
  * Exposes:
  * - `baseStore.create(...)`      -> create a store instance
- * - `baseStore.clientData(...)`  -> get client/environment snapshot (SSR-safe)
  * - `baseStore.globalData(...)`  -> access your global data store/helpers (project-specific)
  * - `baseStore.use(...)`         -> subscribe to a store (returns current state)
- * - `baseStore.useClient(...)`   -> React hook for client data (project-specific)
  * - `baseStore.useGlobal(...)`   -> React hook for global store (project-specific)
  * - `baseStore.useLocal(...)`    -> React hook for local/page store (project-specific)
- * - `baseStore.reactRouterDomData(...)` -> React hook for react-router-dom data (project-specific)
- * - `baseStore.useReactRouterDom(...)` -> React hook for react-router-dom data (project-specific)
  *
  * @type {{
  *   create: <T>(initialState?: T) => {
@@ -35,14 +25,10 @@ import { useNotifier } from "./useNotifier";
  *     subscribe: (listener: (next: T, prev: T) => void) => () => void,
  *     getVersion: () => number,
  *   },
- *   clientData: (...args: any[]) => any,
  *   globalData: (...args: any[]) => any,
- *   reactRouterDomData: (...args: any[]) => any,
  *   use: (store: { subscribe: Function, get: Function }, selector?: Function) => any,
- *   useClient: (...args: any[]) => any,
  *   useGlobal: (...args: any[]) => any,
  *   useLocal: (...args: any[]) => any,
- *   useReactRouterDom: (...args: any[]) => any,
  * }}
  *
  * @example for CREATE
@@ -84,14 +70,8 @@ import { useNotifier } from "./useNotifier";
  */
 export const baseStore = {
     create,
-    clientData,
     globalData,
-    notifierData,
-    reactRouterDomData,
     use,
-    useClient,
     useGlobal,
     useLocal,
-    useReactRouterDom,
-    useNotifier,
 };

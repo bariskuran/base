@@ -44,7 +44,10 @@
  * stringCaseConverter("my-value", "pascal", "kebab"); // "MyValue"
  */
 export const stringCaseConverter = (string, output = "camel", input = "auto") => {
-    if (!string) return "";
+    if (!string || typeof string !== "string") {
+        console.log("stringCaseConverter: string is falsy", JSON.stringify(string));
+        return "";
+    }
 
     if (input === "auto") {
         if (/^[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)*$/.test(string)) input = "camel";
