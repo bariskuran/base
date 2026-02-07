@@ -1,10 +1,14 @@
 import { useMemo, useCallback, useEffect } from "react";
 import { baseStore } from "../../@baseStore";
 import { DEFAULT_THEME } from "../../../constants/DEFAULT_THEME";
-import { useImmer } from "../../useImmer";
 
 export const useTheme = ({ theme } = {}) => {
-    const [{ theme: currentColors, currentThemeKey, currentThemeLabelObj }, setImmer] = useImmer({
+    const {
+        theme: currentColors,
+        currentThemeKey,
+        currentThemeLabelObj,
+        setLocal,
+    } = baseStore.useLocal({
         theme: {},
         currentThemeKey: null,
         currentThemeLebelObj: null,
@@ -65,7 +69,7 @@ export const useTheme = ({ theme } = {}) => {
 
         const { _props, ...colors } = t;
 
-        setImmer?.({
+        setLocal?.({
             theme: colors,
             currentThemeKey: selectedKey,
             currentThemeLabelObj: _props?.label || null,
@@ -86,7 +90,7 @@ export const useTheme = ({ theme } = {}) => {
 
             const { _props, ...colors } = chosen;
 
-            setImmer?.({
+            setLocal?.({
                 theme: colors,
                 currentThemeKey: themeKey,
                 currentThemeLabelObj: _props?.label || null,

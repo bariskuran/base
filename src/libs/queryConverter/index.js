@@ -75,7 +75,7 @@ export const queryConverter = {
             walk(obj[k], keyPath);
         }
 
-        return parts.join("&");
+        return "?" + parts.join("&");
     },
 
     import: (str, settings = {}) => {

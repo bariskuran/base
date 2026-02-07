@@ -1,8 +1,8 @@
 import { SuspenseWrapper } from "./Suspense";
 import { StyledComponentsWrapper } from "./styling";
-import { GlobalDataInjector } from "./GlobalDataInjector";
+import { GlobalDataAndRouter } from "./GlobalDataAndRouter";
 import { useEffects } from "./useEffects";
-import { IdleManager } from "../IdleManager";
+
 /**
  *  * @example
  * import { Base } from "@bariskuran/base";
@@ -28,9 +28,8 @@ const Base = (props) => {
             suspenseFallback={SuspenseFallback}
             otherSuspenseProps={projectSettings.otherSuspenseProps}
         >
-            <IdleManager />
             <StyledComponentsWrapper styledSettings={projectSettings.styledSettings}>
-                <GlobalDataInjector routes={routes} projectSettings={projectSettings} />
+                <GlobalDataAndRouter routes={routes} projectSettings={projectSettings} />
             </StyledComponentsWrapper>
         </SuspenseWrapper>
     );

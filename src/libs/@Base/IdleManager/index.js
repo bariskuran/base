@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { baseStore } from "../@baseStore";
-import { useEventListener } from "../useEventListener";
-import { useTimer } from "../useTimer";
+import { baseStore } from "../../@baseStore";
+import { useEventListener } from "../../useEventListener";
+import { useTimer } from "../../useTimer";
 
 const clampMinutes = (v, { allowedIdleTime = 30 } = {}) => {
     const n = Number(v);

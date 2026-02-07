@@ -37,7 +37,6 @@ export {
     useSyncExternalStore,
     useTransition,
 } from "react";
-export { produce, freeze, current, original } from "immer";
 export {
     createGlobalStyle,
     css,
@@ -78,7 +77,9 @@ export { deepMerge } from "./libs/deepMerge";
 export { default as Base } from "./libs/@Base/index";
 export { findDifferences } from "./libs/findDifferences";
 export { generateRandom } from "./libs/generateRandom";
+export { getClientData } from "./libs/getClientData";
 export { getContrastRatio } from "./libs/getContrastRatio";
+export { getText, getText as t } from "./libs/getText";
 export { getTimeDifference } from "./libs/getTimeDifference";
 export { Icon } from "./libs/@Icon";
 export { isContainer } from "./libs/isContainer";
@@ -114,4 +115,5 @@ export { useScrollThrottle } from "./libs/useScrollThrottle";
 export { useScrollTopLeft } from "./libs/useScrollTopLeft";
 export { useScrollWidthHeight } from "./libs/useScrollWidthHeight";
 export { useTimer, getTimersSnapshot } from "./libs/useTimer";
-export { getClientData } from "./libs/getClientData";
+export { downloadAsCsv } from "./libs/downloadAsCsv";
+export { baseFetch, useBaseFetch } from "./libs/@baseFetch";
