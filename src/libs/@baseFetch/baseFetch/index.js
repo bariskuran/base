@@ -31,21 +31,38 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
         disableLoadingApi = disableLoadingApiGlobal || false,
         onError,
         onSuccess,
+        onCancel,
         envUrl = envUrlGlobal || null,
     } = jointSettings || {};
 
     const controllers = [];
-    let killed = false;
+    let cancelled = false;
+    let cancelReason = "canceled";
+    let cancelNotified = false;
 
-    const killFetch = (reason = "killed") => {
-        killed = true;
+    const notifyCancelOnce = () => {
+        if (cancelNotified) return;
+        cancelNotified = true;
+        try {
+            onCancel?.({ reason: cancelReason, baseStore });
+        } catch (err) {
+            console.error("[baseFetch] onCancel callback error:", err);
+        }
+    };
+
+    const cancelFetch = (reason = "canceled") => {
+        cancelled = true;
+        cancelReason = reason || "canceled";
+
         controllers.forEach((c) => {
             try {
-                c.abort(reason);
-            } catch {
-                console.error("Error in killFetch:", reason);
+                c.abort(cancelReason);
+            } catch (err) {
+                console.error("[baseFetch] Error in cancelFetch abort:", err);
             }
         });
+
+        notifyCancelOnce();
     };
 
     const promise = (async () => {
@@ -59,11 +76,9 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
 
         if (validationErrors.length) {
             const res = {
-                ok: false,
+                isOk: false,
                 status: "error",
-                responses: [],
                 errors: validationErrors,
-                killed: false,
             };
             onError?.(res);
             return res;
@@ -93,8 +108,8 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
                 onEnd,
             } = call || {};
 
-            const isAbsolute = isAbsoluteUrl(url);
-            const resolvedCredentials = credentials ?? (isAbsolute ? "omit" : "include");
+            const isAbs = isAbsoluteUrl(url);
+            const resolvedCredentials = credentials ?? (isAbs ? "omit" : "include");
             const finalMethod = normalizeMethod(method);
             const payloadObj = payload ?? resolvePayload(payloadAdaptor, prevResults);
             const fullUrlBase = applyEnvUrl(url, envUrl);
@@ -112,8 +127,9 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
             if (useCache) {
                 const cached = getFromCache({ cacheKey, nowTs: Date.now() });
                 if (cached !== null && cached !== undefined) {
-                    const handled = typeof onEnd === "function" ? onEnd(cached, null) : cached;
-                    return { ok: true, fromCache: true, data: handled, raw: cached };
+                    const handled =
+                        typeof onEnd === "function" ? await onEnd(cached, null) : cached;
+                    return { isOk: true, fromCache: true, data: handled, raw: cached };
                 }
             }
 
@@ -121,12 +137,18 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
             if (!disableLoadingApi && loadingApi?.add) {
                 try {
                     queueName = loadingApi.add({ url: fullUrl, method: finalMethod });
-                } catch {
-                    console.error("Error in loadingApi.add:", url);
+                } catch (err) {
+                    console.error("[baseFetch] loadingApi.add error:", err);
                 }
             }
 
             try {
+                if (cancelled) {
+                    const err = new Error(cancelReason);
+                    err.name = "AbortError";
+                    throw err;
+                }
+
                 onStart?.({ index, url: fullUrl, method: finalMethod, baseStore });
 
                 const resolvedToken = await resolveToken({ disableAuth, token, getTokenFrom });
@@ -165,8 +187,9 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
                 }
 
                 if (!disableAuth && resolvedToken) {
-                    if (!init.headers.Authorization)
+                    if (!init.headers.Authorization) {
                         init.headers.Authorization = `Bearer ${resolvedToken}`;
+                    }
                 }
 
                 const r = await fetch(fullUrl, init);
@@ -190,53 +213,82 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
 
                 if (useCache) {
                     const ttlMs = Number(cacheTime || 0) * 60 * 1000;
-                    if (ttlMs > 0) {
-                        addToCache({ cacheKey, data: handled, ttlMs });
-                    }
+                    if (ttlMs > 0) addToCache({ cacheKey, data: handled, ttlMs });
                 }
 
-                return { ok: true, fromCache: false, data: handled, raw: parsed };
+                return { isOk: true, fromCache: false, data: handled, raw: parsed };
             } catch (err) {
+                const isAbort =
+                    cancelled ||
+                    err?.name === "AbortError" ||
+                    (typeof err?.message === "string" &&
+                        (err.message.includes("aborted") ||
+                            err.message.includes("canceled") ||
+                            err.message.includes("cancel")));
+
+                if (isAbort) {
+                    cancelled = true;
+                    if (!cancelReason) cancelReason = "canceled";
+                    notifyCancelOnce();
+                    return { isOk: false, cancelled: true, error: err };
+                }
+
                 let handledErr = err;
                 if (typeof onEnd === "function") {
                     try {
                         const maybe = await onEnd(null, err);
                         if (maybe !== undefined) handledErr = maybe;
-                    } catch {
-                        console.error("Error in onEnd:", err);
+                    } catch (e2) {
+                        console.error("[baseFetch] onEnd error handler failed:", e2);
                     }
                 }
-                return { ok: false, error: handledErr };
+
+                return { isOk: false, error: handledErr };
             } finally {
                 if (!disableLoadingApi && queueName && loadingApi?.remove) {
                     try {
                         loadingApi.remove(queueName);
-                    } catch {
-                        console.error("Error in loadingApi.remove:", queueName);
+                    } catch (err) {
+                        console.error("[baseFetch] loadingApi.remove error:", err);
                     }
                 }
             }
         };
 
-        if (calls.length === 1) {
+        const isSingle = calls.length === 1;
+
+        if (isSingle) {
             const r = await runOneCall(calls[0], 0, []);
-            if (r.ok) {
-                responses.push(r.data);
-                const res = { ok: true, status: "success", responses: r.data, errors: [], killed };
+
+            if (r.cancelled || cancelled) {
+                const res = { isOk: false, status: "canceled" };
+                return res;
+            }
+
+            if (r.isOk) {
+                const res = { isOk: true, status: "success", response: r.data };
                 onSuccess?.(res);
                 return res;
             }
+
             errors.push({ index: 0, error: r.error });
-            const res = { ok: false, status: "error", responses: null, errors, killed };
+            const res = { isOk: false, status: "error", response: null, errors };
             onError?.(res);
             return res;
         }
 
         if (enableSynchronousCalls) {
             for (let i = 0; i < calls.length; i++) {
-                if (killed) break;
+                if (cancelled) break;
+
                 const r = await runOneCall(calls[i], i, results);
-                if (r.ok) {
+
+                if (r.cancelled || cancelled) {
+                    cancelled = true;
+                    break;
+                }
+
+                if (r.isOk) {
                     results.push(r.data);
                     responses.push(r.data);
                 } else {
@@ -245,29 +297,34 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
                 }
             }
         } else {
-            // parallel
             const all = await Promise.all(calls.map((c, i) => runOneCall(c, i, [])));
+
             all.forEach((r, i) => {
-                if (r.ok) responses.push(r.data);
-                else errors.push({ index: i, error: r.error });
+                if (r.cancelled) cancelled = true;
+                if (r.isOk) responses.push(r.data);
+                else if (!r.cancelled) errors.push({ index: i, error: r.error });
             });
         }
 
-        const ok = errors.length === 0 && !killed;
+        if (cancelled) {
+            const res = { isOk: false, status: "canceled" };
+            return res;
+        }
+
+        const isOk = errors.length === 0;
 
         const finalRes = {
-            ok,
-            status: ok ? "success" : "error",
+            isOk,
+            status: isOk ? "success" : "error",
             responses,
-            errors,
-            killed,
+            ...(errors.length ? { errors } : {}),
         };
 
-        if (ok) onSuccess?.(finalRes);
+        if (isOk) onSuccess?.(finalRes);
         else onError?.(finalRes);
 
         return finalRes;
     })();
 
-    return { promise, killFetch };
+    return { promise, cancelFetch };
 };
