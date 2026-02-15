@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-
+import { useRef } from "react";
+import { useBaseEffect } from "../useBaseEffect";
 /*
 
 useEffectAfterMount(() => {
@@ -23,11 +23,11 @@ export const useEffectAfterMount = (callback, dependencies = []) => {
     const isFirst = useRef(true);
     const callbackRef = useRef(callback);
 
-    useEffect(() => {
+    useBaseEffect(() => {
         callbackRef.current = callback;
     }, [callback]);
 
-    useEffect(() => {
+    useBaseEffect(() => {
         if (isFirst.current) {
             isFirst.current = false;
             return;

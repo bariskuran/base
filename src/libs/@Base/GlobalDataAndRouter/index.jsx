@@ -9,9 +9,12 @@ import { LanguageManager } from "../LanguageManager";
 import { PageLoadingManager } from "../loadingQueueManager";
 
 export const CoreRRDLayout = ({ routes, projectSettings }) => {
-    const [isGlobalReady] = baseStore.useGlobal((s) => [s.isGlobalReady]);
+    const [isGlobalReady, isThemeReady] = baseStore.useGlobal((s) => [
+        s.isGlobalReady,
+        s.isThemeReady,
+    ]);
 
-    if (!isGlobalReady)
+    if (!isGlobalReady || !isThemeReady)
         return <GlobalDataProvider projectSettings={projectSettings} routes={routes} />;
     return (
         <>
@@ -25,7 +28,11 @@ export const CoreRRDLayout = ({ routes, projectSettings }) => {
 };
 
 export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
-    const [isDevMode, isGlobalReady] = baseStore.useGlobal((s) => [s.isDevMode, s.isGlobalReady]);
+    const [isDevMode, isGlobalReady, isThemeReady] = baseStore.useGlobal((s) => [
+        s.isDevMode,
+        s.isGlobalReady,
+        s.isThemeReady,
+    ]);
 
     const router = useMemo(
         () =>
@@ -34,14 +41,14 @@ export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
                     element: <CoreRRDLayout projectSettings={projectSettings} routes={routes} />,
                     errorElement: <ErrorPage defaultCode={500} />,
                     children: [
-                        ...(isGlobalReady ? routes : []),
+                        ...(isGlobalReady && isThemeReady ? routes : []),
                         ...(isDevMode ? designSystemRoutes : []),
                         { path: "*", element: <Navigate to="/error?code=404" replace /> },
                         { path: "/error", element: <ErrorPage defaultCode={500} /> },
                     ],
                 },
             ]),
-        [routes, isGlobalReady],
+        [routes, isGlobalReady, isThemeReady],
     );
 
     return <RouterProvider router={router} />;

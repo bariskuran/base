@@ -29,7 +29,6 @@ export const PageLoadingManager = () => {
         const myRunId = ++runIdRef.current;
 
         setLoadingPage(true);
-        console.log("isLoadingPage", "true");
         let alive = true;
         const run = async () => {
             await raf();
@@ -51,7 +50,6 @@ export const PageLoadingManager = () => {
             if (!alive || myRunId !== runIdRef.current) return;
 
             setLoadingPage(false);
-            console.log("isLoadingPage", "false");
         };
 
         run();

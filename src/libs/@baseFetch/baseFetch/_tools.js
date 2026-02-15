@@ -1,4 +1,84 @@
 import { baseStore } from "../../@baseStore";
+import { byPath } from "../../byPath";
+import { API_RESPONSE_CODES } from "../../../constants/API_RESPONSE_CODES";
+import { getText } from "../../getText";
+
+const DEFAULT_ERROR_CODE = 500;
+
+export const pickErrorMessageFromPaths = (data, paths = []) => {
+    if (!data || typeof data !== "object") return null;
+    if (!Array.isArray(paths) || paths.length === 0) return null;
+
+    for (const p of paths) {
+        if (!p || typeof p !== "string") continue;
+        const v = byPath.get(data, p);
+        if (typeof v === "string" && v.trim()) return v.trim();
+    }
+
+    return null;
+};
+
+export const findStatusCodeUpToDepth3 = (data) => {
+    const norm = (x) => {
+        const n = Number(x);
+        return Number.isFinite(n) ? n : null;
+    };
+
+    if (!data || typeof data !== "object") return null;
+    if ("status" in data) {
+        const c = norm(data.status);
+        if (c != null) return c;
+    }
+
+    const level1 = Object.values(data).filter((v) => v && typeof v === "object");
+    for (const v1 of level1) {
+        if ("status" in v1) {
+            const c = norm(v1.status);
+            if (c != null) return c;
+        }
+
+        const level2 = Object.values(v1).filter((v) => v && typeof v === "object");
+        for (const v2 of level2) {
+            if ("status" in v2) {
+                const c = norm(v2.status);
+                if (c != null) return c;
+            }
+
+            const level3 = Object.values(v2).filter((v) => v && typeof v === "object");
+            for (const v3 of level3) {
+                if ("status" in v3) {
+                    const c = norm(v3.status);
+                    if (c != null) return c;
+                }
+            }
+        }
+    }
+    return null;
+};
+
+export const getI18nMessageFromStatusCode = (code) => {
+    const meta =
+        API_RESPONSE_CODES?.[code] ||
+        API_RESPONSE_CODES?.unknown ||
+        API_RESPONSE_CODES?.[DEFAULT_ERROR_CODE];
+    const descEntry = meta?.description;
+    const titleEntry = meta?.title;
+    const msg =
+        (descEntry ? getText(descEntry) : "") ||
+        (titleEntry ? getText(titleEntry) : "") ||
+        `HTTP ${code}`;
+    return msg;
+};
+
+export const resolveErrorMessage = ({ err, data, responseErrorPaths }) => {
+    const fromPaths = pickErrorMessageFromPaths(data, responseErrorPaths);
+    if (fromPaths) return fromPaths;
+    const statusFromData = findStatusCodeUpToDepth3(data);
+    if (statusFromData != null) return getI18nMessageFromStatusCode(statusFromData);
+    const m = typeof err?.message === "string" ? err.message.trim() : "";
+    if (m) return m;
+    return getI18nMessageFromStatusCode(DEFAULT_ERROR_CODE);
+};
 
 export const isAbsoluteUrl = (url = "") => /^https?:\/\//i.test(String(url || "").trim());
 

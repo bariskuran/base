@@ -1,5 +1,5 @@
 import { colorConverter } from "../colorConverter";
-import { getContrastRatio } from "../getContrastRatio";
+import { colorContrastRatio } from "../colorContrastRatio";
 
 /**
  *  * @example
@@ -63,7 +63,7 @@ export const colorContrast = (background, expectedTone, expectedRatio, opts = {}
 
         if (typeof l2 !== "number") continue;
 
-        const ratio = getContrastRatio(l1, l2);
+        const ratio = colorContrastRatio(l1, l2);
         const diff = Math.abs(ratio - target);
 
         if (ratio >= minTarget && ratio <= maxTarget) {
@@ -81,7 +81,7 @@ export const colorContrast = (background, expectedTone, expectedRatio, opts = {}
     }
 
     const finalFormats = best.formats || tone;
-    const finalRatio = best.ratio ?? getContrastRatio(l1, finalFormats.luminance);
+    const finalRatio = best.ratio ?? colorContrastRatio(l1, finalFormats.luminance);
 
     return {
         color: finalFormats.hex6,

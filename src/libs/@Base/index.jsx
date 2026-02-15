@@ -2,7 +2,8 @@ import { SuspenseWrapper } from "./Suspense";
 import { StyledComponentsWrapper } from "./styling";
 import { GlobalDataAndRouter } from "./GlobalDataAndRouter";
 import { useEffects } from "./useEffects";
-
+import { useEffect } from "react";
+import { injectInitialRemAndBodyFontStyle } from "./styling/injectInitialRemAndBodyFontStyle";
 /**
  *  * @example
  * import { Base } from "@bariskuran/base";
@@ -14,18 +15,18 @@ import { useEffects } from "./useEffects";
  */
 
 const Base = (props) => {
-    const {
-        SuspenseFallback = <div>Suspence loading...</div>,
-        routes = [],
-        projectSettings = {},
-    } = props || {};
+    const { routes = [], projectSettings = {} } = props || {};
 
-    useEffects({ projectSettings });
+    useEffect(() => {
+        injectInitialRemAndBodyFontStyle(projectSettings?.styledSettings?.remSettings);
+    }, []);
+
+    useEffects();
 
     /* */
     return (
         <SuspenseWrapper
-            suspenseFallback={SuspenseFallback}
+            suspenseFallback={projectSettings.SuspenseFallback || <div>Suspence loading...</div>}
             otherSuspenseProps={projectSettings.otherSuspenseProps}
         >
             <StyledComponentsWrapper styledSettings={projectSettings.styledSettings}>

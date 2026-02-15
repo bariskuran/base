@@ -1,4 +1,6 @@
 import { typeOf } from "../typeOf";
+import { useEffect } from "react";
+import { baseStore } from "../@baseStore";
 
 const DEFAULTS = {
     treatFalsiesAsEqual: false,
@@ -109,4 +111,17 @@ export const isEqual = (a, b, settings = {}, level = 0, seen) => {
     }
 
     return true;
+};
+
+export const useIsEqual = (value) => {
+    const { data, setLocal } = baseStore.useLocal({ data: value });
+
+    useEffect(() => {
+        setLocal((s) => {
+            if (isEqual(s.data, value)) return;
+            s.data = value;
+        });
+    }, [value, setLocal]);
+
+    return data;
 };

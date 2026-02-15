@@ -56,7 +56,7 @@ import { useLocal } from "./useLocal";
  * const { count } = baseStore.use(counterStore, optionalSelector);
  *
  * @example for LOCAL - creating a store and selector doesn't necessery.
- * const { setLocal, ...allValues } = baseStore.useLocal(initialValues || {});
+ * const { setLocal, localStore, ...allValues } = baseStore.useLocal(initialValues || {});
  * setLocal... // set method is the same.
  *
  * @example for CLIENT DATA & GLOBALDATA & NOTIFIER DATA

@@ -6,6 +6,7 @@ import { prepareRemSettings } from "./prepareRemSettings";
 import { GlobalStyle } from "./GlobalStyle";
 import { DEFAULT_PRIMARY_FONT } from "../../../constants/DEFAULT_PRIMARY_FONT";
 import { DEFAULT_GLOBAL_STYLE } from "../../../constants/DEFAULT_GLOBAL_STYLE";
+import { ConfigProvider } from "antd";
 
 export const StyledComponentsWrapper = ({ children, styledSettings }) => {
     const {
@@ -17,8 +18,10 @@ export const StyledComponentsWrapper = ({ children, styledSettings }) => {
         remSettings,
         breakpoints,
         themes,
+        makeAntdTheme,
     } = styledSettings || {};
-    const theme = useTheme({ theme: themes });
+
+    const { theme, antdTheme } = useTheme({ theme: themes, makeAntdTheme });
 
     const mediaFunctions = useMemo(
         () => generateMediaFunctions({ maxAspRatio, minAspRatio, breakpoints }),
@@ -32,13 +35,26 @@ export const StyledComponentsWrapper = ({ children, styledSettings }) => {
 
     return (
         <ThemeProvider theme={{ ...theme, ...mediaFunctions }} {...otherStyledComponentsProps}>
-            <GlobalStyle
-                preparedRemSettings={preparedRemSettings}
-                primaryFont={primaryFont || DEFAULT_PRIMARY_FONT}
-                defaultGlobalStyle={DEFAULT_GLOBAL_STYLE}
-                globalStyle={globalStyle}
-            />
-            {children}
+            <ConfigProvider
+                theme={{
+                    ...antdTheme,
+                    token: {
+                        ...antdTheme?.token,
+                        fontFamily: "inherit",
+                    },
+                }}
+                tooltip={{
+                    unique: true,
+                }}
+            >
+                <GlobalStyle
+                    preparedRemSettings={preparedRemSettings}
+                    primaryFont={primaryFont || DEFAULT_PRIMARY_FONT}
+                    defaultGlobalStyle={DEFAULT_GLOBAL_STYLE}
+                    globalStyle={globalStyle}
+                />
+                {children}
+            </ConfigProvider>
         </ThemeProvider>
     );
 };

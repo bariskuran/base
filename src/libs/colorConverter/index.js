@@ -1,7 +1,6 @@
 /*
 
 colorConverter("#f00") => {
-   
     return {
         hex6,
         hex8,
@@ -20,6 +19,7 @@ colorConverter("#f00") => {
         luminance,
         linearRgbaArray,
     }
+}
 
 */
 
@@ -28,8 +28,19 @@ colorConverter("#f00") => {
  * and computes relative luminance (WCAG).
  *
  * Supported inputs:
- * - string: "#rgb", "#rgba", "#rrggbb", "#rrggbbaa"
- * - object: { hex3, hex4, hex6, hex8, rgbArray, rgbString, rgbaArray, rgbaString, hslArray, hslString, hslaArray, hslaString, hsbArray, hsbString, hsbaArray, hsbaString, alpha, alphaPerc }
+ * - string:
+ *   - "#rgb", "#rgba", "#rrggbb", "#rrggbbaa"
+ *   - "rgb(...)" / "rgba(...)" (both comma and modern space + "/" alpha syntax)
+ *   - "hsl(...)" / "hsla(...)" (both comma and modern syntax)
+ *   - "hsb(...)" / "hsba(...)" (your custom format)
+ *   - CSS named colors (e.g. "red", "rebeccapurple") + "transparent" (browser only)
+ * - object:
+ *   { hex3, hex4, hex6, hex8, rgbArray, rgbString, rgbaArray, rgbaString, hslArray, hslString,
+ *     hslaArray, hslaString, hsbArray, hsbString, hsbaArray, hsbaString, alpha, alphaPerc }
+ *
+ * Notes:
+ * - CSS named colors are resolved via a tiny canvas trick. In non-browser environments (SSR),
+ *   named colors are NOT resolved (function returns {} for those inputs).
  *
  * @param {string|Object} colorInput
  * @returns {Object} Converted formats (or {} if input cannot be parsed)
@@ -59,6 +70,49 @@ export const colorConverter = (colorInput) => {
         color = color.padStart(8, "0");
 
         return "#" + color.toLowerCase();
+    };
+
+    // Resolve CSS color names / "transparent" in the browser.
+    // Returns a normalized CSS color string: "#rrggbb" or "rgba(r,g,b,a)" (or null if invalid/unavailable).
+    const cssColorToNormalized = (input) => {
+        if (typeof input !== "string") return null;
+        if (typeof document === "undefined") return null;
+
+        const s = input.trim();
+        if (!s) return null;
+
+        // If it's already a known format, skip (we'll parse it later)
+        const lower = s.toLowerCase();
+        if (
+            lower.startsWith("#") ||
+            lower.startsWith("rgb(") ||
+            lower.startsWith("rgba(") ||
+            lower.startsWith("hsl(") ||
+            lower.startsWith("hsla(") ||
+            lower.startsWith("hsb(") ||
+            lower.startsWith("hsba(")
+        ) {
+            return null;
+        }
+
+        try {
+            const canvas = document.createElement("canvas");
+            canvas.width = canvas.height = 1;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return null;
+
+            // Reset then set
+            ctx.fillStyle = "#000";
+            ctx.fillStyle = s;
+
+            // If invalid, browser keeps previous value ("#000000")
+            if (ctx.fillStyle === "#000000" && lower !== "black") return null;
+
+            // Typical outputs: "#rrggbb" (for names), or "rgba(0, 0, 0, 0)" for transparent
+            return ctx.fillStyle;
+        } catch {
+            return null;
+        }
     };
 
     const sRGBtoLinearRGB = (c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
@@ -167,19 +221,15 @@ export const colorConverter = (colorInput) => {
     const clamp01 = (x) => Math.min(1, Math.max(0, x));
 
     const parseRgbLike = (str) => {
-        // supports: rgb(1,2,3) | rgb(1 2 3) | rgba(1,2,3,0.5) | rgba(1 2 3 / 0.5)
         const s = String(str).trim().toLowerCase();
 
         const isRgba = s.startsWith("rgba");
         const isRgb = s.startsWith("rgb(") || isRgba;
         if (!isRgb) return null;
 
-        // extract inside (...)
         const inside = s.slice(s.indexOf("(") + 1, s.lastIndexOf(")")).trim();
-        // split by "/" for alpha (modern syntax)
         const [left, right] = inside.split("/").map((x) => x && x.trim());
 
-        // numbers could be comma or space separated
         const parts = left.split(/[\s,]+/).filter(Boolean);
         if (parts.length < 3) return null;
 
@@ -188,11 +238,8 @@ export const colorConverter = (colorInput) => {
         const b = parseFloat(parts[2]);
 
         let a = 1;
-        if (right != null) {
-            a = parseFloat(right);
-        } else if (isRgba && parts[3] != null) {
-            a = parseFloat(parts[3]);
-        }
+        if (right != null) a = parseFloat(right);
+        else if (isRgba && parts[3] != null) a = parseFloat(parts[3]);
 
         if ([r, g, b, a].some((x) => Number.isNaN(x))) return null;
 
@@ -200,7 +247,6 @@ export const colorConverter = (colorInput) => {
     };
 
     const parseHslLike = (str) => {
-        // supports: hsl(210, 50%, 40%) | hsl(210 50% 40%) | hsla(210 50% 40% / 0.5)
         const s = String(str).trim().toLowerCase();
         const isHsla = s.startsWith("hsla");
         const isHsl = s.startsWith("hsl(") || isHsla;
@@ -226,7 +272,6 @@ export const colorConverter = (colorInput) => {
     };
 
     const parseHsbLike = (str) => {
-        // supports your custom: hsb(210, 50%, 40%) | hsba(210 50% 40% / 0.5)
         const s = String(str).trim().toLowerCase();
         const isHsba = s.startsWith("hsba");
         const isHsb = s.startsWith("hsb(") || isHsba;
@@ -253,7 +298,15 @@ export const colorConverter = (colorInput) => {
 
     // ---------- normalize input ----------
     if (typeof colorInput === "string") {
-        colorInput = { hex8: hexToHexA(colorInput) };
+        const normalized = cssColorToNormalized(colorInput);
+        if (normalized) {
+            // "#rrggbb" OR "rgba(...)"
+            if (normalized.startsWith("#")) colorInput = { hex8: hexToHexA(normalized) };
+            else colorInput = { rgbaString: normalized };
+        } else {
+            // keep old behavior for actual hex input; otherwise parsing will safely fail and return {}
+            colorInput = { hex8: hexToHexA(colorInput) };
+        }
     }
 
     const {

@@ -7,6 +7,8 @@ import { notifierFunctions } from "../notifier";
 import { TEXT_LIBRARY } from "../../../constants/TEXT_LIBRARY";
 import { useEventListener } from "../../useEventListener";
 import { loadingApi } from "../loadingQueueManager";
+import { VALIDATION_RULES } from "../../../constants/VALIDATION_RULES";
+import { useEffectAfterMount } from "../../useEffectAfterMount";
 
 export const GlobalDataProvider = ({ projectSettings, routes }) => {
     const {
@@ -18,6 +20,8 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         styledSettings = {},
         textLibrary: usersTextLibrary = {},
         baseFetchSettings = {},
+        baseFormSettings = {},
+        validationRules = {},
     } = projectSettings || {};
 
     const navigate = useNavigate();
@@ -34,7 +38,6 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         },
         [navigate, location.search],
     );
-    const global = baseStore.useGlobal();
 
     const getCD = useCallback(() => {
         return getClientData({
@@ -46,10 +49,11 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
 
     useEffect(() => {
         const clientData = getCD();
+        const currGlobalData = baseStore.globalData.get();
 
         try {
-            global.set({
-                ...baseStore.globalData.get(),
+            baseStore.globalData.set({
+                ...currGlobalData,
                 ...globalBaseStoreVariables,
                 textLibrary: { ...TEXT_LIBRARY, ...(usersTextLibrary || {}) },
                 isGlobalReady: true,
@@ -78,6 +82,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     token: null,
                     cacheTime: 10,
                     envUrl: null,
+                    responseErrorPaths: [],
                     ...baseFetchSettings,
                 },
 
@@ -130,16 +135,27 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     params,
                     searchParams: searchParamsObj,
                 },
+
+                // baseForm
+                _baseForm: {
+                    ...baseFormSettings,
+                },
+
+                // validationRules
+                _validationRules: {
+                    ...VALIDATION_RULES,
+                    ...validationRules,
+                },
             });
         } catch (error) {
             console.error("GlobalDataProvider: Failed to set globalData", error);
         }
     }, []);
 
-    useEffect(() => {
+    useEffectAfterMount(() => {
         const currentGlobalData = baseStore.globalData.get();
 
-        global.set({
+        baseStore.globalData.set({
             ...currentGlobalData,
             ...globalBaseStoreVariables,
             _projectSettings: projectSettings,
@@ -163,7 +179,8 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                 "en",
         });
     }, [projectSettings]);
-    useEffect(() => {
+
+    useEffectAfterMount(() => {
         baseStore.globalData.set((s) => {
             s._routes = routes;
         });
@@ -171,20 +188,20 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
 
     const updateClientData = () => {
         const generatedClientData = getCD();
-        global.set((s) => {
+        baseStore.globalData.set((s) => {
             s._clientData = generatedClientData;
             s._baseDate.timeZone = generatedClientData.timeZone;
         });
     };
     useEventListener("resize", updateClientData, { getFirst: false });
-    useEffect(updateClientData, [
+    useEffectAfterMount(updateClientData, [
         styledSettings.breakpoints,
         styledSettings.maxAspRatio,
         styledSettings.minAspRatio,
     ]);
 
-    useEffect(() => {
-        global.set((s) => {
+    useEffectAfterMount(() => {
+        baseStore.globalData.set((s) => {
             s._reactRouterDom = {
                 navigate,
                 navigateWithSearch,
@@ -195,11 +212,23 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         });
     }, [navigate, navigateWithSearch, location, params, searchParamsObj]);
 
-    useEffect(() => {
-        global.set((s) => {
-            s._baseFetchSettings = baseFetchSettings;
+    useEffectAfterMount(() => {
+        baseStore.globalData.set((s) => {
+            s._baseFetchSettings = {
+                ...s._baseFetchSettings,
+                ...baseFetchSettings,
+            };
         });
     }, [baseFetchSettings]);
+
+    useEffectAfterMount(() => {
+        baseStore.globalData.set((s) => {
+            s._baseFormSettings = {
+                ...s._baseFormSettings,
+                ...baseFormSettings,
+            };
+        });
+    }, [baseFormSettings]);
 
     /* */
     return null;

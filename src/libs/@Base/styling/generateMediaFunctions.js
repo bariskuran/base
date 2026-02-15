@@ -4,6 +4,7 @@ import { css } from "styled-components";
 import { DEFAULT_BREAKPOINTS } from "../../../constants/DEFAULT_BREAKPOINTS";
 import { DEFAULT_MAX_ASP_RATIO } from "../../../constants/DEFAULT_MAX_ASP_RATIO";
 import { DEFAULT_MIN_ASP_RATIO } from "../../../constants/DEFAULT_MIN_ASP_RATIO";
+import { colorAlpha } from "../../colorAlpha";
 
 export const generateMediaFunctions = ({
     breakpoints = DEFAULT_BREAKPOINTS,
@@ -95,6 +96,8 @@ export const generateMediaFunctions = ({
             ${styles}
         `;
     };
+
+    mediaFunctions.colorAlpha = colorAlpha;
 
     return mediaFunctions;
 };

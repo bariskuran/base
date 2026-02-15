@@ -10,6 +10,7 @@ import {
     normalizeMethod,
     resolvePayload,
     resolveToken,
+    resolveErrorMessage,
     isAbsoluteUrl,
 } from "./_tools";
 
@@ -24,6 +25,7 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
         token: tokenGlobal,
         cacheTime: cacheTimeGlobal,
         envUrl: envUrlGlobal,
+        responseErrorPaths: responseErrorPathsGlobal,
     } = _baseFetchSettings;
 
     const {
@@ -106,6 +108,7 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
                 token = tokenGlobal || null,
                 onStart,
                 onEnd,
+                responseErrorPaths = responseErrorPathsGlobal || [],
             } = call || {};
 
             const isAbs = isAbsoluteUrl(url);
@@ -232,8 +235,24 @@ export const baseFetch = (callOrCalls, jointSettings = {}) => {
                     notifyCancelOnce();
                     return { isOk: false, cancelled: true, error: err };
                 }
+                try {
+                    const data = err?.data;
+                    const msg = resolveErrorMessage({
+                        err,
+                        data,
+                        responseErrorPaths,
+                    });
+
+                    if (msg && typeof msg === "string") {
+                        err.message = msg;
+                    }
+                    err._baseMessage = msg;
+                } catch (e) {
+                    console.error("[baseFetch] resolveErrorMessage failed:", e);
+                }
 
                 let handledErr = err;
+
                 if (typeof onEnd === "function") {
                     try {
                         const maybe = await onEnd(null, err);

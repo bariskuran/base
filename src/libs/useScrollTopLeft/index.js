@@ -52,7 +52,6 @@ export const useScrollTopLeft = (options = {}) => {
                 ? (window.scrollX ?? window.pageXOffset ?? document.documentElement.scrollLeft ?? 0)
                 : (source.scrollLeft ?? 0);
 
-        // First run: initialize baseline, no direction
         if (!prevRef.current.inited) {
             prevRef.current = { top: nextTop, left: nextLeft, inited: true };
             setLocal?.({ top: nextTop, left: nextLeft, directionX: "none", directionY: "none" });
@@ -62,8 +61,12 @@ export const useScrollTopLeft = (options = {}) => {
         const dy = nextTop - prevRef.current.top;
         const dx = nextLeft - prevRef.current.left;
 
-        const nextDirectionY = dy > 0 ? "bottom" : dy < 0 ? "top" : "none";
-        const nextDirectionX = dx > 0 ? "right" : dx < 0 ? "left" : "none";
+        if (dy === 0 && dx === 0) {
+            return;
+        }
+
+        const nextDirectionY = dy > 0 ? "bottom" : "top";
+        const nextDirectionX = dx > 0 ? "right" : "left";
 
         prevRef.current.top = nextTop;
         prevRef.current.left = nextLeft;
