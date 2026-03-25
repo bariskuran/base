@@ -6,13 +6,28 @@ import { colorShader } from "../../colorShader";
 
 const isString = (v) => typeof v === "string" && v.length > 0;
 
-const buildScale = (hex) => {
+const buildGreyScale = () => {
+    const out = {};
+
+    for (let i = 1; i <= 100; i += 1) {
+        out["tint" + i] = colorTinter("#000000", i);
+        out["shade" + i] = colorShader("#ffffff", i);
+    }
+
+    return out;
+};
+
+const buildScale = (hex, key) => {
+    if (key === "grey") {
+        return buildGreyScale();
+    }
+
     const base = String(hex);
     const out = {};
 
     for (let i = 1; i <= 100; i += 1) {
-        out["tint" + i] = colorTinter(base, 100 - i);
-        out["shade" + i] = colorShader(base, 100 - i);
+        out["tint" + i] = colorTinter(base, i);
+        out["shade" + i] = colorShader(base, i);
     }
 
     return out;
@@ -26,7 +41,7 @@ const buildThemeWithScales = (palette) => {
     for (const k of Object.keys(src)) {
         const v = src[k];
         colors[k] = v;
-        if (isString(v)) scales[k] = buildScale(v);
+        if (isString(v)) scales[k] = buildScale(v, k);
     }
 
     return { colors, scales };

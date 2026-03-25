@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { useBaseEffect } from "../useBaseEffect";
+import { useEffect, useRef } from "react";
+
 /*
 
 useEffectAfterMount(() => {
@@ -19,21 +19,14 @@ useEffectAfterMount(() => {
  *
  * @returns {null}
  */
-export const useEffectAfterMount = (callback, dependencies = []) => {
-    const isFirst = useRef(true);
-    const callbackRef = useRef(callback);
+export const useEffectAfterMount = (effect, deps = []) => {
+    const didMount = useRef(false);
 
-    useBaseEffect(() => {
-        callbackRef.current = callback;
-    }, [callback]);
-
-    useBaseEffect(() => {
-        if (isFirst.current) {
-            isFirst.current = false;
+    useEffect(() => {
+        if (!didMount.current) {
+            didMount.current = true;
             return;
         }
-        callbackRef.current?.();
-    }, dependencies);
-
-    return null;
+        return effect();
+    }, deps);
 };

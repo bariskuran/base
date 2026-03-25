@@ -4,41 +4,7 @@ import { BaseFormItem as BaseFormItemOriginal } from "./BaseFormItem";
 import { useDefineStore } from "./tools/useDefineStore";
 import { mountForm } from "./tools/mountForm";
 import { unmountForm } from "./tools/unmountForm";
-
-/**
- *
- * @example
- * useForm({
- *  storeFile, // optional
- *  disableHelper: true, // default false
- *  helperProps: {
- *     HelperComponent: null, // default DefaultHelper
- *     disableActions: true, // default false
- *     disableTitle: true, // default false
- *     disableDescription: true, // default false
- *     disableErrors: true, // default false
- *     helperPropsAltinaKonulanHerseyHelperComponenteAktarılır.
- *     Aynı şekilde BaseFromGroup ve BaseFromItem icin de geçerlidir.
- *     Item > Group > use şeklinde üst üstüste yazılır.
- *  },
- * })
- * @example
- * <BaseForm
- *  StyledContainer={StyledContainer} // Optional
- * >
- *
- * @example
- * <BaseFormGroup
- *  disableHelper: true, // default false
- *   helperProps: ... use'daki ayarlar.
- * >
- *
- * @example
- * <BaseFormItem
- *  disableHelper: true, // default false
- *   helperProps: ... use'daki ayarlar.
- * >
- */
+import { inputComponents } from "./inputComponents";
 
 export const useBaseForm = ({ store: storeFile, ...formProps }) => {
     const { store, ...state } = useDefineStore({ store: storeFile });
@@ -62,25 +28,36 @@ export const useBaseForm = ({ store: storeFile, ...formProps }) => {
      *
      * -------------------------------------------------
      */
-    const [BaseForm, BaseFormItem] = useMemo(
-        () => [
-            (p) => <BaseFormOriginal {...p} storeFile={store} />,
-            (p) => <BaseFormItemOriginal {...p} storeFile={store} />,
-        ],
-        [store],
-    );
+    const [BaseForm, BaseFormItem] = useMemo(() => {
+        const BoundBaseForm = (p) => <BaseFormOriginal {...p} storeFile={store} />;
 
-    /**
-     * -------------------------------------------------
-     *
-     * MOUNT is DONE. TRIGGER FIRST VALIDATION CHECK.
-     *
-     * -------------------------------------------------
-     */
-    useEffect(() => {
-        if (!state?.isFormMounted || !state?.areFieldsMounted) return;
-        state?.validateForm();
-    }, [state?.areFieldsMounted]);
+        const BoundBaseFormItem = Object.assign(
+            (p) => <BaseFormItemOriginal {...p} storeFile={store} />,
+            Object.fromEntries(
+                Object.entries(inputComponents).map(([key, config]) => [
+                    key,
+                    (p) => (
+                        <BaseFormItemOriginal
+                            {...p}
+                            storeFile={store}
+                            inputComponentProps={{ name: key, ...config }}
+                        />
+                    ),
+                ]),
+            ),
+        );
+
+        return [BoundBaseForm, BoundBaseFormItem];
+    }, [store]);
+
+    const EmptyBaseFormItem = useMemo(
+        () =>
+            Object.assign(
+                () => null,
+                Object.fromEntries(Object.keys(inputComponents).map((key) => [key, () => null])),
+            ),
+        [],
+    );
 
     /**
      * -------------------------------------------------
@@ -89,7 +66,13 @@ export const useBaseForm = ({ store: storeFile, ...formProps }) => {
      *
      * -------------------------------------------------
      */
-    if (!state?.isFormMounted) return { BaseForm: () => <></> };
+    if (!state?.isFormMounted) {
+        return {
+            BaseForm: () => null,
+            BaseFormItem: EmptyBaseFormItem,
+            BaseFormGroup: EmptyBaseFormItem,
+        };
+    }
     return {
         ...state,
         storeFile: store,

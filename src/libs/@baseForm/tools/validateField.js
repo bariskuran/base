@@ -16,7 +16,6 @@ export const validateField = ({ value, validationRules = [], field }) => {
     let isTouched = childList.some((child) => child && child.isTouched === true);
     let isValidGlobal = !childList.some((child) => child && child.isValid === false);
 
-    console.log(field?.name, isValidGlobal, field);
     if (childList.length > 0) {
         childList.forEach((child) => {
             if (!child) return;

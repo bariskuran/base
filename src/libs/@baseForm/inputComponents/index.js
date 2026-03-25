@@ -1,5 +1,5 @@
-import { Input } from "./Input";
+import { TextArea, textAreaDefault } from "./TextArea";
 
 export const inputComponents = {
-    Input,
+    textArea: { Component: TextArea, defaultValue: textAreaDefault },
 };

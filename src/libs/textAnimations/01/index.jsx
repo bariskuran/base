@@ -1,6 +1,12 @@
 import { useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
-import { generateRandomNumber } from "../../generateRandomNumber";
+import { generateRandomNumber } from "../generateRandomNumber";
+
+/**
+ *
+ * BAKILACAK BUNA.
+ *
+ */
 
 const LineBase = styled.div`
     width: 100%;
@@ -46,7 +52,11 @@ export const TA1 = (p = {}) => {
     }, []);
 
     return randomValues.map((lineData, lineIndex) => (
-        <LineBase key={lineIndex} $marginLeft={lineData.lineMargin} $animationDuration={animationDuration}>
+        <LineBase
+            key={lineIndex}
+            $marginLeft={lineData.lineMargin}
+            $animationDuration={animationDuration}
+        >
             {arr[lineIndex].split(" ").map((word, wordIndex) => (
                 <SpanBase
                     key={wordIndex}

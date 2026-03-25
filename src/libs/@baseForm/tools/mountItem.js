@@ -1,5 +1,6 @@
 import { getPath } from "./getPath";
 import { byPath } from "../../byPath";
+import { validateField } from "./validateField";
 
 const isGroupByProps = ({ Component, children } = {}) => !Component && children != null;
 
@@ -13,21 +14,38 @@ const ensureBaseShape = (node, name, label) => {
     node.isValid ??= true;
     node.isReady ??= true;
     node.isMainItem ??= false;
-    node.previousValue ??= null;
 };
 
 const normalizeGroup = (node) => {
     node.isGroup = true;
     node.children ??= {};
+
+    // if (deriveValue) {
+    //     const childrenValues = {};
+    //     Object.entries(node.children).forEach(([childKey, childValue]) => {
+    //         childrenValues[childKey] = childValue.value;
+    //     });
+    //     node.value = deriveValue({
+    //         name: node.name,
+    //         childrenValues,
+    //     });
+    // }
 };
 
-const normalizeLeaf = (node, { defaultValue }) => {
+const normalizeLeaf = (node, { defaultValue, deriveValue }) => {
     node.isGroup = false;
     if ("children" in node) delete node.children;
 
-    const v = defaultValue ?? null;
-    node.defaultValue ??= defaultValue ?? null;
+    const v1 = defaultValue ?? null;
+    const v = deriveValue
+        ? deriveValue({
+              value: v1,
+          })
+        : v1;
+
+    node.defaultValue ??= v;
     node.value ??= v;
+    node.previousValue ??= node.value;
     node.lastSubmittedValue ??= node.value;
     if ("lastSubmitValue" in node) {
         node.lastSubmittedValue ??= node.lastSubmitValue;
@@ -71,8 +89,8 @@ const toPlain = (v) => {
     }
 };
 
-export const mountItem = ({ set, get, itemProps, parents = [] }) => {
-    const { name, defaultValue, children, Component, label } = itemProps || {};
+export const mountItem = ({ set, get, itemProps, parents = [], validateForm }) => {
+    const { name, defaultValue, children, Component, label, deriveValue } = itemProps || {};
     if (!set || !get || !name) return;
 
     const isGroup = isGroupByProps({ Component, children });
@@ -88,10 +106,10 @@ export const mountItem = ({ set, get, itemProps, parents = [] }) => {
 
             node.count = (node.count || 1) + 1;
 
-            ensureBaseShape(node, name);
+            // ensureBaseShape(node, name);
 
-            if (isGroup) normalizeGroup(node);
-            else normalizeLeaf(node, { defaultValue });
+            // if (isGroup) normalizeGroup(node);
+            // else normalizeLeaf(node, { defaultValue });
         });
 
         return;
@@ -110,14 +128,39 @@ export const mountItem = ({ set, get, itemProps, parents = [] }) => {
                 node.children = toPlain(existingChildren);
             }
         } else {
-            normalizeLeaf(node, { defaultValue });
+            normalizeLeaf(node, { defaultValue, deriveValue });
         }
+
+        if (node.isGroup && deriveValue) {
+            const childrenValues = {};
+            Object.entries(node.children).forEach(([childKey, childValue]) => {
+                childrenValues[childKey] = childValue.value;
+            });
+            const v = deriveValue({
+                name,
+                childrenValues,
+            });
+
+            node.value = v;
+            node.previousValue = v;
+            node.lastSubmittedValue = v;
+        }
+
+        const [errors, isDirty, isValidGlobal] = validateField({
+            value: node.value,
+            validationRules: itemProps.validationRules,
+            field: node,
+        });
+
+        node.errors = errors;
+        node.isDirty = isDirty;
+        node.isValid = isValidGlobal;
 
         byPath.set(s, path, node, true);
 
         if (isHighestLevel) {
             s.values ??= {};
-            const v = defaultValue ?? null;
+            const v = node.value ?? defaultValue ?? null;
 
             if (!(name in s.values)) {
                 s.values[name] = v;
@@ -132,4 +175,6 @@ export const mountItem = ({ set, get, itemProps, parents = [] }) => {
     });
 
     scheduleMountFlush({ get, set });
+
+    validateForm();
 };

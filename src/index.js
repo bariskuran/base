@@ -124,4 +124,6 @@ export { useIsEqual } from "./libs/isEqual";
 export { useBaseEffect } from "./libs/useBaseEffect";
 export { colorShader } from "./libs/colorShader";
 export { colorTinter } from "./libs/colorTinter";
-export { Tooltip } from "./libs/@baseUi/Tooltip";
+export { Tooltip } from "./libs/Tooltip";
+export { clearUndefinedDeep } from "./libs/clearUndefinedDeep";
+export { Button } from "./libs/Button";

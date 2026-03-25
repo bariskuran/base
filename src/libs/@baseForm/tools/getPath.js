@@ -10,5 +10,7 @@ export const getPath = ({ parents = [], name }) => {
     }
 
     path += `.${name}`;
+    path = path?.startsWith("fields.") ? path : `fields.${path}`;
+
     return path;
 };

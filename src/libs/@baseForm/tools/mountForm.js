@@ -9,9 +9,11 @@ import { resetToDefaults } from "./resetToDefaults";
 import { resetToLastSubmit } from "./resetToLastSubmit";
 import { clearForm } from "./clearForm";
 import { validateForm } from "./validateForm";
+import { generateRandom } from "../../generateRandom";
 
 export const mountForm = ({ store, formProps }) => {
     const { get, set } = store;
+    const { formName = generateRandom.text(16) } = formProps || {};
 
     const currState = get() || {};
     if (currState.isFormMounted) return;

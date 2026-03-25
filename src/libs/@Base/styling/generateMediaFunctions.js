@@ -5,6 +5,10 @@ import { DEFAULT_BREAKPOINTS } from "../../../constants/DEFAULT_BREAKPOINTS";
 import { DEFAULT_MAX_ASP_RATIO } from "../../../constants/DEFAULT_MAX_ASP_RATIO";
 import { DEFAULT_MIN_ASP_RATIO } from "../../../constants/DEFAULT_MIN_ASP_RATIO";
 import { colorAlpha } from "../../colorAlpha";
+import { colorTinter } from "../../colorTinter";
+import { colorShader } from "../../colorShader";
+import { colorConverter } from "../../colorConverter";
+import { colorContrast } from "../../colorContrast";
 
 export const generateMediaFunctions = ({
     breakpoints = DEFAULT_BREAKPOINTS,
@@ -98,6 +102,10 @@ export const generateMediaFunctions = ({
     };
 
     mediaFunctions.colorAlpha = colorAlpha;
+    mediaFunctions.colorTinter = colorTinter;
+    mediaFunctions.colorShader = colorShader;
+    mediaFunctions.colorConverter = colorConverter;
+    mediaFunctions.colorContrast = colorContrast;
 
     return mediaFunctions;
 };

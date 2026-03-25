@@ -1,6 +1,10 @@
 import { Tooltip as AntdTooltip } from "antd";
 import { componentCreator } from "../componentCreator/index.jsx";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../@baseStore";
+/**
+ *
+ * BAKILACAK BUNA. ANTD KALDIRILACAK.
+ */
 
 const Base = ({ color, ...p }) => {
     const [c] = baseStore.useGlobal((s) => [s.theme[color || "grey"]]);
