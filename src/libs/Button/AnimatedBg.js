@@ -4,7 +4,9 @@ const S = styled.div`
     ${({
         // theme,
         $isHovered,
-        $disabled,
+        // $disabled,
+        $isActivated,
+        // $isPending,
         $isJustIcon,
         // $bgColor,
         $hoverBgColor,
@@ -48,12 +50,12 @@ const S = styled.div`
             }
         `}
 
-        &:active {
-            transform: scale(0.8);
+        ${$isActivated &&
+        css`
             &::before {
                 background: ${$activeBgColor};
             }
-        }
+        `}
 
         & > [data-slot="label"] {
             ${!$isJustIcon &&
@@ -80,6 +82,7 @@ const S = styled.div`
         }
     `}
 `;
-export const AnimatedBg = {
+export const X = {
     variant: S,
 };
+export default X;

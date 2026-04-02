@@ -49,6 +49,8 @@ export const debouncedFunction = (
         isThrottle = false,
         getFirst = false,
         functionName = generateRandom.text(16),
+        onStart,
+        onEnd,
     } = {},
 ) => {
     if (!delay || delay < 100) return fn;
@@ -69,6 +71,10 @@ export const debouncedFunction = (
 
             const isFirstCallInWindow = entry.timeout == null;
 
+            if (isFirstCallInWindow) {
+                onStart?.(...args);
+            }
+
             if (getFirst && isFirstCallInWindow) {
                 fn(...args);
                 entry.calledDuringWait = false;
@@ -88,6 +94,8 @@ export const debouncedFunction = (
                 entry.timeout = null;
                 entry.lastArgs = null;
                 entry.calledDuringWait = false;
+
+                onEnd?.();
             }, delay);
         };
     }
@@ -99,6 +107,8 @@ export const debouncedFunction = (
         if (!entry.isWaiting) {
             entry.isWaiting = true;
 
+            onStart?.(...args);
+
             if (getFirst) {
                 fn(...args);
                 entry.calledDuringWait = false;
@@ -108,6 +118,7 @@ export const debouncedFunction = (
 
             entry.timeout = setTimeout(() => {
                 entry.isWaiting = false;
+
                 if (entry.calledDuringWait) {
                     fn(...entry.lastArgs);
                 }
@@ -116,10 +127,13 @@ export const debouncedFunction = (
                 entry.timeout = null;
                 entry.lastArgs = null;
                 entry.calledDuringWait = false;
+
+                onEnd?.();
             }, delay);
 
             return;
         }
+
         entry.calledDuringWait = true;
     };
 };

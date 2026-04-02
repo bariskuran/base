@@ -16,6 +16,8 @@ export const DefaultVariant = styled.div`
         $isHovered,
         // $disabled,
         $isJustIcon,
+        $isActivated,
+        // $isPending,
         // $bgColor,
         $hoverBgColor,
         $activeBgColor,
@@ -43,10 +45,11 @@ export const DefaultVariant = styled.div`
             transform: translateY(-3rem);
         `}
 
-        &:active {
-            background: ${$activeBgColor} !important;
+        ${$isActivated &&
+        css`
+            /* background: ${$activeBgColor} !important; */
             transform: translateY(3rem) scale(0.8);
-        }
+        `}
 
         & > [data-slot="label"] {
             ${!$isJustIcon &&
@@ -56,7 +59,7 @@ export const DefaultVariant = styled.div`
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8rem;
+            padding: 6rem;
             text-transform: uppercase;
             letter-spacing: 0.5rem;
             font-weight: 600;
@@ -69,7 +72,7 @@ export const DefaultVariant = styled.div`
             justify-content: center;
             align-items: center;
             width: max-content;
-            padding: 8rem;
+            padding: 6rem;
         }
     `}
 `;

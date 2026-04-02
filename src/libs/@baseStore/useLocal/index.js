@@ -10,5 +10,14 @@ const { x, y, setLocal } = useLocal({ x: 0, y: 0 });
 
 export const useLocal = (initialState = {}) => {
     const store = useMemo(() => create(initialState), []);
-    return { ...use(store), setLocal: store.set, localStore: store };
+    return {
+        ...use(store),
+        setLocal: store.set,
+        setLocalByPath: (path, value) => {
+            store.set((s) => {
+                s[path] = value;
+            });
+        },
+        localStore: store,
+    };
 };

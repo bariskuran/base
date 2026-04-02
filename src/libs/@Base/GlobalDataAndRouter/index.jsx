@@ -28,11 +28,10 @@ export const CoreRRDLayout = ({ routes, projectSettings }) => {
 };
 
 export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
-    const [isDevMode, isGlobalReady, isThemeReady] = baseStore.useGlobal((s) => [
-        s.isDevMode,
-        s.isGlobalReady,
-        s.isThemeReady,
-    ]);
+    const [isDevMode, isGlobalReady, isThemeReady, enableDesignSystem] = baseStore.useGlobal(
+        (s) => [s.isDevMode, s.isGlobalReady, s.isThemeReady, s.enableDesignSystem],
+    );
+    const isReady = isGlobalReady && isThemeReady;
 
     const router = useMemo(
         () =>
@@ -41,15 +40,15 @@ export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
                     element: <CoreRRDLayout projectSettings={projectSettings} routes={routes} />,
                     errorElement: <ErrorPage defaultCode={500} />,
                     children: [
-                        ...(isGlobalReady && isThemeReady ? routes : []),
-                        ...(isDevMode ? designSystemRoutes : []),
+                        ...(isReady ? routes : []),
+                        ...(isDevMode || enableDesignSystem ? designSystemRoutes : []),
                         { path: "*", element: <Navigate to="/error?code=404" replace /> },
                         { path: "/error", element: <ErrorPage defaultCode={500} /> },
                     ],
                 },
             ]),
-        [routes, isGlobalReady, isThemeReady],
+        [routes, isReady, isDevMode, projectSettings],
     );
-
+    if (!isThemeReady) return null;
     return <RouterProvider router={router} />;
 };

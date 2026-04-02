@@ -4,7 +4,7 @@ import { IconsLibrary } from "./IconsLibrary";
 
 export const designSystemRoutes = [
     {
-        path: "baseDesignSystem",
+        path: "design-system",
         element: <DesignSystemLayout />,
         children: [{ index: true, path: "icons", element: <IconsLibrary /> }],
     },

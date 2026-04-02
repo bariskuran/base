@@ -1,39 +1,19 @@
 import styled, { css } from "styled-components";
 
 const S = styled.div`
-    ${({
-        theme,
-        $isHovered,
-        // $isActivated,
-        // $isPending,
-        // $disabled,
-        // $isJustIcon,
-        // $bgColor,
-        // $hoverBgColor,
-        // $activeBgColor,
-        // $color,
-        // $prefixBgColor,
-        // $prefixColor,
-        // $suffixBgColor,
-        // $suffixColor,
-        // $minHeight,
-        // $minWidth,
-        // $minLabelWidth,
-        // $inverseColor1,
-        // $inverseColor2,
-        // $size,
-    }) => css`
+    ${({ theme, $isHovered }) => css`
         all: unset;
         display: flex;
         cursor: pointer;
         transition: all 0.5s;
         position: relative;
+        margin: 0 5rem;
 
         &::before,
         &::after {
             content: "";
             position: absolute;
-            bottom: -2rem;
+            bottom: 1rem;
             left: 0;
             width: 100%;
             height: 2rem;
@@ -51,11 +31,6 @@ const S = styled.div`
             display: flex;
             justify-content: center;
             align-items: center;
-            text-transform: uppercase;
-            letter-spacing: 0.5rem;
-            font-weight: 600;
-            font-size: 12rem;
-            padding: 5rem 10rem;
             transition: all 0.5s;
         }
 
@@ -65,7 +40,6 @@ const S = styled.div`
             justify-content: center;
             align-items: center;
             width: max-content;
-            padding: 4rem;
             transition: all 0.5s;
         }
 
@@ -82,7 +56,8 @@ const S = styled.div`
         }
     `}
 `;
-export const X = {
+
+const X = {
     variant: S,
     bgColor: "background",
 };

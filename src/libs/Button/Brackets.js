@@ -4,6 +4,8 @@ const S = styled.div`
     ${({
         theme,
         $isHovered,
+        // $isActivated,
+        // $isPending,
         // $disabled,
         // $isJustIcon,
         // $bgColor,
@@ -69,9 +71,10 @@ const S = styled.div`
         }
     `}
 `;
-export const Brackets = {
+export const X = {
     variant: S,
     prefix: { icon: "bracketLeft", width: 22, color: "primary" },
     suffix: { icon: "bracketRight", width: 22, color: "primary" },
     bgColor: "background",
 };
+export default X;

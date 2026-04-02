@@ -9,6 +9,7 @@ import { colorTinter } from "../../colorTinter";
 import { colorShader } from "../../colorShader";
 import { colorConverter } from "../../colorConverter";
 import { colorContrast } from "../../colorContrast";
+import { colorGet } from "../../colorGet";
 
 export const generateMediaFunctions = ({
     breakpoints = DEFAULT_BREAKPOINTS,
@@ -106,6 +107,7 @@ export const generateMediaFunctions = ({
     mediaFunctions.colorShader = colorShader;
     mediaFunctions.colorConverter = colorConverter;
     mediaFunctions.colorContrast = colorContrast;
+    mediaFunctions.colorGet = colorGet;
 
     return mediaFunctions;
 };

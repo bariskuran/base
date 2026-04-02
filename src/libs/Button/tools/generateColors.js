@@ -1,7 +1,7 @@
-import { colorConverter } from "../colorConverter";
-import { colorShader } from "../colorShader";
-import { colorAlpha } from "../colorAlpha";
-import { colorTinter } from "../colorTinter";
+import { colorConverter } from "../../colorConverter";
+import { colorShader } from "../../colorShader";
+import { colorAlpha } from "../../colorAlpha";
+import { colorTinter } from "../../colorTinter";
 
 export const generateColors = ({
     theme,

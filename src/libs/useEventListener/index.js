@@ -42,6 +42,8 @@ export const useEventListener = (event, handler, settings = {}) => {
         capture,
         once,
         passive,
+        onStart,
+        onEnd,
     } = settings;
 
     const handlerRef = useRef(handler);
@@ -63,8 +65,8 @@ export const useEventListener = (event, handler, settings = {}) => {
     }, [capture, once, passive]);
 
     const debounceSettings = useMemo(
-        () => ({ delay, isThrottle, getFirst }),
-        [delay, isThrottle, getFirst],
+        () => ({ delay, isThrottle, getFirst, onStart, onEnd }),
+        [delay, isThrottle, getFirst, onStart, onEnd],
     );
     const delayed = useDebouncedFunction((e) => handlerRef.current(e), debounceSettings);
 

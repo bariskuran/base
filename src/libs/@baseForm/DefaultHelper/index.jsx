@@ -117,7 +117,7 @@ export const DefaultHelper = ({ children, ...props }) => {
                         <Icon
                             icon="information"
                             width={labelIconWidth}
-                            enableTooltip={true}
+                            enablePopTip={true}
                             tooltipProps={{ title: description }}
                         />
                     )}
