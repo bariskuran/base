@@ -7,7 +7,6 @@ export const Base = (p) => {
         align,
         defaultWidth,
         defaultHeight,
-        defaultMargin,
         truckRef,
         direction,
         defaultSideMargin,
@@ -24,6 +23,11 @@ export const Base = (p) => {
         onTruckMouseDown,
         onThumbMouseDown,
         isDragging,
+        isWindowLike,
+        handleOnMouseEnter,
+        isScrollbarActive,
+        handleOnMouseLeave,
+        defaultMargin,
     } = useVars(p);
 
     /* RETURN */
@@ -32,6 +36,8 @@ export const Base = (p) => {
         <Variant
             ref={truckRef}
             onMouseDown={onTruckMouseDown}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
             //
             $position={position}
             $direction={direction}
@@ -43,6 +49,9 @@ export const Base = (p) => {
             $thumbPosition={thumbPosition}
             $maxScroll={maxScroll}
             $scrollPos={scrollPos}
+            $isDragging={isDragging}
+            $isScrollbarActive={isScrollbarActive}
+            $isBoxMode={!isWindowLike}
             //
             style={{
                 ...(position === "horizontal"
@@ -55,9 +64,16 @@ export const Base = (p) => {
                           height: defaultHeight + "%",
                       }),
                 [align]: defaultMargin + "rem",
+                // [align]: 0 + "rem",
+                //
+                ...(!isWindowLike && position === "vertical"
+                    ? { top: 0 }
+                    : !isWindowLike && position === "horizontal"
+                      ? { left: 0 }
+                      : {}),
                 [align === "top" || align === "bottom" ? "left" : "top"]: defaultSideMargin + "%",
-                zIndex: 99999999999999,
-                position: "absolute",
+                zIndex: 9999999999,
+                position: isWindowLike ? "fixed" : "absolute",
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
@@ -72,15 +88,16 @@ export const Base = (p) => {
                     direction === "horizontal"
                         ? {
                               width: thumbLength + "px",
-                              height: "100%",
-                              transform: `translateX(${thumbPosition}px)`,
+                              height: "150%",
+                              translate: `${thumbPosition}px 0`,
+                              transformOrigin: "right center",
                               minWidth: minThumbLength + "px",
                               cursor: isDragging ? "grabbing" : "grab",
                           }
                         : {
                               height: thumbLength + "px",
-                              width: "100%",
-                              transform: `translateY(${thumbPosition}px)`,
+                              width: "150%",
+                              translate: `0 ${thumbPosition}px`,
                               minHeight: minThumbLength + "px",
                               cursor: isDragging ? "grabbing" : "grab",
                           }

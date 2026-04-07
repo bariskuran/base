@@ -1,20 +1,7 @@
-// import { useRef, useEffect } from "react";
 import { baseStore } from "../../@baseStore";
+import { useExportData } from "../../useExportedData";
 
 const useVars = (p) => {
-    /**
-     *
-     * Incoming Props
-     *
-     */
-    // const {} = p || {};
-
-    /**
-     *
-     * React
-     **
-     */
-
     const { setLocal, setLocalByPath, isOpen } = baseStore.useLocal({ isOpen: false });
     const openPopTip = () =>
         setLocal((s) => {
@@ -26,14 +13,14 @@ const useVars = (p) => {
         });
 
     /* Return */
-    return {
-        ...p,
-        allProps: p,
-        setLocal,
-        setLocalByPath,
-        isOpen,
-        openPopTip,
-        closePopTip,
-    };
+    return useExportData(
+        {
+            ...p,
+            allProps: p,
+            setLocal,
+            setLocalByPath,
+        },
+        { isOpen, openPopTip, closePopTip },
+    );
 };
 export default useVars;

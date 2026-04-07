@@ -10,6 +10,7 @@ import { colorShader } from "../../colorShader";
 import { colorConverter } from "../../colorConverter";
 import { colorContrast } from "../../colorContrast";
 import { colorGet } from "../../colorGet";
+import { normalizeCssSize } from "../../normalizeCssSize";
 
 export const generateMediaFunctions = ({
     breakpoints = DEFAULT_BREAKPOINTS,
@@ -108,6 +109,7 @@ export const generateMediaFunctions = ({
     mediaFunctions.colorConverter = colorConverter;
     mediaFunctions.colorContrast = colorContrast;
     mediaFunctions.colorGet = colorGet;
+    mediaFunctions.normalizeCssSize = normalizeCssSize;
 
     return mediaFunctions;
 };

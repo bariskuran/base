@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { deepMerge } from "../../deepMerge";
 import { baseStore } from "../../@baseStore";
 import { colorGet } from "../../colorGet";
+import { useExportData } from "../../useExportedData";
 
 const useVars = (p) => {
     /**
@@ -9,15 +10,7 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const {
-        items,
-        commonProps,
-        direction = "column",
-        gap = 5,
-        bgColor,
-        disableBoxShadow,
-        scrollBoxProps,
-    } = p || {};
+    const { items, commonProps, direction = "column", gap = 5, bgColor, Variant } = p || {};
 
     /**
      *
@@ -42,16 +35,19 @@ const useVars = (p) => {
     );
 
     /* Return */
-    return {
-        ...p,
-        items,
-        commonProps,
-        direction,
-        preparedItems,
-        gap,
-        colors: colors || {},
-        disableBoxShadow,
-        scrollBoxProps,
-    };
+    return useExportData(
+        {
+            ...p,
+            items,
+            commonProps,
+            direction,
+            gap,
+            colors: colors || {},
+            Variant,
+        },
+        {
+            preparedItems,
+        },
+    );
 };
 export default useVars;

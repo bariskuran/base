@@ -4,7 +4,6 @@ import useVars from "./tools/useVars.js";
 
 export const FloatingUi = ({ children, content, ...p }) => {
     const {
-        open,
         openFromUser,
         childrenRef,
         floatingRef,

@@ -35,7 +35,14 @@ import { baseStore } from "../@baseStore";
  * return <section ref={ref}>Observed content</section>;
  */
 export const useObserver = (options = {}) => {
-    const { onEnter, onExit, threshold = 0.1, rootMargin = 0, root = null } = options;
+    const {
+        onEnter,
+        onExit,
+        threshold = 0.1,
+        rootMargin = 0,
+        root = null,
+        disable = false,
+    } = options;
 
     const supportsIO = typeof window !== "undefined" && typeof IntersectionObserver !== "undefined";
 
@@ -60,6 +67,7 @@ export const useObserver = (options = {}) => {
     );
 
     useEffect(() => {
+        if (disable) return;
         if (!supportsIO) return;
         if (!node) return;
 
@@ -84,7 +92,7 @@ export const useObserver = (options = {}) => {
         observer.observe(node);
 
         return () => observer.disconnect();
-    }, [supportsIO, node, threshold, rootMargin, root, setLocal]);
+    }, [supportsIO, node, threshold, rootMargin, root, setLocal, disable]);
 
     return useMemo(() => ({ ref, inViewport: !!inViewport }), [ref, inViewport]);
 };

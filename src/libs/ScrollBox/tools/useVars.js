@@ -1,7 +1,7 @@
 import { baseStore } from "../../@baseStore";
-import { DefaultVariant } from "../DefaultVariant";
 import { useRef } from "react";
 import { useCheckOverflow } from "../../useCheckOverflow";
+import { useExportData } from "../../useExportedData";
 
 const useVars = (p) => {
     /**
@@ -9,7 +9,7 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const { variant, maxHeight, disableBoxShadow, fullWidth, scrollBarProps } = p || {};
+    const { Variant, maxHeight, disableBoxShadow, fullWidth, scrollBarProps } = p || {};
 
     /**
      *
@@ -20,35 +20,25 @@ const useVars = (p) => {
     const { isOverflowingY, isOverflowingX, isOverflowing } = useCheckOverflow({
         ref: containerRef,
     });
-    const [theme, defaultVariants] = baseStore.useGlobal((s) => [s.theme, s.defaultVariants]);
-    // const { setLocal } = baseStore.useLocal({});
-
-    /**
-     *
-     * Functions
-     **
-     */
-
-    /**
-     *
-     * Vars
-     **
-     */
-    const Variant = variant || defaultVariants?.scrollBox || DefaultVariant;
+    const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
     /* Return */
-    return {
-        ...p,
-        theme,
-        Variant,
-        maxHeight,
-        containerRef,
-        isOverflowingY,
-        isOverflowingX,
-        disableBoxShadow,
-        isOverflowing,
-        fullWidth,
-        scrollBarProps,
-    };
+    return useExportData(
+        {
+            ...p,
+            theme,
+            Variant,
+            maxHeight,
+            containerRef,
+            disableBoxShadow,
+            fullWidth,
+            scrollBarProps,
+        },
+        {
+            isOverflowingY,
+            isOverflowingX,
+            isOverflowing,
+        },
+    );
 };
 export default useVars;

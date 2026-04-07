@@ -8,10 +8,10 @@ import { componentCreator } from "../componentCreator/index.jsx";
  *
  */
 
-export const Popover = componentCreator("Popover", Base, {
-    error: (p) => <Base bgColor="error" {...p} />,
-    success: (p) => <Base bgColor="success" {...p} />,
-    warning: (p) => <Base bgColor="warning" {...p} />,
-    primary: (p) => <Base primary {...p} />,
-    secondary: (p) => <Base secondary {...p} />,
+export const Popover = componentCreator("Popover", Base, undefined, {
+    error: { bgColor: "error" },
+    success: { bgColor: "success" },
+    warning: { bgColor: "warning" },
+    primary: { primary: true },
+    secondary: { secondary: true },
 });

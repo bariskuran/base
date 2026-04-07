@@ -1,96 +1,159 @@
 import { baseStore } from "../../@baseStore";
-import { DefaultVariant } from "../DefaultVariant";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useLayoutEffect, useMemo } from "react";
 import { colorGet } from "../../colorGet";
 import { disableBrowserScrollBar, enableBrowserScrollBar } from "./manageBrowsersScrollBar";
 import getThumbProps from "./getThumbProps";
 import { useEventListener } from "../../useEventListener";
 import { useCheckOverflow } from "../../useCheckOverflow";
+import { delayedFunction } from "../../delayedFunction";
+import { useExportData } from "../../useExportedData";
 
 const useVars = (p) => {
-    /**
-     *
-     * Incoming Props
-     *
-     */
     const {
-        variant,
+        Variant,
         position = "vertical",
         align = "right",
         direction = "y",
         truckColor,
         thumbColor,
+        containerRef,
+        maxLength,
+        marginToBorder,
+        size,
+        exportData, // advanced return for jsx components implementation is done.
     } = p || {};
 
-    /**
-     *
-     * Store
-     **
-     */
     const truckRef = useRef(null);
     const thumbRef = useRef(null);
-    const [theme, defaultVariants] = baseStore.useGlobal((s) => [s.theme, s.defaultVariants]);
+
+    const [theme] = baseStore.useGlobal((s) => [s.theme]);
+
     const {
         thumbLength,
         thumbPosition,
         maxScroll,
         scrollPos,
         previousOverflowValues,
-        isTruckMounted,
         setLocal,
-        scrollHost,
         isDragging,
         dragStartClient,
         dragStartScroll,
+        resolvedHost,
+        isScrollbarActive,
     } = baseStore.useLocal({
         previousOverflowValues: {},
-        isTruckMounted: false,
         isDragging: false,
         dragStartClient: 0,
         dragStartScroll: 0,
+        thumbLength: 0,
+        thumbPosition: 0,
+        maxScroll: 0,
+        scrollPos: 0,
+        resolvedHost: null,
+        isScrollbarActive: false,
     });
+
     const colors = colorGet(truckColor || theme.foreground);
 
-    /**
-     *
-     * Overflow Hidden onMount and return original onUnmount
-     **
-     */
     const root = typeof document !== "undefined" ? document.getElementById("root") : null;
+    const hasExternalContainerRef = !!containerRef;
+
+    /**
+     * Host resolve
+     * - containerRef varsa onun dolmasını bekle
+     * - yoksa body/window modu
+     */
+    useLayoutEffect(() => {
+        if (typeof document === "undefined") return;
+
+        if (hasExternalContainerRef) {
+            if (!containerRef?.current) return;
+
+            setLocal((s) => {
+                s.resolvedHost = containerRef.current;
+            });
+            return;
+        }
+
+        setLocal((s) => {
+            s.resolvedHost = document.documentElement;
+        });
+    }, [hasExternalContainerRef, containerRef, setLocal]);
+
     const normalizedScrollSource =
         typeof document === "undefined" ||
-        scrollHost == null ||
-        scrollHost === root ||
-        scrollHost === document.body ||
-        scrollHost === document.documentElement
+        resolvedHost == null ||
+        resolvedHost === root ||
+        resolvedHost === document.body ||
+        resolvedHost === document.documentElement
             ? window
-            : scrollHost;
+            : resolvedHost;
+
     const isWindowLike =
         normalizedScrollSource === window ||
         normalizedScrollSource === document.body ||
         normalizedScrollSource === document.documentElement;
-    const { isOverflowing } = useCheckOverflow({ target: normalizedScrollSource });
 
+    const { isOverflowing } = useCheckOverflow({
+        target: resolvedHost ? normalizedScrollSource : null,
+    });
+
+    /**
+     * Native browser scrollbar hide
+     */
     useEffect(() => {
+        if (typeof document === "undefined") return;
+        if (!resolvedHost) return;
+
         const styleEl = document.createElement("style");
-        disableBrowserScrollBar({ truckRef, isTruckMounted, setLocal, styleEl });
+
+        disableBrowserScrollBar({
+            host:
+                normalizedScrollSource === window
+                    ? document.documentElement
+                    : normalizedScrollSource,
+            setLocal,
+            styleEl,
+        });
+
         return () => {
             enableBrowserScrollBar({ styleEl, previousOverflowValues });
         };
-    }, [isOverflowing]);
+    }, [resolvedHost, normalizedScrollSource]);
+
+    const [defaultWidth, defaultHeight, defaultMargin, minThumbLength] = [
+        size || 6,
+        maxLength ?? 95,
+        marginToBorder ?? 2,
+        24,
+    ];
 
     /**
-     *
-     * Vars
-     **
+     * Thumb metrics
      */
-    const Variant = variant || defaultVariants?.scrollBar || DefaultVariant;
-    const [defaultWidth, defaultHeight, defaultMargin, minThumbLength] = [8, 96, 5, 24];
-
+    const deactivateScrollbar = useMemo(
+        () =>
+            delayedFunction(
+                () => {
+                    setLocal((s) => {
+                        s.isScrollbarActive = false;
+                    });
+                },
+                { delay: 500 },
+            ),
+        [setLocal],
+    );
+    const activateScrollbar = () => {
+        deactivateScrollbar.cancel();
+        setLocal((s) => {
+            s.isScrollbarActive = true;
+        });
+    };
     const getThumbP = () => {
+        if (!resolvedHost) return;
+
         const { thumbLength, thumbPosition, maxScroll, scrollPos } = getThumbProps({
             direction,
-            position,
             defaultWidth,
             defaultHeight,
             minThumbLength,
@@ -106,16 +169,27 @@ const useVars = (p) => {
     };
 
     useEffect(() => {
+        if (!resolvedHost) return;
         getThumbP();
-    }, [scrollHost, direction, position]);
+    }, [resolvedHost, normalizedScrollSource, direction, position]);
 
-    useEventListener("scroll", getThumbP, {
-        delay: 50,
-        passive: true,
-        source: normalizedScrollSource,
-    });
+    useEventListener(
+        "scroll",
+        () => {
+            getThumbP();
+            activateScrollbar();
+            deactivateScrollbar.run();
+        },
+        {
+            delay: 50,
+            passive: true,
+            source: resolvedHost ? normalizedScrollSource : undefined,
+        },
+    );
 
-    /* DRAG HANDLERS */
+    /**
+     * Scroll setters
+     */
     const setScrollTo = (nextScroll, { behavior = "auto" } = {}) => {
         const safeScroll = Math.max(0, Math.min(maxScroll, nextScroll));
 
@@ -134,7 +208,6 @@ const useVars = (p) => {
                 ...(direction === "y" ? { top: safeScroll } : { left: safeScroll }),
                 behavior,
             });
-            return;
         }
     };
 
@@ -146,16 +219,18 @@ const useVars = (p) => {
 
         const trackLength = direction === "y" ? rect.height : rect.width;
         const trackStart = direction === "y" ? rect.top : rect.left;
-        const clientPosKey = direction === "y" ? "clientY" : "clientX";
 
         return {
             rect,
             trackLength,
             trackStart,
-            clientPosKey,
             movableArea: Math.max(0, trackLength - thumbLength),
         };
     };
+
+    /**
+     * Click on truck
+     */
     const onTruckMouseDown = (e) => {
         if (!isOverflowing) return;
         if (thumbRef.current?.contains(e.target)) return;
@@ -167,7 +242,6 @@ const useVars = (p) => {
         const clickOffset = clickPos - metrics.trackStart;
 
         const desiredThumbPos = clickOffset - thumbLength / 2;
-
         const clampedThumbPos = Math.max(0, Math.min(metrics.movableArea, desiredThumbPos));
 
         const nextScroll =
@@ -176,6 +250,9 @@ const useVars = (p) => {
         setScrollTo(nextScroll, { behavior: "smooth" });
     };
 
+    /**
+     * Drag thumb
+     */
     const onThumbMouseDown = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -226,6 +303,9 @@ const useVars = (p) => {
         source: typeof window !== "undefined" ? window : undefined,
     });
 
+    /**
+     * Global cursor while dragging
+     */
     useEffect(() => {
         if (typeof document === "undefined") return;
 
@@ -257,32 +337,50 @@ const useVars = (p) => {
         };
     }, [isDragging]);
 
-    /* Return */
-    return {
-        ...p,
-        theme,
-        Variant,
-        position,
-        align,
-        defaultWidth,
-        defaultHeight,
-        defaultMargin,
-        direction,
-        defaultSideMargin: (100 - defaultHeight) / 2,
-        truckRef,
-        truckColor,
-        thumbColor,
-        colors,
-        minThumbLength,
-        thumbLength,
-        thumbPosition,
-        maxScroll,
-        scrollPos,
-        isOverflowing,
-        thumbRef,
-        onTruckMouseDown,
-        onThumbMouseDown,
-        isDragging,
+    const handleOnMouseEnter = () => {
+        activateScrollbar();
     };
+    const handleOnMouseLeave = () => {
+        deactivateScrollbar.run();
+    };
+
+    return useExportData(
+        {
+            exportData,
+            ...p,
+            theme,
+            Variant,
+            position,
+            align,
+            defaultWidth,
+            defaultHeight,
+            defaultMargin,
+            direction,
+            defaultSideMargin: (100 - defaultHeight) / 2,
+            truckRef,
+            thumbRef,
+            truckColor,
+            thumbColor,
+            colors,
+            onTruckMouseDown,
+            onThumbMouseDown,
+            handleOnMouseEnter,
+            handleOnMouseLeave,
+        },
+        {
+            minThumbLength,
+            thumbLength,
+            thumbPosition,
+            maxScroll,
+            scrollPos,
+            isOverflowing,
+            isDragging,
+            isWindowLike,
+            isBoxMode: !isWindowLike,
+            isScrollbarActive: isScrollbarActive || isDragging,
+            containerRef,
+        },
+    );
 };
+
 export default useVars;

@@ -1,6 +1,8 @@
 import { useMemo, useEffect } from "react";
 import { baseStore } from "../../@baseStore";
 import { generateRandom } from "../../generateRandom";
+import { useExportData } from "../../useExportedData";
+import { useObserver } from "../../useObserver";
 
 const useVars = (p) => {
     /**
@@ -38,17 +40,31 @@ const useVars = (p) => {
         }
     };
 
+    const { ref: observerRef, inViewport } = useObserver({
+        disable: !isOpen,
+        onExit: () =>
+            setGlobal((s) => {
+                s.popoverId = null;
+            }),
+    });
+
     /* Return */
-    return {
-        ...p,
-        uniqueId,
-        allProps: p,
-        setLocal,
-        setLocalByPath,
-        isOpen,
-        onClickHandler,
-        buttonProps,
-        floatingUiProps,
-    };
+    return useExportData(
+        {
+            ...p,
+            allProps: p,
+            inViewport,
+            setLocal,
+            setLocalByPath,
+            isOpen,
+            onClickHandler,
+            buttonProps,
+            floatingUiProps,
+            observerRef,
+        },
+        {
+            uniqueId,
+        },
+    );
 };
 export default useVars;

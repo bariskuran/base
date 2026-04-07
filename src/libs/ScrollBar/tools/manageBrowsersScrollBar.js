@@ -1,27 +1,25 @@
-import getScrollHost from "./getScrollHost";
-
-export const disableBrowserScrollBar = ({ truckRef, isTruckMounted, setLocal, styleEl }) => {
-    const el = truckRef?.current;
-    if (!el || typeof document === "undefined" || isTruckMounted) return;
+export const disableBrowserScrollBar = ({ host, setLocal, styleEl }) => {
+    if (!host || typeof document === "undefined") return;
 
     const root = document.getElementById("root");
-    let host = getScrollHost(el);
-    if (!host) return;
-
+    //
     setLocal((s) => {
-        s.isTruckMounted = true;
-        s.scrollHost = host;
+        s.resolvedHost = host;
     });
 
     let uid = null;
-    const isRootLike = host === root || host === document.body || host === document.documentElement;
+    const isRootLike =
+        host === root ||
+        host === document.body ||
+        host === document.documentElement ||
+        host === window;
 
     if (!isRootLike) {
         uid = `scroll-hide-${Math.random().toString(36).slice(2, 10)}`;
         host.setAttribute("data-scrollbar-hide", uid);
     }
 
-    const prevOverflow = host.style.overflow;
+    const prevOverflow = host.style?.overflow;
 
     setLocal((s) => {
         s.previousOverflowValues = {
@@ -46,9 +44,6 @@ export const disableBrowserScrollBar = ({ truckRef, isTruckMounted, setLocal, st
             }
         `;
     } else {
-        const uid = `scroll-hide-${Math.random().toString(36).slice(2, 10)}`;
-        host.setAttribute("data-scrollbar-hide", uid);
-
         styleEl.textContent = `
             [data-scrollbar-hide="${uid}"] {
                 scrollbar-width: none !important;
@@ -63,6 +58,7 @@ export const disableBrowserScrollBar = ({ truckRef, isTruckMounted, setLocal, st
 
     document.head.appendChild(styleEl);
 };
+
 export const enableBrowserScrollBar = ({ styleEl, previousOverflowValues }) => {
     try {
         styleEl?.remove();
@@ -74,7 +70,7 @@ export const enableBrowserScrollBar = ({ styleEl, previousOverflowValues }) => {
             targetEl.removeAttribute("data-scrollbar-hide");
         }
 
-        if (targetEl && prevOverflow !== undefined) {
+        if (targetEl && prevOverflow !== undefined && targetEl.style) {
             targetEl.style.overflow = prevOverflow;
         }
     } catch (e) {

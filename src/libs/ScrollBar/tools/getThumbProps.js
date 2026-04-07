@@ -3,8 +3,9 @@ const getThumbProps = ({
     defaultWidth = 10,
     defaultHeight = 96,
     minThumbLength = 24,
+    source = typeof window !== "undefined" ? window : undefined,
 } = {}) => {
-    if (typeof window === "undefined" || typeof document === "undefined") {
+    if (typeof window === "undefined" || typeof document === "undefined" || !source) {
         return {
             thumbLength: 0,
             thumbPosition: 0,
@@ -18,19 +19,36 @@ const getThumbProps = ({
     const body = document.body;
 
     const isY = direction === "y";
+    const isWindowLike =
+        source === window || source === document.body || source === document.documentElement;
+
     const longPercent = Math.max(defaultWidth, defaultHeight);
-    const viewportLength = isY ? window.innerHeight : window.innerWidth;
-    const trackLength = viewportLength * (longPercent / 100);
 
-    const contentLength = isY
-        ? Math.max(docEl.scrollHeight, body.scrollHeight)
-        : Math.max(docEl.scrollWidth, body.scrollWidth);
+    const visibleLength = isWindowLike
+        ? isY
+            ? window.innerHeight
+            : window.innerWidth
+        : isY
+          ? source.clientHeight
+          : source.clientWidth;
 
-    const visibleLength = isY ? window.innerHeight : window.innerWidth;
+    const trackLength = visibleLength * (longPercent / 100);
 
-    const scrollPos = isY
-        ? window.scrollY || window.pageYOffset || 0
-        : window.scrollX || window.pageXOffset || 0;
+    const contentLength = isWindowLike
+        ? isY
+            ? Math.max(docEl.scrollHeight, body.scrollHeight)
+            : Math.max(docEl.scrollWidth, body.scrollWidth)
+        : isY
+          ? source.scrollHeight
+          : source.scrollWidth;
+
+    const scrollPos = isWindowLike
+        ? isY
+            ? window.scrollY || window.pageYOffset || 0
+            : window.scrollX || window.pageXOffset || 0
+        : isY
+          ? source.scrollTop
+          : source.scrollLeft;
 
     const maxScroll = Math.max(0, contentLength - visibleLength);
 
@@ -47,14 +65,17 @@ const getThumbProps = ({
     let thumbLength = trackLength * (visibleLength / contentLength);
     thumbLength = Math.max(minThumbLength, thumbLength);
     thumbLength = Math.min(trackLength, thumbLength);
+
     const movableArea = trackLength - thumbLength;
     const thumbPosition = maxScroll > 0 ? (scrollPos / maxScroll) * movableArea : 0;
 
     return {
         thumbLength: Math.round(thumbLength),
         thumbPosition: Math.round(thumbPosition),
+        trackLength: Math.round(trackLength),
         maxScroll: Math.round(maxScroll),
         scrollPos: Math.round(scrollPos),
     };
 };
+
 export default getThumbProps;

@@ -49,6 +49,7 @@ export default [
         },
 
         rules: {
+            "react-hooks/refs": "off",
             "react/no-children-prop": "off",
             "react/no-unescaped-entities": "off",
             "no-unreachable": "warn",

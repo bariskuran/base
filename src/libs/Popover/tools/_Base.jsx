@@ -3,7 +3,8 @@ import { FloatingUi } from "../../FloatingUi";
 import { Button } from "../../Button";
 
 export const Base = ({ children, ...p }) => {
-    const { isOpen, onClickHandler, floatingUiProps, buttonProps, uniqueId } = useVars(p);
+    const { isOpen, onClickHandler, floatingUiProps, buttonProps, uniqueId, observerRef } =
+        useVars(p);
 
     /* RETURN */
     return (
@@ -17,6 +18,7 @@ export const Base = ({ children, ...p }) => {
             alignY="top"
         >
             <Button
+                ref={observerRef}
                 activeManually={isOpen}
                 {...(buttonProps || {
                     outlined: true,

@@ -1,10 +1,10 @@
 import { useMatch, useNavigation, useNavigate, Link } from "react-router-dom";
 import { baseStore } from "../../@baseStore";
 import { useTimers } from "./useTimers.js";
-import { DefaultVariant } from "../DefaultVariant.js";
 import { generateColors } from "./generateColors.js";
 
 export const useVars = ({
+    Variant,
     label,
     hoverLabel,
     activeLabel,
@@ -19,7 +19,6 @@ export const useVars = ({
     icon,
     disabled,
     _blank,
-    variant,
     primary,
     secondary,
     minHeight,
@@ -176,8 +175,7 @@ export const useVars = ({
     const isHovered = (hoverManually || isHover) && !disabled && !isActivated;
     const isJustIcon = !label && icon;
 
-    const [theme, defaultVariants] = baseStore.useGlobal((s) => [s.theme, s.defaultVariants]);
-    const Variant = variant || defaultVariants?.button || DefaultVariant;
+    const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
     const [bgC1, bgC2, bgC3, c, i1, i2] = generateColors({
         primary,
@@ -354,7 +352,6 @@ export const useVars = ({
         icon,
         disabled,
         _blank,
-        variant,
         primary,
         secondary,
         minHeight,

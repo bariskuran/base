@@ -1,10 +1,12 @@
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState, useCallback } from "react";
 import { baseStore } from "../../@baseStore";
 import { useEventListener } from "../../useEventListener";
 import { delayedFunction } from "../../delayedFunction";
 import { DefaultVariant } from "../DefaultVariant";
 import getPosition from "./getPosition";
 import { colorGet } from "../../colorGet";
+import { useExportData } from "../../useExportedData";
+import { useFloatingAutoUpdate } from "./useFloatingAutoUpdate";
 
 const useVars = (p) => {
     /**
@@ -52,26 +54,37 @@ const useVars = (p) => {
         blockVisibility: false,
         status: "closed",
     });
+    const [referenceEl, setReferenceEl] = useState(null);
+    const [floatingEl, setFloatingEl] = useState(null);
+
     const childrenRef = useRef(null);
     const floatingRef = useRef(null);
+
+    const setChildrenNode = useCallback((node) => {
+        childrenRef.current = node;
+        setReferenceEl(node);
+    }, []);
+
+    const setFloatingNode = useCallback((node) => {
+        floatingRef.current = node;
+        setFloatingEl(node);
+    }, []);
 
     useEffect(() => {
         setLocalByPath("isMounted", true);
     }, []);
 
-    const getPos = () => {
+    const getPos = useCallback(() => {
         if (status === "closed") return;
 
-        requestAnimationFrame(() => {
-            getPosition({
-                childrenRef,
-                floatingRef,
-                setLocal,
-                alignXFromUser,
-                alignYFromUser,
-            });
+        getPosition({
+            childrenRef,
+            floatingRef,
+            setLocal,
+            alignXFromUser,
+            alignYFromUser,
         });
-    };
+    }, [status, setLocal, alignXFromUser, alignYFromUser]);
 
     /**
      *
@@ -197,30 +210,36 @@ const useVars = (p) => {
         bgColor || (primary ? theme.primary : secondary ? theme.secondary : theme.background),
     );
 
+    useFloatingAutoUpdate({
+        open: (status === "opening" || status === "opened") && !!referenceEl && !!floatingEl,
+        referenceEl,
+        floatingEl,
+        onUpdate: getPos,
+    });
+
     /* Return */
-    return {
-        ...p,
-        delayMs,
-        status,
-        colors,
-        Variant,
-        setLocal,
-        setLocalByPath,
-        isMounted,
-        childrenRef,
-        floatingRef,
-        open,
-        positionX,
-        positionY,
-        alignX,
-        alignY,
-        blockVisibility,
-        disableArrow,
-        primary,
-        secondary,
-        onMouseEnter,
-        onMouseLeave,
-        onClick,
-    };
+    return useExportData(
+        {
+            ...p,
+            delayMs,
+            status,
+            colors,
+            Variant,
+            setLocal,
+            setLocalByPath,
+            childrenRef: setChildrenNode,
+            floatingRef: setFloatingNode,
+            open,
+            alignX,
+            alignY,
+            disableArrow,
+            primary,
+            secondary,
+            onMouseEnter,
+            onMouseLeave,
+            onClick,
+        },
+        { isMounted, positionX, positionY, blockVisibility },
+    );
 };
 export default useVars;

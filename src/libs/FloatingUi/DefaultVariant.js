@@ -54,7 +54,7 @@ export const DefaultVariant = styled.div`
             position: absolute;
             top: ${$positionY || 150}px;
             left: ${$positionX || 150}px;
-            z-index: 9999;
+            z-index: 1000;
             background-color: ${$bgColor
                 ? $colors.color
                 : $colors.colorApi.isLight
