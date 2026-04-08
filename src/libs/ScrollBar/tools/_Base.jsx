@@ -3,13 +3,9 @@ import useVars from "./useVars";
 export const Base = (p) => {
     const {
         Variant,
-        position,
-        align,
-        defaultWidth,
-        defaultHeight,
+        barPosition,
+        isOppositePosition,
         truckRef,
-        direction,
-        defaultSideMargin,
         colors,
         truckColor,
         thumbColor,
@@ -17,7 +13,6 @@ export const Base = (p) => {
         thumbPosition,
         maxScroll,
         scrollPos,
-        minThumbLength,
         isOverflowing,
         thumbRef,
         onTruckMouseDown,
@@ -27,7 +22,14 @@ export const Base = (p) => {
         handleOnMouseEnter,
         isScrollbarActive,
         handleOnMouseLeave,
-        defaultMargin,
+        thickness,
+        maxLength,
+        marginToSide,
+        marginToBorder,
+        minThumbLength,
+        isBarVertical,
+        mainKey,
+        crossKey,
     } = useVars(p);
 
     /* RETURN */
@@ -39,9 +41,8 @@ export const Base = (p) => {
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
             //
-            $position={position}
-            $direction={direction}
-            $align={align}
+            $barPosition={barPosition}
+            $isOppositePosition={isOppositePosition}
             $truckColor={truckColor}
             $thumbColor={thumbColor}
             $colors={colors}
@@ -54,24 +55,21 @@ export const Base = (p) => {
             $isBoxMode={!isWindowLike}
             //
             style={{
-                ...(position === "horizontal"
+                ...(isBarVertical
                     ? {
-                          width: defaultHeight + "%",
-                          height: defaultWidth + "rem",
+                          width: thickness + "rem",
+                          height: maxLength
+                              ? maxLength + "%"
+                              : `calc(100% - ${marginToSide}px * 2)`,
                       }
                     : {
-                          width: defaultWidth + "rem",
-                          height: defaultHeight + "%",
+                          width: maxLength ? maxLength + "%" : `calc(100% - ${marginToSide}px * 2)`,
+                          height: thickness + "rem",
                       }),
-                [align]: defaultMargin + "rem",
-                // [align]: 0 + "rem",
-                //
-                ...(!isWindowLike && position === "vertical"
-                    ? { top: 0 }
-                    : !isWindowLike && position === "horizontal"
-                      ? { left: 0 }
-                      : {}),
-                [align === "top" || align === "bottom" ? "left" : "top"]: defaultSideMargin + "%",
+                [mainKey]: marginToBorder + "rem",
+                ...(!isWindowLike && isBarVertical ? { top: 0 } : {}),
+                ...(!isWindowLike && !isBarVertical ? { left: 0 } : {}),
+                [crossKey]: !maxLength ? marginToSide + "px" : (100 - maxLength) / 2 + "%",
                 zIndex: 9999999999,
                 position: isWindowLike ? "fixed" : "absolute",
                 display: "flex",
@@ -85,20 +83,21 @@ export const Base = (p) => {
                 onMouseDown={onThumbMouseDown}
                 data-slot="thumb"
                 style={
-                    direction === "horizontal"
+                    isBarVertical
                         ? {
-                              width: thumbLength + "px",
-                              height: "150%",
-                              translate: `${thumbPosition}px 0`,
-                              transformOrigin: "right center",
-                              minWidth: minThumbLength + "px",
+                              width: "100%",
+                              height: thumbLength + "px",
+                              scale: "1.5 1",
+                              translate: `0 ${thumbPosition}px`,
+                              minHeight: minThumbLength + "px",
                               cursor: isDragging ? "grabbing" : "grab",
                           }
                         : {
-                              height: thumbLength + "px",
-                              width: "150%",
-                              translate: `0 ${thumbPosition}px`,
-                              minHeight: minThumbLength + "px",
+                              height: "100%",
+                              width: thumbLength + "px",
+                              scale: "1 1.5",
+                              translate: `${thumbPosition}px 0`,
+                              minWidth: minThumbLength + "px",
                               cursor: isDragging ? "grabbing" : "grab",
                           }
                 }

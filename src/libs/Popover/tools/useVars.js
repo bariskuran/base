@@ -10,7 +10,7 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const { buttonProps, ...floatingUiProps } = p || {};
+    const { buttonProps, scrollBoxProps = {}, ...floatingUiProps } = p || {};
 
     /**
      *
@@ -60,6 +60,7 @@ const useVars = (p) => {
             onClickHandler,
             buttonProps,
             floatingUiProps,
+            scrollBoxProps,
             observerRef,
         },
         {

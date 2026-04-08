@@ -3,9 +3,8 @@ import styled, { css } from "styled-components";
 const S = styled.div`
     ${({
         theme,
-        // $direction, // "x" OR "y"
-        // $align, // top, bottom, left, right
-        $position, // horizontal, vertical
+        $barPosition,
+        $isOppositePosition,
         $truckColor,
         // $thumbColor,
         // $colors,
@@ -32,14 +31,20 @@ const S = styled.div`
                     background-color 0.5s,
                     scale 0.5s;
                 background-color: ${mainColor};
-                scale: ${$position === "horizontal"
+                scale: ${$barPosition === "horizontal"
                     ? $isScrollbarActive
                         ? "1 2"
                         : "1 1.5"
                     : $isScrollbarActive
                       ? "2 1"
                       : "1.5 1"};
-                transform-origin: right center;
+                transform-origin: ${$barPosition === "horizontal"
+                    ? $isOppositePosition
+                        ? "left center"
+                        : "right center"
+                    : $isOppositePosition
+                      ? "left center"
+                      : "right center"};
             }
         `;
     }}

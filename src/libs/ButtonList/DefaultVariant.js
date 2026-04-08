@@ -6,7 +6,7 @@ export const DefaultVariant = styled.div`
         display: flex;
         flex-direction: ${$direction};
         gap: ${$gap + "rem"};
-        background: ${$colors.color};
-        color: ${$colors.opposite};
+        /* background: ${$colors.color}; */
+        /* color: ${$colors.opposite}; */
     `}
 `;

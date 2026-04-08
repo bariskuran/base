@@ -1,10 +1,20 @@
 import useVars from "./useVars";
 import { FloatingUi } from "../../FloatingUi";
 import { Button } from "../../Button";
+import { ScrollBox } from "../../ScrollBox";
 
 export const Base = ({ children, ...p }) => {
-    const { isOpen, onClickHandler, floatingUiProps, buttonProps, uniqueId, observerRef } =
-        useVars(p);
+    const {
+        isOpen,
+        onClickHandler,
+        floatingUiProps,
+        buttonProps,
+        uniqueId,
+        observerRef,
+        scrollBoxProps,
+    } = useVars(p);
+
+    const content = <ScrollBox {...scrollBoxProps}>{children}</ScrollBox>;
 
     /* RETURN */
     return (
@@ -12,7 +22,7 @@ export const Base = ({ children, ...p }) => {
             {...floatingUiProps}
             open={isOpen}
             onClick={onClickHandler}
-            content={children}
+            content={content}
             uniqueId={uniqueId}
             enableEscaping={true}
             alignY="top"

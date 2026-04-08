@@ -1,8 +1,8 @@
 const getThumbProps = ({
-    direction = "x",
-    defaultWidth = 10,
-    defaultHeight = 96,
-    minThumbLength = 24,
+    direction = "y",
+    maxLength,
+    marginToSide,
+    minThumbLength,
     source = typeof window !== "undefined" ? window : undefined,
 } = {}) => {
     if (typeof window === "undefined" || typeof document === "undefined" || !source) {
@@ -22,8 +22,6 @@ const getThumbProps = ({
     const isWindowLike =
         source === window || source === document.body || source === document.documentElement;
 
-    const longPercent = Math.max(defaultWidth, defaultHeight);
-
     const visibleLength = isWindowLike
         ? isY
             ? window.innerHeight
@@ -32,7 +30,9 @@ const getThumbProps = ({
           ? source.clientHeight
           : source.clientWidth;
 
-    const trackLength = visibleLength * (longPercent / 100);
+    const trackLength = maxLength
+        ? visibleLength * (maxLength / 100)
+        : visibleLength - marginToSide * 2;
 
     const contentLength = isWindowLike
         ? isY

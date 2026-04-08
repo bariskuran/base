@@ -135,3 +135,5 @@ export { ScrollBar } from "./libs/ScrollBar";
 export { useCheckOverflow } from "./libs/useCheckOverflow";
 export { useExportData, useExportedData } from "./libs/useExportedData";
 export { normalizeCssSize } from "./libs/normalizeCssSize";
+export { get3DShadow } from "./libs/colorGet3DShadow";
+export { colorGet } from "./libs/colorGet";

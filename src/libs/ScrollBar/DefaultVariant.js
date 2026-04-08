@@ -3,9 +3,8 @@ import styled, { css } from "styled-components";
 export const DefaultVariant = styled.div`
     ${({
         theme,
-        // $direction, // "x" OR "y"
-        // $align, // top, bottom, left, right
-        $position, // horizontal, vertical
+        $barPosition, // horizontal | vertical — çubuk yerleşimi
+        // $isOppositePosition,
         $truckColor,
         // $thumbColor,
         // $colors,
@@ -25,13 +24,14 @@ export const DefaultVariant = styled.div`
                 background-color 1s,
                 opacity 1s;
             opacity: ${$isScrollbarActive ? 0.5 : 0.2};
-            scale: ${$position === "horizontal" ? "1 0.7" : "0.7 1"};
+            scale: ${$barPosition === "horizontal" ? "1 0.5" : "0.5 1"};
 
             & > [data-slot="thumb"] {
                 border-radius: 5rem;
                 transition: background-color 1s;
                 background-color: ${mainColor};
-                scale: ${$position === "horizontal" ? "1 1.5" : "1.5 1"};
+                scale: ${$barPosition === "horizontal" ? "1 1.5" : "1.5 1"};
+                transform-origin: center center;
             }
         `;
     }}

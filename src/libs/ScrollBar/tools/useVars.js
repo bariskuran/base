@@ -11,23 +11,28 @@ import { useExportData } from "../../useExportedData";
 const useVars = (p) => {
     const {
         Variant,
-        position = "vertical",
-        align = "right",
-        direction = "y",
+        scrollDirection = "scrollY", // "scrollY" | "scrollX" (+ kısa "x" / "y") — scrollTop mı scrollLeft mi
+        barPosition = "vertical", // "vertical" | "horizontal" — çubuğun ekrandaki yönü (scroll ekseninden bağımsız)
+        isOppositePosition = false, // vertical: varsayılan sağ → true iken sol; horizontal: varsayılan alt → true iken üst
         truckColor,
         thumbColor,
         containerRef,
-        maxLength,
-        marginToBorder,
-        size,
+        //
+        thickness = 6,
+        maxLength, // %
+        marginToSide = 10,
+        marginToBorder = 2,
+        minThumbLength = 24,
+        //
         exportData, // advanced return for jsx components implementation is done.
     } = p || {};
 
-    const truckRef = useRef(null);
-    const thumbRef = useRef(null);
+    const scrollAxis =
+        scrollDirection === "scrollX" || scrollDirection === "x" || scrollDirection === "X"
+            ? "x"
+            : "y";
 
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
-
     const {
         thumbLength,
         thumbPosition,
@@ -52,9 +57,10 @@ const useVars = (p) => {
         resolvedHost: null,
         isScrollbarActive: false,
     });
+    const truckRef = useRef(null);
+    const thumbRef = useRef(null);
 
     const colors = colorGet(truckColor || theme.foreground);
-
     const root = typeof document !== "undefined" ? document.getElementById("root") : null;
     const hasExternalContainerRef = !!containerRef;
 
@@ -121,13 +127,6 @@ const useVars = (p) => {
         };
     }, [resolvedHost, normalizedScrollSource]);
 
-    const [defaultWidth, defaultHeight, defaultMargin, minThumbLength] = [
-        size || 6,
-        maxLength ?? 95,
-        marginToBorder ?? 2,
-        24,
-    ];
-
     /**
      * Thumb metrics
      */
@@ -153,9 +152,9 @@ const useVars = (p) => {
         if (!resolvedHost) return;
 
         const { thumbLength, thumbPosition, maxScroll, scrollPos } = getThumbProps({
-            direction,
-            defaultWidth,
-            defaultHeight,
+            direction: scrollAxis,
+            maxLength,
+            marginToSide,
             minThumbLength,
             source: normalizedScrollSource,
         });
@@ -171,7 +170,7 @@ const useVars = (p) => {
     useEffect(() => {
         if (!resolvedHost) return;
         getThumbP();
-    }, [resolvedHost, normalizedScrollSource, direction, position]);
+    }, [resolvedHost, normalizedScrollSource, scrollAxis]);
 
     useEventListener(
         "scroll",
@@ -190,12 +189,40 @@ const useVars = (p) => {
     /**
      * Scroll setters
      */
+    const getHostEl = () => {
+        if (typeof document === "undefined") return null;
+
+        if (isWindowLike) {
+            return document.documentElement;
+        }
+
+        return normalizedScrollSource || null;
+    };
+
+    const getOverflowByAxis = () => {
+        const el = getHostEl();
+        if (!el) {
+            return {
+                isOverflowingX: false,
+                isOverflowingY: false,
+            };
+        }
+
+        return {
+            isOverflowingX: el.scrollWidth > el.clientWidth,
+            isOverflowingY: el.scrollHeight > el.clientHeight,
+        };
+    };
+
+    /**
+     * Scroll setters
+     */
     const setScrollTo = (nextScroll, { behavior = "auto" } = {}) => {
         const safeScroll = Math.max(0, Math.min(maxScroll, nextScroll));
 
         if (isWindowLike) {
             window.scrollTo({
-                ...(direction === "y" ? { top: safeScroll } : { left: safeScroll }),
+                ...(scrollAxis === "y" ? { top: safeScroll } : { left: safeScroll }),
                 behavior,
             });
             return;
@@ -205,11 +232,45 @@ const useVars = (p) => {
 
         if (typeof normalizedScrollSource.scrollTo === "function") {
             normalizedScrollSource.scrollTo({
-                ...(direction === "y" ? { top: safeScroll } : { left: safeScroll }),
+                ...(scrollAxis === "y" ? { top: safeScroll } : { left: safeScroll }),
                 behavior,
             });
         }
     };
+
+    const onWheelTranslateYToX = (e) => {
+        if (scrollAxis !== "x") return;
+        if (isWindowLike) return;
+
+        const hostEl = getHostEl();
+        if (!hostEl) return;
+
+        const { isOverflowingX, isOverflowingY } = getOverflowByAxis();
+
+        if (isOverflowingY) return;
+        if (!isOverflowingX) return;
+
+        const absY = Math.abs(e.deltaY);
+        const absX = Math.abs(e.deltaX);
+
+        if (absY === 0) return;
+        if (absX > absY) return;
+
+        const currentLeft = hostEl.scrollLeft;
+        const maxLeft = Math.max(0, hostEl.scrollWidth - hostEl.clientWidth);
+        const nextLeft = Math.max(0, Math.min(maxLeft, currentLeft + e.deltaY));
+
+        if (nextLeft !== currentLeft) {
+            e.preventDefault();
+            hostEl.scrollLeft = nextLeft;
+        }
+    };
+
+    useEventListener("wheel", onWheelTranslateYToX, {
+        delay: 0,
+        passive: false,
+        source: resolvedHost && !isWindowLike ? normalizedScrollSource : undefined,
+    });
 
     const getTrackMetrics = () => {
         const truckEl = truckRef.current;
@@ -217,8 +278,9 @@ const useVars = (p) => {
 
         const rect = truckEl.getBoundingClientRect();
 
-        const trackLength = direction === "y" ? rect.height : rect.width;
-        const trackStart = direction === "y" ? rect.top : rect.left;
+        const isBarVertical = barPosition === "vertical";
+        const trackLength = isBarVertical ? rect.height : rect.width;
+        const trackStart = isBarVertical ? rect.top : rect.left;
 
         return {
             rect,
@@ -238,7 +300,7 @@ const useVars = (p) => {
         const metrics = getTrackMetrics();
         if (!metrics) return;
 
-        const clickPos = direction === "y" ? e.clientY : e.clientX;
+        const clickPos = barPosition === "vertical" ? e.clientY : e.clientX;
         const clickOffset = clickPos - metrics.trackStart;
 
         const desiredThumbPos = clickOffset - thumbLength / 2;
@@ -257,7 +319,7 @@ const useVars = (p) => {
         e.preventDefault();
         e.stopPropagation();
 
-        const client = direction === "y" ? e.clientY : e.clientX;
+        const client = barPosition === "vertical" ? e.clientY : e.clientX;
 
         setLocal((s) => {
             s.isDragging = true;
@@ -272,7 +334,7 @@ const useVars = (p) => {
         const metrics = getTrackMetrics();
         if (!metrics) return;
 
-        const currentClient = direction === "y" ? e.clientY : e.clientX;
+        const currentClient = barPosition === "vertical" ? e.clientY : e.clientX;
         const deltaClient = currentClient - dragStartClient;
 
         if (metrics.movableArea <= 0 || maxScroll <= 0) return;
@@ -344,28 +406,43 @@ const useVars = (p) => {
         deactivateScrollbar.run();
     };
 
+    const isBarVertical = barPosition === "vertical";
+    const mainKey = isBarVertical
+        ? isOppositePosition
+            ? "left"
+            : "right"
+        : isOppositePosition
+          ? "top"
+          : "bottom";
+    const crossKey = isBarVertical ? "top" : "left";
+
     return useExportData(
         {
             exportData,
             ...p,
             theme,
             Variant,
-            position,
-            align,
-            defaultWidth,
-            defaultHeight,
-            defaultMargin,
-            direction,
-            defaultSideMargin: (100 - defaultHeight) / 2,
+            scrollDirection,
+            barPosition,
+            isOppositePosition,
+            scrollAxis,
             truckRef,
             thumbRef,
             truckColor,
             thumbColor,
             colors,
+            thickness,
+            maxLength,
+            marginToSide,
+            marginToBorder,
+            minThumbLength,
             onTruckMouseDown,
             onThumbMouseDown,
             handleOnMouseEnter,
             handleOnMouseLeave,
+            isBarVertical,
+            mainKey,
+            crossKey,
         },
         {
             minThumbLength,

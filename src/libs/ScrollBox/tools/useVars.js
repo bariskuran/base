@@ -9,7 +9,7 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const { Variant, maxHeight, disableBoxShadow, fullWidth, scrollBarProps } = p || {};
+    const { Variant, maxWidth, maxHeight, disableShadow, fullWidth, scrollBarProps } = p || {};
 
     /**
      *
@@ -21,6 +21,7 @@ const useVars = (p) => {
         ref: containerRef,
     });
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
+    const disableScrollBox = !maxHeight && !maxWidth;
 
     /* Return */
     return useExportData(
@@ -28,10 +29,12 @@ const useVars = (p) => {
             ...p,
             theme,
             Variant,
+            disableScrollBox,
             maxHeight,
             containerRef,
-            disableBoxShadow,
+            disableShadow,
             fullWidth,
+            maxWidth,
             scrollBarProps,
         },
         {

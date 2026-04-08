@@ -10,7 +10,17 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const { items, commonProps, direction = "column", gap = 5, bgColor, Variant } = p || {};
+    const {
+        items,
+        commonProps,
+        direction = "column",
+        gap = 5,
+        bgColor,
+        Variant,
+        maxHeight,
+        maxWidth,
+        scrollBoxProps = {},
+    } = p || {};
 
     /**
      *
@@ -44,6 +54,11 @@ const useVars = (p) => {
             gap,
             colors: colors || {},
             Variant,
+            scrollBoxProps: {
+                ...scrollBoxProps,
+                ...(maxHeight ? { maxHeight } : {}),
+                ...(maxWidth ? { maxWidth } : {}),
+            },
         },
         {
             preparedItems,

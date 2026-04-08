@@ -8,17 +8,23 @@ export const Base = ({ children, ...p }) => {
         maxWidth,
         Variant,
         containerRef,
-        disableBoxShadow,
+        disableShadow,
         isOverflowingY,
         isOverflowingX,
         isOverflowing,
         fullWidth,
         scrollBarProps,
+        disableScrollBox,
     } = useVars(p);
+
+    if (disableScrollBox) {
+        return children;
+    }
 
     return (
         <div
             style={{
+                width: "unset",
                 maxWidth: "100%",
                 minWidth: 0,
                 position: "relative",
@@ -29,28 +35,33 @@ export const Base = ({ children, ...p }) => {
                 //
                 $maxHeight={normalizeCssSize(maxHeight)}
                 $fullWidth={fullWidth}
-                $disableBoxShadow={!isOverflowing ? false : disableBoxShadow}
+                $disableShadow={!isOverflowing ? false : disableShadow}
                 $isOverflowing={isOverflowing}
                 $isOverflowingY={isOverflowingY}
                 $isOverflowingX={isOverflowingX}
                 //
                 style={{
+                    overscrollBehaviorY: isOverflowing ? "contain" : "auto",
+                    overscrollBehaviorX: isOverflowing ? "contain" : "auto",
                     minWidth: 0,
                     ...(maxWidth ? { maxWidth: normalizeCssSize(maxWidth) } : {}),
                     ...(maxHeight ? { maxHeight: normalizeCssSize(maxHeight) } : {}),
                     ...(isOverflowingY && !fullWidth ? { paddingRight: 20 } : {}),
                     ...(isOverflowingX && !fullWidth ? { paddingBottom: 20 } : {}),
-                    ...(fullWidth ? { width: "100%" } : {}),
+                    ...(fullWidth ? { width: "100%" } : { width: "max-content" }),
                 }}
             >
                 {children}
             </Variant>
-            <ScrollBar
-                {...scrollBarProps}
-                containerRef={containerRef}
-                position={isOverflowingY ? "vertical" : "horizontal"}
-                align={isOverflowingY ? "right" : "bottom"}
-            />
+            {isOverflowingY && <ScrollBar {...scrollBarProps} containerRef={containerRef} />}
+            {isOverflowingX && (
+                <ScrollBar
+                    {...scrollBarProps}
+                    containerRef={containerRef}
+                    scrollDirection="scrollX"
+                    barPosition="horizontal"
+                />
+            )}
         </div>
     );
 };
