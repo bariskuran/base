@@ -20,7 +20,7 @@ const useVars = (p) => {
         //
         thickness = 6,
         maxLength, // %
-        marginToSide = 10,
+        marginToSide = 5,
         marginToBorder = 2,
         minThumbLength = 24,
         //

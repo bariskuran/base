@@ -2,7 +2,6 @@ import { useRef, useEffect, useMemo, useState, useCallback } from "react";
 import { baseStore } from "../../@baseStore";
 import { useEventListener } from "../../useEventListener";
 import { delayedFunction } from "../../delayedFunction";
-import { DefaultVariant } from "../DefaultVariant";
 import getPosition from "./getPosition";
 import { colorGet } from "../../colorGet";
 import { useExportData } from "../../useExportedData";
@@ -24,7 +23,7 @@ const useVars = (p) => {
         onMouseEnter,
         onMouseLeave,
         onClick,
-        variant,
+        Variant,
         bgColor,
         uniqueId,
         enableEscaping,
@@ -203,8 +202,7 @@ const useVars = (p) => {
      * Other Vars
      */
 
-    const [theme, defaultVariants] = baseStore.useGlobal((s) => [s.theme, s.defaultVariants]);
-    const Variant = variant || defaultVariants?.floatingUi || DefaultVariant;
+    const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
     const colors = colorGet(
         bgColor || (primary ? theme.primary : secondary ? theme.secondary : theme.background),

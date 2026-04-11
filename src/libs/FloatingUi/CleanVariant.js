@@ -1,10 +1,10 @@
 import styled, { css } from "styled-components";
 
-export const DefaultVariant = styled.div`
+export const CleanVariant = styled.div`
     ${({
         theme,
-        $bgColor,
-        $color,
+        // $bgColor,
+        // $color,
         $positionX,
         $positionY,
         $alignX,
@@ -14,7 +14,7 @@ export const DefaultVariant = styled.div`
         // $primary,
         // $secondary,
         // $open,
-        $colors,
+        // $colors,
         $status,
         $delayMs,
     }) => {
@@ -45,16 +45,10 @@ export const DefaultVariant = styled.div`
             top: ${$positionY || 150}px;
             left: ${$positionX || 150}px;
             z-index: 1000;
-            background-color: ${$bgColor
-                ? $colors.color
-                : $colors.colorApi.isLight
-                  ? $colors.colorApi.shade5
-                  : $colors.colorApi.tint5};
-            color: ${$color || $colors.opposite};
             max-width: calc(100vw - 40rem);
             word-wrap: break-word;
             overflow-wrap: break-word;
-            padding: 5rem;
+            padding: 10rem;
             border-radius: 5rem;
             filter: drop-shadow(1rem 1rem 4rem ${theme.colorAlpha(theme.foreground, 0.5)});
 
@@ -70,12 +64,6 @@ export const DefaultVariant = styled.div`
                 position: absolute;
                 width: 18rem;
                 height: 10rem;
-
-                background-color: ${$bgColor
-                    ? $colors.color
-                    : $colors.colorApi.isLight
-                      ? $colors.colorApi.shade5
-                      : $colors.colorApi.tint5};
 
                 clip-path: polygon(50% 100%, 0 0, 100% 0);
                 filter: drop-shadow(1rem 1rem 4rem ${theme.colorAlpha(theme.foreground, 0.35)});

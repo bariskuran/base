@@ -37,8 +37,6 @@ export const useVars = ({
     activeBgColor,
     color,
     alphaRate,
-    //
-    ...otherProps
 }) => {
     /**
      *
@@ -194,7 +192,6 @@ export const useVars = ({
         disabled || clickBlocker || isMatch || (delay && delay > 0) || !!onClick;
 
     const commonProps = {
-        ...otherProps,
         ...(shouldBindClickHandler ? { onClick: handleClick } : {}),
         ...(url ? (isExternalUrl ? { href: url } : { to: url }) : {}),
     };
@@ -368,6 +365,5 @@ export const useVars = ({
         activeBgColor,
         color,
         alphaRate,
-        otherProps,
     };
 };

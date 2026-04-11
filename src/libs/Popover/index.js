@@ -8,10 +8,14 @@ import { componentCreator } from "../componentCreator/index.jsx";
  *
  */
 
-export const Popover = componentCreator("Popover", Base, undefined, {
-    error: { bgColor: "error" },
-    success: { bgColor: "success" },
-    warning: { bgColor: "warning" },
-    primary: { primary: true },
-    secondary: { secondary: true },
+export const Popover = componentCreator({
+    name: "Popover",
+    BaseComp: Base,
+    variants: {
+        error: { bgColor: "error" },
+        success: { bgColor: "success" },
+        warning: { bgColor: "warning" },
+        primary: { primary: true },
+        secondary: { secondary: true },
+    },
 });

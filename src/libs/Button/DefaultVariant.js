@@ -20,7 +20,7 @@ export const DefaultVariant = styled.div`
         // $isPending,
         // $bgColor,
         $hoverBgColor,
-        $activeBgColor,
+        // $activeBgColor,
         // $color,
         // $prefixBgColor,
         // $prefixColor,
@@ -47,8 +47,7 @@ export const DefaultVariant = styled.div`
 
         ${$isActivated &&
         css`
-            /* background: ${$activeBgColor} !important; */
-            transform: translateY(3rem) scale(0.8);
+            transform: translateY(3rem) scale(0.9);
         `}
 
         & > [data-slot="label"] {
