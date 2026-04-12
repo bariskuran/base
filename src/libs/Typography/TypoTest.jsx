@@ -8,7 +8,7 @@ const short = "Hello World";
 const jsx = (
     <>
         <span>
-            Merhaba <i>dünya</i>
+            Merhaba <i style={{ fontSize: 50 }}>dünya</i>
         </span>
         <span>{long}</span>
     </>
