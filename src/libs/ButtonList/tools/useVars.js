@@ -20,6 +20,7 @@ const useVars = (p) => {
         maxHeight,
         maxWidth,
         scrollBoxProps = {},
+        exportData,
     } = p || {};
 
     /**
@@ -47,6 +48,7 @@ const useVars = (p) => {
     /* Return */
     return useExportData(
         {
+            exportData,
             ...p,
             items,
             commonProps,

@@ -6,6 +6,7 @@ import Brackets from "./Brackets.js";
 import Underline from "./Underline.js";
 import AnimatedBg from "./AnimatedBg.js";
 import String from "./String.js";
+import Plain from "./Plain.js";
 
 export const Button = componentCreator({
     name: "Button",
@@ -21,5 +22,17 @@ export const Button = componentCreator({
         underline: Underline,
         animatedBg: AnimatedBg,
         string: String,
+        plain: Plain,
+        closeIcon: {
+            ...Plain,
+            bgColor: "transparent",
+            color: "foreground",
+            hoverBgColor: "transparent",
+            activeBgColor: "transparent",
+            icon: {
+                icon: "close",
+                width: 12,
+            },
+        },
     },
 });

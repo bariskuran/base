@@ -96,17 +96,16 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
 
                 // notifier
                 _notifier: {
-                    killAfter: 10,
-                    disable: false,
+                    killAfter: 5,
+                    closingDelay: 500,
+                    disableNotifier: false,
+                    disableAutoKill: false,
                     ...notifierSettings,
                     queue: [],
                     count: 0,
                     add: notifierFunctions.add,
                     remove: notifierFunctions.remove,
                     clear: notifierFunctions.clear,
-                    onAdd: null,
-                    onRemove: null,
-                    onClear: null,
                 },
 
                 // baseDate

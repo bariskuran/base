@@ -3,37 +3,41 @@ import { useExportData } from "../../useExportedData";
 import { colorGet } from "../../colorGet";
 import { normalizeCssSize } from "../../normalizeCssSize";
 import { baseStore } from "../../@baseStore";
-import { getTruncatedContent } from "./getTruncatedContent";
+import { getTruncatedHtml } from "./getTruncatedHtml";
 
 const sysDefaults = {
     as: "span",
-    //
     weight: 400,
     whiteSpace: "normal",
     overflow: "visible",
     letterSpacing: 0,
-    lineHeight: 1.2,
+    lineHeight: 1.4,
     selfAlign: "left",
 };
 
-const useVars = ({ children, content, ...p }) => {
+const useVars = ({ children, content, contentArray, ...p }) => {
     const [theme, currentBreakpoint] = baseStore.useGlobal((s) => [
         s.theme,
         s._clientData.currentBreakpoint,
     ]);
-    const { truncatedContent, setLocal } = baseStore.useLocal({
-        truncatedContent: null,
+
+    const { truncatedHtml, setLocal } = baseStore.useLocal({
+        truncatedHtml: null,
     });
+
     const ref = useRef(null);
-    const setContent = useCallback(
-        (content) => {
+    const sourceRef = useRef(null);
+
+    const isEllipsisBase = p.ellipsis === "base";
+
+    const setTruncatedHtml = useCallback(
+        (nextHtml) => {
             setLocal((s) => {
-                s.truncatedContent = content;
+                s.truncatedHtml = nextHtml;
             });
         },
         [setLocal],
     );
-    const isEllipsisBase = p.ellipsis === "base";
 
     const controlledProps = useMemo(() => {
         const responsiveProps = p.responsive?.[currentBreakpoint] || {};
@@ -52,30 +56,27 @@ const useVars = ({ children, content, ...p }) => {
             color: color ? clr.color : highlight ? highlightClr.opposite : theme.foreground,
             highlight: highlight ? colorGet(highlight || clr.opposite)?.color : undefined,
         };
-    }, [p, currentBreakpoint]);
+    }, [p, currentBreakpoint, theme]);
 
     const recalculateTruncation = useCallback(() => {
-        if (!isEllipsisBase || !ref.current) {
-            setContent(null);
+        if (!isEllipsisBase || !ref.current || !sourceRef.current) {
+            setTruncatedHtml(null);
             return;
         }
 
-        const newContent = children ?? content;
-
-        const newTruncatedContent = getTruncatedContent({
-            ref,
-            content: newContent,
+        const result = getTruncatedHtml({
+            visibleRef: ref,
+            sourceRef,
             clamp: p.clamp || 1,
             suffix: "...",
-            truncateBy: "word",
         });
 
-        setContent(newTruncatedContent);
-    }, [children, content, isEllipsisBase, p.clamp, setContent]);
+        setTruncatedHtml(result?.isTruncated ? result.html : null);
+    }, [isEllipsisBase, p.clamp, setTruncatedHtml]);
 
     useLayoutEffect(() => {
         recalculateTruncation();
-    }, [recalculateTruncation]);
+    }, [recalculateTruncation, children, content]);
 
     useEffect(() => {
         if (!isEllipsisBase || !ref.current) return;
@@ -106,7 +107,34 @@ const useVars = ({ children, content, ...p }) => {
         };
     }, [isEllipsisBase, recalculateTruncation]);
 
-    return useExportData({ ...controlledProps, isEllipsisBase, ref, truncatedContent }, {});
+    const finalVisibleContent = children ?? content;
+
+    const hasNoContent =
+        truncatedHtml == null &&
+        !finalVisibleContent &&
+        (!contentArray || contentArray.length === 0);
+
+    const shouldRenderChildren = !isEllipsisBase || truncatedHtml == null;
+    const shouldUseInnerHtml = isEllipsisBase && truncatedHtml != null;
+    const shouldUseOverlayCopy = p.copyable && (p.ellipsis || p.clamp || shouldUseInnerHtml);
+    const canUseInlineCopy = p.copyable && !shouldUseOverlayCopy && !shouldUseInnerHtml;
+
+    return useExportData(
+        {
+            ...controlledProps,
+            shouldUseOverlayCopy,
+            shouldUseInnerHtml,
+            isEllipsisBase,
+            canUseInlineCopy,
+            shouldRenderChildren,
+            ref,
+            sourceRef,
+            truncatedHtml,
+            finalVisibleContent,
+            hasNoContent,
+        },
+        {},
+    );
 };
 
 export default useVars;

@@ -1,4 +1,5 @@
 import { baseStore } from "../@baseStore";
+import { reactNodeToPlainText } from "./reactNodeToPlainText";
 
 /**
  * Copies a given value to the clipboard.
@@ -55,62 +56,92 @@ import { baseStore } from "../@baseStore";
  *   onSuccess: () => console.log("Number copied"),
  * });
  */
-export const copyToClipboard = async (text, { onSuccess, onError, addToNotifier = false } = {}) => {
-    if (text == null) return false;
-    const value = typeof text === "string" ? text : String(text);
-    const canUseClipboard =
-        typeof navigator !== "undefined" &&
-        navigator?.clipboard &&
-        typeof navigator.clipboard.writeText === "function";
-    const { addToNotifier: aTN } = baseStore.notifierData.get();
+const legacyCopyToClipboard = (text) => {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+
+    textarea.style.position = "fixed";
+    textarea.style.top = "-999999px";
+    textarea.style.left = "-999999px";
+    textarea.style.opacity = "0";
+
+    document.body.appendChild(textarea);
+
+    const selection = document.getSelection();
+    const originalRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+    textarea.focus();
+    textarea.select();
+
+    let success = false;
+
+    try {
+        success = document.execCommand("copy");
+    } catch {
+        success = false;
+    }
+
+    document.body.removeChild(textarea);
+
+    if (selection) {
+        selection.removeAllRanges();
+        if (originalRange) selection.addRange(originalRange);
+    }
+
+    return success;
+};
+
+export const copyToClipboard = async (
+    value,
+    {
+        onSuccess,
+        onError,
+        successMessage = "Copied to clipboard.",
+        errorMessage = "Failed to copy text.",
+    } = {},
+) => {
+    const text = reactNodeToPlainText(value);
+    const { _notifier } = baseStore.globalData.get() || {};
 
     const executeSuccess = () => {
-        onSuccess?.();
-        if (addToNotifier) {
-            aTN({
-                info: "Copied to clipboard",
-                status: "success",
-            });
-        }
+        onSuccess?.(text);
+        _notifier?.add?.(successMessage, { type: "success" });
         return true;
     };
 
+    const executeError = (err) => {
+        console.error(errorMessage, err);
+        onError?.(err);
+        _notifier?.add?.(errorMessage, { type: "error" });
+        return false;
+    };
+
+    if (!text) {
+        return executeError(new Error("Nothing to copy."));
+    }
+
+    let copied = false;
+
     try {
-        if (canUseClipboard) {
-            await navigator.clipboard.writeText(value);
-            return executeSuccess();
+        if (navigator?.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            copied = true;
+        } else {
+            copied = legacyCopyToClipboard(text);
         }
+    } catch {
+        copied = legacyCopyToClipboard(text);
+    }
 
-        if (typeof document === "undefined") {
-            const err = new Error("Clipboard API not available and no document for fallback.");
-            onError?.(err);
-            return false;
-        }
+    if (!copied) {
+        return executeError(new Error(errorMessage));
+    }
 
-        const elem = document.createElement("textarea");
-        elem.value = value;
-        elem.setAttribute("readonly", "");
-        elem.style.position = "fixed";
-        elem.style.top = "-9999px";
-        elem.style.left = "-9999px";
-        document.body.appendChild(elem);
-
-        elem.focus();
-        elem.select();
-
-        const ok = document.execCommand?.("copy") === true;
-        document.body.removeChild(elem);
-
-        if (ok) {
-            return executeSuccess();
-        }
-
-        const err = new Error("Fallback copy failed.");
-        onError?.(err);
-        return false;
+    try {
+        return executeSuccess();
     } catch (err) {
-        console.error("Failed to copy text:", err);
-        onError?.(err);
-        return false;
+        console.error("Copy succeeded but success handlers failed:", err);
+        return true;
     }
 };

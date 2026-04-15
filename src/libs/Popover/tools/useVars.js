@@ -10,7 +10,7 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const { buttonProps, scrollBoxProps = {}, ...floatingUiProps } = p || {};
+    const { exportData, buttonProps, scrollBoxProps = {}, ...floatingUiProps } = p || {};
 
     /**
      *
@@ -51,6 +51,7 @@ const useVars = (p) => {
     /* Return */
     return useExportData(
         {
+            exportData,
             ...p,
             allProps: p,
             inViewport,

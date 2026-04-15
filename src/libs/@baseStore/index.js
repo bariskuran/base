@@ -59,13 +59,8 @@ import { useLocal } from "./useLocal";
  * const { setLocal, localStore, ...allValues } = baseStore.useLocal(initialValues || {});
  * setLocal... // set method is the same.
  *
- * @example for CLIENT DATA & GLOBALDATA & NOTIFIER DATA
- * const cd = baseStore.clientData();
+ * @example
  * const global = baseStore.useGlobal();
- * const [ winW ] = baseStore.clientData(s=>[s.winW]);
- * const notifier = baseStore.useNotifier();
- * const [ A , set ] = baseStore.useNotifier(s=>[s.A]);
- * const { A, B, C, set } = baseStore.useNotifier();
  *
  */
 export const baseStore = {

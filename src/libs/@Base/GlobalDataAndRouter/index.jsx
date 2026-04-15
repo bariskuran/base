@@ -7,6 +7,7 @@ import { IdleManager } from "../IdleManager";
 import { ErrorPage } from "../ErrorPage";
 import { LanguageManager } from "../LanguageManager";
 import { PageLoadingManager } from "../loadingQueueManager";
+import { NotifierListener } from "../../NotifierListener";
 
 export const CoreRRDLayout = ({ routes, projectSettings }) => {
     const [isGlobalReady, isThemeReady] = baseStore.useGlobal((s) => [
@@ -22,6 +23,7 @@ export const CoreRRDLayout = ({ routes, projectSettings }) => {
             <IdleManager />
             <LanguageManager />
             <PageLoadingManager />
+            <NotifierListener />
             <Outlet />
         </>
     );

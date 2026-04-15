@@ -39,5 +39,5 @@ export const useVars = ({ props, childrenCount }) => {
      *
      *
      */
-    return useExportData({ ...generatedProps }, {});
+    return useExportData({ exportData: props.exportData, ...generatedProps }, {});
 };

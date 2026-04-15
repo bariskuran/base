@@ -2,6 +2,7 @@ import { useMatch, useNavigation, useNavigate, Link } from "react-router-dom";
 import { baseStore } from "../../@baseStore";
 import { useTimers } from "./useTimers.js";
 import { generateColors } from "./generateColors.js";
+import { useExportData } from "../../useExportedData";
 
 export const useVars = ({
     Variant,
@@ -37,6 +38,9 @@ export const useVars = ({
     activeBgColor,
     color,
     alphaRate,
+    //
+    popTip,
+    exportData,
 }) => {
     /**
      *
@@ -220,10 +224,10 @@ export const useVars = ({
         $outlined: outlined,
         $size: size,
         $isJustIcon: isJustIcon, //
-        $bgColor: bgC1,
-        $hoverBgColor: bgC2,
-        $activeBgColor: bgC3,
-        $color: c,
+        $bgColor: bgColor || bgC1,
+        $hoverBgColor: hoverBgColor || bgC2,
+        $activeBgColor: activeBgColor || bgC3,
+        $color: color || c,
         $inverseColor1: i1,
         $inverseColor2: i2,
         //
@@ -288,82 +292,89 @@ export const useVars = ({
      *
      *
      */
-    return {
-        showActiveLabel,
-        showHoverLabel,
-        showDefaultLabel,
-        // vars
-        isActivated,
-        isHovered,
-        isJustIcon,
-        Variant,
-        theme,
-        bgC1,
-        bgC2,
-        bgC3,
-        c,
-        i1,
-        i2,
-        as,
-        handleClick,
-        shouldBindClickHandler,
-        commonProps,
-        linkAProps,
-        buttonProps,
-        variantProps,
+    return useExportData(
+        {
+            exportData,
+            showActiveLabel,
+            showHoverLabel,
+            showDefaultLabel,
+            // vars
+            popTip,
+            isActivated,
+            isHovered,
+            isJustIcon,
+            Variant,
+            theme,
+            bgC1,
+            bgC2,
+            bgC3,
+            c,
+            i1,
+            i2,
+            as,
+            handleClick,
+            shouldBindClickHandler,
+            commonProps,
+            linkAProps,
+            buttonProps,
+            variantProps,
 
-        // timers
-        ...timers,
+            // timers
+            ...timers,
 
-        // rrd
-        navigate,
+            // rrd
+            navigate,
 
-        // functions
-        getTimerBaseName,
+            // functions
+            getTimerBaseName,
 
-        // local store
-        setLocal,
-        showOnClickValues,
-        isHover,
-        clickBlocker,
-        isActive,
+            // local store
+            setLocal,
 
-        // vars
-        url,
-        isExternalUrl,
-        isMatch,
-        isPending,
+            // vars
+            url,
+            isExternalUrl,
+            isMatch,
+            isPending,
 
-        // props
-        label,
-        hoverLabel,
-        activeLabel,
-        onClick,
-        to,
-        href,
-        urlProp,
-        hoverManually,
-        activeManually,
-        prefix,
-        suffix,
-        icon,
-        disabled,
-        _blank,
-        primary,
-        secondary,
-        minHeight,
-        minWidth,
-        minLabelWidth,
-        outlined,
-        size,
-        disableUseMatch,
-        delay,
-        onDelayStart,
-        onDelayEnd,
-        bgColor,
-        hoverBgColor,
-        activeBgColor,
-        color,
-        alphaRate,
-    };
+            // props
+            label,
+            hoverLabel,
+            activeLabel,
+            onClick,
+            to,
+            href,
+            urlProp,
+            hoverManually,
+            activeManually,
+            prefix,
+            suffix,
+            icon,
+            disabled,
+            _blank,
+            primary,
+            secondary,
+            minHeight,
+            minWidth,
+            minLabelWidth,
+            outlined,
+            size,
+            disableUseMatch,
+            delay,
+            onDelayStart,
+            onDelayEnd,
+            bgColor,
+            hoverBgColor,
+            activeBgColor,
+            color,
+            alphaRate,
+        },
+        {
+            showOnClickValues,
+            isHover,
+            clickBlocker,
+            isActive,
+            //
+        },
+    );
 };

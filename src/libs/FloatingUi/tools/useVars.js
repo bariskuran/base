@@ -27,6 +27,7 @@ const useVars = (p) => {
         bgColor,
         uniqueId,
         enableEscaping,
+        exportData,
     } = p || {};
 
     /**
@@ -218,6 +219,7 @@ const useVars = (p) => {
     /* Return */
     return useExportData(
         {
+            exportData,
             ...p,
             delayMs,
             status,

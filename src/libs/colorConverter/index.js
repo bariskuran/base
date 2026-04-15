@@ -330,7 +330,7 @@ export const colorConverter = (colorInput) => {
         alpha: inputAlpha,
     } = colorInput || {};
 
-    const alpha = inputAlphaPerc ? inputAlphaPerc / 100 : (inputAlpha ?? 1);
+    const alpha = inputAlphaPerc != null ? inputAlphaPerc / 100 : (inputAlpha ?? 1);
 
     let rgba;
 

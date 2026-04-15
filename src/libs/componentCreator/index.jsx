@@ -39,8 +39,8 @@ export const componentCreator = ({
 
             return (
                 <BaseComp
-                    {...rest}
                     {...otherPresetProps}
+                    {...rest}
                     __hasParentUiComponent={__hasParentUiComponent}
                     Variant={nestedVariant || DefaultVariant}
                 />
@@ -73,8 +73,8 @@ export const componentCreator = ({
 
             return (
                 <BaseComp
-                    {...restProps}
                     {...otherPresetProps}
+                    {...restProps}
                     __hasParentUiComponent={__hasParentUiComponent}
                     Variant={nestedVariant || DefaultVariant}
                 />

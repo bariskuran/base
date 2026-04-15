@@ -9,7 +9,8 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const { Variant, maxWidth, maxHeight, disableShadow, fullWidth, scrollBarProps } = p || {};
+    const { Variant, maxWidth, maxHeight, disableShadow, fullWidth, scrollBarProps, exportData } =
+        p || {};
 
     /**
      *
@@ -26,6 +27,7 @@ const useVars = (p) => {
     /* Return */
     return useExportData(
         {
+            exportData,
             ...p,
             theme,
             Variant,

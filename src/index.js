@@ -148,3 +148,4 @@ export { PopTipTest } from "./libs/PopTip/PopTipTest";
 export { PopoverTest } from "./libs/Popover/PopoverTest";
 export { ButtonTest } from "./libs/Button/ButtonTest";
 export { TypoTest } from "./libs/Typography/TypoTest";
+export { NotifierTest } from "./libs/NotifierListener/NotifierTest";

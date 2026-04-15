@@ -15,6 +15,7 @@ const useVars = (p) => {
     /* Return */
     return useExportData(
         {
+            exportData: p.exportData,
             ...p,
             allProps: p,
             setLocal,

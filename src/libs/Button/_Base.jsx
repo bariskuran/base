@@ -2,6 +2,7 @@ import { S } from "./tools/_styled.js";
 import { useVars } from "./tools/useVars.js";
 import { IconArea } from "./tools/IconArea.jsx";
 import { ScaleWrapper } from "./tools/ScaleWrapper.jsx";
+import { PopTip } from "../PopTip";
 
 export const Base = (props = {}) => {
     const {
@@ -23,51 +24,62 @@ export const Base = (props = {}) => {
         showActiveLabel,
         showHoverLabel,
         showDefaultLabel,
+        popTip,
     } = useVars(props);
 
     /* RETURN */
     return (
-        <ScaleWrapper size={size} isMatch={isMatch}>
-            <Variant {...variantProps}>
-                <IconArea
-                    areaName="prefix"
-                    obj={prefix}
-                    color={c}
-                    hoverManually={isHovered}
-                    isActive={isActivated}
-                />
-                {label != null && (
-                    <div data-slot="label" style={minWidth ? { minWidth: `${minWidth}rem` } : {}}>
-                        <S.LabelStack>
-                            <LabelLayer a={[showDefaultLabel, "label-default", label, true]} />
-                            <LabelLayer
-                                a={[showHoverLabel, "label-hover", hoverLabel, hoverLabel]}
-                            />
-                            <LabelLayer
-                                a={[showActiveLabel, "label-active", activeLabel, activeLabel]}
-                            />
-                        </S.LabelStack>
-                    </div>
-                )}
-                {isJustIcon && (
+        <PopTipWrapper popTip={popTip}>
+            <ScaleWrapper size={size} isMatch={isMatch}>
+                <Variant {...variantProps}>
                     <IconArea
-                        areaName="label"
-                        obj={icon}
+                        areaName="prefix"
+                        obj={prefix}
                         color={c}
                         hoverManually={isHovered}
                         isActive={isActivated}
                     />
-                )}
-                <IconArea
-                    areaName="suffix"
-                    obj={suffix}
-                    color={c}
-                    hoverManually={isHovered}
-                    isActive={isActivated}
-                />
-            </Variant>
-        </ScaleWrapper>
+                    {label != null && (
+                        <div
+                            data-slot="label"
+                            style={minWidth ? { minWidth: `${minWidth}rem` } : {}}
+                        >
+                            <S.LabelStack>
+                                <LabelLayer a={[showDefaultLabel, "label-default", label, true]} />
+                                <LabelLayer
+                                    a={[showHoverLabel, "label-hover", hoverLabel, hoverLabel]}
+                                />
+                                <LabelLayer
+                                    a={[showActiveLabel, "label-active", activeLabel, activeLabel]}
+                                />
+                            </S.LabelStack>
+                        </div>
+                    )}
+                    {isJustIcon && (
+                        <IconArea
+                            areaName="label"
+                            obj={icon}
+                            color={c}
+                            hoverManually={isHovered}
+                            isActive={isActivated}
+                        />
+                    )}
+                    <IconArea
+                        areaName="suffix"
+                        obj={suffix}
+                        color={c}
+                        hoverManually={isHovered}
+                        isActive={isActivated}
+                    />
+                </Variant>
+            </ScaleWrapper>
+        </PopTipWrapper>
     );
+};
+
+const PopTipWrapper = ({ popTip, children }) => {
+    if (!popTip) return children;
+    return <PopTip content={popTip}>{children}</PopTip>;
 };
 
 const LabelLayer = ({ a: [visible, name, children, condition] = [] }) =>

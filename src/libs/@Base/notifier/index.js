@@ -1,4 +1,40 @@
 import { baseStore } from "../../@baseStore";
+import { isValidElement } from "react";
+import { isPlainObject } from "../../isPlainObject";
+
+const isRenderableNotificationValue = (value) => {
+    if (typeof value === "string" || typeof value === "number") return true;
+    if (isValidElement(value)) return true;
+    return false;
+};
+
+const normalizeNotificationInput = (notification, extra = {}) => {
+    const { queueId, bgColor, ...rest } = extra;
+
+    if (isRenderableNotificationValue(notification)) {
+        return {
+            value: notification,
+            queueId,
+            bgColor,
+            ...rest,
+        };
+    }
+
+    if (isPlainObject(notification)) {
+        if (!isRenderableNotificationValue(notification.value)) {
+            return null;
+        }
+
+        return {
+            ...notification,
+            queueId,
+            bgColor,
+            ...rest,
+        };
+    }
+
+    return null;
+};
 
 /**
  * Example usage of `useNotifier` inside a component.
@@ -55,102 +91,135 @@ const clearTimer = (id) => {
     __timers.delete(id);
 };
 
-const get = () => baseStore.globalData.get()._notifier;
-const set = (updater) =>
-    baseStore.globalData.set((d) => {
-        d._notifier = {
-            ...d._notifier,
-            ...updater,
-        };
-    });
+const remove = (queueId) => {
+    const { _notifier } = baseStore.globalData.get();
+    const set = baseStore.globalData.set;
+    const { queue = [], count } = _notifier;
 
-const scheduleAutoKill = (id) => {
-    const { killAfter, disable: disabled } = get();
-
-    if (disabled) return;
-    if (!killAfter || killAfter <= 0) return;
+    const id = Number(queueId);
+    if (!id) return false;
 
     clearTimer(id);
 
+    const existingQueue = Array.isArray(queue) ? queue : [];
+    const index = existingQueue.findIndex((n) => Number(n?.queueId) === id);
+    if (index === -1) return false;
+
+    const newQueue = existingQueue.filter((n) => Number(n?.queueId) !== id);
+    const newCount = (count || 0) - 1;
+
+    set((d) => {
+        d._notifier.queue = newQueue;
+        d._notifier.count = newCount;
+    });
+
+    return true;
+};
+
+const changeStatus = (id, status, closingDelay) => {
+    const { _notifier } = baseStore.globalData.get();
+    const set = baseStore.globalData.set;
+
+    const { queue = [] } = _notifier;
+    const existingQueue = Array.isArray(queue) ? queue : [];
+    const index = existingQueue.findIndex((n) => Number(n?.queueId) === id);
+    if (index === -1) return false;
+
+    set((d) => {
+        d._notifier.queue[index].status = status;
+    });
+
+    setTimeout(() => {
+        remove(id);
+    }, closingDelay);
+
+    return true;
+};
+
+const scheduleAutoKill = (id, killAfter, closingDelay) => {
+    const { _notifier } = baseStore.globalData.get();
+    const { queue = [] } = _notifier;
+
+    clearTimer(id);
+
+    const existingQueue = Array.isArray(queue) ? queue : [];
+    const index = existingQueue.findIndex((n) => Number(n?.queueId) === id);
+    if (index === -1) return false;
+
     const t = setTimeout(() => {
-        notifierFunctions.remove(id, { reason: "autoKill" });
-    }, killAfter * 1000);
+        changeStatus(id, "closing", closingDelay);
+    }, killAfter);
 
     __timers.set(id, t);
 };
 
-const callFn = (fn, payload) => {
-    try {
-        fn?.(payload.notification, payload);
-    } catch (e) {
-        console.error("notifier callback error:", e);
+const add = (notification, options = {}) => {
+    const { _notifier } = baseStore.globalData.get();
+    const set = baseStore.globalData.set;
+    const {
+        queue = [],
+        count,
+        //
+        killAfter: killAfterGlobal,
+        closingDelay: closingDelayGlobal,
+        disableNotifier: disableNotifierGlobal,
+        disableAutoKill: disableAutoKillGlobal,
+    } = _notifier;
+
+    const { killAfter, closingDelay, disableAutoKill, ...rest } = options;
+
+    const totalKillAfter = (killAfter || killAfterGlobal || 5) * 1000;
+    const totalDisable =
+        disableNotifierGlobal || disableAutoKill || disableAutoKillGlobal || totalKillAfter <= 0.1;
+    const totalClosingDelay = (closingDelay || closingDelayGlobal || 0.5) * 1000;
+
+    const id = ++__notifierSeq;
+
+    const item = normalizeNotificationInput(notification, {
+        queueId: id,
+        ...rest,
+        remove: () => changeStatus(id, "closing", totalClosingDelay),
+        disableAutoKill: totalDisable,
+        killAfter: totalKillAfter,
+        closingDelay: totalClosingDelay,
+        status: "active",
+    });
+
+    if (!item) {
+        console.warn("notifier.add ignored invalid notification:", notification);
+        return null;
     }
+
+    const existingQueue = Array.isArray(queue) ? queue : [];
+    const newQueue = [...existingQueue, item];
+    const newCount = (count || 0) + 1;
+    set((d) => {
+        d._notifier.queue = newQueue;
+        d._notifier.count = newCount;
+    });
+
+    if (!disableAutoKill) scheduleAutoKill(id, totalKillAfter, totalClosingDelay);
+
+    return id;
+};
+
+const clear = () => {
+    const { _notifier } = baseStore.globalData.get();
+    const set = baseStore.globalData.set;
+    const { queue = [] } = _notifier;
+
+    const q = Array.isArray(queue) ? queue : [];
+    for (const n of q) clearTimer(Number(n?.queueId));
+
+    set((d) => {
+        d._notifier.queue = [];
+        d._notifier.count = 0;
+    });
+    return true;
 };
 
 export const notifierFunctions = {
-    add: (notification, { disableAutoKill = false, type = "info" }) => {
-        const { disable: disabled, queue, count, onAdd } = get();
-        if (disabled) return null;
-
-        const id = ++__notifierSeq;
-
-        const item =
-            notification && typeof notification === "object"
-                ? { ...notification, queueId: id, type }
-                : { value: notification, queueId: id, type };
-
-        const existingQueue = Array.isArray(queue) ? queue : [];
-        existingQueue.push(item);
-        const newCount = (count || 0) + 1;
-        set({ queue: existingQueue, count: newCount });
-
-        const ctx = { reason: "add", notification: item, queueId: id };
-        callFn(onAdd, ctx);
-
-        if (!disableAutoKill) scheduleAutoKill(id);
-
-        return id;
-    },
-    remove: (queueId, { reason = null } = {}) => {
-        const { queue, count, onRemove } = get();
-
-        const id = Number(queueId);
-        if (!id) return false;
-
-        clearTimer(id);
-
-        const existingQueue = Array.isArray(queue) ? queue : [];
-        const index = existingQueue.findIndex((n) => Number(n?.queueId) === id);
-        if (index === -1) return false;
-
-        const removed = existingQueue[index];
-
-        const newQueue = existingQueue.filter((n) => Number(n?.queueId) !== id);
-        const newCount = (count || 0) - 1;
-
-        set({ queue: newQueue, count: newCount });
-
-        const ctx = { reason: reason || "remove", notification: removed, queueId: id };
-        callFn(onRemove, ctx);
-
-        return true;
-    },
-    clear: ({ reason = null } = {}) => {
-        const { queue, onClear } = get();
-
-        const q = Array.isArray(queue) ? queue : [];
-        for (const n of q) clearTimer(Number(n?.queueId));
-
-        set({ queue: [], count: 0 });
-
-        const ctx = { reason: reason || "clear", notification: null, queueId: null };
-        callFn(onClear, ctx);
-
-        return true;
-    },
-    setHandlers: ({ onAdd, onRemove, onClear } = {}) => {
-        if (typeof onAdd === "function") set({ onAdd });
-        if (typeof onRemove === "function") set({ onRemove });
-        if (typeof onClear === "function") set({ onClear });
-    },
+    add,
+    remove,
+    clear,
 };
