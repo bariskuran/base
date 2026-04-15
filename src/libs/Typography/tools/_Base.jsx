@@ -13,7 +13,6 @@ export const Base = (props) => {
 
     if (vars.hasNoContent) return null;
 
-    /* PROPS */
     const commonProps = {
         as: vars.as,
         $maxWidth: vars.maxWidth,
@@ -53,7 +52,7 @@ export const Base = (props) => {
             popTip={getText("copyContent")}
             icon={{
                 icon: "copy",
-                width: 16,
+                width: 14,
                 onActiveIcon: "check",
                 onHoverColor: vars.color,
                 onActiveColor: "primary",
@@ -61,36 +60,38 @@ export const Base = (props) => {
         />
     );
 
-    /* RETURN */
     return (
         <>
             <S.wrapper $overlayCopy={vars.shouldUseOverlayCopy}>
                 {vars.shouldUseInnerHtml ? (
-                    <S.container
-                        {...commonProps}
-                        ref={vars.ref}
-                        $ellipsis={vars.ellipsis}
-                        $overflow={vars.overflow}
-                        $hasOverlayCopy={vars.shouldUseOverlayCopy}
-                        $isManuallyHover={isManuallyHover}
-                        dangerouslySetInnerHTML={{ __html: vars.truncatedHtml }}
-                    />
+                    <S.containerArea>
+                        <S.container
+                            {...commonProps}
+                            ref={vars.ref}
+                            $ellipsis={vars.ellipsis}
+                            $overflow={vars.overflow}
+                            $isManuallyHover={isManuallyHover}
+                            dangerouslySetInnerHTML={{ __html: vars.truncatedHtml }}
+                        />
+                    </S.containerArea>
                 ) : (
-                    <S.container
-                        {...commonProps}
-                        ref={vars.ref}
-                        $ellipsis={vars.ellipsis}
-                        $overflow={vars.overflow}
-                        $isManuallyHover={isManuallyHover}
-                        $hasOverlayCopy={vars.shouldUseOverlayCopy}
-                    >
-                        {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
-                        {vars.canUseInlineCopy && <S.inlineCopy>{B}</S.inlineCopy>}
-                    </S.container>
+                    <S.containerArea>
+                        <S.container
+                            {...commonProps}
+                            ref={vars.ref}
+                            $ellipsis={vars.ellipsis}
+                            $overflow={vars.overflow}
+                            $isManuallyHover={isManuallyHover}
+                        >
+                            {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
+                            {vars.canUseInlineCopy && <S.inlineCopy>{B}</S.inlineCopy>}
+                        </S.container>
+                    </S.containerArea>
                 )}
 
                 {vars.shouldUseOverlayCopy && <S.overlayCopy>{B}</S.overlayCopy>}
             </S.wrapper>
+
             <S.measureSource
                 {...commonProps}
                 ref={vars.sourceRef}

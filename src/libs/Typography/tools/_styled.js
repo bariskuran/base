@@ -27,9 +27,9 @@ const sharedStyles = ({
     $isManuallyHover,
     $lineHeight,
     $letterSpacing,
-    // $copyable
 }) => css`
     box-sizing: border-box;
+    position: relative;
     ${$maxWidth != null ? `max-width: ${$maxWidth};` : ""}
     ${$width != null ? `width: ${$width};` : ""}
     ${$size != null ? `font-size: ${$size};` : ""}
@@ -98,16 +98,13 @@ const sharedStyles = ({
         display: block;
         width: ${$width ? $width : "100%"};
     `}
-    
+
     ${$isManuallyHover &&
     css`
         &::after {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0, 0, 0, 0.04);
             pointer-events: none;
         }
@@ -117,29 +114,35 @@ const sharedStyles = ({
 const S = {
     wrapper: styled.div`
         ${({ $overlayCopy }) => css`
+            display: ${$overlayCopy ? "grid" : "inline-block"};
+            ${$overlayCopy ? "grid-template-columns: minmax(0, 1fr) 35rem;" : ""}
+            ${$overlayCopy ? "align-items: start;" : ""}
             position: relative;
-            display: ${$overlayCopy ? "block" : "inline-block"};
             width: ${$overlayCopy ? "100%" : "auto"};
             max-width: 100%;
         `}
     `,
 
+    containerArea: styled.div`
+        min-width: 0;
+        width: 100%;
+    `,
+
     overlayCopy: styled.div`
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 0;
-        z-index: 2;
         display: flex;
         align-items: flex-start;
         justify-content: flex-end;
         pointer-events: auto;
+        user-select: none;
     `,
 
     inlineCopy: styled.span`
         display: inline-flex;
         vertical-align: middle;
         margin-left: 6rem;
+        position: relative;
+        z-index: 2;
+        user-select: none;
     `,
 
     container: styled.div`
