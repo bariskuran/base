@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { icons } from "./icons";
 import { baseStore } from "../@baseStore";
-import { flags } from "./flags";
 import { PopTip } from "../PopTip";
 
 const Centerized = styled.div`
@@ -11,9 +10,40 @@ const Centerized = styled.div`
     place-items: center;
 `;
 
+const isValidIconArray = (value) => {
+    if (!Array.isArray(value)) return false;
+    if (value.length < 2) return false;
+
+    const [viewBox, content] = value;
+
+    const isValidViewBox =
+        typeof viewBox === "string" &&
+        viewBox.trim().split(/\s+/).length === 2 &&
+        viewBox
+            .trim()
+            .split(/\s+/)
+            .every((v) => !Number.isNaN(Number(v)));
+
+    const isValidContent =
+        typeof content === "string" || typeof content === "function" || content != null;
+
+    return isValidViewBox && isValidContent;
+};
+
+const resolveIconFile = (iconInput, allIcons) => {
+    if (typeof iconInput === "string") {
+        return allIcons[iconInput] || null;
+    }
+
+    if (isValidIconArray(iconInput)) {
+        return iconInput;
+    }
+
+    return null;
+};
+
 export const Icon = ({
     icon,
-    flag,
     color,
     width = 10,
     style,
@@ -29,7 +59,7 @@ export const Icon = ({
     enablePopTip = false,
     popTipProps = {},
     hoverManually = false,
-    isActive = false, // bir icon kendi içinde aktif olamaz. Dolayısıyla aslında isActive === isActiveManually'dir. dışarıdan tetiklenmesi gerekir.
+    isActive = false,
 }) => {
     const [iconsLibrary] = baseStore.useGlobal((s) => [s._iconsLibrary]);
     const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
@@ -53,28 +83,24 @@ export const Icon = ({
         viewH3,
         isHorizontal3,
     ] = useMemo(() => {
-        const file = icon
-            ? allIcons[icon] || allIcons.warning
-            : flags[flag] || flags[flag?.toLowerCase()] || flags.global;
+        const file = resolveIconFile(icon, allIcons);
+        const hoverFile = resolveIconFile(onHoverIcon, allIcons);
+        const activeFile = resolveIconFile(onActiveIcon, allIcons);
 
-        const hoverFile = onHoverIcon
-            ? allIcons[onHoverIcon] || allIcons.warning
-            : flags[flag] || flags[flag?.toLowerCase()] || flags.global;
-
-        const activeFile = onActiveIcon
-            ? allIcons[onActiveIcon] || allIcons.warning
-            : flags[flag] || flags[flag?.toLowerCase()] || flags.global;
+        if (!file) {
+            return [null, 0, 0, true, null, 0, 0, true, null, 0, 0, true];
+        }
 
         const [viewBox, Content] = file || [];
-        const [viewW, viewH] = viewBox?.split(" ").map((v) => Number(v)) || [];
+        const [viewW, viewH] = viewBox?.split(/\s+/).map((v) => Number(v)) || [];
         const isHorizontal = useHeight ? false : viewW > viewH;
 
-        const [viewBox2, Content2] = hoverFile || [];
-        const [viewW2, viewH2] = viewBox2?.split(" ").map((v) => Number(v)) || [];
+        const [viewBox2, Content2] = hoverFile || file || [];
+        const [viewW2, viewH2] = viewBox2?.split(/\s+/).map((v) => Number(v)) || [];
         const isHorizontal2 = useHeight ? false : viewW2 > viewH2;
 
-        const [viewBox3, Content3] = activeFile || [];
-        const [viewW3, viewH3] = viewBox3?.split(" ").map((v) => Number(v)) || [];
+        const [viewBox3, Content3] = activeFile || file || [];
+        const [viewW3, viewH3] = viewBox3?.split(/\s+/).map((v) => Number(v)) || [];
         const isHorizontal3 = useHeight ? false : viewW3 > viewH3;
 
         return [
@@ -91,7 +117,7 @@ export const Icon = ({
             viewH3,
             isHorizontal3,
         ];
-    }, [icon, flag, onHoverIcon, allIcons, useHeight, onActiveIcon]);
+    }, [icon, onHoverIcon, allIcons, useHeight, onActiveIcon]);
 
     const finalColor =
         isActive && onActiveColor ? onActiveColor : isHover && onHoverColor ? onHoverColor : color;
@@ -103,18 +129,7 @@ export const Icon = ({
               ? onHoverIconWidth
               : width;
 
-    if (flag) {
-        return (
-            <FlagWrapper
-                $size={`${width}rem`}
-                $isHorizontal={isHorizontal}
-                src={Content}
-                alt=""
-                draggable={false}
-                style={style ? { ...style } : undefined}
-            />
-        );
-    }
+    if (!Content || !viewW || !viewH) return null;
 
     return (
         <PopTipWrapper enablePopTip={enablePopTip} popTipProps={popTipProps}>
@@ -281,23 +296,3 @@ const PopTipWrapper = ({ enablePopTip, popTipProps, children }) => {
     if (!enablePopTip) return children;
     return <PopTip {...popTipProps}>{children}</PopTip>;
 };
-
-const FlagWrapper = styled.img`
-    user-select: none;
-    display: block;
-    flex-shrink: 0;
-    object-fit: contain;
-
-    ${(p) =>
-        p.$isHorizontal
-            ? css`
-                  width: ${p.$size};
-                  min-width: ${p.$size};
-                  height: auto;
-              `
-            : css`
-                  height: ${p.$size};
-                  min-height: ${p.$size};
-                  width: auto;
-              `}
-`;

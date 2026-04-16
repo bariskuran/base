@@ -10,7 +10,8 @@ import { colorShader } from "../../colorShader";
 import { colorConverter } from "../../colorConverter";
 import { colorContrast } from "../../colorContrast";
 import { colorGet } from "../../colorGet";
-import { normalizeCssSize } from "../../normalizeCssSize";
+import { cssNormalizeSize } from "../../cssNormalizeSize";
+import { cssSpacingResolver } from "../../cssSpacingResolver";
 import { get3DShadow } from "../../colorGet3DShadow";
 
 export const generateMediaFunctions = ({
@@ -86,6 +87,12 @@ export const generateMediaFunctions = ({
         `;
     };
 
+    const keys = ["phone", "tablet", "desktop", "large", "uhd", "uhd8"];
+
+    keys.forEach((key) => {
+        mediaFunctions.responsive[key] = (content) => mediaFunctions[key](content);
+    });
+
     mediaFunctions.freeBpMixin = (prop, obj) => {
         let styles = "";
         for (let i = 0; i < obj.length; i++) {
@@ -111,7 +118,8 @@ export const generateMediaFunctions = ({
     mediaFunctions.colorContrast = colorContrast;
     mediaFunctions.colorGet = colorGet;
     mediaFunctions.get3DShadow = get3DShadow;
-    mediaFunctions.normalizeCssSize = normalizeCssSize;
+    mediaFunctions.cssNormalizeSize = cssNormalizeSize;
+    mediaFunctions.cssSpacingResolver = cssSpacingResolver;
 
     return mediaFunctions;
 };

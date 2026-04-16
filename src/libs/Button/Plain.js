@@ -37,7 +37,8 @@ export const S = styled.div`
         display: flex;
         transition: all 0.2s;
         cursor: pointer;
-        border-radius: 5rem;
+        border-radius: 0rem !important;
+        border: none !important;
 
         ${$isHovered &&
         css`

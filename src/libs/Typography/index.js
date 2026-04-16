@@ -1,10 +1,24 @@
 import { componentCreator } from "../componentCreator/index.jsx";
 import { Base } from "./tools/_Base.jsx";
 
+const jointH = {
+    lineHeight: 1.3,
+    weight: 300,
+};
+
 export const Typo = componentCreator({
     name: "Typo",
     BaseComp: Base,
     variants: {
-        column: { direction: "column" },
+        h1: { as: "h1", size: "190%", ...jointH },
+        h2: { as: "h2", size: "175%", ...jointH },
+        h3: { as: "h3", size: "160%", ...jointH },
+        h4: { as: "h4", size: "145%", ...jointH },
+        h5: { as: "h5", size: "130%", ...jointH },
+        h6: { as: "h6", size: "115%", ...jointH },
+        p: { as: "p" },
+        span: { as: "span" },
+        quote: { as: "blockquote", size: "110%" },
+        sub: { size: "70%" },
     },
 });

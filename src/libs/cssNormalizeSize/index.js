@@ -1,4 +1,4 @@
-export const normalizeCssSize = (value) => {
+export const cssNormalizeSize = (value) => {
     if (value == null) return undefined;
 
     if (value === 0 || value === "0") return 0;

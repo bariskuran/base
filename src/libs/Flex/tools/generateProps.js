@@ -1,6 +1,6 @@
 import { deepMerge } from "../../deepMerge";
 import { colorGet } from "../../colorGet";
-import { normalizeCssSize } from "../../normalizeCssSize";
+import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { removeUndefinedDeep } from "../../removeUndefined";
 
 export const manageColors = ({ bgColor, color } = {}) => {
@@ -95,7 +95,7 @@ const generate4DirectionProps = ([high, top, right, bottom, left]) => {
     if (bottom != null) b = bottom;
     if (left != null) l = left;
 
-    const normalized = [t, r, b, l].map((item) => normalizeCssSize(item));
+    const normalized = [t, r, b, l].map((item) => cssNormalizeSize(item));
 
     if (normalized.every((item) => item == null)) return undefined;
 
@@ -188,21 +188,21 @@ const generateFlexItemSizing = ({ flex, width, height, parentDirection }) => {
                 flex: "1 1 auto",
                 height: undefined,
                 minHeight: 0,
-                width: normalizeCssSize(width),
+                width: cssNormalizeSize(width),
             };
         }
 
         if (height != null) {
             return {
-                flex: `0 0 ${normalizeCssSize(height)}`,
+                flex: `0 0 ${cssNormalizeSize(height)}`,
                 height: undefined,
-                width: normalizeCssSize(width),
+                width: cssNormalizeSize(width),
             };
         }
 
         return {
-            width: normalizeCssSize(width),
-            height: normalizeCssSize(height),
+            width: cssNormalizeSize(width),
+            height: cssNormalizeSize(height),
         };
     }
 
@@ -211,21 +211,21 @@ const generateFlexItemSizing = ({ flex, width, height, parentDirection }) => {
             flex: "1 1 auto",
             width: undefined,
             minWidth: 0,
-            height: normalizeCssSize(height),
+            height: cssNormalizeSize(height),
         };
     }
 
     if (width != null) {
         return {
-            flex: `0 0 ${normalizeCssSize(width)}`,
+            flex: `0 0 ${cssNormalizeSize(width)}`,
             width: undefined,
-            height: normalizeCssSize(height),
+            height: cssNormalizeSize(height),
         };
     }
 
     return {
-        width: normalizeCssSize(width),
-        height: normalizeCssSize(height),
+        width: cssNormalizeSize(width),
+        height: cssNormalizeSize(height),
     };
 };
 
@@ -307,13 +307,13 @@ export const generateProps = ({
           })
         : {
               flex,
-              width: flex == null ? normalizeCssSize(width) : undefined,
-              height: flex == null ? normalizeCssSize(height) : undefined,
+              width: flex == null ? cssNormalizeSize(width) : undefined,
+              height: flex == null ? cssNormalizeSize(height) : undefined,
           };
 
     const obj = {
         ...manageColors({ bgColor, color }),
-        borderRadius: normalizeCssSize(borderRadius),
+        borderRadius: cssNormalizeSize(borderRadius),
         direction: currDirection,
         flex: baseSizing.flex,
         padding: generate4DirectionProps([
@@ -329,7 +329,7 @@ export const generateProps = ({
         minWidth: baseSizing.minWidth,
         minHeight: baseSizing.minHeight,
         ...generateJustifyAlign({ align, xAlign, yAlign, direction: currDirection }),
-        gap: normalizeCssSize(gap),
+        gap: cssNormalizeSize(gap),
         alignSelf: generateAlignSelf({ alignSelf }),
         inProps: generateInProps({
             inCommonProps,

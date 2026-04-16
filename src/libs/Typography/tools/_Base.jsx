@@ -16,8 +16,9 @@ export const Base = (props) => {
     const commonProps = {
         as: vars.as,
         $maxWidth: vars.maxWidth,
+        $disableMaxWidthLock: vars.disableMaxWidthLock,
         $width: vars.width,
-        $size: vars.size,
+        $size: vars.size || vars.fontSize,
         $weight: vars.weight,
         $color: vars.color,
         $highlight: vars.highlight,
@@ -28,7 +29,7 @@ export const Base = (props) => {
         $whiteSpace: vars.whiteSpace,
         $letterSpacing: vars.letterSpacing,
         $lineHeight: vars.lineHeight,
-        $selectable: vars.selectable,
+        $unselectable: vars.unselectable,
         $copyable: vars.copyable,
         $italic: vars.italic,
         $bold: vars.bold,
@@ -38,6 +39,8 @@ export const Base = (props) => {
         $lowercase: vars.lowercase,
         $capitalize: vars.capitalize,
         $disabled: vars.disabled,
+        $margin: vars.margin,
+        $padding: vars.padding,
     };
 
     const B = (

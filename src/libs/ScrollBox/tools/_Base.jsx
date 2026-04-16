@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import useVars from "./useVars";
 import { ScrollBar } from "../../ScrollBar";
-import { normalizeCssSize } from "../../normalizeCssSize";
+import { cssNormalizeSize } from "../../cssNormalizeSize";
 import ContextProvider from "../../ContextProviderForUiComponents";
 
 const Context = createContext(null);
@@ -38,7 +38,7 @@ export const Base = ({ children, ...p }) => {
                 <Variant
                     ref={containerRef}
                     //
-                    $maxHeight={normalizeCssSize(maxHeight)}
+                    $maxHeight={cssNormalizeSize(maxHeight)}
                     $fullWidth={fullWidth}
                     $disableShadow={!isOverflowing ? false : disableShadow}
                     $isOverflowing={isOverflowing}
@@ -49,8 +49,8 @@ export const Base = ({ children, ...p }) => {
                         overscrollBehaviorY: isOverflowing ? "contain" : "auto",
                         overscrollBehaviorX: isOverflowing ? "contain" : "auto",
                         minWidth: 0,
-                        ...(maxWidth ? { maxWidth: normalizeCssSize(maxWidth) } : {}),
-                        ...(maxHeight ? { maxHeight: normalizeCssSize(maxHeight) } : {}),
+                        ...(maxWidth ? { maxWidth: cssNormalizeSize(maxWidth) } : {}),
+                        ...(maxHeight ? { maxHeight: cssNormalizeSize(maxHeight) } : {}),
                         ...(isOverflowingY && !fullWidth ? { paddingRight: 20 } : {}),
                         ...(isOverflowingX && !fullWidth ? { paddingBottom: 20 } : {}),
                         ...(fullWidth ? { width: "100%" } : { width: "max-content" }),

@@ -5,6 +5,8 @@ const veryLong =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 const long =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+const semi =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure";
 const short = "Hello World";
 const jsx = (
     <>
@@ -32,7 +34,7 @@ export const TypoTest = () => {
             <Typo size={14} content={long} align="right" />
             <Typo size={14} content={short} selfAlign="right" /> */}
             {/* <Typo size={14} content={veryLong} width={500} ellipsis /> */}
-            <Typo size={14} content={jsx} ellipsis />
+            {/* <Typo size={14} content={jsx} ellipsis />
             <Typo size={14} content={jsx} clamp={2} />
             <span>--------</span>
             <Typo size={14} content={long} ellipsis="base" />
@@ -44,7 +46,21 @@ export const TypoTest = () => {
             <Typo size={14} content={long} copyable />
             <Typo clamp={2} copyable>
                 {long}
-            </Typo>
+            </Typo> */}
+            {/* <Typo size={14} content={long} lineHeight={3} />
+            <Typo size={14} content={long} unselectable />
+            <Typo size="200%" content={long} /> */}
+            <Typo.h1 content={semi} />
+            <Typo.h2 content={semi} />
+            <Typo.h3 content={semi} />
+            <Typo.h4 content={semi} />
+            <Typo.h5 content={semi} />
+            <Typo.h6 content={semi} />
+            <span>--------</span>
+            <Typo.quote content={semi} />
+            <Typo.p content={semi} />
+            <Typo.span content={semi} />
+            <Typo.sub content={semi} />
         </div>
     );
 };

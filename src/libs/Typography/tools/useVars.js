@@ -1,9 +1,10 @@
 import { useMemo, useRef, useCallback, useLayoutEffect, useEffect } from "react";
 import { useExportData } from "../../useExportedData";
 import { colorGet } from "../../colorGet";
-import { normalizeCssSize } from "../../normalizeCssSize";
+import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { baseStore } from "../../@baseStore";
 import { getTruncatedHtml } from "./getTruncatedHtml";
+import { cssSpacingResolver } from "../../cssSpacingResolver";
 
 const sysDefaults = {
     as: "span",
@@ -11,7 +12,7 @@ const sysDefaults = {
     whiteSpace: "normal",
     overflow: "visible",
     letterSpacing: 0,
-    lineHeight: 1.4,
+    lineHeight: 1.7,
     selfAlign: "left",
 };
 
@@ -50,9 +51,9 @@ const useVars = ({ children, content, contentArray, ...p }) => {
 
         return {
             ...mergedProps,
-            width: normalizeCssSize(width),
-            maxWidth: normalizeCssSize(maxWidth),
-            size: normalizeCssSize(size),
+            width: cssNormalizeSize(width),
+            maxWidth: cssNormalizeSize(maxWidth),
+            size: cssNormalizeSize(size),
             color: color ? clr.color : highlight ? highlightClr.opposite : theme.foreground,
             highlight: highlight ? colorGet(highlight || clr.opposite)?.color : undefined,
         };
@@ -107,6 +108,9 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         };
     }, [isEllipsisBase, recalculateTruncation]);
 
+    const margin = cssSpacingResolver(p, "margin");
+    const padding = cssSpacingResolver(p, "padding");
+
     const finalVisibleContent = children ?? content;
 
     const hasNoContent =
@@ -122,6 +126,8 @@ const useVars = ({ children, content, contentArray, ...p }) => {
     return useExportData(
         {
             ...controlledProps,
+            margin,
+            padding,
             shouldUseOverlayCopy,
             shouldUseInnerHtml,
             isEllipsisBase,

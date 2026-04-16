@@ -69,7 +69,8 @@ export const DEFAULT_GLOBAL_STYLE = css`
     h3,
     h4,
     h5,
-    h6 {
+    h6,
+    blockquote {
         margin: 0px;
     }
 `;
