@@ -2,14 +2,14 @@ import styled, { css } from "styled-components";
 
 const S = {
     container: styled.div`
-        ${({ theme }) => css`
-            display: flex;
-            align-items: stretch;
-            min-height: 100rem;
-        `}
+        display: flex;
+        align-items: stretch;
+        min-height: 100rem;
     `,
     titleArea: styled.div`
-        max-width: 150rem;
+        max-width: 125rem;
+        min-width: 125rem;
+        box-sizing: border-box;
         padding: 10rem;
         padding-top: 30rem;
         display: flex;
@@ -18,11 +18,28 @@ const S = {
         align-items: flex-end;
     `,
     line: styled.div`
+        position: relative;
         background: ${({ theme }) => theme.greys.shade40};
         min-height: 100rem;
         width: 1px;
-        min-width: 1px;
         align-self: stretch;
+        z-index: 2;
+
+        ${({ $lastBlock }) =>
+            $lastBlock &&
+            css`
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 50%;
+                    bottom: 0;
+                    transform: translate(-50%, 50%);
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 999px;
+                    background: ${({ theme }) => theme.greys.shade40};
+                }
+            `}
     `,
 
     ajaxArea: styled.div`

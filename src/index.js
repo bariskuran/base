@@ -150,6 +150,5 @@ export { PopoverTest } from "./libs/Popover/PopoverTest";
 export { ButtonTest } from "./libs/Button/ButtonTest";
 export { TypoTest } from "./libs/Typography/TypoTest";
 export { NotifierTest } from "./libs/NotifierListener/NotifierTest";
-export { DSCodeViewer } from "./libs/DSCodeViewer";
-export { DSApiViewer } from "./libs/DSApiViewer";
 export { Space } from "./libs/Space";
+export { default as DS } from "./libs/DesignSystem";

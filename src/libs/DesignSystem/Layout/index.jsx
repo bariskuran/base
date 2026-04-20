@@ -3,14 +3,14 @@ import { S } from "./_styled";
 import { sitemap } from "../index";
 import { Button } from "../../Button";
 import { ScrollBox } from "../../ScrollBox";
-// import useVars from "./useVars";
+import useVars from "./useVars";
 
-export const DesignSystemLayout = () => {
-    // const vars = useVars();
+const Layout = () => {
+    const vars = useVars();
 
     /* RETURN */
     return (
-        <S.container>
+        <S.container $vars={vars}>
             <S.navigation>
                 <ScrollBox.clean fullWidth="right" maxHeight="100vh">
                     <S.logoArea>
@@ -44,3 +44,4 @@ export const DesignSystemLayout = () => {
         </S.container>
     );
 };
+export default Layout;

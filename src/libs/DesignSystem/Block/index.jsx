@@ -1,11 +1,11 @@
 import S from "./_styled";
-import { Typo } from "../Typography";
-import { baseStore } from "../@baseStore";
-import { Button } from "../Button";
-import { DSCodeViewer } from "../DSCodeViewer";
-import { Flex } from "../Flex";
+import { Typo } from "../../Typography";
+import { baseStore } from "../../@baseStore";
+import { Button } from "../../Button";
+import { Flex } from "../../Flex";
+import CodeViewer from "../CodeViewer";
 
-export const DSBlock = ({ title, description, code, example }) => {
+const Block = ({ title, description, code, example, lastBlock }) => {
     const { ajax, setLocal } = baseStore.useLocal({
         ajax: 0,
     });
@@ -42,7 +42,7 @@ export const DSBlock = ({ title, description, code, example }) => {
                     </S.ajaxArea>
                 )}
             </S.titleArea>
-            <S.line />
+            <S.line $lastBlock={lastBlock} />
             <Flex.column>
                 {(example || description) && ajax === 0 && (
                     <S.contentArea>
@@ -52,10 +52,11 @@ export const DSBlock = ({ title, description, code, example }) => {
                 )}
                 {((code && ajax === 1) || (!example && !description && code)) && (
                     <S.contentArea>
-                        <DSCodeViewer>{code}</DSCodeViewer>
+                        <CodeViewer>{code}</CodeViewer>
                     </S.contentArea>
                 )}
             </Flex.column>
         </S.container>
     );
 };
+export default Block;

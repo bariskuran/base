@@ -3,6 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 import { icons } from "./icons";
 import { baseStore } from "../@baseStore";
 import { PopTip } from "../PopTip";
+import { byPath } from "../byPath";
 
 const Centerized = styled.div`
     position: relative;
@@ -42,6 +43,11 @@ const resolveIconFile = (iconInput, allIcons) => {
     return null;
 };
 
+const resolveThemeColor = (theme, value) => {
+    if (!value) return value;
+    return byPath.get(theme, value) || theme?.[value] || value;
+};
+
 export const Icon = ({
     icon,
     color,
@@ -62,7 +68,7 @@ export const Icon = ({
     isActive = false,
     disableScaleEffect,
 }) => {
-    const [iconsLibrary] = baseStore.useGlobal((s) => [s._iconsLibrary]);
+    const [iconsLibrary, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
     const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
 
     const [isSelfHover, setIsSelfHover] = useState(false);
@@ -120,8 +126,10 @@ export const Icon = ({
         ];
     }, [icon, onHoverIcon, allIcons, useHeight, onActiveIcon]);
 
-    const finalColor =
+    const finalColorRaw =
         isActive && onActiveColor ? onActiveColor : isHover && onHoverColor ? onHoverColor : color;
+
+    const finalColor = resolveThemeColor(theme, finalColorRaw);
 
     const finalWidth =
         isActive && onActiveIconWidth
@@ -219,7 +227,7 @@ const pulseTwice = keyframes`
 const SvgWrapper = styled.svg`
     ${({ $fill, theme, $isHover, $onHoverIcon, $isActive, $enable, $disableScaleEffect }) => css`
         grid-area: 1 / 1;
-        fill: ${theme[$fill] || $fill || theme.foreground};
+        fill: ${$fill || theme.foreground};
         user-select: none;
         display: block;
         flex-shrink: 0;

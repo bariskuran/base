@@ -30,8 +30,6 @@ export const useVars = ({ props, childrenCount }) => {
         [props, currentBreakpoint],
     );
 
-    console.log(generatedProps);
-
     /**
      *
      *
