@@ -3,7 +3,7 @@ import { Icon } from "../../@Icon";
 import styled from "styled-components";
 import { copyToClipboard } from "../../copyToClipboard";
 import { baseStore } from "../../@baseStore";
-import { sortFunction } from "../../sortFunction";
+import { sortBy } from "../../sortBy";
 
 const S = {
     Container: styled.div`
@@ -77,7 +77,7 @@ export const IconsLibrary = () => {
                         keywords.some((kw) => kw.includes(lowerSearch))
                     );
                 })
-                .sort(([aName], [bName]) => sortFunction.asc(aName, bName))
+                .sort(([aName], [bName]) => sortBy.asc(aName, bName))
                 .map(([iconName]) => (
                     <S.Box
                         key={iconName}

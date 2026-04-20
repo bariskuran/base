@@ -37,7 +37,7 @@
  * ["b", "a", "c"].sort(sortFunction.desc);
  * // → ["c", "b", "a"]
  */
-export const sortFunction = {
+export const sortBy = {
     asc: (a, b) => naturalCompare(a, b),
     desc: (a, b) => naturalCompare(b, a),
 };

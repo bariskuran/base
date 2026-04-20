@@ -99,7 +99,7 @@ export { queryConverter } from "./libs/queryConverter";
 export { scrollLock } from "./libs/scrollLock";
 export { shallowEqual } from "./libs/shallowEqual";
 export { sleep } from "./libs/sleep";
-export { sortFunction } from "./libs/sortFunction";
+export { sortBy } from "./libs/sortBy";
 export { stringCaseConverter } from "./libs/stringCaseConverter";
 export { SYMBOLS } from "./constants/SYMBOLS";
 export { typeOf } from "./libs/typeOf";

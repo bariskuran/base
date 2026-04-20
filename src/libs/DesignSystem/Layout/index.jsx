@@ -4,9 +4,16 @@ import { sitemap } from "../index";
 import { Button } from "../../Button";
 import { ScrollBox } from "../../ScrollBox";
 import useVars from "./useVars";
+import { sortBy } from "../../sortBy";
+import { useMemo } from "react";
 
 const Layout = () => {
     const vars = useVars();
+
+    const sorted = useMemo(() => {
+        const [first, ...rest] = sitemap || [];
+        return first ? [first, ...rest.sort((a, b) => sortBy.asc(a[0], b[0]))] : [];
+    }, [sitemap]);
 
     /* RETURN */
     return (
@@ -26,7 +33,7 @@ const Layout = () => {
                             }}
                         />
                     </S.logoArea>
-                    {sitemap.map(([name, path], i) => (
+                    {sorted.map(([name, path], i) => (
                         <Button.squareOnRight
                             key={path || i}
                             to={path || "/design-system"}

@@ -1,4 +1,4 @@
-import { sortFunction } from "../sortFunction";
+import { sortBy } from "../sortBy";
 
 /**
  * Pushes an element into an array, sorts it ascending, and returns:
@@ -36,7 +36,7 @@ import { sortFunction } from "../sortFunction";
  * // => [[10, 20, 30], 2, 20, undefined]
  */
 export const pushAsSorted = (arr = [], el = 0) => {
-    const arrayCopy = [...arr, el].sort(sortFunction.asc);
+    const arrayCopy = [...arr, el].sort(sortBy.asc);
 
     const uniqueArray = [...new Set(arrayCopy)];
 
