@@ -1,18 +1,46 @@
 import { Outlet } from "react-router-dom";
-import { styled } from "styled-components";
+import { S } from "./_styled";
+import { sitemap } from "../index";
+import { Button } from "../../Button";
+import { ScrollBox } from "../../ScrollBox";
+// import useVars from "./useVars";
 
-const S = {
-    Container: styled.div`
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        padding: 100rem;
-        box-sizing: border-box;
-    `,
+export const DesignSystemLayout = () => {
+    // const vars = useVars();
+
+    /* RETURN */
+    return (
+        <S.container>
+            <S.navigation>
+                <ScrollBox.clean fullWidth="right" maxHeight="100vh">
+                    <S.logoArea>
+                        <Button.plain
+                            to="/design-system"
+                            bgColor="transparent"
+                            hoverBgColor="transparent"
+                            icon={{
+                                disableScaleEffect: true,
+                                icon: "baseLogo",
+                                color: "primary",
+                                width: 125,
+                            }}
+                        />
+                    </S.logoArea>
+                    {sitemap.map(([name, path], i) => (
+                        <Button.squareOnRight
+                            key={path || i}
+                            to={path || "/design-system"}
+                            label={name}
+                            bgColor="transparent"
+                            color="foreground"
+                            fullWidth="right"
+                        />
+                    ))}
+                </ScrollBox.clean>
+            </S.navigation>
+            <S.content>
+                <Outlet />
+            </S.content>
+        </S.container>
+    );
 };
-
-export const DesignSystemLayout = () => (
-    <S.Container>
-        <Outlet />
-    </S.Container>
-);

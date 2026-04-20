@@ -51,10 +51,11 @@ export const DefaultVariant = styled.div`
         `}
 
         & > [data-slot="label"] {
-            ${!$isJustIcon &&
+            /* ${!$isJustIcon &&
             css`
                 min-width: 75rem;
-            `}
+            `} */
+
             display: flex;
             justify-content: center;
             align-items: center;

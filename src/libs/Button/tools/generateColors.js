@@ -2,6 +2,7 @@ import { colorConverter } from "../../colorConverter";
 import { colorShader } from "../../colorShader";
 import { colorAlpha } from "../../colorAlpha";
 import { colorTinter } from "../../colorTinter";
+import { byPath } from "../../byPath";
 
 export const generateColors = ({
     theme,
@@ -19,7 +20,7 @@ export const generateColors = ({
         : secondary
           ? theme.secondary
           : bgColor
-            ? theme[bgColor] || bgColor
+            ? byPath.get(theme, bgColor) || theme[bgColor] || bgColor
             : theme.foreground || colorAlpha("black", 0.8);
 
     const bg1Formats = colorConverter(selectedBgColor);
@@ -44,8 +45,12 @@ export const generateColors = ({
     const hoverRate = getInteractiveRate(alphaRate, luminance, "hover");
     const activeRate = getInteractiveRate(alphaRate, luminance, "active");
 
-    const resolvedHoverBg = hoverBgColor ? theme[hoverBgColor] || hoverBgColor : null;
-    const resolvedActiveBg = activeBgColor ? theme[activeBgColor] || activeBgColor : null;
+    const resolvedHoverBg = hoverBgColor
+        ? byPath.get(theme, hoverBgColor) || theme[hoverBgColor] || hoverBgColor
+        : null;
+    const resolvedActiveBg = activeBgColor
+        ? byPath.get(theme, activeBgColor) || theme[activeBgColor] || activeBgColor
+        : null;
 
     const normalBg1 = selectedHex8;
     const normalBg2 = resolvedHoverBg || toneFn(selectedHex8, hoverRate);
@@ -62,10 +67,11 @@ export const generateColors = ({
     if (outlined) {
         const overlayBase = isLight ? "#ffffff" : "#000000";
         const outlinedBg1 = "transparent";
-        const outlinedBg2 = colorAlpha(overlayBase, hoverRate / 100);
-        const outlinedBg3 = colorAlpha(overlayBase, activeRate / 100);
+        const outlinedBg2 = resolvedHoverBg || colorAlpha(overlayBase, hoverRate / 100);
+        const outlinedBg3 = resolvedActiveBg || colorAlpha(overlayBase, activeRate / 100);
         const outlinedColor = color || selectedBgColor;
 
+        console.log(hoverBgColor, resolvedHoverBg, outlinedBg1, outlinedBg2);
         return [outlinedBg1, outlinedBg2, outlinedBg3, outlinedColor, inverse1, inverse2];
     }
 

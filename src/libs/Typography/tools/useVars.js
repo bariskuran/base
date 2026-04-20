@@ -16,6 +16,8 @@ const sysDefaults = {
     selfAlign: "left",
 };
 
+// useVars.js
+
 const useVars = ({ children, content, contentArray, ...p }) => {
     const [theme, currentBreakpoint] = baseStore.useGlobal((s) => [
         s.theme,
@@ -27,18 +29,6 @@ const useVars = ({ children, content, contentArray, ...p }) => {
     });
 
     const ref = useRef(null);
-    const sourceRef = useRef(null);
-
-    const isEllipsisBase = p.ellipsis === "base";
-
-    const setTruncatedHtml = useCallback(
-        (nextHtml) => {
-            setLocal((s) => {
-                s.truncatedHtml = nextHtml;
-            });
-        },
-        [setLocal],
-    );
 
     const controlledProps = useMemo(() => {
         const responsiveProps = p.responsive?.[currentBreakpoint] || {};
@@ -49,8 +39,12 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         const clr = colorGet(color || theme.foreground);
         const highlightClr = colorGet(highlight || clr.opposite);
 
+        const enableQuoteMarks = !!mergedProps.enableQuoteMarks;
+
         return {
             ...mergedProps,
+            ellipsis: enableQuoteMarks ? false : mergedProps.ellipsis,
+            clamp: enableQuoteMarks ? false : mergedProps.clamp,
             width: cssNormalizeSize(width),
             maxWidth: cssNormalizeSize(maxWidth),
             size: cssNormalizeSize(size),
@@ -59,28 +53,49 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         };
     }, [p, currentBreakpoint, theme]);
 
+    const setTruncatedHtml = useCallback(
+        (nextHtml) => {
+            setLocal((s) => {
+                s.truncatedHtml = nextHtml;
+            });
+        },
+        [setLocal],
+    );
+
+    const finalVisibleContent = children ?? content;
+    const margin = cssSpacingResolver(p, "margin");
+    const padding = cssSpacingResolver(p, "padding");
+    const isEllipsisBaseFinal = controlledProps.ellipsis === "base";
+
     const recalculateTruncation = useCallback(() => {
-        if (!isEllipsisBase || !ref.current || !sourceRef.current) {
+        if (!isEllipsisBaseFinal || !ref.current) {
             setTruncatedHtml(null);
             return;
         }
 
         const result = getTruncatedHtml({
             visibleRef: ref,
-            sourceRef,
-            clamp: p.clamp || 1,
+            content: finalVisibleContent,
+            as: controlledProps.as,
+            clamp: controlledProps.clamp || 1,
             suffix: "...",
         });
 
         setTruncatedHtml(result?.isTruncated ? result.html : null);
-    }, [isEllipsisBase, p.clamp, setTruncatedHtml]);
+    }, [
+        isEllipsisBaseFinal,
+        finalVisibleContent,
+        controlledProps.as,
+        controlledProps.clamp,
+        setTruncatedHtml,
+    ]);
 
     useLayoutEffect(() => {
         recalculateTruncation();
-    }, [recalculateTruncation, children, content]);
+    }, [recalculateTruncation]);
 
     useEffect(() => {
-        if (!isEllipsisBase || !ref.current) return;
+        if (!isEllipsisBaseFinal || !ref.current) return;
 
         const el = ref.current;
         const parent = el.parentElement;
@@ -89,15 +104,12 @@ const useVars = ({ children, content, contentArray, ...p }) => {
 
         const run = () => {
             if (frameId) cancelAnimationFrame(frameId);
-
             frameId = requestAnimationFrame(() => {
                 recalculateTruncation();
             });
         };
 
-        const observer = new ResizeObserver(() => {
-            run();
-        });
+        const observer = new ResizeObserver(run);
 
         observer.observe(el);
         if (parent) observer.observe(parent);
@@ -106,21 +118,17 @@ const useVars = ({ children, content, contentArray, ...p }) => {
             observer.disconnect();
             if (frameId) cancelAnimationFrame(frameId);
         };
-    }, [isEllipsisBase, recalculateTruncation]);
-
-    const margin = cssSpacingResolver(p, "margin");
-    const padding = cssSpacingResolver(p, "padding");
-
-    const finalVisibleContent = children ?? content;
+    }, [isEllipsisBaseFinal, recalculateTruncation]);
 
     const hasNoContent =
         truncatedHtml == null &&
         !finalVisibleContent &&
         (!contentArray || contentArray.length === 0);
 
-    const shouldRenderChildren = !isEllipsisBase || truncatedHtml == null;
-    const shouldUseInnerHtml = isEllipsisBase && truncatedHtml != null;
-    const shouldUseOverlayCopy = p.copyable && (p.ellipsis || p.clamp || shouldUseInnerHtml);
+    const shouldRenderChildren = !isEllipsisBaseFinal || truncatedHtml == null;
+    const shouldUseInnerHtml = isEllipsisBaseFinal && truncatedHtml != null;
+    const shouldUseOverlayCopy =
+        p.copyable && (controlledProps.ellipsis || controlledProps.clamp || shouldUseInnerHtml);
     const canUseInlineCopy = p.copyable && !shouldUseOverlayCopy && !shouldUseInnerHtml;
 
     return useExportData(
@@ -130,11 +138,10 @@ const useVars = ({ children, content, contentArray, ...p }) => {
             padding,
             shouldUseOverlayCopy,
             shouldUseInnerHtml,
-            isEllipsisBase,
+            isEllipsisBase: isEllipsisBaseFinal,
             canUseInlineCopy,
             shouldRenderChildren,
             ref,
-            sourceRef,
             truncatedHtml,
             finalVisibleContent,
             hasNoContent,

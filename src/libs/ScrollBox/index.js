@@ -11,6 +11,7 @@ export const ScrollBox = componentCreator({
     DefaultVariant,
     CleanVariant,
     variants: {
+        clean: CleanVariant,
         opposite: opposite,
         threeD: threeD,
     },

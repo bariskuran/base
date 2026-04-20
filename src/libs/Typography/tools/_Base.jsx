@@ -1,3 +1,5 @@
+// Base.jsx
+
 import S from "./_styled";
 import useVars from "./useVars";
 import { Button } from "../../Button";
@@ -41,9 +43,10 @@ export const Base = (props) => {
         $disabled: vars.disabled,
         $margin: vars.margin,
         $padding: vars.padding,
+        $enableQuoteMarks: vars.enableQuoteMarks,
     };
 
-    const B = (
+    const CopyButton = (
         <Button.plain
             exportData={exportData}
             onClick={() => {
@@ -63,48 +66,34 @@ export const Base = (props) => {
         />
     );
 
+    const Main = vars.shouldUseInnerHtml ? (
+        <S.container
+            {...commonProps}
+            ref={vars.ref}
+            $ellipsis={vars.ellipsis}
+            $overflow={vars.overflow}
+            $isManuallyHover={isManuallyHover}
+            dangerouslySetInnerHTML={{ __html: vars.truncatedHtml }}
+        />
+    ) : (
+        <S.container
+            {...commonProps}
+            ref={vars.ref}
+            $ellipsis={vars.ellipsis}
+            $overflow={vars.overflow}
+            $isManuallyHover={isManuallyHover}
+        >
+            {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
+            {vars.canUseInlineCopy && <S.inlineCopy>{CopyButton}</S.inlineCopy>}
+        </S.container>
+    );
+
+    if (!vars.copyable) return Main;
+
     return (
-        <>
-            <S.wrapper $overlayCopy={vars.shouldUseOverlayCopy}>
-                {vars.shouldUseInnerHtml ? (
-                    <S.containerArea>
-                        <S.container
-                            {...commonProps}
-                            ref={vars.ref}
-                            $ellipsis={vars.ellipsis}
-                            $overflow={vars.overflow}
-                            $isManuallyHover={isManuallyHover}
-                            dangerouslySetInnerHTML={{ __html: vars.truncatedHtml }}
-                        />
-                    </S.containerArea>
-                ) : (
-                    <S.containerArea>
-                        <S.container
-                            {...commonProps}
-                            ref={vars.ref}
-                            $ellipsis={vars.ellipsis}
-                            $overflow={vars.overflow}
-                            $isManuallyHover={isManuallyHover}
-                        >
-                            {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
-                            {vars.canUseInlineCopy && <S.inlineCopy>{B}</S.inlineCopy>}
-                        </S.container>
-                    </S.containerArea>
-                )}
-
-                {vars.shouldUseOverlayCopy && <S.overlayCopy>{B}</S.overlayCopy>}
-            </S.wrapper>
-
-            <S.measureSource
-                {...commonProps}
-                ref={vars.sourceRef}
-                aria-hidden="true"
-                $ellipsis={false}
-                $overflow="visible"
-                $hasOverlayCopy={vars.shouldUseOverlayCopy}
-            >
-                {vars.finalVisibleContent}
-            </S.measureSource>
-        </>
+        <S.wrapper $overlayCopy={vars.shouldUseOverlayCopy}>
+            {Main}
+            {vars.shouldUseOverlayCopy && <S.overlayCopy>{CopyButton}</S.overlayCopy>}
+        </S.wrapper>
     );
 };

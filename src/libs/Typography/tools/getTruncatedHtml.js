@@ -1,18 +1,14 @@
+import { createElement, Fragment } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+
 const getLineHeightPx = (computedStyle, fallbackFontSize = 16) => {
     const raw = computedStyle.lineHeight;
 
-    if (!raw || raw === "normal") {
-        return fallbackFontSize * 1.2;
-    }
-
-    if (raw.endsWith("px")) {
-        return parseFloat(raw);
-    }
+    if (!raw || raw === "normal") return fallbackFontSize * 1.2;
+    if (raw.endsWith("px")) return parseFloat(raw);
 
     const parsed = parseFloat(raw);
-    if (!Number.isNaN(parsed)) {
-        return parsed * fallbackFontSize;
-    }
+    if (!Number.isNaN(parsed)) return parsed * fallbackFontSize;
 
     return fallbackFontSize * 1.2;
 };
@@ -31,10 +27,15 @@ const getAvailableWidth = (sourceEl) => {
     return Math.max(0, Math.floor(contentWidth));
 };
 
-const createMeasurementRoot = ({ sourceEl, widthPx, clamp }) => {
-    const cs = window.getComputedStyle(sourceEl);
+const createSourceRoot = ({ content, as = "span" }) => {
+    const root = document.createElement(as || "span");
+    root.innerHTML = renderToStaticMarkup(createElement(Fragment, null, content));
+    return root;
+};
 
-    const root = document.createElement(sourceEl.tagName.toLowerCase());
+const createMeasurementRoot = ({ visibleEl, sourceRoot, widthPx, clamp }) => {
+    const cs = window.getComputedStyle(visibleEl);
+    const root = document.createElement(visibleEl.tagName.toLowerCase());
 
     Object.assign(root.style, {
         position: "absolute",
@@ -73,7 +74,7 @@ const createMeasurementRoot = ({ sourceEl, widthPx, clamp }) => {
         display: "block",
     });
 
-    root.innerHTML = sourceEl.innerHTML;
+    root.innerHTML = sourceRoot.innerHTML;
 
     return root;
 };
@@ -150,7 +151,6 @@ const truncateTreeAtIndex = (root, cutIndex, suffix) => {
         consumed = nextConsumed;
     }
 
-    // Her ihtimale karşı
     const lastNode = textNodes[textNodes.length - 1];
     if (lastNode) {
         lastNode.textContent = (lastNode.textContent || "").replace(/\s+$/u, "") + suffix;
@@ -158,26 +158,28 @@ const truncateTreeAtIndex = (root, cutIndex, suffix) => {
 };
 
 const fits = ({ el, clamp, maxHeight }) => {
-    if (clamp <= 1) {
-        return el.scrollWidth <= el.clientWidth + 0.5;
-    }
-
+    if (clamp <= 1) return el.scrollWidth <= el.clientWidth + 0.5;
     return el.scrollHeight <= maxHeight + 0.5;
 };
 
-const buildCandidate = ({ sourceEl, widthPx, clamp, cutIndex, suffix }) => {
-    const candidate = createMeasurementRoot({ sourceEl, widthPx, clamp });
+const buildCandidate = ({ visibleEl, sourceRoot, widthPx, clamp, cutIndex, suffix }) => {
+    const candidate = createMeasurementRoot({ visibleEl, sourceRoot, widthPx, clamp });
     truncateTreeAtIndex(candidate, cutIndex, suffix);
     document.body.appendChild(candidate);
     return candidate;
 };
 
-export const getTruncatedHtml = ({ visibleRef, sourceRef, clamp = 1, suffix = "..." }) => {
+export const getTruncatedHtml = ({
+    visibleRef,
+    content,
+    as = "span",
+    clamp = 1,
+    suffix = "...",
+}) => {
     const visibleEl = visibleRef?.current;
-    const sourceEl = sourceRef?.current;
+    if (!visibleEl) return null;
 
-    if (!visibleEl || !sourceEl) return null;
-
+    const sourceRoot = createSourceRoot({ content, as });
     const widthPx = getAvailableWidth(visibleEl);
     if (!widthPx || widthPx <= 0) return null;
 
@@ -185,17 +187,18 @@ export const getTruncatedHtml = ({ visibleRef, sourceRef, clamp = 1, suffix = ".
     const lineHeightPx = getLineHeightPx(visibleStyle, parseFloat(visibleStyle.fontSize) || 16);
     const maxHeight = lineHeightPx * Math.max(1, clamp);
 
-    const totalLength = getTotalTextLength(sourceEl);
+    const totalLength = getTotalTextLength(sourceRoot);
 
     if (totalLength <= 0) {
         return {
             isTruncated: false,
-            html: sourceEl.innerHTML,
+            html: sourceRoot.innerHTML,
         };
     }
 
     const fullCandidate = createMeasurementRoot({
-        sourceEl,
+        visibleEl,
+        sourceRoot,
         widthPx,
         clamp,
     });
@@ -211,7 +214,7 @@ export const getTruncatedHtml = ({ visibleRef, sourceRef, clamp = 1, suffix = ".
         if (fullFits) {
             return {
                 isTruncated: false,
-                html: sourceEl.innerHTML,
+                html: sourceRoot.innerHTML,
             };
         }
     } finally {
@@ -226,7 +229,8 @@ export const getTruncatedHtml = ({ visibleRef, sourceRef, clamp = 1, suffix = ".
         const mid = Math.floor((low + high) / 2);
 
         const candidate = buildCandidate({
-            sourceEl,
+            visibleEl,
+            sourceRoot,
             widthPx,
             clamp,
             cutIndex: mid,
@@ -252,7 +256,8 @@ export const getTruncatedHtml = ({ visibleRef, sourceRef, clamp = 1, suffix = ".
     }
 
     const finalCandidate = buildCandidate({
-        sourceEl,
+        visibleEl,
+        sourceRoot,
         widthPx,
         clamp,
         cutIndex: best,

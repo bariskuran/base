@@ -18,7 +18,9 @@ export const Typo = componentCreator({
         h6: { as: "h6", size: "115%", ...jointH },
         p: { as: "p" },
         span: { as: "span" },
-        quote: { as: "blockquote", size: "110%" },
+        quote: { as: "blockquote", size: "110%", enableQuoteMarks: true },
         sub: { size: "70%" },
+        bold: { bold: true },
+        italic: { italic: true },
     },
 });

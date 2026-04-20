@@ -1,4 +1,4 @@
-import { useMatch, useNavigation, useNavigate, Link } from "react-router-dom";
+import { useMatch, useNavigation, useNavigate, Link, useResolvedPath } from "react-router-dom";
 import { baseStore } from "../../@baseStore";
 import { useTimers } from "./useTimers.js";
 import { generateColors } from "./generateColors.js";
@@ -29,7 +29,7 @@ export const useVars = ({
     size,
     disableUseMatch,
     //
-    delay, // seconds
+    delay,
     onDelayStart,
     onDelayEnd,
     //
@@ -41,32 +41,25 @@ export const useVars = ({
     //
     popTip,
     exportData,
+    fullWidth, // left - right da olabilir.
 }) => {
-    /**
-     *
-     *
-     * VARS
-     *
-     *
-     */
     const navigate = useNavigate();
     const url = href || to || urlProp;
     const isExternalUrl = /^https?:\/\//.test(url || "");
+
+    const resolvedPath = useResolvedPath(
+        !url || isExternalUrl ? "/_______never_match_______" : url,
+    );
+
     const isMatch1 = !!useMatch({
-        path: url !== undefined ? url : "/_______never_match_______",
+        path: resolvedPath.pathname,
         end: true,
     });
+
     const isMatch = !disableUseMatch && isMatch1;
     const navigation = useNavigation();
     const isPending = navigation.state === "loading";
 
-    /**
-     *
-     *
-     * LOCAL STORE VARS
-     *
-     *
-     */
     const { setLocal, showOnClickValues, isHover, clickBlocker, isActive } = baseStore.useLocal({
         showOnClickValues: false,
         isHover: false,
@@ -74,23 +67,8 @@ export const useVars = ({
         clickBlocker: false,
     });
 
-    /**
-     *
-     *
-     * FUNCTIONS
-     *
-     *
-     */
     const getTimerBaseName = ({ label, prefix, suffix, icon }) =>
         label || prefix?.icon || suffix?.icon || icon?.icon || icon || "unknown";
-
-    /**
-     *
-     *
-     * USETIMERS
-     *
-     *
-     */
 
     const runAction = (
         e,
@@ -118,6 +96,7 @@ export const useVars = ({
 
         navigate(url);
     };
+
     const timers = useTimers({
         label,
         prefix,
@@ -131,13 +110,6 @@ export const useVars = ({
         getTimerBaseName,
     });
 
-    /**
-     *
-     *
-     * HANDLE CLICK
-     *
-     *
-     */
     const handleClick = (e) => {
         if (disabled || clickBlocker || isMatch || timers.isDelayRunning) {
             e.preventDefault();
@@ -159,13 +131,7 @@ export const useVars = ({
             clickBlockerStart: timers?.clickBlockerStart,
         });
     };
-    /**
-     *
-     *
-     * VARS
-     *
-     *
-     */
+
     const isActivated =
         (activeManually ||
             timers.isShowOnClickValuesRunning ||
@@ -190,6 +156,10 @@ export const useVars = ({
         outlined,
         theme,
     });
+    // if (label === "Copy") {
+    //     console.log(bgC1, bgC2);
+    // }
+
     const as = !url ? "button" : isExternalUrl ? "a" : Link;
 
     const shouldBindClickHandler =
@@ -205,6 +175,7 @@ export const useVars = ({
         ...(disabled ? { "aria-disabled": "true", tabIndex: -1 } : {}),
         ...(_blank ? { target: "_blank", rel: "noreferrer noopener" } : {}),
     };
+
     const buttonProps = {
         ...commonProps,
         type: "button",
@@ -223,23 +194,24 @@ export const useVars = ({
         $minHeight: minHeight,
         $outlined: outlined,
         $size: size,
-        $isJustIcon: isJustIcon, //
+        $isJustIcon: isJustIcon,
         $bgColor: bgColor || bgC1,
         $hoverBgColor: hoverBgColor || bgC2,
         $activeBgColor: activeBgColor || bgC3,
         $color: color || c,
         $inverseColor1: i1,
         $inverseColor2: i2,
-        //
         $prefixBgColor: prefix?.bgColor,
         $prefixColor: prefix?.color,
         $suffixBgColor: suffix?.bgColor,
         $suffixColor: suffix?.color,
-        //
+        $fullWidth: fullWidth,
+
         onPointerDown: () =>
             setLocal((s) => {
                 s.isActivated = true;
             }),
+
         onPointerUp: () =>
             setLocal((s) => {
                 s.isActivated = false;
@@ -261,10 +233,10 @@ export const useVars = ({
             setLocal((s) => {
                 s.isHover = true;
             }),
-        //
+
         as,
         ...(as === "a" || as === Link ? linkAProps : buttonProps),
-        //
+
         style: {
             background: bgC1,
             color: c,
@@ -285,20 +257,12 @@ export const useVars = ({
     const showHoverLabel = !showActiveLabel && isHovered && hoverLabel != null;
     const showDefaultLabel = !showActiveLabel && !showHoverLabel;
 
-    /**
-     *
-     *
-     * RETURN
-     *
-     *
-     */
     return useExportData(
         {
             exportData,
             showActiveLabel,
             showHoverLabel,
             showDefaultLabel,
-            // vars
             popTip,
             isActivated,
             isHovered,
@@ -318,26 +282,14 @@ export const useVars = ({
             linkAProps,
             buttonProps,
             variantProps,
-
-            // timers
             ...timers,
-
-            // rrd
             navigate,
-
-            // functions
             getTimerBaseName,
-
-            // local store
             setLocal,
-
-            // vars
             url,
             isExternalUrl,
             isMatch,
             isPending,
-
-            // props
             label,
             hoverLabel,
             activeLabel,
@@ -368,13 +320,13 @@ export const useVars = ({
             activeBgColor,
             color,
             alphaRate,
+            fullWidth,
         },
         {
             showOnClickValues,
             isHover,
             clickBlocker,
             isActive,
-            //
         },
     );
 };

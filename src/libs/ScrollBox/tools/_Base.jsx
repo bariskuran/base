@@ -27,14 +27,7 @@ export const Base = ({ children, ...p }) => {
 
     return (
         <ContextProvider Context={Context}>
-            <div
-                style={{
-                    width: "unset",
-                    maxWidth: "100%",
-                    minWidth: 0,
-                    position: "relative",
-                }}
-            >
+            <>
                 <Variant
                     ref={containerRef}
                     //
@@ -67,7 +60,7 @@ export const Base = ({ children, ...p }) => {
                         barPosition="horizontal"
                     />
                 )}
-            </div>
+            </>
         </ContextProvider>
     );
 };

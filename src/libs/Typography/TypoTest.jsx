@@ -58,6 +58,7 @@ export const TypoTest = () => {
             <Typo.h6 content={semi} />
             <span>--------</span>
             <Typo.quote content={semi} />
+            <Typo.quote content={semi} ellipsis clamp={2} />
             <Typo.p content={semi} />
             <Typo.span content={semi} />
             <Typo.sub content={semi} />

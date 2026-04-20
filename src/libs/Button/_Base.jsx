@@ -25,12 +25,13 @@ export const Base = (props = {}) => {
         showHoverLabel,
         showDefaultLabel,
         popTip,
+        fullWidth,
     } = useVars(props);
 
     /* RETURN */
     return (
         <PopTipWrapper popTip={popTip}>
-            <ScaleWrapper size={size} isMatch={isMatch}>
+            <ScaleWrapper size={size} isMatch={isMatch} fullWidth={fullWidth}>
                 <Variant {...variantProps}>
                     <IconArea
                         areaName="prefix"

@@ -29,36 +29,22 @@ const S = styled.div`
         cursor: pointer;
         transition: all 0.5s;
         position: relative;
-        width: ${$fullWidth ? "100%" : "auto"};
-
-        &::before,
-        &::after {
-            content: "";
-            position: absolute;
-            bottom: 3rem;
-            left: 0;
-            width: 100%;
-            height: 3rem;
-            background: ${theme.greys.shade30};
-            transition: all 0.5s;
-        }
-
-        &::after {
-            left: 50%;
-            width: 0%;
-            background: ${theme.primary};
-        }
+        width: ${$fullWidth ? "100%" : "auto"} !important;
+        box-sizing: border-box;
 
         & > [data-slot="label"] {
             display: flex;
-            justify-content: center;
+            justify-content: ${$fullWidth === "right"
+                ? "flex-end"
+                : $fullWidth === "left"
+                  ? "flex-start"
+                  : "center"};
             align-items: center;
-            text-transform: uppercase;
             letter-spacing: 0.5rem;
             font-weight: 600;
-            font-size: 12rem;
-            padding: 5rem 10rem;
+            font-size: 16rem;
             transition: all 0.5s;
+            padding: 8rem;
         }
 
         & > [data-slot="prefix"],
@@ -71,22 +57,32 @@ const S = styled.div`
             transition: all 0.5s;
         }
 
-        ${($isHovered || $isActivated) &&
+        ${$isHovered &&
         css`
-            &::after {
-                left: 0;
-                width: 100%;
-            }
+            background: ${theme.colorAlpha(theme.primary, 0.2)} !important;
         `}
+
+        &:after {
+            content: "";
+            width: 0;
+            height: 40rem;
+            background: ${theme.primary};
+            transition: all 0.5s;
+        }
 
         ${$isActivated &&
         css`
-            transform: scale(0.8);
+            background: ${theme.colorAlpha(theme.primary, 0.1)} !important;
+
+            &:after {
+                width: 10rem;
+            }
         `}
     `}
 `;
 export const X = {
     variant: S,
     bgColor: "background",
+    fullWidth: true,
 };
 export default X;

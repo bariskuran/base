@@ -32,6 +32,7 @@ const sharedStyles = ({
     $letterSpacing,
     $margin,
     $padding,
+    $enableQuoteMarks,
 }) => {
     return css`
         box-sizing: border-box;
@@ -130,6 +131,34 @@ const sharedStyles = ({
                 pointer-events: none;
             }
         `}
+
+         ${$enableQuoteMarks &&
+        css`
+            &::before,
+            &::after {
+                font-family: "Times New Roman", serif;
+                font-size: 500%;
+                line-height: 0;
+                font-weight: 100;
+                opacity: 0.3;
+                line-height: 0;
+            }
+
+            &::before {
+                content: '"';
+                margin-right: 0.05em;
+                vertical-align: -30rem;
+            }
+
+            &::after {
+                content: '"';
+                margin-left: 0.05em;
+                display: inline-block;
+                transform: rotate(180deg);
+                transform-origin: center;
+                vertical-align: -10rem;
+            }
+        `}
     `;
 };
 
@@ -144,12 +173,6 @@ const S = {
             max-width: 100%;
         `}
     `,
-
-    containerArea: styled.div`
-        min-width: 0;
-        width: 100%;
-    `,
-
     overlayCopy: styled.div`
         display: flex;
         align-items: flex-start;
@@ -169,26 +192,7 @@ const S = {
 
     container: styled.div`
         ${sharedStyles}
-    `,
-
-    measureSource: styled.div`
-        ${sharedStyles}
-
-        position: fixed !important;
-        left: -999999px !important;
-        top: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-        z-index: -1 !important;
-
-        width: auto !important;
-        max-width: none !important;
-        overflow: visible !important;
-        display: block !important;
-
-        -webkit-line-clamp: unset !important;
-        -webkit-box-orient: unset !important;
-        text-overflow: clip !important;
+        min-width: 0;
     `,
 };
 

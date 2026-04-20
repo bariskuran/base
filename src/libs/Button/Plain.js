@@ -13,13 +13,13 @@ import styled, { css } from "styled-components";
 export const S = styled.div`
     ${({
         // theme,
-        $isHovered,
+        // $isHovered,
         // $disabled,
         $isJustIcon,
-        $isActivated,
+        // $isActivated,
         // $isPending,
         // $bgColor,
-        $hoverBgColor,
+        // $hoverBgColor,
         // $activeBgColor,
         // $color,
         // $prefixBgColor,
@@ -39,17 +39,6 @@ export const S = styled.div`
         cursor: pointer;
         border-radius: 0rem !important;
         border: none !important;
-
-        ${$isHovered &&
-        css`
-            background: ${$hoverBgColor} !important;
-            transform: translateY(-2rem);
-        `}
-
-        ${$isActivated &&
-        css`
-            transform: translateY(2rem) scale(0.9);
-        `}
 
         & > [data-slot="label"] {
             ${!$isJustIcon &&

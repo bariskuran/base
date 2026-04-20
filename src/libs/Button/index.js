@@ -7,6 +7,7 @@ import Underline from "./Underline.js";
 import AnimatedBg from "./AnimatedBg.js";
 import String from "./String.js";
 import Plain from "./Plain.js";
+import SquareOnRight from "./SquareOnRight.js";
 
 export const Button = componentCreator({
     name: "Button",
@@ -23,6 +24,7 @@ export const Button = componentCreator({
         animatedBg: AnimatedBg,
         string: String,
         plain: Plain,
+        squareOnRight: SquareOnRight,
         closeIcon: {
             ...Plain,
             bgColor: "transparent",

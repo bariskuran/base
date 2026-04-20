@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 const S = styled.div`
-    ${({ theme, $isHovered }) => css`
+    ${({ theme, $isHovered, $isActivated }) => css`
         all: unset;
         display: flex;
         cursor: pointer;
@@ -16,7 +16,7 @@ const S = styled.div`
             bottom: 1rem;
             left: 0;
             width: 100%;
-            height: 2rem;
+            height: 3rem;
             background: ${theme.greys.shade30};
             transition: all 0.5s;
         }
@@ -43,7 +43,7 @@ const S = styled.div`
             transition: all 0.5s;
         }
 
-        ${$isHovered &&
+        ${($isHovered || $isActivated) &&
         css`
             &::after {
                 left: 0;
@@ -51,14 +51,23 @@ const S = styled.div`
             }
         `}
 
-        &:active {
-            transform: scale(0.8);
-        }
+        ${$isActivated &&
+        css`
+            pointer-events: none;
+
+            &::after {
+                background: ${theme.foreground};
+                left: 0;
+                width: 100%;
+                height: 2rem;
+            }
+        `}
     `}
 `;
 
 const X = {
     variant: S,
-    bgColor: "background",
+    bgColor: "transparent",
+    color: "foreground",
 };
 export default X;

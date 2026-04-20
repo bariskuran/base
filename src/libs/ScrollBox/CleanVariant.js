@@ -18,6 +18,5 @@ export const CleanVariant = styled.div`
             position: relative;
             overflow: auto;
             min-height: 0;
-            padding: 5rem;
         `}
 `;

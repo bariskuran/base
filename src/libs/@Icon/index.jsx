@@ -60,6 +60,7 @@ export const Icon = ({
     popTipProps = {},
     hoverManually = false,
     isActive = false,
+    disableScaleEffect,
 }) => {
     const [iconsLibrary] = baseStore.useGlobal((s) => [s._iconsLibrary]);
     const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
@@ -148,6 +149,7 @@ export const Icon = ({
                         setIsSelfHover,
                         isActive,
                         onActiveIcon,
+                        disableScaleEffect,
                     }}
                     enable={!isHover && !isActive}
                 />
@@ -167,6 +169,7 @@ export const Icon = ({
                             setIsSelfHover,
                             isActive,
                             onActiveIcon,
+                            disableScaleEffect,
                         }}
                         enable={isHover && !isActive}
                     />
@@ -184,6 +187,7 @@ export const Icon = ({
                             setIsSelfHover,
                             isActive,
                             onActiveIcon,
+                            disableScaleEffect,
                         }}
                         enable={isActive && !isHover}
                     />
@@ -213,7 +217,7 @@ const pulseTwice = keyframes`
 `;
 
 const SvgWrapper = styled.svg`
-    ${({ $fill, theme, $isHover, $onHoverIcon, $isActive, $enable }) => css`
+    ${({ $fill, theme, $isHover, $onHoverIcon, $isActive, $enable, $disableScaleEffect }) => css`
         grid-area: 1 / 1;
         fill: ${theme[$fill] || $fill || theme.foreground};
         user-select: none;
@@ -226,12 +230,14 @@ const SvgWrapper = styled.svg`
 
         ${$onHoverIcon &&
         $isHover &&
+        !$disableScaleEffect &&
         css`
             transform: scale(1.1);
         `}
 
         ${$enable &&
         $isActive &&
+        !$disableScaleEffect &&
         css`
             animation: ${pulseTwice} 1.5s ease forwards;
         `}
@@ -266,6 +272,7 @@ const SvgW = ({
     isActive,
     onActiveIcon,
     enable,
+    disableScaleEffect,
 }) => (
     <SvgWrapper
         $fill={finalColor}
@@ -274,6 +281,7 @@ const SvgW = ({
         $isHover={isHover}
         $isHoverIcon={isHoverIcon}
         $onHoverIcon={onHoverIcon}
+        $disableScaleEffect={disableScaleEffect}
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
