@@ -15,7 +15,7 @@ const Page = ({ children, title, releasedOn, description }) => {
                 </Flex.column>
                 <S.headerContent>
                     {releasedOn && <Typo.span>(Relased On: {releasedOn})</Typo.span>}
-                    {description && <Typo.span>{description}</Typo.span>}
+                    {description && <Typo.pre whiteSpace="pre-line">{description}</Typo.pre>}
                 </S.headerContent>
             </Flex.row>
             {children}

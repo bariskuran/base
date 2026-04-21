@@ -16,29 +16,33 @@ const Block = ({ title, description, code, example, lastBlock }) => {
     return (
         <S.container>
             <S.titleArea>
-                <Typo.h4 selfAlign="right">{title}</Typo.h4>
+                <Typo.h4 selfAlign="right" margin="0 0 20rem 0">
+                    {title}
+                </Typo.h4>
                 {enableAjax && (
                     <S.ajaxArea>
-                        <>
-                            <Button.string
-                                label="Example"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.ajax = 0;
-                                    })
-                                }
-                                activeManually={ajax === 0}
-                            />
-                            <Button.string
-                                label="Code"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.ajax = 1;
-                                    })
-                                }
-                                activeManually={ajax === 1}
-                            />
-                        </>
+                        <Button
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.ajax = 0;
+                                })
+                            }
+                            // activeManually={ajax === 0}
+                            icon={{
+                                icon: "search",
+                            }}
+                        />
+                        <Button
+                            icon={{
+                                icon: "code",
+                            }}
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.ajax = 1;
+                                })
+                            }
+                            // activeManually={ajax === 1}
+                        />
                     </S.ajaxArea>
                 )}
             </S.titleArea>

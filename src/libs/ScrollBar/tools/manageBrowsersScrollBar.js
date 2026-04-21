@@ -1,33 +1,25 @@
-export const disableBrowserScrollBar = ({ host, setLocal, styleEl }) => {
-    if (!host || typeof document === "undefined") return;
+export const disableBrowserScrollBar = ({ host, styleEl }) => {
+    if (!host || typeof document === "undefined") return null;
 
     const root = document.getElementById("root");
-    //
-    setLocal((s) => {
-        s.resolvedHost = host;
-    });
-
     let uid = null;
+
     const isRootLike =
         host === root ||
         host === document.body ||
         host === document.documentElement ||
         host === window;
 
+    const previousValues = {
+        targetEl: host,
+        scrollbarAttr: null,
+    };
+
     if (!isRootLike) {
         uid = `scroll-hide-${Math.random().toString(36).slice(2, 10)}`;
         host.setAttribute("data-scrollbar-hide", uid);
+        previousValues.scrollbarAttr = uid;
     }
-
-    const prevOverflow = host.style?.overflow;
-
-    setLocal((s) => {
-        s.previousOverflowValues = {
-            targetEl: host,
-            scrollbarAttr: uid,
-            prevOverflow,
-        };
-    });
 
     styleEl.setAttribute("data-scrollbar-hide-style", "true");
 
@@ -57,21 +49,20 @@ export const disableBrowserScrollBar = ({ host, setLocal, styleEl }) => {
     }
 
     document.head.appendChild(styleEl);
+
+    return previousValues;
 };
 
-export const enableBrowserScrollBar = ({ styleEl, previousOverflowValues }) => {
+export const enableBrowserScrollBar = ({ styleEl, previousValues }) => {
     try {
         styleEl?.remove();
 
-        if (!previousOverflowValues) return;
-        const { targetEl, scrollbarAttr, prevOverflow } = previousOverflowValues;
+        if (!previousValues) return;
+
+        const { targetEl, scrollbarAttr } = previousValues;
 
         if (scrollbarAttr && targetEl) {
             targetEl.removeAttribute("data-scrollbar-hide");
-        }
-
-        if (targetEl && prevOverflow !== undefined && targetEl.style) {
-            targetEl.style.overflow = prevOverflow;
         }
     } catch (e) {
         console.warn("ScrollBar cleanup error:", e);

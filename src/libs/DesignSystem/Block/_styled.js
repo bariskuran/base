@@ -22,6 +22,7 @@ const S = {
         background: ${({ theme }) => theme.greys.shade40};
         min-height: 100rem;
         width: 1px;
+        min-width: 1px;
         align-self: stretch;
         z-index: 2;
 
@@ -46,6 +47,7 @@ const S = {
         display: flex;
         justify-content: flex-end;
         align-items: flex-start;
+        gap: 5rem;
     `,
     contentArea: styled.div`
         /* border-bottom: 1px solid ${({ theme }) => theme.greys.shade40}; */

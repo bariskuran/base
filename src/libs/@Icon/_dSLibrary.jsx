@@ -1,9 +1,40 @@
-import { icons } from "../../@Icon/icons";
-import { Icon } from "../../@Icon";
+import Ds from "../DesignSystem";
+import { icons } from "./icons";
+import { Icon } from "./";
 import styled from "styled-components";
-import { copyToClipboard } from "../../copyToClipboard";
-import { baseStore } from "../../@baseStore";
-import { sortBy } from "../../sortBy";
+import { copyToClipboard } from "../copyToClipboard";
+import { baseStore } from "../@baseStore";
+import { sortBy } from "../sortBy";
+
+const X = () => (
+    <Ds.page
+        title="Icon Library"
+        releasedOn="1.0.0"
+        description={`Icon komponenti ile kullanılan tüm iconları görüntüleyebilirsiniz. İsim ve keyword bazlı arama yapabilirsiniz. Kullanımı için Icon komponentinin dökümantasyonunu inceleyin.
+            
+            Base'in kendi icon seti hali hazırda mevcuttur. Ayrıca kendi iconlarınızı da proje dosyanız üzerinden ekleyebilirsiniz.`}
+    >
+        <Ds.block
+            title="Adding new icons"
+            description={`Proje tarafında, PROJECT_SETTINGS.iconsLibrary altında kendi icon setinizi
+            [viewPortX, path, searchKeywords] 
+            formatı ile ekleyebilirsiniz.
+            
+            viewportY yani icon yüksekliği her zaman 20px olmalıdır.`}
+            code={`iconsLibrary: {
+                        testIcon: [
+                            "5.6, 20",
+                            "M2.8,20c-1.5,0-2.7-1.2-2.7-2.7s1.2-2.7,2.7-2.7,2.7,1.2,2.7,2.7-1.2,2.7-2.7,2.7ZM4.3,9.5l-.7,2.8h-1.6l-.7-2.8C.3,5.8,0,3.8,0,2.8,0,.9,1.1,0,2.8,0s2.8.9,2.8,2.8-.3,3.1-1.3,6.7Z",
+                            ["warning", "exclamation", "mark"],
+                        ],
+                    }
+                `}
+        />
+        <Library />
+    </Ds.page>
+);
+
+export default X;
 
 const S = {
     Container: styled.div`
@@ -51,7 +82,7 @@ const S = {
     `,
 };
 
-export const IconsLibrary = () => {
+export const Library = () => {
     const [iconsLibrary] = baseStore.useGlobal((s) => [s._iconsLibrary]);
     const { searchText, setLocal } = baseStore.useLocal({ searchText: "" });
 

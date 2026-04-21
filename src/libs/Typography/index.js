@@ -22,5 +22,6 @@ export const Typo = componentCreator({
         sub: { size: "70%" },
         bold: { bold: true },
         italic: { italic: true },
+        pre: { as: "pre" },
     },
 });

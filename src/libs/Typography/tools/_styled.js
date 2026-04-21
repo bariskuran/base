@@ -82,6 +82,7 @@ const sharedStyles = ({
             margin-right: auto;
             justify-self: start;
             align-self: start;
+            text-align: left;
         `}
 
     ${$selfAlign === "center" &&
@@ -91,6 +92,7 @@ const sharedStyles = ({
             margin-right: auto;
             justify-self: center;
             align-self: center;
+            text-align: center;
         `}
 
     ${$selfAlign === "right" &&
@@ -100,6 +102,7 @@ const sharedStyles = ({
             margin-right: 0;
             justify-self: end;
             align-self: end;
+            text-align: right;
         `}
 
     ${($ellipsis || $clamp) &&

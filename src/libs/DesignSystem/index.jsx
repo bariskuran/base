@@ -7,11 +7,13 @@ import block from "./Block";
 
 export const sitemap = [
     ["How To Install", undefined, l(() => import("./_dS")), { index: true }],
-    ["DSApiViewer", "dSApiViewer", l(() => import("./ApiViewer/_dS"))],
-    ["DSBlock", "dSBlock", l(() => import("./Block/_dS"))],
+    ["<Ds.api>", "dSApiViewer", l(() => import("./ApiViewer/_dS"))],
+    ["<Ds.block>", "dSBlock", l(() => import("./Block/_dS"))],
+    ["<Ds.code>", "dSCodeViewer", l(() => import("./CodeViewer/_dS"))],
+    ["<ScrollBar>", "scrollBar", l(() => import("../ScrollBar/_dS"))],
+    ["iconLibrary", "iconLibrary", l(() => import("../@Icon/_dSLibrary"))],
+    ["<Icon>", "icons", l(() => import("../@Icon/_dS"))],
     //
-    ["DSCodeViewer", "dSCodeViewer", l(() => import("./CodeViewer/_dS"))],
-    ["Icon", "icons", l(() => import("../@Icon/_dS"))],
 ];
 
 export const designSystemRoutes = [

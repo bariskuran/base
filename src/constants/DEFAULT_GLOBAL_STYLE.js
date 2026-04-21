@@ -38,8 +38,6 @@ export const DEFAULT_GLOBAL_STYLE = css`
         position: relative;
         font-variant-ligatures: no-common-ligatures;
         box-sizing: border-box;
-        display: flex;
-        align-items: center;
     }
 
     button {

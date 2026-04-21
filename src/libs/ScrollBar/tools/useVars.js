@@ -1,95 +1,118 @@
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { baseStore } from "../../@baseStore";
-import { useEffect, useRef, useLayoutEffect, useMemo } from "react";
 import { colorGet } from "../../colorGet";
 import { disableBrowserScrollBar, enableBrowserScrollBar } from "./manageBrowsersScrollBar";
+import getScrollHost from "./getScrollHost";
 import getThumbProps from "./getThumbProps";
 import { useEventListener } from "../../useEventListener";
-import { useCheckOverflow } from "../../useCheckOverflow";
 import { delayedFunction } from "../../delayedFunction";
 import { useExportData } from "../../useExportedData";
+
+const getAxisOverflow = ({ source, isWindowLike }) => {
+    if (typeof document === "undefined" || !source) {
+        return {
+            isOverflowingX: false,
+            isOverflowingY: false,
+        };
+    }
+
+    if (isWindowLike) {
+        const docEl = document.documentElement;
+        const body = document.body;
+
+        return {
+            isOverflowingX: Math.max(docEl.scrollWidth, body.scrollWidth) > window.innerWidth,
+            isOverflowingY: Math.max(docEl.scrollHeight, body.scrollHeight) > window.innerHeight,
+        };
+    }
+
+    return {
+        isOverflowingX: source.scrollWidth > source.clientWidth,
+        isOverflowingY: source.scrollHeight > source.clientHeight,
+    };
+};
 
 const useVars = (p) => {
     const {
         Variant,
-        scrollDirection = "scrollY", // "scrollY" | "scrollX" (+ kısa "x" / "y") — scrollTop mı scrollLeft mi
-        barPosition = "vertical", // "vertical" | "horizontal" — çubuğun ekrandaki yönü (scroll ekseninden bağımsız)
-        isOppositePosition = false, // vertical: varsayılan sağ → true iken sol; horizontal: varsayılan alt → true iken üst
+        body = false,
+        disableX = false,
+        disableY = false,
+        xOnTop = false,
+        yOnLeft = false,
         truckColor,
         thumbColor,
-        containerRef,
-        //
         thickness = 6,
-        maxLength, // %
+        maxLength,
         marginToSide = 5,
         marginToBorder = 2,
         minThumbLength = 24,
-        //
-        exportData, // advanced return for jsx components implementation is done.
+        exportData,
     } = p || {};
 
-    const scrollAxis =
-        scrollDirection === "scrollX" || scrollDirection === "x" || scrollDirection === "X"
-            ? "x"
-            : "y";
-
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
+
     const {
-        thumbLength,
-        thumbPosition,
-        maxScroll,
-        scrollPos,
-        previousOverflowValues,
-        setLocal,
-        isDragging,
+        resolvedHost,
+        hostRect,
+        x,
+        y,
+        dragAxis,
         dragStartClient,
         dragStartScroll,
-        resolvedHost,
         isScrollbarActive,
+        setLocal,
     } = baseStore.useLocal({
-        previousOverflowValues: {},
-        isDragging: false,
+        resolvedHost: null,
+        hostRect: null,
+        dragAxis: null,
         dragStartClient: 0,
         dragStartScroll: 0,
-        thumbLength: 0,
-        thumbPosition: 0,
-        maxScroll: 0,
-        scrollPos: 0,
-        resolvedHost: null,
         isScrollbarActive: false,
+        x: {
+            thumbLength: 0,
+            thumbPosition: 0,
+            trackLength: 0,
+            maxScroll: 0,
+            scrollPos: 0,
+            isOverflowing: false,
+        },
+        y: {
+            thumbLength: 0,
+            thumbPosition: 0,
+            trackLength: 0,
+            maxScroll: 0,
+            scrollPos: 0,
+            isOverflowing: false,
+        },
     });
-    const truckRef = useRef(null);
-    const thumbRef = useRef(null);
+
+    const anchorRef = useRef(null);
+    const xTruckRef = useRef(null);
+    const yTruckRef = useRef(null);
+    const xThumbRef = useRef(null);
+    const yThumbRef = useRef(null);
 
     const colors = colorGet(truckColor || theme.foreground);
-    const root = typeof document !== "undefined" ? document.getElementById("root") : null;
-    const hasExternalContainerRef = !!containerRef;
 
-    /**
-     * Host resolve
-     * - containerRef varsa onun dolmasını bekle
-     * - yoksa body/window modu
-     */
     useLayoutEffect(() => {
         if (typeof document === "undefined") return;
 
-        if (hasExternalContainerRef) {
-            if (!containerRef?.current) return;
+        const host = getScrollHost({
+            node: anchorRef.current,
+            body,
+        });
 
-            setLocal((s) => {
-                s.resolvedHost = containerRef.current;
-            });
-            return;
-        }
+        if (!host) return;
 
         setLocal((s) => {
-            s.resolvedHost = document.documentElement;
+            s.resolvedHost = host;
         });
-    }, [hasExternalContainerRef, containerRef, setLocal]);
+    }, [body, setLocal]);
 
     const normalizedScrollSource =
         typeof document === "undefined" ||
-        resolvedHost == null ||
-        resolvedHost === root ||
+        !resolvedHost ||
         resolvedHost === document.body ||
         resolvedHost === document.documentElement
             ? window
@@ -100,36 +123,13 @@ const useVars = (p) => {
         normalizedScrollSource === document.body ||
         normalizedScrollSource === document.documentElement;
 
-    const { isOverflowing } = useCheckOverflow({
-        target: resolvedHost ? normalizedScrollSource : null,
-    });
-
-    /**
-     * Native browser scrollbar hide
-     */
-    useEffect(() => {
-        if (typeof document === "undefined") return;
-        if (!resolvedHost) return;
-
-        const styleEl = document.createElement("style");
-
-        disableBrowserScrollBar({
-            host:
-                normalizedScrollSource === window
-                    ? document.documentElement
-                    : normalizedScrollSource,
-            setLocal,
-            styleEl,
+    const activateScrollbar = () => {
+        deactivateScrollbar.cancel();
+        setLocal((s) => {
+            s.isScrollbarActive = true;
         });
+    };
 
-        return () => {
-            enableBrowserScrollBar({ styleEl, previousOverflowValues });
-        };
-    }, [resolvedHost, normalizedScrollSource]);
-
-    /**
-     * Thumb metrics
-     */
     const deactivateScrollbar = useMemo(
         () =>
             delayedFunction(
@@ -142,17 +142,58 @@ const useVars = (p) => {
             ),
         [setLocal],
     );
-    const activateScrollbar = () => {
-        deactivateScrollbar.cancel();
-        setLocal((s) => {
-            s.isScrollbarActive = true;
-        });
-    };
-    const getThumbP = () => {
+
+    const syncHostRect = () => {
+        if (typeof document === "undefined") return;
+
+        if (isWindowLike) {
+            setLocal((s) => {
+                s.hostRect = {
+                    top: 0,
+                    left: 0,
+                    right: window.innerWidth,
+                    bottom: window.innerHeight,
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                };
+            });
+            return;
+        }
+
         if (!resolvedHost) return;
 
-        const { thumbLength, thumbPosition, maxScroll, scrollPos } = getThumbProps({
-            direction: scrollAxis,
+        const rect = resolvedHost.getBoundingClientRect();
+
+        setLocal((s) => {
+            s.hostRect = {
+                top: rect.top,
+                left: rect.left,
+                right: rect.right,
+                bottom: rect.bottom,
+                width: rect.width,
+                height: rect.height,
+            };
+        });
+    };
+
+    const syncMetrics = () => {
+        if (!resolvedHost || !normalizedScrollSource) return;
+
+        const overflow = getAxisOverflow({
+            source: normalizedScrollSource,
+            isWindowLike,
+        });
+
+        const xProps = getThumbProps({
+            direction: "x",
+            maxLength,
+            marginToSide,
+            minThumbLength,
+            source: normalizedScrollSource,
+        });
+
+        const yProps = getThumbProps({
+            direction: "y",
             maxLength,
             marginToSide,
             minThumbLength,
@@ -160,69 +201,147 @@ const useVars = (p) => {
         });
 
         setLocal((s) => {
-            s.thumbLength = thumbLength;
-            s.thumbPosition = thumbPosition;
-            s.maxScroll = maxScroll;
-            s.scrollPos = scrollPos;
+            s.x = {
+                ...xProps,
+                isOverflowing: overflow.isOverflowingX,
+            };
+            s.y = {
+                ...yProps,
+                isOverflowing: overflow.isOverflowingY,
+            };
         });
     };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!resolvedHost) return;
-        getThumbP();
-    }, [resolvedHost, normalizedScrollSource, scrollAxis]);
+        syncHostRect();
+        syncMetrics();
+    }, [resolvedHost, isWindowLike, maxLength, marginToSide, minThumbLength]);
+
+    useLayoutEffect(() => {
+        if (typeof document === "undefined") return;
+        if (!resolvedHost) return;
+        if (body) return;
+
+        const host = resolvedHost;
+        const style = host.style;
+        const computed = window.getComputedStyle(host);
+
+        const prev = {
+            overflow: style.overflow,
+            overflowX: style.overflowX,
+            overflowY: style.overflowY,
+            paddingTop: style.paddingTop,
+            paddingRight: style.paddingRight,
+            paddingBottom: style.paddingBottom,
+            paddingLeft: style.paddingLeft,
+        };
+
+        const hasScrollableOverflow =
+            ["auto", "scroll", "overlay"].includes(computed.overflow) ||
+            ["auto", "scroll", "overlay"].includes(computed.overflowX) ||
+            ["auto", "scroll", "overlay"].includes(computed.overflowY);
+
+        if (!hasScrollableOverflow) {
+            // eslint-disable-next-line react-hooks/immutability
+            style.overflow = "auto";
+        }
+
+        const paddingSize = thickness + marginToBorder + 6;
+
+        if (y.isOverflowing && !disableY) {
+            if (yOnLeft) {
+                style.paddingLeft = `calc(${computed.paddingLeft} + ${paddingSize}px)`;
+            } else {
+                style.paddingRight = `calc(${computed.paddingRight} + ${paddingSize}px)`;
+            }
+        }
+
+        if (x.isOverflowing && !disableX) {
+            if (xOnTop) {
+                style.paddingTop = `calc(${computed.paddingTop} + ${paddingSize}px)`;
+            } else {
+                style.paddingBottom = `calc(${computed.paddingBottom} + ${paddingSize}px)`;
+            }
+        }
+
+        return () => {
+            style.overflow = prev.overflow;
+            style.overflowX = prev.overflowX;
+            style.overflowY = prev.overflowY;
+            style.paddingTop = prev.paddingTop;
+            style.paddingRight = prev.paddingRight;
+            style.paddingBottom = prev.paddingBottom;
+            style.paddingLeft = prev.paddingLeft;
+        };
+    }, [
+        resolvedHost,
+        body,
+        disableX,
+        disableY,
+        xOnTop,
+        yOnLeft,
+        x.isOverflowing,
+        y.isOverflowing,
+        thickness,
+        marginToBorder,
+    ]);
+
+    useEffect(() => {
+        if (typeof document === "undefined") return;
+        if (!resolvedHost) return;
+
+        const hostForHide =
+            normalizedScrollSource === window ? document.documentElement : normalizedScrollSource;
+
+        const styleEl = document.createElement("style");
+        const previousValues = disableBrowserScrollBar({
+            host: hostForHide,
+            styleEl,
+        });
+
+        return () => {
+            enableBrowserScrollBar({
+                styleEl,
+                previousValues,
+            });
+        };
+    }, [resolvedHost, normalizedScrollSource]);
 
     useEventListener(
         "scroll",
         () => {
-            getThumbP();
+            syncMetrics();
+            syncHostRect();
             activateScrollbar();
             deactivateScrollbar.run();
         },
         {
-            delay: 50,
+            delay: 0,
             passive: true,
             source: resolvedHost ? normalizedScrollSource : undefined,
         },
     );
 
-    /**
-     * Scroll setters
-     */
-    const getHostEl = () => {
-        if (typeof document === "undefined") return null;
+    useEventListener("resize", syncHostRect, {
+        delay: 0,
+        passive: true,
+        source: typeof window !== "undefined" ? window : undefined,
+    });
 
-        if (isWindowLike) {
-            return document.documentElement;
-        }
+    useEventListener("scroll", syncHostRect, {
+        delay: 0,
+        passive: true,
+        source: typeof window !== "undefined" ? window : undefined,
+    });
 
-        return normalizedScrollSource || null;
-    };
-
-    const getOverflowByAxis = () => {
-        const el = getHostEl();
-        if (!el) {
-            return {
-                isOverflowingX: false,
-                isOverflowingY: false,
-            };
-        }
-
-        return {
-            isOverflowingX: el.scrollWidth > el.clientWidth,
-            isOverflowingY: el.scrollHeight > el.clientHeight,
-        };
-    };
-
-    /**
-     * Scroll setters
-     */
-    const setScrollTo = (nextScroll, { behavior = "auto" } = {}) => {
-        const safeScroll = Math.max(0, Math.min(maxScroll, nextScroll));
+    const setScrollTo = (axis, nextScroll, { behavior = "auto" } = {}) => {
+        const axisState = axis === "x" ? x : y;
+        const safeScroll = Math.max(0, Math.min(axisState.maxScroll, nextScroll));
 
         if (isWindowLike) {
             window.scrollTo({
-                ...(scrollAxis === "y" ? { top: safeScroll } : { left: safeScroll }),
+                ...(axis === "y" ? { top: safeScroll } : { left: safeScroll }),
                 behavior,
             });
             return;
@@ -232,23 +351,23 @@ const useVars = (p) => {
 
         if (typeof normalizedScrollSource.scrollTo === "function") {
             normalizedScrollSource.scrollTo({
-                ...(scrollAxis === "y" ? { top: safeScroll } : { left: safeScroll }),
+                ...(axis === "y" ? { top: safeScroll } : { left: safeScroll }),
                 behavior,
             });
+            return;
+        }
+
+        if (axis === "y") {
+            // eslint-disable-next-line react-hooks/immutability
+            normalizedScrollSource.scrollTop = safeScroll;
+        } else {
+            normalizedScrollSource.scrollLeft = safeScroll;
         }
     };
 
     const onWheelTranslateYToX = (e) => {
-        if (scrollAxis !== "x") return;
         if (isWindowLike) return;
-
-        const hostEl = getHostEl();
-        if (!hostEl) return;
-
-        const { isOverflowingX, isOverflowingY } = getOverflowByAxis();
-
-        if (isOverflowingY) return;
-        if (!isOverflowingX) return;
+        if (!x.isOverflowing || y.isOverflowing) return;
 
         const absY = Math.abs(e.deltaY);
         const absX = Math.abs(e.deltaX);
@@ -256,14 +375,17 @@ const useVars = (p) => {
         if (absY === 0) return;
         if (absX > absY) return;
 
-        const currentLeft = hostEl.scrollLeft;
-        const maxLeft = Math.max(0, hostEl.scrollWidth - hostEl.clientWidth);
+        e.preventDefault();
+
+        const currentLeft = normalizedScrollSource.scrollLeft;
+        const maxLeft = Math.max(
+            0,
+            normalizedScrollSource.scrollWidth - normalizedScrollSource.clientWidth,
+        );
         const nextLeft = Math.max(0, Math.min(maxLeft, currentLeft + e.deltaY));
 
-        if (nextLeft !== currentLeft) {
-            e.preventDefault();
-            hostEl.scrollLeft = nextLeft;
-        }
+        // eslint-disable-next-line react-hooks/immutability
+        normalizedScrollSource.scrollLeft = nextLeft;
     };
 
     useEventListener("wheel", onWheelTranslateYToX, {
@@ -272,89 +394,92 @@ const useVars = (p) => {
         source: resolvedHost && !isWindowLike ? normalizedScrollSource : undefined,
     });
 
-    const getTrackMetrics = () => {
-        const truckEl = truckRef.current;
+    const getTrackMetrics = (axis) => {
+        const isY = axis === "y";
+        const truckEl = isY ? yTruckRef.current : xTruckRef.current;
+        const axisState = isY ? y : x;
+
         if (!truckEl) return null;
 
         const rect = truckEl.getBoundingClientRect();
-
-        const isBarVertical = barPosition === "vertical";
-        const trackLength = isBarVertical ? rect.height : rect.width;
-        const trackStart = isBarVertical ? rect.top : rect.left;
+        const trackLength = isY ? rect.height : rect.width;
+        const trackStart = isY ? rect.top : rect.left;
 
         return {
             rect,
             trackLength,
             trackStart,
-            movableArea: Math.max(0, trackLength - thumbLength),
+            movableArea: Math.max(0, trackLength - axisState.thumbLength),
         };
     };
 
-    /**
-     * Click on truck
-     */
-    const onTruckMouseDown = (e) => {
-        if (!isOverflowing) return;
-        if (thumbRef.current?.contains(e.target)) return;
+    const onTruckMouseDownFactory = (axis) => (e) => {
+        const axisState = axis === "y" ? y : x;
+        const thumbEl = axis === "y" ? yThumbRef.current : xThumbRef.current;
 
-        const metrics = getTrackMetrics();
+        if (!axisState.isOverflowing) return;
+        if (thumbEl?.contains(e.target)) return;
+
+        const metrics = getTrackMetrics(axis);
         if (!metrics) return;
 
-        const clickPos = barPosition === "vertical" ? e.clientY : e.clientX;
+        const clickPos = axis === "y" ? e.clientY : e.clientX;
         const clickOffset = clickPos - metrics.trackStart;
-
-        const desiredThumbPos = clickOffset - thumbLength / 2;
+        const desiredThumbPos = clickOffset - axisState.thumbLength / 2;
         const clampedThumbPos = Math.max(0, Math.min(metrics.movableArea, desiredThumbPos));
 
         const nextScroll =
-            metrics.movableArea <= 0 ? 0 : (clampedThumbPos / metrics.movableArea) * maxScroll;
+            metrics.movableArea <= 0
+                ? 0
+                : (clampedThumbPos / metrics.movableArea) * axisState.maxScroll;
 
-        setScrollTo(nextScroll, { behavior: "smooth" });
+        setScrollTo(axis, nextScroll, { behavior: "smooth" });
     };
 
-    /**
-     * Drag thumb
-     */
-    const onThumbMouseDown = (e) => {
+    const onThumbMouseDownFactory = (axis) => (e) => {
         e.preventDefault();
         e.stopPropagation();
 
-        const client = barPosition === "vertical" ? e.clientY : e.clientX;
+        const client = axis === "y" ? e.clientY : e.clientX;
+        const axisState = axis === "y" ? y : x;
 
         setLocal((s) => {
-            s.isDragging = true;
+            s.dragAxis = axis;
             s.dragStartClient = client;
-            s.dragStartScroll = scrollPos;
+            s.dragStartScroll = axisState.scrollPos;
         });
     };
 
     const onDragMove = (e) => {
-        if (!isDragging) return;
+        if (!dragAxis) return;
 
-        const metrics = getTrackMetrics();
+        const axis = dragAxis;
+        const axisState = axis === "y" ? y : x;
+        const metrics = getTrackMetrics(axis);
+
         if (!metrics) return;
 
-        const currentClient = barPosition === "vertical" ? e.clientY : e.clientX;
+        const currentClient = axis === "y" ? e.clientY : e.clientX;
         const deltaClient = currentClient - dragStartClient;
 
-        if (metrics.movableArea <= 0 || maxScroll <= 0) return;
+        if (metrics.movableArea <= 0 || axisState.maxScroll <= 0) return;
 
-        const scrollPerPixel = maxScroll / metrics.movableArea;
+        const scrollPerPixel = axisState.maxScroll / metrics.movableArea;
         const nextScroll = dragStartScroll + deltaClient * scrollPerPixel;
 
-        setScrollTo(nextScroll, { behavior: "auto" });
+        setScrollTo(axis, nextScroll, { behavior: "auto" });
     };
 
     const onDragEnd = () => {
-        if (!isDragging) return;
+        if (!dragAxis) return;
 
         setLocal((s) => {
-            s.isDragging = false;
+            s.dragAxis = null;
         });
     };
 
     useEventListener("mousemove", onDragMove, {
-        delay: 50,
+        delay: 0,
         passive: false,
         source: typeof window !== "undefined" ? window : undefined,
     });
@@ -365,56 +490,49 @@ const useVars = (p) => {
         source: typeof window !== "undefined" ? window : undefined,
     });
 
-    /**
-     * Global cursor while dragging
-     */
     useEffect(() => {
         if (typeof document === "undefined") return;
 
         const html = document.documentElement;
-        const body = document.body;
+        const bodyEl = document.body;
 
         const prevHtmlCursor = html.style.cursor;
-        const prevBodyCursor = body.style.cursor;
+        const prevBodyCursor = bodyEl.style.cursor;
         const prevHtmlUserSelect = html.style.userSelect;
-        const prevBodyUserSelect = body.style.userSelect;
+        const prevBodyUserSelect = bodyEl.style.userSelect;
 
-        if (isDragging) {
+        if (dragAxis) {
             html.style.setProperty("cursor", "grabbing", "important");
-            body.style.setProperty("cursor", "grabbing", "important");
+            bodyEl.style.setProperty("cursor", "grabbing", "important");
             html.style.setProperty("user-select", "none", "important");
-            body.style.setProperty("user-select", "none", "important");
+            bodyEl.style.setProperty("user-select", "none", "important");
         } else {
             html.style.cursor = prevHtmlCursor;
-            body.style.cursor = prevBodyCursor;
+            bodyEl.style.cursor = prevBodyCursor;
             html.style.userSelect = prevHtmlUserSelect;
-            body.style.userSelect = prevBodyUserSelect;
+            bodyEl.style.userSelect = prevBodyUserSelect;
         }
 
         return () => {
             html.style.cursor = prevHtmlCursor;
-            body.style.cursor = prevBodyCursor;
+            bodyEl.style.cursor = prevBodyCursor;
             html.style.userSelect = prevHtmlUserSelect;
-            body.style.userSelect = prevBodyUserSelect;
+            bodyEl.style.userSelect = prevBodyUserSelect;
         };
-    }, [isDragging]);
+    }, [dragAxis]);
 
     const handleOnMouseEnter = () => {
         activateScrollbar();
     };
+
     const handleOnMouseLeave = () => {
         deactivateScrollbar.run();
     };
 
-    const isBarVertical = barPosition === "vertical";
-    const mainKey = isBarVertical
-        ? isOppositePosition
-            ? "left"
-            : "right"
-        : isOppositePosition
-          ? "top"
-          : "bottom";
-    const crossKey = isBarVertical ? "top" : "left";
+    const showX = x.isOverflowing && !disableX;
+    const showY = y.isOverflowing && !disableY;
+    const isDraggingX = dragAxis === "x";
+    const isDraggingY = dragAxis === "y";
 
     return useExportData(
         {
@@ -422,12 +540,11 @@ const useVars = (p) => {
             ...p,
             theme,
             Variant,
-            scrollDirection,
-            barPosition,
-            isOppositePosition,
-            scrollAxis,
-            truckRef,
-            thumbRef,
+            body,
+            disableX,
+            disableY,
+            xOnTop,
+            yOnLeft,
             truckColor,
             thumbColor,
             colors,
@@ -436,26 +553,31 @@ const useVars = (p) => {
             marginToSide,
             marginToBorder,
             minThumbLength,
-            onTruckMouseDown,
-            onThumbMouseDown,
+            resolvedHost,
+            normalizedScrollSource,
+            isWindowLike,
+            hostRect,
+            anchorRef,
+            xTruckRef,
+            yTruckRef,
+            xThumbRef,
+            yThumbRef,
+            onXTruckMouseDown: onTruckMouseDownFactory("x"),
+            onYTruckMouseDown: onTruckMouseDownFactory("y"),
+            onXThumbMouseDown: onThumbMouseDownFactory("x"),
+            onYThumbMouseDown: onThumbMouseDownFactory("y"),
             handleOnMouseEnter,
             handleOnMouseLeave,
-            isBarVertical,
-            mainKey,
-            crossKey,
+            setScrollTo,
         },
         {
-            minThumbLength,
-            thumbLength,
-            thumbPosition,
-            maxScroll,
-            scrollPos,
-            isOverflowing,
-            isDragging,
-            isWindowLike,
-            isBoxMode: !isWindowLike,
-            isScrollbarActive: isScrollbarActive || isDragging,
-            containerRef,
+            x,
+            y,
+            showX,
+            showY,
+            isDraggingX,
+            isDraggingY,
+            isScrollbarActive: isScrollbarActive || !!dragAxis,
         },
     );
 };

@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 const S = {
-    children: styled.div`
-        all: unset;
+    anchor: styled.div`
+        display: none;
     `,
 };
+
 export default S;
