@@ -5,6 +5,7 @@ import S from "./_styled";
 
 const dedent = (text = "") => {
     const lines = String(text).replace(/\r\n/g, "\n").split("\n");
+
     while (lines.length && lines[0].trim() === "") lines.shift();
     while (lines.length && lines[lines.length - 1].trim() === "") lines.pop();
 
@@ -35,6 +36,278 @@ const dedent = (text = "") => {
         .join("\n");
 };
 
+const getLineIndentAt = (text = "", index = 0) => {
+    let i = index - 1;
+    while (i >= 0 && text[i] !== "\n") i -= 1;
+    const start = i + 1;
+    const before = text.slice(start, index);
+    return before.match(/^[ \t]*/)?.[0] ?? "";
+};
+
+const findTagEnd = (text = "", startIndex = 0) => {
+    let quote = null;
+    let braceDepth = 0;
+    let parenDepth = 0;
+    let bracketDepth = 0;
+
+    for (let i = startIndex; i < text.length; i += 1) {
+        const ch = text[i];
+        const prev = text[i - 1];
+
+        if (quote) {
+            if (ch === quote && prev !== "\\") quote = null;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'" || ch === "`") {
+            quote = ch;
+            continue;
+        }
+
+        if (ch === "{") {
+            braceDepth += 1;
+            continue;
+        }
+
+        if (ch === "}") {
+            braceDepth = Math.max(0, braceDepth - 1);
+            continue;
+        }
+
+        if (ch === "(") {
+            parenDepth += 1;
+            continue;
+        }
+
+        if (ch === ")") {
+            parenDepth = Math.max(0, parenDepth - 1);
+            continue;
+        }
+
+        if (ch === "[") {
+            bracketDepth += 1;
+            continue;
+        }
+
+        if (ch === "]") {
+            bracketDepth = Math.max(0, bracketDepth - 1);
+            continue;
+        }
+
+        if (ch === ">" && braceDepth === 0 && parenDepth === 0 && bracketDepth === 0) {
+            return i;
+        }
+    }
+
+    return -1;
+};
+
+const findFirstTopLevelWhitespace = (text = "") => {
+    let quote = null;
+    let braceDepth = 0;
+    let parenDepth = 0;
+    let bracketDepth = 0;
+
+    for (let i = 0; i < text.length; i += 1) {
+        const ch = text[i];
+        const prev = text[i - 1];
+
+        if (quote) {
+            if (ch === quote && prev !== "\\") quote = null;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'" || ch === "`") {
+            quote = ch;
+            continue;
+        }
+
+        if (ch === "{") {
+            braceDepth += 1;
+            continue;
+        }
+
+        if (ch === "}") {
+            braceDepth = Math.max(0, braceDepth - 1);
+            continue;
+        }
+
+        if (ch === "(") {
+            parenDepth += 1;
+            continue;
+        }
+
+        if (ch === ")") {
+            parenDepth = Math.max(0, parenDepth - 1);
+            continue;
+        }
+
+        if (ch === "[") {
+            bracketDepth += 1;
+            continue;
+        }
+
+        if (ch === "]") {
+            bracketDepth = Math.max(0, bracketDepth - 1);
+            continue;
+        }
+
+        if (/\s/.test(ch) && braceDepth === 0 && parenDepth === 0 && bracketDepth === 0) {
+            return i;
+        }
+    }
+
+    return -1;
+};
+
+const splitTopLevelProps = (text = "") => {
+    const result = [];
+    let current = "";
+    let quote = null;
+    let braceDepth = 0;
+    let parenDepth = 0;
+    let bracketDepth = 0;
+
+    for (let i = 0; i < text.length; i += 1) {
+        const ch = text[i];
+        const prev = text[i - 1];
+
+        if (quote) {
+            current += ch;
+            if (ch === quote && prev !== "\\") quote = null;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'" || ch === "`") {
+            quote = ch;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "{") {
+            braceDepth += 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "}") {
+            braceDepth = Math.max(0, braceDepth - 1);
+            current += ch;
+            continue;
+        }
+
+        if (ch === "(") {
+            parenDepth += 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === ")") {
+            parenDepth = Math.max(0, parenDepth - 1);
+            current += ch;
+            continue;
+        }
+
+        if (ch === "[") {
+            bracketDepth += 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "]") {
+            bracketDepth = Math.max(0, bracketDepth - 1);
+            current += ch;
+            continue;
+        }
+
+        if (/\s/.test(ch) && braceDepth === 0 && parenDepth === 0 && bracketDepth === 0) {
+            if (current.trim()) {
+                result.push(current.trim());
+                current = "";
+            }
+            continue;
+        }
+
+        current += ch;
+    }
+
+    if (current.trim()) result.push(current.trim());
+
+    return result;
+};
+
+const formatOpeningTag = (rawTag = "", lineIndent = "", indentUnit = "    ") => {
+    if (!rawTag.startsWith("<") || !rawTag.endsWith(">")) return rawTag;
+    if (rawTag.startsWith("</")) return rawTag;
+    if (rawTag === "<>" || rawTag === "</>") return rawTag;
+    if (rawTag.startsWith("<!--")) return rawTag;
+
+    const isSelfClosing = /\/>\s*$/.test(rawTag);
+    const inner = rawTag.slice(1, isSelfClosing ? -2 : -1).trim();
+
+    if (!inner) return rawTag;
+
+    const firstWs = findFirstTopLevelWhitespace(inner);
+    if (firstWs === -1) return rawTag;
+
+    const tagName = inner.slice(0, firstWs).trim();
+    const propsText = inner.slice(firstWs).trim();
+
+    if (!tagName || !propsText) return rawTag;
+
+    const props = splitTopLevelProps(propsText);
+    if (props.length <= 1) return rawTag;
+
+    const propIndent = lineIndent + indentUnit;
+    const closing = isSelfClosing ? " />" : ">";
+
+    return [
+        `<${tagName}`,
+        ...props.map(
+            (prop, index) => `${propIndent}${prop}${index === props.length - 1 ? closing : ""}`,
+        ),
+    ].join("\n");
+};
+
+const formatJsxPropsForViewer = (text = "", indentUnit = "    ") => {
+    let result = "";
+    let i = 0;
+
+    while (i < text.length) {
+        const ch = text[i];
+
+        if (ch !== "<") {
+            result += ch;
+            i += 1;
+            continue;
+        }
+
+        const next = text[i + 1];
+
+        if (next === "/" || next === ">" || next === "!" || next === "?") {
+            result += ch;
+            i += 1;
+            continue;
+        }
+
+        const tagEnd = findTagEnd(text, i + 1);
+
+        if (tagEnd === -1) {
+            result += text.slice(i);
+            break;
+        }
+
+        const rawTag = text.slice(i, tagEnd + 1);
+        const lineIndent = getLineIndentAt(text, i);
+        const formattedTag = formatOpeningTag(rawTag, lineIndent, indentUnit);
+
+        result += formattedTag;
+        i = tagEnd + 1;
+    }
+
+    return result;
+};
+
 const CodeViewer = ({
     code,
     children,
@@ -46,10 +319,15 @@ const CodeViewer = ({
     color,
     maxHeight,
     wrap = false,
+    formatJsxProps = true,
     ...props
 }) => {
     const rawContent = code ?? children ?? "";
-    const normalizedContent = useMemo(() => dedent(rawContent), [rawContent]);
+
+    const normalizedContent = useMemo(() => {
+        const base = dedent(rawContent);
+        return formatJsxProps ? formatJsxPropsForViewer(base) : base;
+    }, [rawContent, formatJsxProps]);
 
     return (
         <S.container
@@ -64,6 +342,7 @@ const CodeViewer = ({
             {...props}
         >
             <code>{normalizedContent}</code>
+
             <S.buttonArea>
                 <Button
                     onClick={() => {
@@ -83,4 +362,5 @@ const CodeViewer = ({
         </S.container>
     );
 };
+
 export default CodeViewer;
