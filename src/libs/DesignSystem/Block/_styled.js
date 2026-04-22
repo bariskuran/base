@@ -5,6 +5,7 @@ const S = {
         display: flex;
         align-items: stretch;
         min-height: 100rem;
+        width: 100%;
     `,
     titleArea: styled.div`
         max-width: 125rem;
@@ -50,7 +51,7 @@ const S = {
         gap: 5rem;
     `,
     contentArea: styled.div`
-        /* border-bottom: 1px solid ${({ theme }) => theme.greys.shade40}; */
+        width: 100%;
         background-color: ${({ theme }) => theme.backgrounds.tint30};
         border-radius: 0 20rem 20rem 0;
         padding: 20rem;

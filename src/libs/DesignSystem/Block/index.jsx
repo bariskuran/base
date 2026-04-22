@@ -16,42 +16,48 @@ const Block = ({ title, description, code, example, lastBlock }) => {
     return (
         <S.container>
             <S.titleArea>
-                <Typo.h4 selfAlign="right" margin="0 0 20rem 0">
+                <Typo.h5 selfAlign="right" margin="0 0 10rem 0" fitContent balance>
                     {title}
-                </Typo.h4>
+                </Typo.h5>
                 {enableAjax && (
                     <S.ajaxArea>
-                        <Button
+                        <Button.underline
                             onClick={() =>
                                 setLocal((s) => {
                                     s.ajax = 0;
                                 })
                             }
-                            // activeManually={ajax === 0}
+                            activeManually={ajax === 0}
                             icon={{
                                 icon: "search",
+                                width: 14,
+                                onActiveColor: "primary",
                             }}
                         />
-                        <Button
+                        <Button.underline
                             icon={{
                                 icon: "code",
+                                width: 14,
+                                onActiveColor: "primary",
                             }}
                             onClick={() =>
                                 setLocal((s) => {
                                     s.ajax = 1;
                                 })
                             }
-                            // activeManually={ajax === 1}
+                            activeManually={ajax === 1}
                         />
                     </S.ajaxArea>
                 )}
             </S.titleArea>
             <S.line $lastBlock={lastBlock} />
-            <Flex.column>
+            <Flex.column justify="start">
                 {(example || description) && ajax === 0 && (
                     <S.contentArea>
                         <div>{example}</div>
-                        <div>{description}</div>
+                        <Typo.p whiteSpace="pre-line" balance>
+                            {description}
+                        </Typo.p>
                     </S.contentArea>
                 )}
                 {((code && ajax === 1) || (!example && !description && code)) && (

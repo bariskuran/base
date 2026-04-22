@@ -12,7 +12,6 @@ export const S = {
             $maxHeight,
             $wrap,
         }) => css`
-            all: unset;
             display: block;
             box-sizing: border-box;
             width: 100%;

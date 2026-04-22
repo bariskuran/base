@@ -102,22 +102,41 @@ const generate4DirectionProps = ([high, top, right, bottom, left]) => {
     return normalized.map((item) => item ?? 0).join(" ");
 };
 
+const mapJustify = (value) => {
+    if (value == null) return undefined;
+    const v = String(value).trim();
+    if (["start", "left", "top"].includes(v)) return "flex-start";
+    if (["end", "right", "bottom"].includes(v)) return "flex-end";
+    if (v === "center") return "center";
+    if (["between", "space-between"].includes(v)) return "space-between";
+    if (["around", "space-around"].includes(v)) return "space-around";
+    if (["evenly", "space-evenly"].includes(v)) return "space-evenly";
+    return v;
+};
+
+const mapAlignItems = (value) => {
+    if (value == null) return undefined;
+
+    const v = String(value).trim();
+
+    if (["start", "left", "top"].includes(v)) return "flex-start";
+    if (["end", "right", "bottom"].includes(v)) return "flex-end";
+    if (v === "center") return "center";
+    if (["stretch", "baseline"].includes(v)) return v;
+
+    return v;
+};
+
 const mapXAlign = (value) => {
     if (value == null) return undefined;
 
     const v = String(value).trim();
 
-    const map = {
-        left: "flex-start",
-        center: "center",
-        right: "flex-end",
-        "flex-start": "flex-start",
-        "flex-end": "flex-end",
-        start: "start",
-        end: "end",
-    };
+    if (["left", "start"].includes(v)) return "flex-start";
+    if (["right", "end"].includes(v)) return "flex-end";
+    if (v === "center") return "center";
 
-    return map[v] || v;
+    return v;
 };
 
 const mapYAlign = (value) => {
@@ -125,21 +144,32 @@ const mapYAlign = (value) => {
 
     const v = String(value).trim();
 
-    const map = {
-        top: "flex-start",
-        center: "center",
-        bottom: "flex-end",
-        "flex-start": "flex-start",
-        "flex-end": "flex-end",
-        start: "start",
-        end: "end",
-        stretch: "stretch",
-    };
+    if (["top", "start"].includes(v)) return "flex-start";
+    if (["bottom", "end"].includes(v)) return "flex-end";
+    if (v === "center") return "center";
 
-    return map[v] || v;
+    return v;
 };
 
-const generateJustifyAlign = ({ align, xAlign, yAlign, direction }) => {
+const generateJustifyAlign = ({
+    align,
+    xAlign,
+    yAlign,
+    direction,
+    justifyContent,
+    justify,
+    alignItems,
+}) => {
+    const directJustify = mapJustify(justifyContent ?? justify);
+    const directAlignItems = mapAlignItems(alignItems ?? align);
+
+    if (directJustify != null || directAlignItems != null) {
+        return {
+            ...(directJustify != null ? { justifyContent: directJustify } : {}),
+            ...(directAlignItems != null ? { alignItems: directAlignItems } : {}),
+        };
+    }
+
     const isColumn = direction === "column" || direction === "column-reverse";
 
     const resolvedXAlign = xAlign ?? align;
@@ -150,14 +180,14 @@ const generateJustifyAlign = ({ align, xAlign, yAlign, direction }) => {
 
     if (isColumn) {
         return {
-            justifyContent: y,
-            alignItems: x,
+            ...(y != null ? { justifyContent: y } : {}),
+            ...(x != null ? { alignItems: x } : {}),
         };
     }
 
     return {
-        justifyContent: x,
-        alignItems: y,
+        ...(x != null ? { justifyContent: x } : {}),
+        ...(y != null ? { alignItems: y } : {}),
     };
 };
 
@@ -291,6 +321,9 @@ export const generateProps = ({
         yAlign,
         gap,
         alignSelf,
+        justifyContent,
+        justify,
+        alignItems,
         //
         inCommonProps,
         inProps,
@@ -328,7 +361,15 @@ export const generateProps = ({
         height: baseSizing.height,
         minWidth: baseSizing.minWidth,
         minHeight: baseSizing.minHeight,
-        ...generateJustifyAlign({ align, xAlign, yAlign, direction: currDirection }),
+        ...generateJustifyAlign({
+            align,
+            xAlign,
+            yAlign,
+            direction: currDirection,
+            justifyContent,
+            justify,
+            alignItems,
+        }),
         gap: cssNormalizeSize(gap),
         alignSelf: generateAlignSelf({ alignSelf }),
         inProps: generateInProps({

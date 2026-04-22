@@ -33,6 +33,7 @@ export const S = {
         margin: 10rem 0 20rem 0;
     `,
     content: styled.div`
+        width: 100%;
         display: flex;
         flex-direction: column;
         gap: 10rem;

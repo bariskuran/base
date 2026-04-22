@@ -14,8 +14,12 @@ const Page = ({ children, title, releasedOn, description }) => {
                     </Flex.row>
                 </Flex.column>
                 <S.headerContent>
-                    {releasedOn && <Typo.span>(Relased On: {releasedOn})</Typo.span>}
-                    {description && <Typo.pre whiteSpace="pre-line">{description}</Typo.pre>}
+                    {releasedOn && <Typo.span balance>(Relased On: {releasedOn})</Typo.span>}
+                    {description && (
+                        <Typo.pre whiteSpace="pre-line" balance>
+                            {description}
+                        </Typo.pre>
+                    )}
                 </S.headerContent>
             </Flex.row>
             {children}

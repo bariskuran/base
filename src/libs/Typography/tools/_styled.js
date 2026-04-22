@@ -33,6 +33,8 @@ const sharedStyles = ({
     $margin,
     $padding,
     $enableQuoteMarks,
+    $fitContent,
+    $balance,
 }) => {
     return css`
         box-sizing: border-box;
@@ -74,6 +76,16 @@ const sharedStyles = ({
         `}
 
     ${$hasOverlayCopy ? `padding-right: 20rem;` : ""}
+
+    ${$fitContent &&
+        css`
+            width: fit-content;
+        `}
+    
+    ${$balance &&
+        css`
+            text-wrap: balance;
+        `}
 
     ${$selfAlign === "left" &&
         css`

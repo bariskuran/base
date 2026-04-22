@@ -15,6 +15,8 @@ const S = {
             justify-content: flex-start;
             min-width: 200rem;
             box-sizing: border-box;
+            text-wrap: balance;
+            white-space: normal;
         `}
     `,
     headerContent: styled.div`
@@ -26,6 +28,7 @@ const S = {
         align-items: flex-start;
         justify-content: center;
         box-sizing: border-box;
+        margin: 50rem 0;
     `,
     row1: styled.div`
         display: flex;

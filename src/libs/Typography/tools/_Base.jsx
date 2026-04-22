@@ -44,6 +44,8 @@ export const Base = (props) => {
         $margin: vars.margin,
         $padding: vars.padding,
         $enableQuoteMarks: vars.enableQuoteMarks,
+        $fitContent: vars.fitContent,
+        $balance: vars.balance,
     };
 
     const CopyButton = (

@@ -35,10 +35,10 @@ const S = styled.div`
         &::after {
             content: "";
             position: absolute;
-            bottom: 3rem;
+            bottom: -3rem;
             left: 0;
             width: 100%;
-            height: 3rem;
+            height: 2rem;
             background: ${theme.greys.shade30};
             transition: all 0.5s;
         }
@@ -77,11 +77,6 @@ const S = styled.div`
                 left: 0;
                 width: 100%;
             }
-        `}
-
-        ${$isActivated &&
-        css`
-            transform: scale(0.8);
         `}
     `}
 `;

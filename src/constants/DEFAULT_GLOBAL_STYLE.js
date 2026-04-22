@@ -34,7 +34,6 @@ export const DEFAULT_GLOBAL_STYLE = css`
     }
 
     div {
-        width: 100%;
         position: relative;
         font-variant-ligatures: no-common-ligatures;
         box-sizing: border-box;

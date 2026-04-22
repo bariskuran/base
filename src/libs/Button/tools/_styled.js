@@ -18,8 +18,14 @@ export const S = {
         width: unset;
     `,
     ScaleDiv: styled.div`
-        all: unset;
-        transform: scale(${({ $size }) => $size}%);
+        position: relative;
+        display: inline;
+
+        ${({ $size }) =>
+            $size &&
+            css`
+                transform: scale(${$size}%);
+            `}
 
         ${({ $fullWidth }) =>
             $fullWidth &&

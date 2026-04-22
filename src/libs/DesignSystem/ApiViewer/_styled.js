@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 const S = {
     container: styled.div`
         ${({ theme }) => css`
+            width: 100%;
             display: grid;
             grid-template-columns: 10px 1fr 1fr 4fr 1fr;
 

@@ -3,11 +3,12 @@ import styled, { css } from "styled-components";
 const S = styled.div`
     ${({ theme, $isHovered, $isActivated }) => css`
         all: unset;
-        display: flex;
+        width: max-content;
+        display: inline-flex;
         cursor: pointer;
         transition: all 0.5s;
         position: relative;
-        margin: 0 5rem;
+        margin: 0 3rem;
 
         &::before,
         &::after {

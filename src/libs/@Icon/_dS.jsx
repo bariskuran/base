@@ -1,7 +1,9 @@
 import Ds from "../DesignSystem";
-// import { SYS } from "../../constants/SYS";
-// import { Icon } from "./";
-import { Library } from "./Library";
+import { SYS } from "../../constants/SYS";
+import { Icon } from "./";
+import { Flex } from "../Flex";
+import { Button } from "../Button";
+import { baseStore } from "../@baseStore";
 
 const CustomTriangle = () => (
     <>
@@ -9,137 +11,156 @@ const CustomTriangle = () => (
     </>
 );
 
-const X = () => (
-    <Ds.page
-        title="DSIcon"
-        releasedOn="1.0.0"
-        description="DSIcon renders svg icons from the built-in icon set or from custom icon definitions. It supports hover state, active state, size switching, color switching, and optional PopTip integration."
-    >
-        <Library />
-        {/* 
-        <Ds.block
-            title="Basic usage"
-            description="The Icon component can render any icon from the icon library by passing the icon name."
-            code={`import { Icon } from "${SYS.basePath}";
+const X = () => {
+    const { isHover, isActive, setLocal, setLocalByPath } = baseStore.useLocal({
+        isHover: false,
+        isActive: false,
+    });
 
-<div style={{ display: "flex", gap: "16rem", alignItems: "center" }}>
-    <Icon icon="copy" />
-    <Icon icon="check" width={16} />
-    <Icon icon="close" width={20} />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "16rem", alignItems: "center" }}>
-                    <Icon icon="copy" />
-                    <Icon icon="check" width={16} />
-                    <Icon icon="close" width={20} />
-                </div>
+    /* RETURN */
+    return (
+        <Ds.page
+            title="<Icon>"
+            releasedOn="1.0.0"
+            description={
+                <>
+                    DSIcon renders svg icons from the built-in icon set or from custom icon
+                    definitions. It supports hover state, active state, size switching, color
+                    switching, and optional PopTip integration.
+                    <br />
+                    <br /> Check out{" "}
+                    <Button.string to="/design-system/iconLibrary" label="Icon Library" /> to see
+                    all available icons.
+                </>
             }
-        />
+        >
+            {/* <Ds.block
+                title="Basic usage"
+                description="The Icon component can render any icon from the icon library by passing the icon name."
+                code={`import { Icon } from "${SYS.basePath}";
 
-        <Ds.block
-            title="Size and color"
-            description="Width controls the icon size. Color supports both raw values and theme path values."
-            code={`import { Icon } from "${SYS.basePath}";
+                    <Flex gap={16} xAlign="start">
+                        <Icon icon="copy" />
+                        <Icon icon="check" width={20} />
+                        <Icon icon="close" width={24} />
+                    </Flex>`}
+                example={
+                    <Flex gap={16} xAlign="start">
+                        <Icon icon="copy" />
+                        <Icon icon="check" width={20} />
+                        <Icon icon="close" width={24} />
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Width and color"
+                description={`Width controls the icon size. Color supports both raw values and theme path values. 'size' && 'w' prop also work for width as well.
+                
+                "color" prop supports both raw values, theme values and theme path values.
+                `}
+                code={`import { Icon } from "${SYS.basePath}";
 
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon icon="copy" width={12} color="tomato" />
-    <Icon icon="copy" width={18} color="royalblue" />
-    <Icon icon="copy" width={24} color="greys.shade40" />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon="copy" width={12} color="tomato" />
-                    <Icon icon="copy" width={18} color="royalblue" />
-                    <Icon icon="copy" width={24} color="greys.shade40" />
-                </div>
-            }
-        />
+                    <Flex gap={20} xAlign="start">
+                        <Icon icon="copy" width={12} color="$ff0000" />
+                        <Icon icon="copy" size={18} color="royalblue" />
+                        <Icon icon="copy" size={18} color="primary" />
+                        <Icon icon="copy" w={24} color="greys.shade40" />
+                    </Flex>`}
+                example={
+                    <Flex gap={20} xAlign="start">
+                        <Icon icon="copy" width={12} color="#ff0000" />
+                        <Icon icon="copy" size={18} color="royalblue" />
+                        <Icon icon="copy" size={18} color="primary" />
+                        <Icon icon="copy" w={24} color="greys.shade40" />
+                    </Flex>
+                }
+            /> */}
+            <Ds.block
+                title="Hover state"
+                description="You can change icon, color and width on hover. Hover behavior works automatically with mouse interaction or you can trigger it manually with hoverManually (boolean) prop."
+                code={`import { Icon } from "${SYS.basePath}";
 
-        <Ds.block
-            title="Hover state"
-            description="You can change icon, color, width, or style on hover. Hover behavior works automatically with mouse interaction."
-            code={`import { Icon } from "${SYS.basePath}";
+                    <Flex gap={20} xAlign="start">
+                        <Icon icon="copy" onHoverIcon="check" onHoverColor="green" />
+                        <Icon icon="download" width={14} onHoverScale={1.4} onHoverColor="dodgerblue" />
+                        <Icon icon="search" width={14} onHoverScale={1.4} onHoverColor="dodgerblue" hoverManually={isHover} />
+                    </Flex>`}
+                example={
+                    <Flex gap={20} xAlign="start">
+                        <Icon
+                            icon="copy"
+                            onHoverIcon="check"
+                            onHoverColor="green"
+                            hoverManually={isHover}
+                        />
+                        <Icon
+                            icon="download"
+                            width={14}
+                            onHoverScale={1.4}
+                            onHoverColor="dodgerblue"
+                            hoverManually={isHover}
+                        />
+                        <Icon
+                            icon="search"
+                            width={14}
+                            onHoverScale={1.4}
+                            onHoverColor="dodgerblue"
+                            hoverManually={isHover}
+                        />
+                        <div
+                            onMouseEnter={() => setLocalByPath("isHover", true)}
+                            onMouseLeave={() => setLocalByPath("isHover", false)}
+                        >
+                            hoverManually
+                        </div>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Active state"
+                description={`Active state can switch the icon, color and scale. When active, the component also plays the built-in pulse animation unless disableScaleEffect is true.
+                    
+                    Technically, <Icon> component can not trigger active state itself. But, you can trigger it manually with activeManually (boolean) prop inside your component.`}
+                code={`import { Icon } from "${SYS.basePath}";
 
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon
-        icon="copy"
-        onHoverIcon="check"
-        onHoverColor="green"
-    />
-
-    <Icon
-        icon="copy"
-        width={14}
-        onHoverIconWidth={20}
-        onHoverColor="dodgerblue"
-    />
-
-    <Icon
-        icon="copy"
-        onHoverStyle={{ opacity: 0.5 }}
-    />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon="copy" onHoverIcon="check" onHoverColor="green" />
-
-                    <Icon icon="copy" width={14} onHoverIconWidth={20} onHoverColor="dodgerblue" />
-
-                    <Icon icon="copy" onHoverStyle={{ opacity: 0.5 }} />
-                </div>
-            }
-        />
-
-        <Ds.block
-            title="Active state"
-            description="Active state can switch the icon, color, width, and style. When active, the component also plays the built-in pulse animation unless disableScaleEffect is enabled."
-            code={`import { Icon } from "${SYS.basePath}";
-
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon
-        icon="copy"
-        isActive
-        onActiveIcon="check"
-        onActiveColor="green"
-    />
-
-    <Icon
-        icon="copy"
-        width={14}
-        isActive
-        onActiveIconWidth={20}
-        onActiveColor="tomato"
-    />
-
-    <Icon
-        icon="copy"
-        isActive
-        onActiveStyle={{ opacity: 0.45 }}
-        disableScaleEffect
-    />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon="copy" isActive onActiveIcon="check" onActiveColor="green" />
-
-                    <Icon
-                        icon="copy"
-                        width={14}
-                        isActive
-                        onActiveIconWidth={20}
-                        onActiveColor="tomato"
-                    />
-
-                    <Icon
-                        icon="copy"
-                        isActive
-                        onActiveStyle={{ opacity: 0.45 }}
-                        disableScaleEffect
-                    />
-                </div>
-            }
-        />
-
+                    <Flex gap={20} xAlign="start">
+                        <Icon icon="copy" onActiveIcon="check" onActiveColor="green" activeManually={isActive} />
+                        <Icon icon="copy" width={14} onActiveScale={1.4} onActiveColor="tomato" activeManually={isActive} />
+                        <Icon icon="copy" width={14} onActiveScale={1.8} onActiveColor="primary" activeManually={isActive} disableScaleEffect />
+                    </Flex>`}
+                example={
+                    <Flex gap={20} xAlign="start">
+                        <Icon
+                            icon="copy"
+                            onActiveIcon="check"
+                            onActiveColor="green"
+                            activeManually={isActive}
+                        />
+                        <Icon
+                            icon="download"
+                            width={14}
+                            onActiveColor="blue"
+                            onActiveScale={1.8}
+                            activeManually={isActive}
+                        />
+                        <Icon
+                            icon="search"
+                            width={14}
+                            onActiveColor="primary"
+                            onActiveScale={3}
+                            activeManually={isActive}
+                            disableScaleEffect
+                        />
+                        <div
+                            onMouseEnter={() => setLocalByPath("isActive", true)}
+                            onMouseLeave={() => setLocalByPath("isActive", false)}
+                        >
+                            activeManually
+                        </div>
+                    </Flex>
+                }
+            />
+            {/*
         <Ds.block
             title="Manual hover"
             description="hoverManually lets parent components trigger hover visuals without relying on real mouse hover."
@@ -399,7 +420,8 @@ const CustomTriangle = () => (
                 },
             }}
         /> */}
-    </Ds.page>
-);
+        </Ds.page>
+    );
+};
 
 export default X;

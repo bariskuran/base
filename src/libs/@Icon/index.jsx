@@ -1,15 +1,87 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { icons } from "./icons";
 import { baseStore } from "../@baseStore";
 import { PopTip } from "../PopTip";
 import { byPath } from "../byPath";
 
-const Centerized = styled.div`
-    position: relative;
-    display: inline-grid;
-    place-items: center;
+const pulseTwice = keyframes`
+    0% {
+        transform: scale(1);
+    }
+    20% {
+        transform: scale(1.4);
+    }
+    50% {
+        transform: scale(1);
+    }
+    70% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1);
+    }
 `;
+
+const Root = styled.span`
+    ${({ $size }) => css`
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        width: ${$size}rem;
+        height: ${$size}rem;
+        min-width: ${$size}rem;
+        min-height: ${$size}rem;
+        flex: 0 0 ${$size}rem;
+        line-height: 0;
+        user-select: none;
+    `}
+`;
+
+const LayerBox = styled.span`
+    ${({ $visible, $scale = 1 }) => css`
+        position: absolute;
+        inset: 0;
+        display: block;
+        opacity: ${$visible ? 1 : 0};
+        pointer-events: none;
+        transition:
+            opacity 0.25s linear,
+            transform 0.18s ease;
+        transform: scale(${$scale});
+        transform-origin: center center;
+    `}
+`;
+
+const PulseBox = styled.span`
+    ${({ $enablePulse, $isActive }) => css`
+        position: absolute;
+        inset: 0;
+        display: block;
+        transform-origin: center center;
+
+        ${$enablePulse &&
+        $isActive &&
+        css`
+            animation: ${pulseTwice} 1.2s ease forwards;
+        `}
+    `}
+`;
+
+const Svg = styled.svg`
+    ${({ $fill, theme }) => css`
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        fill: ${$fill || theme.foreground};
+        color: ${$fill || theme.foreground};
+        pointer-events: none;
+    `}
+`;
+
+const isObject = (value) => value != null && typeof value === "object" && !Array.isArray(value);
 
 const isValidIconArray = (value) => {
     if (!Array.isArray(value)) return false;
@@ -17,298 +89,227 @@ const isValidIconArray = (value) => {
 
     const [viewBox, content] = value;
 
-    const isValidViewBox =
-        typeof viewBox === "string" &&
-        viewBox.trim().split(/\s+/).length === 2 &&
-        viewBox
-            .trim()
-            .split(/\s+/)
-            .every((v) => !Number.isNaN(Number(v)));
+    if (typeof viewBox !== "string") return false;
 
-    const isValidContent =
-        typeof content === "string" || typeof content === "function" || content != null;
+    const nums = viewBox
+        .trim()
+        .split(/\s+/)
+        .map((v) => Number(v));
 
-    return isValidViewBox && isValidContent;
-};
+    if (nums.length !== 2) return false;
+    if (nums.some((v) => Number.isNaN(v) || v <= 0)) return false;
 
-const resolveIconFile = (iconInput, allIcons) => {
-    if (typeof iconInput === "string") {
-        return allIcons[iconInput] || null;
-    }
-
-    if (isValidIconArray(iconInput)) {
-        return iconInput;
-    }
-
-    return null;
+    return typeof content === "string" || typeof content === "function" || content != null;
 };
 
 const resolveThemeColor = (theme, value) => {
     if (!value) return value;
-    return byPath.get(theme, value) || theme?.[value] || value;
+    return byPath.get(theme, value) ?? theme?.[value] ?? value;
+};
+
+const normalizeIconsLibrary = (value) => {
+    if (!isObject(value)) return {};
+    return value;
+};
+
+const resolveIconInput = (iconInput, allIcons) => {
+    if (!iconInput) return null;
+
+    if (typeof iconInput === "string") {
+        const fromLibrary = allIcons?.[iconInput];
+        return isValidIconArray(fromLibrary) ? fromLibrary : null;
+    }
+
+    return isValidIconArray(iconInput) ? iconInput : null;
+};
+
+const createIconMeta = (iconInput, allIcons) => {
+    const file = resolveIconInput(iconInput, allIcons);
+    if (!file) return null;
+
+    const [viewBox, Content] = file;
+    const [viewW, viewH] = viewBox.split(/\s+/).map(Number);
+
+    if (!viewW || !viewH) return null;
+
+    const ratio = viewW / viewH;
+    const stretch = Math.max(ratio, 1 / ratio);
+    const opticalScale = Math.max(0.84, Math.min(1, 1 / Math.pow(stretch, 0.18)));
+
+    return {
+        Content,
+        viewW,
+        viewH,
+        opticalScale,
+        centerX: viewW / 2,
+        centerY: viewH / 2,
+    };
+};
+
+const resolveSize = (a, b, c) => a ?? b ?? c;
+
+const resolveScale = (value, fallback = 1) => {
+    if (value == null) return fallback;
+    const n = Number(value);
+    if (Number.isNaN(n) || n <= 0) return fallback;
+    return n;
+};
+
+const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive }) => {
+    if (!meta) return null;
+
+    const { Content, viewW, viewH, opticalScale, centerX, centerY } = meta;
+
+    const opticalTransform =
+        opticalScale === 1
+            ? undefined
+            : `translate(${centerX} ${centerY}) scale(${opticalScale}) translate(${-centerX} ${-centerY})`;
+
+    return (
+        <LayerBox $visible={visible} $scale={scale}>
+            <PulseBox $enablePulse={enablePulse} $isActive={isActive}>
+                <Svg
+                    $fill={fill}
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                    viewBox={`0 0 ${viewW} ${viewH}`}
+                    preserveAspectRatio="xMidYMid meet"
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <g transform={opticalTransform}>
+                        {typeof Content === "string" ? (
+                            <path d={Content} />
+                        ) : Content ? (
+                            <Content />
+                        ) : null}
+                    </g>
+                </Svg>
+            </PulseBox>
+        </LayerBox>
+    );
+};
+
+const PopTipWrapper = ({ enablePopTip, popTipProps, children }) => {
+    if (!enablePopTip) return children;
+    return <PopTip {...popTipProps}>{children}</PopTip>;
 };
 
 export const Icon = ({
     icon,
     color,
-    width = 10,
-    style,
-    useHeight = false,
+    width = 14,
+    size,
+    w,
     onHoverIcon: onHoverIconProp,
     onHoverColor,
-    onHoverIconWidth,
-    onHoverStyle,
+    onHoverScale,
     onActiveIcon: onActiveIconProp,
     onActiveColor,
-    onActiveIconWidth,
-    onActiveStyle,
+    onActiveScale,
     enablePopTip = false,
     popTipProps = {},
     hoverManually = false,
+    activeManually = false,
     isActive = false,
-    disableScaleEffect,
+    disableScaleEffect = false,
+    disablePulse = false,
 }) => {
-    const [iconsLibrary, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
+    const [iconsLibraryRaw, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
+
+    const { isSelfHover, setLocal } = baseStore.useLocal({
+        isSelfHover: false,
+    });
+
+    const iconsLibrary = useMemo(() => normalizeIconsLibrary(iconsLibraryRaw), [iconsLibraryRaw]);
     const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
 
-    const [isSelfHover, setIsSelfHover] = useState(false);
-    const onActiveIcon = onActiveIconProp || icon;
-    const onHoverIcon = onHoverIconProp || icon;
-    const isHover = (hoverManually || isSelfHover) && !isActive;
+    const activeState = !!(activeManually || isActive);
+    const hoverState = !!(hoverManually || isSelfHover) && !activeState;
 
-    const [
-        Content,
-        viewW,
-        viewH,
-        isHorizontal,
-        Content2,
-        viewW2,
-        viewH2,
-        isHorizontal2,
-        Content3,
-        viewW3,
-        viewH3,
-        isHorizontal3,
-    ] = useMemo(() => {
-        const file = resolveIconFile(icon, allIcons);
-        const hoverFile = resolveIconFile(onHoverIcon, allIcons);
-        const activeFile = resolveIconFile(onActiveIcon, allIcons);
+    const onHoverIcon = onHoverIconProp || null;
+    const onActiveIcon = onActiveIconProp || null;
 
-        if (!file) {
-            return [null, 0, 0, true, null, 0, 0, true, null, 0, 0, true];
-        }
+    const baseMeta = useMemo(() => createIconMeta(icon, allIcons), [icon, allIcons]);
+    const hoverMeta = useMemo(() => createIconMeta(onHoverIcon, allIcons), [onHoverIcon, allIcons]);
+    const activeMeta = useMemo(
+        () => createIconMeta(onActiveIcon, allIcons),
+        [onActiveIcon, allIcons],
+    );
 
-        const [viewBox, Content] = file || [];
-        const [viewW, viewH] = viewBox?.split(/\s+/).map((v) => Number(v)) || [];
-        const isHorizontal = useHeight ? false : viewW > viewH;
-
-        const [viewBox2, Content2] = hoverFile || file || [];
-        const [viewW2, viewH2] = viewBox2?.split(/\s+/).map((v) => Number(v)) || [];
-        const isHorizontal2 = useHeight ? false : viewW2 > viewH2;
-
-        const [viewBox3, Content3] = activeFile || file || [];
-        const [viewW3, viewH3] = viewBox3?.split(/\s+/).map((v) => Number(v)) || [];
-        const isHorizontal3 = useHeight ? false : viewW3 > viewH3;
-
-        return [
-            Content,
-            viewW,
-            viewH,
-            isHorizontal,
-            Content2,
-            viewW2,
-            viewH2,
-            isHorizontal2,
-            Content3,
-            viewW3,
-            viewH3,
-            isHorizontal3,
-        ];
-    }, [icon, onHoverIcon, allIcons, useHeight, onActiveIcon]);
-
-    const finalColorRaw =
-        isActive && onActiveColor ? onActiveColor : isHover && onHoverColor ? onHoverColor : color;
+    const finalColorRaw = activeState
+        ? onActiveColor || color
+        : hoverState
+          ? onHoverColor || color
+          : color;
 
     const finalColor = resolveThemeColor(theme, finalColorRaw);
+    const finalSize = resolveSize(size, w, width);
 
-    const finalWidth =
-        isActive && onActiveIconWidth
-            ? onActiveIconWidth
-            : isHover && onHoverIconWidth
-              ? onHoverIconWidth
-              : width;
+    const hoverScaleValue = resolveScale(onHoverScale, 1);
+    const activeScaleValue = resolveScale(onActiveScale, 1);
 
-    if (!Content || !viewW || !viewH) return null;
+    const finalScale = activeState ? activeScaleValue : hoverState ? hoverScaleValue : 1;
+
+    const shouldRenderHoverLayer = !!(onHoverIconProp && hoverMeta);
+    const shouldRenderActiveLayer = !!(onActiveIconProp && activeMeta);
+    const shouldUseHoverLayer = hoverState && shouldRenderHoverLayer;
+    const shouldUseActiveLayer = activeState && shouldRenderActiveLayer;
+    const showBaseLayer = !shouldUseHoverLayer && !shouldUseActiveLayer;
+    const showHoverLayer = shouldUseHoverLayer;
+    const showActiveLayer = shouldUseActiveLayer;
+
+    const pulseEnabled = !disablePulse && !disableScaleEffect;
+
+    if (!baseMeta) return null;
 
     return (
         <PopTipWrapper enablePopTip={enablePopTip} popTipProps={popTipProps}>
-            <Centerized>
-                <SvgW
-                    {...{
-                        onHoverIcon,
-                        isHover,
-                        finalColor,
-                        width: finalWidth,
-                        isHorizontal,
-                        viewW,
-                        viewH,
-                        style,
-                        Content,
-                        setIsSelfHover,
-                        isActive,
-                        onActiveIcon,
-                        disableScaleEffect,
-                    }}
-                    enable={!isHover && !isActive}
+            <Root
+                $size={finalSize}
+                onMouseEnter={() =>
+                    setLocal((s) => {
+                        s.isSelfHover = true;
+                    })
+                }
+                onMouseLeave={() =>
+                    setLocal((s) => {
+                        s.isSelfHover = false;
+                    })
+                }
+            >
+                <IconLayer
+                    meta={baseMeta}
+                    visible={showBaseLayer}
+                    fill={finalColor}
+                    scale={finalScale}
+                    enablePulse={pulseEnabled && activeState && !shouldRenderActiveLayer}
+                    isActive={activeState}
                 />
-                {onHoverIcon && (
-                    <SvgW
-                        {...{
-                            onHoverIcon,
-                            isHover,
-                            isHoverIcon: true,
-                            finalColor,
-                            width: finalWidth,
-                            isHorizontal: isHorizontal2,
-                            viewW: viewW2,
-                            viewH: viewH2,
-                            style: onHoverStyle || style,
-                            Content: Content2,
-                            setIsSelfHover,
-                            isActive,
-                            onActiveIcon,
-                            disableScaleEffect,
-                        }}
-                        enable={isHover && !isActive}
+
+                {shouldRenderHoverLayer && (
+                    <IconLayer
+                        meta={hoverMeta}
+                        visible={showHoverLayer}
+                        fill={finalColor}
+                        scale={finalScale}
+                        enablePulse={false}
+                        isActive={false}
                     />
                 )}
-                {onActiveIcon && (
-                    <SvgW
-                        {...{
-                            finalColor,
-                            width: finalWidth,
-                            isHorizontal: isHorizontal3,
-                            viewW: viewW3,
-                            viewH: viewH3,
-                            style: onActiveStyle || style,
-                            Content: Content3,
-                            setIsSelfHover,
-                            isActive,
-                            onActiveIcon,
-                            disableScaleEffect,
-                        }}
-                        enable={isActive && !isHover}
+
+                {shouldRenderActiveLayer && (
+                    <IconLayer
+                        meta={activeMeta}
+                        visible={showActiveLayer}
+                        fill={finalColor}
+                        scale={finalScale}
+                        enablePulse={pulseEnabled && activeState}
+                        isActive={activeState}
                     />
                 )}
-            </Centerized>
+            </Root>
         </PopTipWrapper>
     );
-};
-
-const pulseTwice = keyframes`
-    0% {
-        transform: scale(0.9);
-    }
-    20% {
-        transform: scale(1.5);
-    }
-    40% {
-        transform: scale(0.9);
-    }
-    60% {
-        transform: scale(1.5);
-    }
-    80%,
-    100% {
-        transform: scale(0.9);
-    }
-`;
-
-const SvgWrapper = styled.svg`
-    ${({ $fill, theme, $isHover, $onHoverIcon, $isActive, $enable, $disableScaleEffect }) => css`
-        grid-area: 1 / 1;
-        fill: ${$fill || theme.foreground};
-        user-select: none;
-        display: block;
-        flex-shrink: 0;
-        transition:
-            opacity 0.35s linear,
-            transform 0.2s linear;
-        opacity: ${$enable ? 1 : 0};
-
-        ${$onHoverIcon &&
-        $isHover &&
-        !$disableScaleEffect &&
-        css`
-            transform: scale(1.1);
-        `}
-
-        ${$enable &&
-        $isActive &&
-        !$disableScaleEffect &&
-        css`
-            animation: ${pulseTwice} 1.5s ease forwards;
-        `}
-    `}
-
-    ${(p) =>
-        p.$isHorizontal
-            ? css`
-                  width: ${p.$size};
-                  min-width: ${p.$size};
-                  height: auto;
-              `
-            : css`
-                  height: ${p.$size};
-                  min-height: ${p.$size};
-                  width: auto;
-              `}
-`;
-
-const SvgW = ({
-    isHover,
-    isHoverIcon,
-    finalColor,
-    width,
-    isHorizontal,
-    viewW,
-    viewH,
-    style,
-    Content,
-    setIsSelfHover,
-    onHoverIcon,
-    isActive,
-    onActiveIcon,
-    enable,
-    disableScaleEffect,
-}) => (
-    <SvgWrapper
-        $fill={finalColor}
-        $size={`${width}rem`}
-        $isHorizontal={isHorizontal}
-        $isHover={isHover}
-        $isHoverIcon={isHoverIcon}
-        $onHoverIcon={onHoverIcon}
-        $disableScaleEffect={disableScaleEffect}
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        viewBox={`0 0 ${viewW} ${viewH}`}
-        style={style ? { ...style } : undefined}
-        onMouseEnter={() => setIsSelfHover(true)}
-        onMouseLeave={() => setIsSelfHover(false)}
-        aria-hidden="true"
-        focusable="false"
-        $isActive={isActive}
-        $onActiveIcon={onActiveIcon}
-        $enable={enable}
-    >
-        {typeof Content === "string" ? <path d={Content} /> : Content ? <Content /> : null}
-        <rect width={viewW} height={viewH} fill="transparent" />
-    </SvgWrapper>
-);
-
-const PopTipWrapper = ({ enablePopTip, popTipProps, children }) => {
-    if (!enablePopTip) return children;
-    return <PopTip {...popTipProps}>{children}</PopTip>;
 };
