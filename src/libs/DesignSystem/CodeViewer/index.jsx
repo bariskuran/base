@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { Button } from "../../Button";
 import { copyToClipboard } from "../../copyToClipboard";
 import S from "./_styled";
@@ -308,6 +308,39 @@ const formatJsxPropsForViewer = (text = "", indentUnit = "    ") => {
     return result;
 };
 
+const renderHighlightedCode = (text = "") => {
+    const regex = /<(?!\/|>|!|\?)([A-Z][A-Za-z0-9._-]*)/g;
+    const nodes = [];
+    let lastIndex = 0;
+    let match;
+    let key = 0;
+
+    while ((match = regex.exec(text)) !== null) {
+        const fullMatch = match[0];
+        const tagName = match[1];
+        const start = match.index;
+
+        if (start > lastIndex) {
+            nodes.push(<Fragment key={key++}>{text.slice(lastIndex, start)}</Fragment>);
+        }
+
+        nodes.push(
+            <S.tagStart key={key++}>
+                {"<"}
+                {tagName}
+            </S.tagStart>,
+        );
+
+        lastIndex = start + fullMatch.length;
+    }
+
+    if (lastIndex < text.length) {
+        nodes.push(<Fragment key={key++}>{text.slice(lastIndex)}</Fragment>);
+    }
+
+    return nodes;
+};
+
 const CodeViewer = ({
     code,
     children,
@@ -329,6 +362,11 @@ const CodeViewer = ({
         return formatJsxProps ? formatJsxPropsForViewer(base) : base;
     }, [rawContent, formatJsxProps]);
 
+    const renderedContent = useMemo(
+        () => renderHighlightedCode(normalizedContent),
+        [normalizedContent],
+    );
+
     return (
         <S.container
             as={as}
@@ -341,7 +379,7 @@ const CodeViewer = ({
             $wrap={wrap}
             {...props}
         >
-            <code>{normalizedContent}</code>
+            <code>{renderedContent}</code>
 
             <S.buttonArea>
                 <Button

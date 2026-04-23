@@ -191,8 +191,8 @@ const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive }) =>
     );
 };
 
-const PopTipWrapper = ({ enablePopTip, popTipProps, children }) => {
-    if (!enablePopTip) return children;
+const PopTipWrapper = ({ popTipProps, children }) => {
+    if (!popTipProps || !popTipProps.content) return children;
     return <PopTip {...popTipProps}>{children}</PopTip>;
 };
 
@@ -208,7 +208,6 @@ export const Icon = ({
     onActiveIcon: onActiveIconProp,
     onActiveColor,
     onActiveScale,
-    enablePopTip = false,
     popTipProps = {},
     hoverManually = false,
     activeManually = false,
@@ -265,7 +264,7 @@ export const Icon = ({
     if (!baseMeta) return null;
 
     return (
-        <PopTipWrapper enablePopTip={enablePopTip} popTipProps={popTipProps}>
+        <PopTipWrapper popTipProps={popTipProps}>
             <Root
                 $size={finalSize}
                 onMouseEnter={() =>

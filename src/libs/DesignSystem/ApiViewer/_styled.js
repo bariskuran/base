@@ -18,6 +18,11 @@ const S = {
             & > *:nth-child(10n + 5) {
                 background: ${theme.colorAlpha(theme.foreground, 0.04)};
             }
+
+            &>*: nth-child(5n + 2) {
+                user-select: none;
+                cursor: pointer;
+            }
         `}
     `,
 };

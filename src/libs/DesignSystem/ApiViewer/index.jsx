@@ -3,6 +3,7 @@ import S from "./_styled";
 import { PopTip } from "../../PopTip";
 import { Typo } from "../../Typography";
 import Block from "../Block";
+import { copyToClipboard } from "../../copyToClipboard";
 
 const ApiViewer = ({ props }) => {
     /* RETURN */
@@ -26,7 +27,7 @@ const ApiViewer = ({ props }) => {
                                         <Typo.bold>{required ? "*" : ""}</Typo.bold>
                                     </PopTip>
                                 </div>
-                                <div>
+                                <div onClick={() => copyToClipboard(name)}>
                                     <Typo.bold>{name}</Typo.bold>
                                 </div>
                                 <div>{type}</div>

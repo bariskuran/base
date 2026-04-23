@@ -55,9 +55,9 @@ const Block = ({ title, description, code, example, lastBlock }) => {
                 {(example || description) && ajax === 0 && (
                     <S.contentArea>
                         <div>{example}</div>
-                        <Typo.p whiteSpace="pre-line" balance>
+                        <Typo.span whiteSpace="pre-line" balance>
                             {description}
-                        </Typo.p>
+                        </Typo.span>
                     </S.contentArea>
                 )}
                 {((code && ajax === 1) || (!example && !description && code)) && (

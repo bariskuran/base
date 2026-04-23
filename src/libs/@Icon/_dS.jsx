@@ -12,7 +12,7 @@ const CustomTriangle = () => (
 );
 
 const X = () => {
-    const { isHover, isActive, setLocal, setLocalByPath } = baseStore.useLocal({
+    const { isHover, isActive, setLocalByPath } = baseStore.useLocal({
         isHover: false,
         isActive: false,
     });
@@ -28,13 +28,13 @@ const X = () => {
                     definitions. It supports hover state, active state, size switching, color
                     switching, and optional PopTip integration.
                     <br />
-                    <br /> Check out{" "}
+                    <br /> Check out
                     <Button.string to="/design-system/iconLibrary" label="Icon Library" /> to see
-                    all available icons.
+                    all available icons and how to add new icons.
                 </>
             }
         >
-            {/* <Ds.block
+            <Ds.block
                 title="Basic usage"
                 description="The Icon component can render any icon from the icon library by passing the icon name."
                 code={`import { Icon } from "${SYS.basePath}";
@@ -49,6 +49,25 @@ const X = () => {
                         <Icon icon="copy" />
                         <Icon icon="check" width={20} />
                         <Icon icon="close" width={24} />
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Custom icon array"
+                description="You can pass a custom icon definition directly as an array. The first item is the viewBox size and the second item is either a path string, a component, or another renderable content."
+                code={`import { Icon } from "${SYS.basePath}";
+
+                        const customIcon = [ "24 24", "M12 2L22 22H2Z" ];
+                        const CustomTriangle = () => ( <><path d="M12 2L22 22H2Z" /></> );
+
+                        <Flex gap={20} xAlign="start">
+                            <Icon icon={customIcon} width={18} color="tomato" />
+                            <Icon icon={["24 24", CustomTriangle]} width={18} color="royalblue" />
+                    </Flex>`}
+                example={
+                    <Flex gap={20} xAlign="start">
+                        <Icon icon={["24 24", "M12 2L22 22H2Z"]} width={18} color="tomato" />
+                        <Icon icon={["24 24", CustomTriangle]} width={18} color="royalblue" />
                     </Flex>
                 }
             />
@@ -74,7 +93,7 @@ const X = () => {
                         <Icon icon="copy" w={24} color="greys.shade40" />
                     </Flex>
                 }
-            /> */}
+            />
             <Ds.block
                 title="Hover state"
                 description="You can change icon, color and width on hover. Hover behavior works automatically with mouse interaction or you can trigger it manually with hoverManually (boolean) prop."
@@ -126,7 +145,7 @@ const X = () => {
                     <Flex gap={20} xAlign="start">
                         <Icon icon="copy" onActiveIcon="check" onActiveColor="green" activeManually={isActive} />
                         <Icon icon="copy" width={14} onActiveScale={1.4} onActiveColor="tomato" activeManually={isActive} />
-                        <Icon icon="copy" width={14} onActiveScale={1.8} onActiveColor="primary" activeManually={isActive} disableScaleEffect />
+                        <Icon icon="copy" width={14} onActiveScale={1.8} onActiveColor="primary" activeManually={isActive} disablePulseEffect />
                     </Flex>`}
                 example={
                     <Flex gap={20} xAlign="start">
@@ -149,7 +168,7 @@ const X = () => {
                             onActiveColor="primary"
                             onActiveScale={3}
                             activeManually={isActive}
-                            disableScaleEffect
+                            disablePulseEffect
                         />
                         <div
                             onMouseEnter={() => setLocalByPath("isActive", true)}
@@ -160,266 +179,123 @@ const X = () => {
                     </Flex>
                 }
             />
-            {/*
-        <Ds.block
-            title="Manual hover"
-            description="hoverManually lets parent components trigger hover visuals without relying on real mouse hover."
-            code={`import { Icon } from "${SYS.basePath}";
 
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon
-        icon="copy"
-        hoverManually
-        onHoverIcon="check"
-        onHoverColor="green"
-    />
+            <Ds.block
+                title="PopTip integration"
+                description={
+                    <>
+                        If you want to use PopTip with an Icon, you can specify the tooltip content
+                        and configuration using the popTipProps prop. The popTipProps object uses
+                        the same API as PopTip.
+                        <br />
+                        <br />
+                        Check out
+                        <Button.string to="/design-system/popTip" label="PopTip" /> for popTipProps.
+                    </>
+                }
+                code={`import { Icon } from "${SYS.basePath}";
 
-    <Icon
-        icon="copy"
-        hoverManually
-        onHoverColor="orange"
-        onHoverIconWidth={22}
-    />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon="copy" hoverManually onHoverIcon="check" onHoverColor="green" />
-
-                    <Icon icon="copy" hoverManually onHoverColor="orange" onHoverIconWidth={22} />
-                </div>
-            }
-        />
-
-        <Ds.block
-            title="useHeight"
-            description="By default, width is calculated according to the horizontal structure of the svg. useHeight forces the given width value to behave like height sizing."
-            code={`import { Icon } from "${SYS.basePath}";
-
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon icon="copy" width={18} />
-    <Icon icon="copy" width={18} useHeight />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon="copy" width={18} />
-                    <Icon icon="copy" width={18} useHeight />
-                </div>
-            }
-        />
-
-        <Ds.block
-            title="Custom icon array"
-            description="You can pass a custom icon definition directly as an array. The first item is the viewBox size and the second item is either a path string, a component, or another renderable content."
-            code={`import { Icon } from "${SYS.basePath}";
-
-const customIcon = [
-    "24 24",
-    "M12 2L22 22H2Z",
-];
-
-const CustomTriangle = () => (
-    <>
-        <path d="M12 2L22 22H2Z" />
-    </>
-);
-
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon icon={customIcon} width={18} color="tomato" />
-    <Icon icon={["24 24", CustomTriangle]} width={18} color="royalblue" />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon={["24 24", "M12 2L22 22H2Z"]} width={18} color="tomato" />
-                    <Icon icon={["24 24", CustomTriangle]} width={18} color="royalblue" />
-                </div>
-            }
-        />
-
-        <Ds.block
-            title="PopTip integration"
-            description="enablePopTip wraps the icon with PopTip. Tooltip content and configuration are passed through popTipProps."
-            code={`import { Icon } from "${SYS.basePath}";
-
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon
-        icon="copy"
-        enablePopTip
-        popTipProps={{ content: "Copy" }}
-    />
-
-    <Icon
-        icon="check"
-        width={18}
-        enablePopTip
-        popTipProps={{ content: "Success" }}
-    />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon="copy" enablePopTip popTipProps={{ content: "Copy" }} />
-
-                    <Icon
-                        icon="check"
-                        width={18}
-                        enablePopTip
-                        popTipProps={{ content: "Success" }}
-                    />
-                </div>
-            }
-        />
-
-        <Ds.block
-            title="Style overrides"
-            description="style, onHoverStyle, and onActiveStyle let you directly override inline svg styles for each state."
-            code={`import { Icon } from "${SYS.basePath}";
-
-<div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-    <Icon
-        icon="copy"
-        style={{ opacity: 0.4 }}
-    />
-
-    <Icon
-        icon="copy"
-        onHoverStyle={{ transform: "rotate(10deg)" }}
-        onHoverColor="green"
-    />
-
-    <Icon
-        icon="copy"
-        isActive
-        onActiveStyle={{ opacity: 0.3 }}
-    />
-</div>`}
-            example={
-                <div style={{ display: "flex", gap: "20rem", alignItems: "center" }}>
-                    <Icon icon="copy" style={{ opacity: 0.4 }} />
-
-                    <Icon
-                        icon="copy"
-                        onHoverStyle={{ transform: "rotate(10deg)" }}
-                        onHoverColor="green"
-                    />
-
-                    <Icon icon="copy" isActive onActiveStyle={{ opacity: 0.3 }} />
-                </div>
-            }
-        />
-
-        <Ds.api
-            props={{
-                icon: {
-                    description:
-                        "Icon name from the library or a custom icon array in the form of [viewBox, content].",
-                    type: "string | array",
-                    required: true,
-                    defaultValue: "null",
-                },
-                color: {
-                    description: "Default icon color.",
-                    type: "string",
-                    required: false,
-                    defaultValue: "null",
-                },
-                width: {
-                    description: "Base icon size.",
-                    type: "number",
-                    required: false,
-                    defaultValue: "10",
-                },
-                style: {
-                    description: "Inline style object for the default state svg.",
-                    type: "object",
-                    required: false,
-                    defaultValue: "null",
-                },
-                useHeight: {
-                    description:
-                        "Uses width value as height sizing instead of horizontal width sizing.",
-                    type: "boolean",
-                    required: false,
-                    defaultValue: "false",
-                },
-                onHoverIcon: {
-                    description: "Icon shown on hover state.",
-                    type: "string | array",
-                    required: false,
-                    defaultValue: "null",
-                },
-                onHoverColor: {
-                    description: "Color shown on hover state.",
-                    type: "string",
-                    required: false,
-                    defaultValue: "null",
-                },
-                onHoverIconWidth: {
-                    description: "Size shown on hover state.",
-                    type: "number",
-                    required: false,
-                    defaultValue: "null",
-                },
-                onHoverStyle: {
-                    description: "Inline style object for hover state svg.",
-                    type: "object",
-                    required: false,
-                    defaultValue: "null",
-                },
-                onActiveIcon: {
-                    description: "Icon shown on active state.",
-                    type: "string | array",
-                    required: false,
-                    defaultValue: "null",
-                },
-                onActiveColor: {
-                    description: "Color shown on active state.",
-                    type: "string",
-                    required: false,
-                    defaultValue: "null",
-                },
-                onActiveIconWidth: {
-                    description: "Size shown on active state.",
-                    type: "number",
-                    required: false,
-                    defaultValue: "null",
-                },
-                onActiveStyle: {
-                    description: "Inline style object for active state svg.",
-                    type: "object",
-                    required: false,
-                    defaultValue: "null",
-                },
-                enablePopTip: {
-                    description: "Wraps the icon with PopTip.",
-                    type: "boolean",
-                    required: false,
-                    defaultValue: "false",
-                },
-                popTipProps: {
-                    description: "Props passed to PopTip when enablePopTip is true.",
-                    type: "object",
-                    required: false,
-                    defaultValue: "{}",
-                },
-                hoverManually: {
-                    description: "Triggers hover visuals manually.",
-                    type: "boolean",
-                    required: false,
-                    defaultValue: "false",
-                },
-                isActive: {
-                    description: "Triggers active visuals manually.",
-                    type: "boolean",
-                    required: false,
-                    defaultValue: "false",
-                },
-                disableScaleEffect: {
-                    description: "Disables hover scale and active pulse effects.",
-                    type: "boolean",
-                    required: false,
-                    defaultValue: "false",
-                },
-            }}
-        /> */}
+                        <Flex gap={20} xAlign="start">
+                            <Icon icon="copy" popTipProps={{ content: "Copy" }} />
+                            <Icon icon="check" width={18} popTipProps={{ content: "Success" }} />
+                        </Flex>`}
+                example={
+                    <Flex gap={20} xAlign="start">
+                        <Icon icon="copy" popTipProps={{ content: "Copy" }} />
+                        <Icon icon="check" width={18} popTipProps={{ content: "Success" }} />
+                    </Flex>
+                }
+            />
+            <Ds.api
+                props={{
+                    icon: {
+                        description:
+                            "Icon name from the library or a custom icon array in the form of [viewBox, content].",
+                        type: "string | array",
+                        required: true,
+                        defaultValue: "warning",
+                    },
+                    color: {
+                        description: "Default icon color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "theme.background || black",
+                    },
+                    width: {
+                        description: "Base icon size. Kısayolları: 'size' && 'w'",
+                        type: "number",
+                        required: false,
+                        defaultValue: "10",
+                    },
+                    onHoverIcon: {
+                        description: "Icon shown on hover state.",
+                        type: "string | array",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    onHoverColor: {
+                        description: "Color shown on hover state.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    onHoverWidth: {
+                        description: "Size shown on hover state.",
+                        type: "number",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    hoverManually: {
+                        description: "Triggers hover visuals manually.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    onActiveIcon: {
+                        description: "Icon shown on active state.",
+                        type: "string | array",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    onActiveColor: {
+                        description: "Color shown on active state.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    onActiveWidth: {
+                        description: "Size shown on active state.",
+                        type: "number",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    activeManually: {
+                        description: "Triggers active visuals manually.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    popTipProps: {
+                        description:
+                            "Enables popTip integration. Props passed to PopTip when enablePopTip is true.",
+                        type: "object",
+                        required: false,
+                        defaultValue: "{}",
+                    },
+                    disableScaleEffect: {
+                        description: "Disables hover scale effect.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    disablePulse: {
+                        description: "Disables active pulse effect.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                }}
+            />
         </Ds.page>
     );
 };

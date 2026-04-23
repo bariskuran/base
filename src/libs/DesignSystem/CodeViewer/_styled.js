@@ -2,11 +2,11 @@ import styled, { css } from "styled-components";
 
 export const S = {
     container: styled.pre`
-        ${({ $tabSize, $padding, $radius, $bg, $color, $maxHeight, $wrap }) => css`
+        ${({ $tabSize, $padding, $radius, $bg, $color, $maxHeight }) => css`
             box-sizing: border-box;
             width: 100%;
-            max-width: 100%;
             overflow: auto;
+            max-width: 100%;
             ${$maxHeight ? `max-height: ${$maxHeight}rem;` : ""}
             padding: ${$padding}rem;
             border-radius: ${$radius}rem;
@@ -19,7 +19,7 @@ export const S = {
             line-height: 1.5;
             tab-size: ${$tabSize};
             -moz-tab-size: ${$tabSize};
-            white-space: ${$wrap ? "pre-wrap" : "pre-wrap"};
+            white-space: pre-wrap;
             word-break: normal;
             overflow-wrap: anywhere;
             display: flex;
@@ -39,6 +39,10 @@ export const S = {
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
+    `,
+    tagStart: styled.strong`
+        font: inherit;
+        font-weight: 700;
     `,
 };
 
