@@ -69,6 +69,7 @@ const useVars = (p) => {
 
     const {
         resolvedHost,
+        overlayHost,
         hostRect,
         x,
         y,
@@ -79,6 +80,7 @@ const useVars = (p) => {
         setLocal,
     } = baseStore.useLocal({
         resolvedHost: null,
+        overlayHost: null,
         hostRect: null,
         dragAxis: null,
         dragStartClient: 0,
@@ -136,6 +138,7 @@ const useVars = (p) => {
 
         setLocal((s) => {
             s.resolvedHost = host;
+            s.overlayHost = host.parentElement || null;
         });
     }, [body, setLocal]);
 
@@ -183,10 +186,22 @@ const useVars = (p) => {
                 bottom: viewport.height,
                 width: viewport.width,
                 height: viewport.height,
+                clientWidth: viewport.width,
+                clientHeight: viewport.height,
+                scrollWidth: Math.max(
+                    document.documentElement.scrollWidth,
+                    document.body.scrollWidth,
+                ),
+                scrollHeight: Math.max(
+                    document.documentElement.scrollHeight,
+                    document.body.scrollHeight,
+                ),
             };
         }
 
         const rect = resolvedHost.getBoundingClientRect();
+        const parent = resolvedHost.parentElement;
+        const parentRect = parent?.getBoundingClientRect?.();
 
         return {
             top: rect.top,
@@ -195,6 +210,16 @@ const useVars = (p) => {
             bottom: rect.bottom,
             width: rect.width,
             height: rect.height,
+            clientWidth: resolvedHost.clientWidth,
+            clientHeight: resolvedHost.clientHeight,
+            scrollWidth: resolvedHost.scrollWidth,
+            scrollHeight: resolvedHost.scrollHeight,
+            overlayTop: parentRect
+                ? rect.top - parentRect.top + (parent?.scrollTop || 0) + resolvedHost.clientTop
+                : rect.top,
+            overlayLeft: parentRect
+                ? rect.left - parentRect.left + (parent?.scrollLeft || 0) + resolvedHost.clientLeft
+                : rect.left,
         };
     };
 
@@ -206,66 +231,6 @@ const useVars = (p) => {
         setLocal((s) => {
             s.hostRect = rect;
         });
-    };
-
-    const applyBarPositionToRef = (axis) => {
-        const el = axis === "y" ? yTruckRef.current : xTruckRef.current;
-        if (!el) return;
-
-        const barPosition = axis === "y" ? yBarPosition : xBarPosition;
-        const isBarVertical = barPosition === "vertical";
-
-        const rect = getCurrentHostRect();
-        const viewport = getViewportSize();
-
-        const hostW = rect.width || viewport.width;
-        const hostH = rect.height || viewport.height;
-
-        const barLength = isBarVertical
-            ? maxLength
-                ? (hostH * maxLength) / 100
-                : Math.max(0, hostH - trackMargin * 2)
-            : maxLength
-              ? (hostW * maxLength) / 100
-              : Math.max(0, hostW - trackMargin * 2);
-
-        const trackStartOffset = maxLength
-            ? ((isBarVertical ? hostH : hostW) - barLength) / 2
-            : trackMargin;
-
-        el.style.top = "";
-        el.style.right = "";
-        el.style.bottom = "";
-        el.style.left = "";
-
-        if (isBarVertical) {
-            el.style.top = `${rect.top + trackStartOffset}px`;
-
-            if (mirror) {
-                el.style.left = isWindowLike ? `${edgeMargin}rem` : `${rect.left + edgeMargin}px`;
-            } else {
-                el.style.right = isWindowLike
-                    ? `${edgeMargin}rem`
-                    : `${viewport.width - rect.right + edgeMargin}px`;
-            }
-
-            return;
-        }
-
-        el.style.left = `${rect.left + trackStartOffset}px`;
-
-        if (mirror) {
-            el.style.top = isWindowLike ? `${edgeMargin}rem` : `${rect.top + edgeMargin}px`;
-        } else {
-            el.style.bottom = isWindowLike
-                ? `${edgeMargin}rem`
-                : `${viewport.height - rect.bottom + edgeMargin}px`;
-        }
-    };
-
-    const applyBarPositions = () => {
-        applyBarPositionToRef("x");
-        applyBarPositionToRef("y");
     };
 
     const syncMetrics = () => {
@@ -313,7 +278,6 @@ const useVars = (p) => {
     const syncAll = () => {
         syncHostRect();
         syncMetrics();
-        applyBarPositions();
     };
 
     const syncAllRaf = () => {
@@ -340,6 +304,28 @@ const useVars = (p) => {
         mirror,
         edgeMargin,
     ]);
+
+    useLayoutEffect(() => {
+        if (typeof document === "undefined") return;
+        if (!resolvedHost) return;
+
+        if (!isWindowLike && overlayHost) {
+            const previousPosition = overlayHost.style.position;
+            const computedPosition = window.getComputedStyle(overlayHost).position;
+            const shouldRestore = computedPosition === "static";
+
+            if (shouldRestore) {
+                // eslint-disable-next-line react-hooks/immutability
+                overlayHost.style.position = "relative";
+            }
+
+            return () => {
+                if (shouldRestore) {
+                    overlayHost.style.position = previousPosition;
+                }
+            };
+        }
+    }, [resolvedHost, overlayHost, isWindowLike]);
 
     useLayoutEffect(() => {
         if (typeof document === "undefined") return;
@@ -416,26 +402,26 @@ const useVars = (p) => {
         if (typeof window === "undefined") return;
         if (!resolvedHost) return;
 
-        const onWindowScrollOrResize = () => {
-            applyBarPositions();
+        const onWindowChange = () => {
             syncAllRaf();
         };
 
-        window.addEventListener("scroll", onWindowScrollOrResize, {
-            passive: true,
-            capture: true,
-        });
+        if (isWindowLike) {
+            window.addEventListener("scroll", onWindowChange, {
+                passive: true,
+            });
+        }
 
-        window.addEventListener("resize", onWindowScrollOrResize, {
+        window.addEventListener("resize", onWindowChange, {
             passive: true,
         });
 
         return () => {
-            window.removeEventListener("scroll", onWindowScrollOrResize, {
-                capture: true,
-            });
+            if (isWindowLike) {
+                window.removeEventListener("scroll", onWindowChange);
+            }
 
-            window.removeEventListener("resize", onWindowScrollOrResize);
+            window.removeEventListener("resize", onWindowChange);
 
             if (rafRef.current) {
                 cancelAnimationFrame(rafRef.current);
@@ -506,7 +492,6 @@ const useVars = (p) => {
         "scroll",
         () => {
             syncMetrics();
-            applyBarPositions();
             activateScrollbar();
             deactivateScrollbar.run();
         },
@@ -779,6 +764,7 @@ const useVars = (p) => {
             exactThumbSize,
             fillMode,
             resolvedHost,
+            overlayHost,
             normalizedScrollSource,
             isWindowLike,
             hostRect,

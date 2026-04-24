@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import S from "./_styled";
 import useVars from "./useVars";
 
@@ -34,8 +35,8 @@ const Bar = ({
     const viewportHeight =
         docEl?.clientHeight ?? (typeof window !== "undefined" ? window.innerHeight : 0);
 
-    const hostW = hostRect?.width || viewportWidth;
-    const hostH = hostRect?.height || viewportHeight;
+    const hostW = hostRect?.clientWidth || hostRect?.width || viewportWidth;
+    const hostH = hostRect?.clientHeight || hostRect?.height || viewportHeight;
 
     const isBarVertical = barPosition === "vertical";
 
@@ -75,20 +76,14 @@ const Bar = ({
 
     const hostLikePositionStyle = isBarVertical
         ? {
-              position: "fixed",
-              top: (hostRect?.top || 0) + trackStartOffset + "px",
-              [mirror ? "left" : "right"]:
-                  (mirror ? hostRect?.left || 0 : viewportWidth - (hostRect?.right || 0)) +
-                  edgeMargin +
-                  "px",
+              position: "absolute",
+              top: trackStartOffset + "px",
+              [mirror ? "left" : "right"]: edgeMargin + "px",
           }
         : {
-              position: "fixed",
-              left: (hostRect?.left || 0) + trackStartOffset + "px",
-              [mirror ? "top" : "bottom"]:
-                  (mirror ? hostRect?.top || 0 : viewportHeight - (hostRect?.bottom || 0)) +
-                  edgeMargin +
-                  "px",
+              position: "absolute",
+              left: trackStartOffset + "px",
+              [mirror ? "top" : "bottom"]: edgeMargin + "px",
           };
 
     const shouldUseMinThumb = exactThumbSize == null && !fillMode;
@@ -158,6 +153,7 @@ export const Base = (p) => {
     const {
         Variant,
         anchorRef,
+        overlayHost,
         hostRect,
         isWindowLike,
         colors,
@@ -192,10 +188,8 @@ export const Base = (p) => {
         mirror,
     } = useVars(p);
 
-    return (
+    const bars = (
         <>
-            <S.anchor ref={anchorRef} />
-
             {showY && (
                 <Bar
                     Variant={Variant}
@@ -255,6 +249,35 @@ export const Base = (p) => {
                     mirror={mirror}
                 />
             )}
+        </>
+    );
+
+    const overlay =
+        !isWindowLike && overlayHost && hostRect
+            ? createPortal(
+                  <div
+                      data-scrollbar-overlay=""
+                      style={{
+                          position: "absolute",
+                          top: hostRect.overlayTop + "px",
+                          left: hostRect.overlayLeft + "px",
+                          width: (hostRect.clientWidth || hostRect.width || 0) + "px",
+                          height: (hostRect.clientHeight || hostRect.height || 0) + "px",
+                          overflow: "hidden",
+                          pointerEvents: "none",
+                          zIndex: 9999999999,
+                      }}
+                  >
+                      {bars}
+                  </div>,
+                  overlayHost,
+              )
+            : null;
+
+    return (
+        <>
+            <S.anchor ref={anchorRef} />
+            {isWindowLike ? bars : overlay}
         </>
     );
 };
