@@ -4,7 +4,7 @@ const S = styled.div`
     ${({
         theme,
         $barPosition,
-        $isOppositePosition,
+        // $isOppositePosition,
         $truckColor,
         // $thumbColor,
         // $colors,
@@ -26,25 +26,18 @@ const S = styled.div`
             opacity: ${$isScrollbarActive ? 1 : 0.3};
 
             & > [data-slot="thumb"] {
-                border-radius: 5rem 0 0 5rem;
+                border-radius: 2rem;
                 transition:
                     background-color 0.5s,
                     scale 0.5s;
                 background-color: ${mainColor};
                 scale: ${$barPosition === "horizontal"
                     ? $isScrollbarActive
-                        ? "1 2"
-                        : "1 1.5"
+                        ? "1 1.2"
+                        : "1 1"
                     : $isScrollbarActive
-                      ? "2 1"
-                      : "1.5 1"};
-                transform-origin: ${$barPosition === "horizontal"
-                    ? $isOppositePosition
-                        ? "left center"
-                        : "right center"
-                    : $isOppositePosition
-                      ? "left center"
-                      : "right center"};
+                      ? "1.2 1"
+                      : "1 1"};
             }
         `;
     }}
@@ -54,5 +47,7 @@ export const X = {
     variant: S,
     truckColor: "primary",
     thumbColor: "primary",
+    body: true,
+    edgeMargin: 10,
 };
 export default X;

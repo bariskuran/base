@@ -14,7 +14,7 @@ const Block = ({ title, description, code, example, lastBlock }) => {
 
     /* RETURN */
     return (
-        <S.container>
+        <S.container $lastBlock={lastBlock}>
             <S.titleArea>
                 <Typo.h5 selfAlign="right" margin="0 0 10rem 0" fitContent balance>
                     {title}

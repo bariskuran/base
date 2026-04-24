@@ -151,6 +151,12 @@ const mapYAlign = (value) => {
     return v;
 };
 
+const normalizeWrap = (wrap) => {
+    if (wrap === true) return "wrap";
+    if (wrap === false) return "nowrap";
+    return wrap;
+};
+
 const generateJustifyAlign = ({
     align,
     xAlign,
@@ -327,6 +333,7 @@ export const generateProps = ({
         //
         inCommonProps,
         inProps,
+        wrap,
     } = mergedObj;
 
     const currDirection = generateDirection(direction);
@@ -372,6 +379,7 @@ export const generateProps = ({
         }),
         gap: cssNormalizeSize(gap),
         alignSelf: generateAlignSelf({ alignSelf }),
+        wrap: normalizeWrap(wrap),
         inProps: generateInProps({
             inCommonProps,
             inProps,

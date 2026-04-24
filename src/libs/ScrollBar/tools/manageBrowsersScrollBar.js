@@ -40,6 +40,7 @@ export const disableBrowserScrollBar = ({ host, styleEl }) => {
             [data-scrollbar-hide="${uid}"] {
                 scrollbar-width: none !important;
                 -ms-overflow-style: none !important;
+                overscroll-behavior: contain !important;
             }
 
             [data-scrollbar-hide="${uid}"]::-webkit-scrollbar {

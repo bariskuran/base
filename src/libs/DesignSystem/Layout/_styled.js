@@ -3,10 +3,9 @@ import styled, { css } from "styled-components";
 export const S = {
     container: styled.div`
         width: 100%;
-        height: 100vh;
         display: flex;
         align-items: flex-start;
-        box-sizing: border-box;
+
         ${({ theme }) => css`
             background-color: ${theme.background};
             color: ${theme.foreground};
@@ -16,15 +15,11 @@ export const S = {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        height: 100%;
         flex: 0 0 300rem;
         margin-bottom: 100rem;
         align-items: flex-end;
-        box-sizing: border-box;
-
-        ${({ theme }) => css`
-            background-color: ${theme.backgrounds.shade5};
-            color: ${theme.foreground};
-        `}
+        border-right: 1px solid ${({ theme }) => theme.greys.shade40};
     `,
     logoArea: styled.div`
         display: flex;

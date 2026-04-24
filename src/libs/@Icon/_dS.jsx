@@ -102,7 +102,7 @@ const X = () => {
                     <Flex gap={20} xAlign="start">
                         <Icon icon="copy" onHoverIcon="check" onHoverColor="green" />
                         <Icon icon="download" width={14} onHoverScale={1.4} onHoverColor="dodgerblue" />
-                        <Icon icon="search" width={14} onHoverScale={1.4} onHoverColor="dodgerblue" hoverManually={isHover} />
+                        <Icon icon="search" width={14} onHoverScale={4} disableScaleEffect onHoverColor="dodgerblue" hoverManually={isHover} />
                     </Flex>`}
                 example={
                     <Flex gap={20} xAlign="start">
@@ -122,9 +122,10 @@ const X = () => {
                         <Icon
                             icon="search"
                             width={14}
-                            onHoverScale={1.4}
+                            onHoverScale={4}
                             onHoverColor="dodgerblue"
                             hoverManually={isHover}
+                            disableScaleEffect
                         />
                         <div
                             onMouseEnter={() => setLocalByPath("isHover", true)}
@@ -219,10 +220,10 @@ const X = () => {
                         description: "Default icon color.",
                         type: "string",
                         required: false,
-                        defaultValue: "theme.background || black",
+                        defaultValue: "foreground || black",
                     },
                     width: {
-                        description: "Base icon size. Kısayolları: 'size' && 'w'",
+                        description: "Base icon size. Shorthands: 'size' && 'w'",
                         type: "number",
                         required: false,
                         defaultValue: "10",
@@ -240,7 +241,8 @@ const X = () => {
                         defaultValue: "null",
                     },
                     onHoverWidth: {
-                        description: "Size shown on hover state.",
+                        description:
+                            "Size shown on hover state. Shorthands: 'onHoverSize' && 'onHoverW'",
                         type: "number",
                         required: false,
                         defaultValue: "null",
@@ -264,7 +266,8 @@ const X = () => {
                         defaultValue: "null",
                     },
                     onActiveWidth: {
-                        description: "Size shown on active state.",
+                        description:
+                            "Size shown on active state. Shorthands: 'onActiveSize' && 'onActiveW'",
                         type: "number",
                         required: false,
                         defaultValue: "null",

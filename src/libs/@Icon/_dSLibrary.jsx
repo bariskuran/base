@@ -5,14 +5,23 @@ import styled from "styled-components";
 import { copyToClipboard } from "../copyToClipboard";
 import { baseStore } from "../@baseStore";
 import { sortBy } from "../sortBy";
+import { Button } from "../Button";
 
 const X = () => (
     <Ds.page
         title="Icon Library"
         releasedOn="1.0.0"
-        description={`Icon komponenti ile kullanılan tüm iconları görüntüleyebilirsiniz. İsim ve keyword bazlı arama yapabilirsiniz. Kullanımı için Icon komponentinin dökümantasyonunu inceleyin.
-            
-            Base'in kendi icon seti hali hazırda mevcuttur. Ayrıca kendi iconlarınızı da proje dosyanız üzerinden ekleyebilirsiniz.`}
+        description={
+            <>
+                You can view all the icons used with the Icon component here. You can search by name
+                or keyword. For usage details, check the documentation for the Icon component. Base
+                comes with its own built-in icon set, but you can also add your own custom icons
+                through your project files.
+                <br />
+                <br /> Check out
+                <Button.string to="/design-system/icon" label="<Icon>" />.
+            </>
+        }
     >
         <Ds.block
             title="Adding new icons"
@@ -30,7 +39,7 @@ const X = () => (
                     }
                 `}
         />
-        <Library />
+        <Ds.block title="Library" example={<Library />} />
     </Ds.page>
 );
 

@@ -148,11 +148,34 @@ const createIconMeta = (iconInput, allIcons) => {
 
 const resolveSize = (a, b, c) => a ?? b ?? c;
 
-const resolveScale = (value, fallback = 1) => {
+const resolveNumber = (value, fallback = null) => {
     if (value == null) return fallback;
     const n = Number(value);
     if (Number.isNaN(n) || n <= 0) return fallback;
     return n;
+};
+
+const resolveVisualScale = ({
+    explicitScale,
+    widthAlias,
+    widthAliasShort,
+    widthAliasSize,
+    baseSize,
+    fallback = 1,
+}) => {
+    const scaleValue = resolveNumber(explicitScale, null);
+    if (scaleValue != null) return scaleValue;
+
+    const targetWidth = resolveNumber(
+        resolveSize(widthAliasSize, widthAliasShort, widthAlias),
+        null,
+    );
+
+    if (targetWidth != null && baseSize > 0) {
+        return targetWidth / baseSize;
+    }
+
+    return fallback;
 };
 
 const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive }) => {
@@ -205,15 +228,20 @@ export const Icon = ({
     onHoverIcon: onHoverIconProp,
     onHoverColor,
     onHoverScale,
+    onHoverWidth,
+    onHoverW,
+    onHoverSize,
     onActiveIcon: onActiveIconProp,
     onActiveColor,
     onActiveScale,
+    onActiveWidth,
+    onActiveW,
+    onActiveSize,
     popTipProps = {},
     hoverManually = false,
     activeManually = false,
-    isActive = false,
     disableScaleEffect = false,
-    disablePulse = false,
+    disablePulseEffect = false,
 }) => {
     const [iconsLibraryRaw, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
 
@@ -224,7 +252,7 @@ export const Icon = ({
     const iconsLibrary = useMemo(() => normalizeIconsLibrary(iconsLibraryRaw), [iconsLibraryRaw]);
     const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
 
-    const activeState = !!(activeManually || isActive);
+    const activeState = !!activeManually;
     const hoverState = !!(hoverManually || isSelfHover) && !activeState;
 
     const onHoverIcon = onHoverIconProp || null;
@@ -244,12 +272,33 @@ export const Icon = ({
           : color;
 
     const finalColor = resolveThemeColor(theme, finalColorRaw);
-    const finalSize = resolveSize(size, w, width);
+    const baseSize = resolveSize(size, w, width);
 
-    const hoverScaleValue = resolveScale(onHoverScale, 1);
-    const activeScaleValue = resolveScale(onActiveScale, 1);
+    const hoverScaleValue = resolveVisualScale({
+        explicitScale: onHoverScale,
+        widthAlias: onHoverWidth,
+        widthAliasShort: onHoverW,
+        widthAliasSize: onHoverSize,
+        baseSize,
+        fallback: 1,
+    });
 
-    const finalScale = activeState ? activeScaleValue : hoverState ? hoverScaleValue : 1;
+    const activeScaleValue = resolveVisualScale({
+        explicitScale: onActiveScale,
+        widthAlias: onActiveWidth,
+        widthAliasShort: onActiveW,
+        widthAliasSize: onActiveSize,
+        baseSize,
+        fallback: 1,
+    });
+
+    const finalScale = disableScaleEffect
+        ? 1
+        : activeState
+          ? activeScaleValue
+          : hoverState
+            ? hoverScaleValue
+            : 1;
 
     const shouldRenderHoverLayer = !!(onHoverIconProp && hoverMeta);
     const shouldRenderActiveLayer = !!(onActiveIconProp && activeMeta);
@@ -259,14 +308,14 @@ export const Icon = ({
     const showHoverLayer = shouldUseHoverLayer;
     const showActiveLayer = shouldUseActiveLayer;
 
-    const pulseEnabled = !disablePulse && !disableScaleEffect;
+    const pulseEnabled = !disablePulseEffect;
 
     if (!baseMeta) return null;
 
     return (
         <PopTipWrapper popTipProps={popTipProps}>
             <Root
-                $size={finalSize}
+                $size={baseSize}
                 onMouseEnter={() =>
                     setLocal((s) => {
                         s.isSelfHover = true;

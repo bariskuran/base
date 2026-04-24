@@ -21,11 +21,13 @@ export const Base = ({ children, content, ...props }) => {
         gap,
         alignSelf,
         inProps,
+        overflow,
+        wrap,
     } = useVars({ props, childrenCount });
 
     /* RETURN */
     return (
-        <S.Container
+        <S.container
             $bgColor={bgColor}
             $color={color}
             $borderRadius={borderRadius}
@@ -42,8 +44,10 @@ export const Base = ({ children, content, ...props }) => {
             $flex={flex}
             $minHeight={minHeight}
             $minWidth={minWidth}
+            $overflow={overflow}
+            $wrap={wrap}
         >
             {children ?? content}
-        </S.Container>
+        </S.container>
     );
 };

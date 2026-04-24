@@ -1,8 +1,18 @@
+const getSafeNumber = (value, fallback) => {
+    if (value == null) return fallback;
+    const n = Number(value);
+    if (Number.isNaN(n)) return fallback;
+    return n;
+};
+
 const getThumbProps = ({
-    direction = "y",
+    scrollAxis = "y",
+    visualAxis = "y",
     maxLength,
-    marginToSide,
+    trackMargin,
     minThumbLength,
+    exactThumbSize,
+    fillMode = false,
     source = typeof window !== "undefined" ? window : undefined,
 } = {}) => {
     if (typeof window === "undefined" || typeof document === "undefined" || !source) {
@@ -18,41 +28,52 @@ const getThumbProps = ({
     const docEl = document.documentElement;
     const body = document.body;
 
-    const isY = direction === "y";
+    const isScrollY = scrollAxis === "y";
+    const isVisualY = visualAxis === "y";
+
     const isWindowLike =
         source === window || source === document.body || source === document.documentElement;
 
     const visibleLength = isWindowLike
-        ? isY
+        ? isScrollY
             ? window.innerHeight
             : window.innerWidth
-        : isY
+        : isScrollY
           ? source.clientHeight
           : source.clientWidth;
 
-    const trackLength = maxLength
-        ? visibleLength * (maxLength / 100)
-        : visibleLength - marginToSide * 2;
+    const visualHostLength = isWindowLike
+        ? isVisualY
+            ? window.innerHeight
+            : window.innerWidth
+        : isVisualY
+          ? source.clientHeight
+          : source.clientWidth;
+
+    const trackLength = Math.max(
+        0,
+        maxLength ? visualHostLength * (maxLength / 100) : visualHostLength - trackMargin * 2,
+    );
 
     const contentLength = isWindowLike
-        ? isY
+        ? isScrollY
             ? Math.max(docEl.scrollHeight, body.scrollHeight)
             : Math.max(docEl.scrollWidth, body.scrollWidth)
-        : isY
+        : isScrollY
           ? source.scrollHeight
           : source.scrollWidth;
 
     const scrollPos = isWindowLike
-        ? isY
+        ? isScrollY
             ? window.scrollY || window.pageYOffset || 0
             : window.scrollX || window.pageXOffset || 0
-        : isY
+        : isScrollY
           ? source.scrollTop
           : source.scrollLeft;
 
     const maxScroll = Math.max(0, contentLength - visibleLength);
 
-    if (maxScroll <= 0 || contentLength <= 0) {
+    if (maxScroll <= 0 || contentLength <= 0 || trackLength <= 0) {
         return {
             thumbLength: Math.round(trackLength),
             thumbPosition: 0,
@@ -62,11 +83,32 @@ const getThumbProps = ({
         };
     }
 
-    let thumbLength = trackLength * (visibleLength / contentLength);
-    thumbLength = Math.max(minThumbLength, thumbLength);
+    if (fillMode) {
+        const progress = Math.max(0, Math.min(1, scrollPos / maxScroll));
+        const thumbLength = trackLength * progress;
+
+        return {
+            thumbLength: Math.round(thumbLength),
+            thumbPosition: 0,
+            trackLength: Math.round(trackLength),
+            maxScroll: Math.round(maxScroll),
+            scrollPos: Math.round(scrollPos),
+        };
+    }
+
+    let thumbLength;
+
+    if (exactThumbSize != null) {
+        thumbLength = getSafeNumber(exactThumbSize, minThumbLength);
+    } else {
+        thumbLength = trackLength * (visibleLength / contentLength);
+        thumbLength = Math.max(minThumbLength, thumbLength);
+    }
+
+    thumbLength = Math.max(1, thumbLength);
     thumbLength = Math.min(trackLength, thumbLength);
 
-    const movableArea = trackLength - thumbLength;
+    const movableArea = Math.max(0, trackLength - thumbLength);
     const thumbPosition = maxScroll > 0 ? (scrollPos / maxScroll) * movableArea : 0;
 
     return {

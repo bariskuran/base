@@ -6,6 +6,12 @@ const S = {
         align-items: stretch;
         min-height: 100rem;
         width: 100%;
+
+        ${({ $lastBlock }) =>
+            $lastBlock &&
+            css`
+                margin-bottom: 100rem;
+            `}
     `,
     titleArea: styled.div`
         max-width: 125rem;

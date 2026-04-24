@@ -18,64 +18,80 @@ const Bar = ({
     colors,
     thickness,
     maxLength,
-    marginToSide,
-    marginToBorder,
+    trackMargin,
+    edgeMargin,
     minThumbLength,
+    exactThumbSize,
+    fillMode,
     thumbLength,
     thumbPosition,
-    isBarVertical,
-    isOppositePosition,
+    barPosition,
+    mirror,
 }) => {
-    const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 0;
-    const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 0;
+    const docEl = typeof document !== "undefined" ? document.documentElement : null;
+    const viewportWidth =
+        docEl?.clientWidth ?? (typeof window !== "undefined" ? window.innerWidth : 0);
+    const viewportHeight =
+        docEl?.clientHeight ?? (typeof window !== "undefined" ? window.innerHeight : 0);
+
+    const hostW = hostRect?.width || viewportWidth;
+    const hostH = hostRect?.height || viewportHeight;
+
+    const isBarVertical = barPosition === "vertical";
+
+    const barLength = isBarVertical
+        ? maxLength
+            ? (hostH * maxLength) / 100
+            : Math.max(0, hostH - trackMargin * 2)
+        : maxLength
+          ? (hostW * maxLength) / 100
+          : Math.max(0, hostW - trackMargin * 2);
+
+    const trackStartOffset = maxLength
+        ? ((isBarVertical ? hostH : hostW) - barLength) / 2
+        : trackMargin;
 
     const baseStyle = isBarVertical
         ? {
               width: thickness + "rem",
-              height: maxLength
-                  ? `${((hostRect?.height || viewportHeight) * maxLength) / 100}px`
-                  : `${Math.max(0, (hostRect?.height || viewportHeight) - marginToSide * 2)}px`,
+              height: `${barLength}px`,
           }
         : {
-              width: maxLength
-                  ? `${((hostRect?.width || viewportWidth) * maxLength) / 100}px`
-                  : `${Math.max(0, (hostRect?.width || viewportWidth) - marginToSide * 2)}px`,
+              width: `${barLength}px`,
               height: thickness + "rem",
           };
 
     const windowLikePositionStyle = isBarVertical
         ? {
               position: "fixed",
-              top: marginToSide + "px",
-              [isOppositePosition ? "left" : "right"]: marginToBorder + "rem",
+              top: trackStartOffset + "px",
+              [mirror ? "left" : "right"]: edgeMargin + "rem",
           }
         : {
               position: "fixed",
-              left: marginToSide + "px",
-              [isOppositePosition ? "top" : "bottom"]: marginToBorder + "rem",
+              left: trackStartOffset + "px",
+              [mirror ? "top" : "bottom"]: edgeMargin + "rem",
           };
 
     const hostLikePositionStyle = isBarVertical
         ? {
               position: "fixed",
-              top: (hostRect?.top || 0) + marginToSide + "px",
-              [isOppositePosition ? "left" : "right"]:
-                  (isOppositePosition
-                      ? hostRect?.left || 0
-                      : viewportWidth - (hostRect?.right || 0)) +
-                  marginToBorder +
+              top: (hostRect?.top || 0) + trackStartOffset + "px",
+              [mirror ? "left" : "right"]:
+                  (mirror ? hostRect?.left || 0 : viewportWidth - (hostRect?.right || 0)) +
+                  edgeMargin +
                   "px",
           }
         : {
               position: "fixed",
-              left: (hostRect?.left || 0) + marginToSide + "px",
-              [isOppositePosition ? "top" : "bottom"]:
-                  (isOppositePosition
-                      ? hostRect?.top || 0
-                      : viewportHeight - (hostRect?.bottom || 0)) +
-                  marginToBorder +
+              left: (hostRect?.left || 0) + trackStartOffset + "px",
+              [mirror ? "top" : "bottom"]:
+                  (mirror ? hostRect?.top || 0 : viewportHeight - (hostRect?.bottom || 0)) +
+                  edgeMargin +
                   "px",
           };
+
+    const shouldUseMinThumb = exactThumbSize == null && !fillMode;
 
     return (
         <Variant
@@ -83,8 +99,8 @@ const Bar = ({
             onMouseDown={onTruckMouseDown}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            $barPosition={isBarVertical ? "vertical" : "horizontal"}
-            $isOppositePosition={isOppositePosition}
+            $barPosition={barPosition}
+            $mirror={mirror}
             $truckColor={truckColor}
             $thumbColor={thumbColor}
             $colors={colors}
@@ -106,27 +122,31 @@ const Bar = ({
         >
             <div
                 ref={thumbRef}
-                onMouseDown={onThumbMouseDown}
+                onMouseDown={fillMode ? undefined : onThumbMouseDown}
                 data-slot="thumb"
                 style={
                     isBarVertical
                         ? {
                               width: "100%",
                               height: thumbLength + "px",
-                              minHeight: minThumbLength + "px",
-                              cursor: isDragging ? "grabbing" : "grab",
-                              transform: `translate3d(0, ${thumbPosition}px, 0) scale(1.5, 1)`,
-                              transformOrigin: "center center",
-                              willChange: "transform",
+                              ...(shouldUseMinThumb ? { minHeight: minThumbLength + "px" } : {}),
+                              cursor: fillMode ? "pointer" : isDragging ? "grabbing" : "grab",
+                              transform: fillMode
+                                  ? "translate3d(0, 0, 0) scale(1.5, 1)"
+                                  : `translate3d(0, ${thumbPosition}px, 0) scale(1.5, 1)`,
+                              transformOrigin: "center top",
+                              willChange: "transform, height",
                           }
                         : {
                               height: "100%",
                               width: thumbLength + "px",
-                              minWidth: minThumbLength + "px",
-                              cursor: isDragging ? "grabbing" : "grab",
-                              transform: `translate3d(${thumbPosition}px, 0, 0) scale(1, 1.5)`,
-                              transformOrigin: "center center",
-                              willChange: "transform",
+                              ...(shouldUseMinThumb ? { minWidth: minThumbLength + "px" } : {}),
+                              cursor: fillMode ? "pointer" : isDragging ? "grabbing" : "grab",
+                              transform: fillMode
+                                  ? "translate3d(0, 0, 0) scale(1, 1.5)"
+                                  : `translate3d(${thumbPosition}px, 0, 0) scale(1, 1.5)`,
+                              transformOrigin: "left center",
+                              willChange: "transform, width",
                           }
                 }
             />
@@ -145,9 +165,11 @@ export const Base = (p) => {
         thumbColor,
         thickness,
         maxLength,
-        marginToSide,
-        marginToBorder,
+        trackMargin,
+        edgeMargin,
         minThumbLength,
+        exactThumbSize,
+        fillMode,
         showX,
         showY,
         x,
@@ -156,6 +178,8 @@ export const Base = (p) => {
         yTruckRef,
         xThumbRef,
         yThumbRef,
+        xBarPosition,
+        yBarPosition,
         onXTruckMouseDown,
         onYTruckMouseDown,
         onXThumbMouseDown,
@@ -165,8 +189,7 @@ export const Base = (p) => {
         isScrollbarActive,
         handleOnMouseEnter,
         handleOnMouseLeave,
-        xOnTop,
-        yOnLeft,
+        mirror,
     } = useVars(p);
 
     return (
@@ -191,13 +214,15 @@ export const Base = (p) => {
                     colors={colors}
                     thickness={thickness}
                     maxLength={maxLength}
-                    marginToSide={marginToSide}
-                    marginToBorder={marginToBorder}
+                    trackMargin={trackMargin}
+                    edgeMargin={edgeMargin}
                     minThumbLength={minThumbLength}
+                    exactThumbSize={exactThumbSize}
+                    fillMode={fillMode}
                     thumbLength={y.thumbLength}
                     thumbPosition={y.thumbPosition}
-                    isBarVertical={true}
-                    isOppositePosition={yOnLeft}
+                    barPosition={yBarPosition}
+                    mirror={mirror}
                 />
             )}
 
@@ -219,13 +244,15 @@ export const Base = (p) => {
                     colors={colors}
                     thickness={thickness}
                     maxLength={maxLength}
-                    marginToSide={marginToSide}
-                    marginToBorder={marginToBorder}
+                    trackMargin={trackMargin}
+                    edgeMargin={edgeMargin}
                     minThumbLength={minThumbLength}
+                    exactThumbSize={exactThumbSize}
+                    fillMode={fillMode}
                     thumbLength={x.thumbLength}
                     thumbPosition={x.thumbPosition}
-                    isBarVertical={false}
-                    isOppositePosition={xOnTop}
+                    barPosition={xBarPosition}
+                    mirror={mirror}
                 />
             )}
         </>

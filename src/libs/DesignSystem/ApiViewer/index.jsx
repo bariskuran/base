@@ -4,6 +4,7 @@ import { PopTip } from "../../PopTip";
 import { Typo } from "../../Typography";
 import Block from "../Block";
 import { copyToClipboard } from "../../copyToClipboard";
+import { sortBy } from "../../sortBy";
 
 const ApiViewer = ({ props }) => {
     /* RETURN */
@@ -19,8 +20,9 @@ const ApiViewer = ({ props }) => {
                     <div>Type</div>
                     <div>Description</div>
                     <div>Default Value</div>
-                    {Object.entries(props || {}).map(
-                        ([name, { description, type, required, defaultValue } = {}]) => (
+                    {Object.entries(props || {})
+                        .sort(sortBy.asc)
+                        .map(([name, { description, type, required, defaultValue } = {}]) => (
                             <Fragment key={name}>
                                 <div>
                                     <PopTip content="Required">
@@ -34,8 +36,7 @@ const ApiViewer = ({ props }) => {
                                 <div>{description}</div>
                                 <div>{defaultValue}</div>
                             </Fragment>
-                        ),
-                    )}
+                        ))}
                 </S.container>
             }
         />
