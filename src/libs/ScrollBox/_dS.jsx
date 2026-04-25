@@ -22,14 +22,9 @@ const X = () => {
         >
             <Ds.block
                 title="Basic usage"
-                description="The Icon component can render any icon from the icon library by passing the icon name."
-                code={`import { Icon } from "${SYS.basePath}";
-
-                    <Flex gap={16} xAlign="start">
-                        <Icon icon="copy" />
-                        <Icon icon="check" width={20} />
-                        <Icon icon="close" width={24} />
-                    </Flex>`}
+                description="XXXX"
+                code={`import { ScrollBox } from "${SYS.basePath}";
+`}
                 example={
                     <ScrollBox width={200} height={100}>
                         {longText}

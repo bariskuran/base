@@ -262,7 +262,7 @@ const X = () => (
                         <ScrollBar variant="primary" />
                     </TwoAxisLargeContent>
                     <TwoAxisLargeContent>
-                        <ScrollBar variant="topQueen" />
+                        <ScrollBar variant="fullTop" />
                     </TwoAxisLargeContent>
                 </Flex>
             }

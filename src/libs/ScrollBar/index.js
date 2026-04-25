@@ -10,7 +10,7 @@ export const ScrollBar = componentCreator({
     variants: {
         body: Body,
         primary: { ...Body, body: false },
-        topQueen: {
+        fullTop: {
             ...Body,
             body: false,
             mirror: true,

@@ -51,15 +51,7 @@ export const Base = ({ children, ...p }) => {
                 >
                     {children}
                 </Variant>
-                {isOverflowingY && <ScrollBar {...scrollBarProps} containerRef={containerRef} />}
-                {isOverflowingX && (
-                    <ScrollBar
-                        {...scrollBarProps}
-                        containerRef={containerRef}
-                        scrollDirection="scrollX"
-                        barPosition="horizontal"
-                    />
-                )}
+                <ScrollBar {...scrollBarProps} />
             </>
         </ContextProvider>
     );
