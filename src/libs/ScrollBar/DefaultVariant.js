@@ -1,7 +1,15 @@
 import styled, { css } from "styled-components";
 
 export const DefaultVariant = styled.div`
-    ${({ theme, $barPosition, $truckColor, $thumbColor, $isScrollbarActive, $mirror }) => {
+    ${({
+        theme,
+        $barPosition,
+        $truckColor,
+        $thumbColor,
+        $isScrollbarActive,
+        $mirror,
+        $enableThumbScale,
+    }) => {
         const mainColor = $truckColor ? theme[$truckColor] || $truckColor : theme.foreground;
         const thumbMainColor = $thumbColor ? theme[$thumbColor] || $thumbColor : mainColor;
 
@@ -15,18 +23,22 @@ export const DefaultVariant = styled.div`
                   : "right center";
 
         return css`
-            background-color: ${theme.colorAlpha(mainColor, 0.5)};
+            background-color: ${theme.colorAlpha(mainColor, 0.2)};
             transition:
                 background-color 1s,
                 opacity 1s;
-            opacity: ${$isScrollbarActive ? 0.5 : 0.2};
-            scale: ${$barPosition === "horizontal" ? "1 0.5" : "0.5 1"};
             transform-origin: ${transformOrigin};
+            opacity: ${$isScrollbarActive ? 0.5 : 0.2};
+
+            & > [data-slot="track"] {
+                /* opacity: ${$isScrollbarActive ? 0.5 : 0.2}; */
+            }
 
             & > [data-slot="thumb"] {
                 border-radius: 5rem;
                 transition: background-color 1s;
                 background-color: ${thumbMainColor};
+                ${$enableThumbScale ? "" : "scale: 1 1;"}
             }
         `;
     }}

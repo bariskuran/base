@@ -9,5 +9,16 @@ export const ScrollBar = componentCreator({
     DefaultVariant: DefaultVariant,
     variants: {
         body: Body,
+        primary: { ...Body, body: false },
+        topQueen: {
+            ...Body,
+            body: false,
+            mirror: true,
+            opposite: true,
+            edgeMargin: 0,
+            trackMargin: 0,
+            thickness: 2,
+            fillMode: true,
+        },
     },
 });

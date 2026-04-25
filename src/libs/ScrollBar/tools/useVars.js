@@ -3,44 +3,11 @@ import { baseStore } from "../../@baseStore";
 import { colorGet } from "../../colorGet";
 import { disableBrowserScrollBar, enableBrowserScrollBar } from "./manageBrowsersScrollBar";
 import getScrollHost from "./getScrollHost";
+import { getAxisOverflow, getHostRect } from "./getScrollMetrics";
 import getThumbProps from "./getThumbProps";
 import { useEventListener } from "../../useEventListener";
 import { delayedFunction } from "../../delayedFunction";
 import { useExportData } from "../../useExportedData";
-
-const getViewportSize = () => {
-    const docEl = typeof document !== "undefined" ? document.documentElement : null;
-
-    return {
-        width: docEl?.clientWidth ?? (typeof window !== "undefined" ? window.innerWidth : 0),
-        height: docEl?.clientHeight ?? (typeof window !== "undefined" ? window.innerHeight : 0),
-    };
-};
-
-const getAxisOverflow = ({ source, isWindowLike }) => {
-    if (typeof document === "undefined" || !source) {
-        return {
-            isOverflowingX: false,
-            isOverflowingY: false,
-        };
-    }
-
-    if (isWindowLike) {
-        const docEl = document.documentElement;
-        const body = document.body;
-        const viewport = getViewportSize();
-
-        return {
-            isOverflowingX: Math.max(docEl.scrollWidth, body.scrollWidth) > viewport.width,
-            isOverflowingY: Math.max(docEl.scrollHeight, body.scrollHeight) > viewport.height,
-        };
-    }
-
-    return {
-        isOverflowingX: source.scrollWidth > source.clientWidth,
-        isOverflowingY: source.scrollHeight > source.clientHeight,
-    };
-};
 
 const useVars = (p) => {
     const {
@@ -52,13 +19,14 @@ const useVars = (p) => {
         mirror = false,
         truckColor,
         thumbColor,
-        thickness = 6,
+        thickness = 4,
         maxLength,
         trackMargin: trackMarginProp,
         edgeMargin: edgeMarginProp,
         minThumbLength = 24,
         exactThumbSize,
         fillMode = false,
+        enableThumbScale = false,
         exportData,
     } = p || {};
 
@@ -175,58 +143,13 @@ const useVars = (p) => {
         });
     };
 
-    const getCurrentHostRect = () => {
-        const viewport = getViewportSize();
-
-        if (isWindowLike || !resolvedHost) {
-            return {
-                top: 0,
-                left: 0,
-                right: viewport.width,
-                bottom: viewport.height,
-                width: viewport.width,
-                height: viewport.height,
-                clientWidth: viewport.width,
-                clientHeight: viewport.height,
-                scrollWidth: Math.max(
-                    document.documentElement.scrollWidth,
-                    document.body.scrollWidth,
-                ),
-                scrollHeight: Math.max(
-                    document.documentElement.scrollHeight,
-                    document.body.scrollHeight,
-                ),
-            };
-        }
-
-        const rect = resolvedHost.getBoundingClientRect();
-        const parent = resolvedHost.parentElement;
-        const parentRect = parent?.getBoundingClientRect?.();
-
-        return {
-            top: rect.top,
-            left: rect.left,
-            right: rect.right,
-            bottom: rect.bottom,
-            width: rect.width,
-            height: rect.height,
-            clientWidth: resolvedHost.clientWidth,
-            clientHeight: resolvedHost.clientHeight,
-            scrollWidth: resolvedHost.scrollWidth,
-            scrollHeight: resolvedHost.scrollHeight,
-            overlayTop: parentRect
-                ? rect.top - parentRect.top + (parent?.scrollTop || 0) + resolvedHost.clientTop
-                : rect.top,
-            overlayLeft: parentRect
-                ? rect.left - parentRect.left + (parent?.scrollLeft || 0) + resolvedHost.clientLeft
-                : rect.left,
-        };
-    };
-
     const syncHostRect = () => {
         if (typeof document === "undefined") return;
 
-        const rect = getCurrentHostRect();
+        const rect = getHostRect({
+            host: resolvedHost,
+            isWindowLike,
+        });
 
         setLocal((s) => {
             s.hostRect = rect;
@@ -315,13 +238,16 @@ const useVars = (p) => {
             const shouldRestore = computedPosition === "static";
 
             if (shouldRestore) {
-                // eslint-disable-next-line react-hooks/immutability
-                overlayHost.style.position = "relative";
+                overlayHost.style.setProperty("position", "relative");
             }
 
             return () => {
                 if (shouldRestore) {
-                    overlayHost.style.position = previousPosition;
+                    if (previousPosition) {
+                        overlayHost.style.setProperty("position", previousPosition);
+                    } else {
+                        overlayHost.style.removeProperty("position");
+                    }
                 }
             };
         }
@@ -545,12 +471,7 @@ const useVars = (p) => {
             return;
         }
 
-        if (axis === "y") {
-            // eslint-disable-next-line react-hooks/immutability
-            normalizedScrollSource.scrollTop = safeScroll;
-        } else {
-            normalizedScrollSource.scrollLeft = safeScroll;
-        }
+        Reflect.set(normalizedScrollSource, axis === "y" ? "scrollTop" : "scrollLeft", safeScroll);
     };
 
     const onWheelTranslateYToX = (e) => {
@@ -579,8 +500,7 @@ const useVars = (p) => {
 
         if (nextLeft === currentLeft) return;
 
-        // eslint-disable-next-line react-hooks/immutability
-        normalizedScrollSource.scrollLeft = nextLeft;
+        Reflect.set(normalizedScrollSource, "scrollLeft", nextLeft);
     };
 
     useEventListener("wheel", onWheelTranslateYToX, {
@@ -763,6 +683,7 @@ const useVars = (p) => {
             minThumbLength,
             exactThumbSize,
             fillMode,
+            enableThumbScale,
             resolvedHost,
             overlayHost,
             normalizedScrollSource,

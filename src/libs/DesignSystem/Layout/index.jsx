@@ -18,7 +18,7 @@ const Layout = () => {
     /* RETURN */
     return (
         <S.container $vars={vars}>
-            <ScrollBar.body maxLength={40} />
+            <ScrollBar.primary body maxLength={40} fillMode />
             <S.navigation>
                 <S.logoArea>
                     <Button.plain

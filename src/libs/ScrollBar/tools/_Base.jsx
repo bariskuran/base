@@ -24,6 +24,7 @@ const Bar = ({
     minThumbLength,
     exactThumbSize,
     fillMode,
+    enableThumbScale,
     thumbLength,
     thumbPosition,
     barPosition,
@@ -87,6 +88,20 @@ const Bar = ({
           };
 
     const shouldUseMinThumb = exactThumbSize == null && !fillMode;
+    const verticalThumbTransform = enableThumbScale
+        ? fillMode
+          ? "translate3d(0, 0, 0) scale(1.5, 1)"
+          : `translate3d(0, ${thumbPosition}px, 0) scale(1.5, 1)`
+        : fillMode
+          ? "translate3d(0, 0, 0)"
+          : `translate3d(0, ${thumbPosition}px, 0)`;
+    const horizontalThumbTransform = enableThumbScale
+        ? fillMode
+          ? "translate3d(0, 0, 0) scale(1, 1.5)"
+          : `translate3d(${thumbPosition}px, 0, 0) scale(1, 1.5)`
+        : fillMode
+          ? "translate3d(0, 0, 0)"
+          : `translate3d(${thumbPosition}px, 0, 0)`;
 
     return (
         <Variant
@@ -104,6 +119,7 @@ const Bar = ({
             $isDragging={isDragging}
             $isScrollbarActive={isScrollbarActive}
             $isBoxMode={!isWindowLike}
+            $enableThumbScale={enableThumbScale}
             style={{
                 ...baseStyle,
                 ...(isWindowLike ? windowLikePositionStyle : hostLikePositionStyle),
@@ -113,6 +129,7 @@ const Bar = ({
                 alignItems: "flex-start",
                 cursor: "pointer",
                 pointerEvents: "auto",
+                overflow: enableThumbScale ? "visible" : "hidden",
             }}
         >
             <div
@@ -126,9 +143,7 @@ const Bar = ({
                               height: thumbLength + "px",
                               ...(shouldUseMinThumb ? { minHeight: minThumbLength + "px" } : {}),
                               cursor: fillMode ? "pointer" : isDragging ? "grabbing" : "grab",
-                              transform: fillMode
-                                  ? "translate3d(0, 0, 0) scale(1.5, 1)"
-                                  : `translate3d(0, ${thumbPosition}px, 0) scale(1.5, 1)`,
+                              transform: verticalThumbTransform,
                               transformOrigin: "center top",
                               willChange: "transform, height",
                           }
@@ -137,9 +152,7 @@ const Bar = ({
                               width: thumbLength + "px",
                               ...(shouldUseMinThumb ? { minWidth: minThumbLength + "px" } : {}),
                               cursor: fillMode ? "pointer" : isDragging ? "grabbing" : "grab",
-                              transform: fillMode
-                                  ? "translate3d(0, 0, 0) scale(1, 1.5)"
-                                  : `translate3d(${thumbPosition}px, 0, 0) scale(1, 1.5)`,
+                              transform: horizontalThumbTransform,
                               transformOrigin: "left center",
                               willChange: "transform, width",
                           }
@@ -166,6 +179,7 @@ export const Base = (p) => {
         minThumbLength,
         exactThumbSize,
         fillMode,
+        enableThumbScale,
         showX,
         showY,
         x,
@@ -213,6 +227,7 @@ export const Base = (p) => {
                     minThumbLength={minThumbLength}
                     exactThumbSize={exactThumbSize}
                     fillMode={fillMode}
+                    enableThumbScale={enableThumbScale}
                     thumbLength={y.thumbLength}
                     thumbPosition={y.thumbPosition}
                     barPosition={yBarPosition}
@@ -243,6 +258,7 @@ export const Base = (p) => {
                     minThumbLength={minThumbLength}
                     exactThumbSize={exactThumbSize}
                     fillMode={fillMode}
+                    enableThumbScale={enableThumbScale}
                     thumbLength={x.thumbLength}
                     thumbPosition={x.thumbPosition}
                     barPosition={xBarPosition}

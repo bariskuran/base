@@ -25,11 +25,8 @@ const X = () => (
     >
         <Ds.block
             title="Adding new icons"
-            description={`Proje tarafında, PROJECT_SETTINGS.iconsLibrary altında kendi icon setinizi
-            [viewPortX, path, searchKeywords] 
-            formatı ile ekleyebilirsiniz.
-            
-            viewportY yani icon yüksekliği her zaman 20px olmalıdır.`}
+            description={`In your project, you can add your own icon set under PROJECT_SETTINGS.iconsLibrary 
+            in the format: ["viewPortX viewPortY", path, searchKeywords].`}
             code={`iconsLibrary: {
                         testIcon: [
                             "5.6, 20",

@@ -1,29 +1,15 @@
 import styled, { css } from "styled-components";
 
 const S = styled.div`
-    ${({
-        theme,
-        $barPosition,
-        // $isOppositePosition,
-        $truckColor,
-        // $thumbColor,
-        // $colors,
-        // $thumbLength,
-        // $thumbPosition,
-        // $maxScroll,
-        // $scrollPos,
-        // $isDragging,
-        // $isBoxMode,
-        $isScrollbarActive,
-    }) => {
+    ${({ theme, $truckColor, $isScrollbarActive, $barPosition }) => {
         const mainColor = $truckColor ? theme[$truckColor] || $truckColor : theme.primary;
-
         return css`
             background-color: ${theme.colorAlpha(mainColor, 0.5)};
             transition:
                 background-color 0.5s,
                 opacity 0.5s;
             opacity: ${$isScrollbarActive ? 1 : 0.3};
+            /* scale: ${$barPosition === "horizontal" ? "1.5 1" : "1 1.5"}; */
 
             & > [data-slot="thumb"] {
                 border-radius: 2rem;
@@ -31,13 +17,7 @@ const S = styled.div`
                     background-color 0.5s,
                     scale 0.5s;
                 background-color: ${mainColor};
-                scale: ${$barPosition === "horizontal"
-                    ? $isScrollbarActive
-                        ? "1 1.2"
-                        : "1 1"
-                    : $isScrollbarActive
-                      ? "1.2 1"
-                      : "1 1"};
+                transform-origin: center;
             }
         `;
     }}

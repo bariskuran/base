@@ -11,9 +11,10 @@ export const sitemap = [
     ["<Ds.block>", "dSBlock", l(() => import("./Block/_dS"))],
     ["<Ds.code>", "dSCodeViewer", l(() => import("./CodeViewer/_dS"))],
     ["<Icon>", "icon", l(() => import("../@Icon/_dS"))],
+    ["<ScrollBar>", "scrollBar", l(() => import("../ScrollBar/_dS"))],
     ["iconLibrary", "iconLibrary", l(() => import("../@Icon/_dSLibrary"))],
     //
-    ["<ScrollBar>", "scrollBar", l(() => import("../ScrollBar/_dS"))],
+    ["<ScrollBox>", "scrollBox", l(() => import("../ScrollBox/_dS"))],
 ];
 
 export const designSystemRoutes = [
