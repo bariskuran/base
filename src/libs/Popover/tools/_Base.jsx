@@ -1,7 +1,7 @@
 import useVars from "./useVars";
 import { FloatingUi } from "../../FloatingUi";
 import { Button } from "../../Button";
-import { ScrollBox } from "../../ScrollBox";
+import { ScrollFlex } from "../../ScrollFlex";
 
 export const Base = ({ children, ...p }) => {
     const {
@@ -14,7 +14,7 @@ export const Base = ({ children, ...p }) => {
         scrollBoxProps,
     } = useVars(p);
 
-    const content = <ScrollBox {...scrollBoxProps}>{children}</ScrollBox>;
+    const content = <ScrollFlex {...scrollBoxProps}>{children}</ScrollFlex>;
 
     /* RETURN */
     return (

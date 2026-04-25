@@ -14,7 +14,7 @@ export const sitemap = [
     ["<ScrollBar>", "scrollBar", l(() => import("../ScrollBar/_dS"))],
     ["iconLibrary", "iconLibrary", l(() => import("../@Icon/_dSLibrary"))],
     //
-    ["<ScrollBox>", "scrollBox", l(() => import("../ScrollBox/_dS"))],
+    ["<ScrollFlex>", "scrollFlex", l(() => import("../ScrollFlex/_dS"))],
 ];
 
 export const designSystemRoutes = [

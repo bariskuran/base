@@ -25,6 +25,7 @@ const Bar = ({
     exactThumbSize,
     fillMode,
     enableThumbScale,
+    disableOpacityEffect,
     thumbLength,
     thumbPosition,
     barPosition,
@@ -120,6 +121,7 @@ const Bar = ({
             $isScrollbarActive={isScrollbarActive}
             $isBoxMode={!isWindowLike}
             $enableThumbScale={enableThumbScale}
+            $disableOpacityEffect={disableOpacityEffect}
             style={{
                 ...baseStyle,
                 ...(isWindowLike ? windowLikePositionStyle : hostLikePositionStyle),
@@ -180,6 +182,7 @@ export const Base = (p) => {
         exactThumbSize,
         fillMode,
         enableThumbScale,
+        disableOpacityEffect,
         showX,
         showY,
         x,
@@ -228,6 +231,7 @@ export const Base = (p) => {
                     exactThumbSize={exactThumbSize}
                     fillMode={fillMode}
                     enableThumbScale={enableThumbScale}
+                    disableOpacityEffect={disableOpacityEffect}
                     thumbLength={y.thumbLength}
                     thumbPosition={y.thumbPosition}
                     barPosition={yBarPosition}
@@ -259,6 +263,7 @@ export const Base = (p) => {
                     exactThumbSize={exactThumbSize}
                     fillMode={fillMode}
                     enableThumbScale={enableThumbScale}
+                    disableOpacityEffect={disableOpacityEffect}
                     thumbLength={x.thumbLength}
                     thumbPosition={x.thumbPosition}
                     barPosition={xBarPosition}

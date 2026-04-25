@@ -14,7 +14,10 @@ import { baseStore } from "../@baseStore";
  * ScrollBar içerisinde, useVars kısmında
  * return useExportData({ ... data });
  *
- * useVars içerisinde return useExportData(data1,data2); şeklinde yapılır. data2 export edilir, hem data1 hem data2 return edilir.
+ * useVars içerisinde return useExportData(data1,data2); şeklinde yapılır.
+ * exportData data1 içerisinde olmalı.
+ * DATA2 EXPORT EDİLİR, bunu karıştırıyorsun hep,
+ * hem data1 hem data2 return edilir.
  */
 
 export const useExportData = ({ exportData, ...returnedData }, exportedData = {}) => {
@@ -42,6 +45,7 @@ export const useExportedData = () => {
 
     const exportData = useCallback((data) => {
         setLocal((s) => {
+            if (shallowEqual(s.exportedData, data)) return;
             s.exportedData = data;
         });
     }, []);

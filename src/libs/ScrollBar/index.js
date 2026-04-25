@@ -17,8 +17,9 @@ export const ScrollBar = componentCreator({
             opposite: true,
             edgeMargin: 0,
             trackMargin: 0,
-            thickness: 2,
+            thickness: 3,
             fillMode: true,
+            disableOpacityEffect: true,
         },
     },
 });

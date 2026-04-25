@@ -27,6 +27,94 @@ const mergeCommonAndItem = (common = {}, item = {}) => {
     return merged;
 };
 
+const normalizeCalcOperators = (value) =>
+    value
+        .replace(/\s+/g, " ")
+        .replace(/\s*([+\-*/])\s*/g, " $1 ")
+        .trim();
+
+const findClosingParen = (value, openIndex) => {
+    let depth = 0;
+
+    for (let i = openIndex; i < value.length; i++) {
+        if (value[i] === "(") depth += 1;
+        if (value[i] === ")") depth -= 1;
+        if (depth === 0) return i;
+    }
+
+    return -1;
+};
+
+const normalizeCalcExpression = (value) => {
+    if (typeof value !== "string") return value;
+
+    let result = "";
+
+    for (let i = 0; i < value.length; i++) {
+        if (value.slice(i, i + 5).toLowerCase() !== "calc(") {
+            result += value[i];
+            continue;
+        }
+
+        const closeIndex = findClosingParen(value, i + 4);
+
+        if (closeIndex === -1) {
+            result += value.slice(i);
+            break;
+        }
+
+        const inner = value.slice(i + 5, closeIndex);
+        const normalizedInner = normalizeCalcExpression(inner).replace(
+            /calc\(([^()]*)\)/g,
+            "$1",
+        );
+
+        result += `calc(${normalizeCalcOperators(normalizedInner)})`;
+        i = closeIndex;
+    }
+
+    return result;
+};
+
+const splitCssValueList = (value) => {
+    const parts = [];
+    let current = "";
+    let depth = 0;
+
+    for (let i = 0; i < value.length; i++) {
+        if (value.slice(i, i + 5).toLowerCase() === "calc(") {
+            current += value.slice(i, i + 5);
+            depth += 1;
+            i += 4;
+            continue;
+        }
+
+        const char = value[i];
+
+        if (char === ")" && depth > 0) {
+            depth -= 1;
+            current += char;
+            continue;
+        }
+
+        if (/\s/.test(char) && depth === 0) {
+            if (current) {
+                parts.push(normalizeCalcExpression(current));
+                current = "";
+            }
+            continue;
+        }
+
+        current += char;
+    }
+
+    if (current) {
+        parts.push(normalizeCalcExpression(current));
+    }
+
+    return parts;
+};
+
 const generateDirection = (direction) => {
     if (!direction) return;
 
@@ -59,7 +147,7 @@ const expandCssQuadValue = (value) => {
     }
 
     if (typeof value === "string") {
-        const parts = value.trim().split(/\s+/).filter(Boolean);
+        const parts = splitCssValueList(value);
 
         if (parts.length === 0) {
             return [undefined, undefined, undefined, undefined];
@@ -95,7 +183,7 @@ const generate4DirectionProps = ([high, top, right, bottom, left]) => {
     if (bottom != null) b = bottom;
     if (left != null) l = left;
 
-    const normalized = [t, r, b, l].map((item) => cssNormalizeSize(item));
+    const normalized = [t, r, b, l].map((item) => normalizeCalcExpression(cssNormalizeSize(item)));
 
     if (normalized.every((item) => item == null)) return undefined;
 

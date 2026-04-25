@@ -4,6 +4,7 @@ import { ScrollBar } from "./";
 import { generateRandom } from "../generateRandom";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
+import styled, { css } from "styled-components";
 
 const longText = generateRandom.loremIpsum(1000);
 const shortText = generateRandom.loremIpsum(50);
@@ -24,6 +25,20 @@ const TwoAxisLargeContent = ({ children, inProps, short }) => (
     </Flex>
 );
 
+export const CustomVariant = styled.div`
+    ${() => css`
+        & > [data-slot="track"] {
+            background: yellow;
+        }
+
+        & > [data-slot="thumb"] {
+            background: blue;
+            transform: scale(1.5);
+            border-radius: 50rem !important;
+        }
+    `}
+`;
+
 const X = () => (
     <Ds.page
         title="<ScrollBar>"
@@ -35,15 +50,15 @@ const X = () => (
                 X and/or Y axis, hides the browser’s native scrollbars, and replaces them with a
                 styled, interactive scrollbar. This component works in overlay mode and does not
                 reserve layout space for content. For most layout-safe, day-to-day use cases,
-                consider using ScrollBox instead. <br />
+                consider using ScrollFlex instead. <br />
                 <br />
                 When you need to customize the page-level (body/window) scroll area, ScrollBar
                 should be used directly via the body prop, since that is its primary low-level use
                 case.
                 <br />
                 <br /> Check out <Button.string
-                    to="/design-system/scrollBox"
-                    label="ScrollBox"
+                    to="/design-system/scrollFlex"
+                    label="ScrollFlex"
                 />{" "}
                 to see common usage.
             </>
@@ -268,6 +283,42 @@ const X = () => (
             }
         />
         <Ds.block
+            title="Custom Variant"
+            code={`import { ScrollBar, styled, css } from "${SYS.basePath}";
+
+export const CustomVariant = styled.div\`
+\${({
+    theme,
+    $barPosition,
+    $truckColor,
+    $thumbColor,
+    $isScrollbarActive,
+    $mirror,
+    $enableThumbScale,
+}) => css\`
+
+    & > [data-slot="track"] {
+    background:red;
+    }
+
+    & > [data-slot="thumb"] {
+    }
+\`}
+\`;
+
+<TwoAxisLargeContent>
+    <ScrollBar variant={CustomVariant} />
+</TwoAxisLargeContent>
+`}
+            example={
+                <Flex xAlign="start" gap={10}>
+                    <TwoAxisLargeContent>
+                        <ScrollBar variant={CustomVariant} />
+                    </TwoAxisLargeContent>
+                </Flex>
+            }
+        />
+        <Ds.block
             title="Body Integration"
             description={`'body' prop can be used to integrate the ScrollBar into the body of the page.
                     
@@ -391,6 +442,13 @@ const X = () => (
                 enableThumbScale: {
                     description:
                         "Enables the thumb scale effect. This prop might be ignored if a variant uses inner scale effect.",
+                    type: "boolean",
+                    required: false,
+                    defaultValue: "false",
+                },
+                disableOpacityEffect: {
+                    description:
+                        "Disables the inactive opacity effect for variants that support it. This behavior is variant-based and custom variants may ignore it.",
                     type: "boolean",
                     required: false,
                     defaultValue: "false",

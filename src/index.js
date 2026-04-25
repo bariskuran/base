@@ -130,7 +130,7 @@ export { PopTip } from "./libs/PopTip";
 export { Popover } from "./libs/Popover";
 export { delayedFunction } from "./libs/delayedFunction";
 export { ButtonList } from "./libs/ButtonList";
-export { ScrollBox } from "./libs/ScrollBox";
+export { ScrollFlex } from "./libs/ScrollFlex";
 export { ScrollBar } from "./libs/ScrollBar";
 export { useCheckOverflow } from "./libs/useCheckOverflow";
 export { useExportData, useExportedData } from "./libs/useExportedData";

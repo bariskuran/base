@@ -2,7 +2,7 @@ import { Children } from "react";
 import { S } from "./_styled.js";
 import { useVars } from "./useVars.js";
 
-export const Base = ({ children, content, ...props }) => {
+export const Base = ({ children, content, className, style, forwardedRef, ...props }) => {
     const childrenCount = Children.count(children || content);
     const {
         bgColor,
@@ -28,6 +28,9 @@ export const Base = ({ children, content, ...props }) => {
     /* RETURN */
     return (
         <S.container
+            ref={forwardedRef}
+            className={className}
+            style={style}
             $bgColor={bgColor}
             $color={color}
             $borderRadius={borderRadius}

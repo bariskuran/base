@@ -9,6 +9,7 @@ export const DefaultVariant = styled.div`
         $isScrollbarActive,
         $mirror,
         $enableThumbScale,
+        $disableOpacityEffect,
     }) => {
         const mainColor = $truckColor ? theme[$truckColor] || $truckColor : theme.foreground;
         const thumbMainColor = $thumbColor ? theme[$thumbColor] || $thumbColor : mainColor;
@@ -28,7 +29,7 @@ export const DefaultVariant = styled.div`
                 background-color 1s,
                 opacity 1s;
             transform-origin: ${transformOrigin};
-            opacity: ${$isScrollbarActive ? 0.5 : 0.2};
+            opacity: ${$disableOpacityEffect ? 1 : $isScrollbarActive ? 0.5 : 0.2};
 
             & > [data-slot="track"] {
                 /* opacity: ${$isScrollbarActive ? 0.5 : 0.2}; */

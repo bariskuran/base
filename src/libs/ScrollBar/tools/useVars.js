@@ -27,6 +27,7 @@ const useVars = (p) => {
         exactThumbSize,
         fillMode = false,
         enableThumbScale = false,
+        disableOpacityEffect = false,
         exportData,
     } = p || {};
 
@@ -659,6 +660,19 @@ const useVars = (p) => {
     const showY = y.isOverflowing && !disableY;
     const isDraggingX = dragAxis === "x";
     const isDraggingY = dragAxis === "y";
+    const getVisibleEdge = (isVisible, barPosition) => {
+        if (!isVisible) return {};
+        if (barPosition === "vertical") return mirror ? { left: true } : { right: true };
+        return mirror ? { top: true } : { bottom: true };
+    };
+    const visibleEdges = {
+        top: false,
+        bottom: false,
+        left: false,
+        right: false,
+        ...getVisibleEdge(showY, yBarPosition),
+        ...getVisibleEdge(showX, xBarPosition),
+    };
 
     return useExportData(
         {
@@ -684,6 +698,7 @@ const useVars = (p) => {
             exactThumbSize,
             fillMode,
             enableThumbScale,
+            disableOpacityEffect,
             resolvedHost,
             overlayHost,
             normalizedScrollSource,
@@ -707,6 +722,12 @@ const useVars = (p) => {
             y,
             showX,
             showY,
+            top: visibleEdges.top,
+            bottom: visibleEdges.bottom,
+            left: visibleEdges.left,
+            right: visibleEdges.right,
+            edgeMargin,
+            thickness,
             isDraggingX,
             isDraggingY,
             isScrollbarActive: isScrollbarActive || !!dragAxis,

@@ -1,15 +1,14 @@
 import styled, { css } from "styled-components";
 
 const S = styled.div`
-    ${({ theme, $truckColor, $isScrollbarActive, $barPosition }) => {
+    ${({ theme, $truckColor, $isScrollbarActive, $disableOpacityEffect }) => {
         const mainColor = $truckColor ? theme[$truckColor] || $truckColor : theme.primary;
         return css`
             background-color: ${theme.colorAlpha(mainColor, 0.5)};
             transition:
                 background-color 0.5s,
                 opacity 0.5s;
-            opacity: ${$isScrollbarActive ? 1 : 0.3};
-            /* scale: ${$barPosition === "horizontal" ? "1.5 1" : "1 1.5"}; */
+            opacity: ${$disableOpacityEffect ? 1 : $isScrollbarActive ? 1 : 0.3};
 
             & > [data-slot="thumb"] {
                 border-radius: 2rem;

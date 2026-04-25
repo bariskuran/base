@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { baseStore } from "../@baseStore";
 import { useUiComponentsContext } from "../ContextProviderForUiComponents";
 
@@ -8,7 +9,7 @@ export const componentCreator = ({
     CleanVariant,
     variants = {},
 }) => {
-    function Main(props) {
+    const Main = forwardRef(function Main(props, forwardedRef) {
         const {
             variant: variantFromProps,
             __hasParentUiComponent: hasParentFromProps,
@@ -42,6 +43,7 @@ export const componentCreator = ({
                     {...otherPresetProps}
                     {...rest}
                     __hasParentUiComponent={__hasParentUiComponent}
+                    forwardedRef={forwardedRef}
                     Variant={nestedVariant || DefaultVariant}
                 />
             );
@@ -51,10 +53,11 @@ export const componentCreator = ({
             <BaseComp
                 {...rest}
                 __hasParentUiComponent={__hasParentUiComponent}
+                forwardedRef={forwardedRef}
                 Variant={incomingVariant || DefaultVariant}
             />
         );
-    }
+    });
 
     Object.defineProperty(Main, "displayName", {
         value: name,
@@ -63,7 +66,7 @@ export const componentCreator = ({
     });
 
     Object.entries(variants || {}).forEach(([key, presetValue]) => {
-        const Preset = function Preset(props) {
+        const Preset = forwardRef(function Preset(props, forwardedRef) {
             const { __hasParentUiComponent, ...restProps } = props || {};
 
             const presetProps =
@@ -76,10 +79,11 @@ export const componentCreator = ({
                     {...otherPresetProps}
                     {...restProps}
                     __hasParentUiComponent={__hasParentUiComponent}
+                    forwardedRef={forwardedRef}
                     Variant={nestedVariant || DefaultVariant}
                 />
             );
-        };
+        });
 
         Object.defineProperty(Preset, "displayName", {
             value: `${name}.${key}`,

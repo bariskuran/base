@@ -6,7 +6,7 @@
  *
  * <Popover>
  *    <ButtonList>
- *        <ScrollBox>
+ *        <ScrollFlex>
  *
  * Bunlar bu şekilde içiçe geçebiliyor gerçekten. Hepsinin kendi defaultVariantları var. Ve bunlar biribirini aslında ezmiyor ama görsel bir kakafoni oluşturuyor.
  *

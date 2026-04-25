@@ -19,7 +19,7 @@ const useVars = (p) => {
         Variant,
         maxHeight,
         maxWidth,
-        scrollBoxProps = {},
+        scrollFlexProps = {},
         exportData,
     } = p || {};
 
@@ -56,8 +56,8 @@ const useVars = (p) => {
             gap,
             colors: colors || {},
             Variant,
-            scrollBoxProps: {
-                ...scrollBoxProps,
+            scrollFlexProps: {
+                ...scrollFlexProps,
                 ...(maxHeight ? { maxHeight } : {}),
                 ...(maxWidth ? { maxWidth } : {}),
             },
