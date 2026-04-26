@@ -6,7 +6,10 @@ import ContextProvider from "../../ContextProviderForUiComponents";
 const Context = createContext(null);
 
 export const Base = ({ children, ...p }) => {
-    const { Variant, flexProps, scrollBarProps, containerRef, borderColor } = useVars(p);
+    const { Variant, flexProps, scrollBarProps, containerRef, borderColor, shouldRender } =
+        useVars(p);
+
+    if (!shouldRender) return null;
 
     return (
         <ContextProvider Context={Context}>

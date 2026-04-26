@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { Flex } from "../Flex";
 
 export const S = styled(Flex)`
-    ${({ theme, $disableShadow }) => css`
+    ${({ $disableShadow }) => css`
         overflow: auto;
 
         ${!$disableShadow &&

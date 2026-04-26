@@ -116,6 +116,47 @@ const mergeDefaultAlignment = (props) => {
 };
 
 const getExplicitHeight = ({ height, flexProps }) => height ?? flexProps.height;
+const getExplicitWidth = ({ width, flexProps, restProps }) =>
+    width ?? flexProps.width ?? restProps.width;
+const getRefElement = (ref) => ref?.current || ref || null;
+
+const isUsableHeightValue = (value) => {
+    if (!value) return false;
+
+    const v = String(value).trim();
+    if (v.includes("%")) return false;
+    return !["auto", "initial", "inherit", "unset", "0", "0px"].includes(v);
+};
+
+const getRuleHeight = (node) => {
+    if (typeof document === "undefined") return null;
+
+    for (const sheet of Array.from(document.styleSheets || [])) {
+        let rules;
+
+        try {
+            rules = sheet.cssRules;
+        } catch {
+            continue;
+        }
+
+        for (const rule of Array.from(rules || [])) {
+            if (!rule.selectorText || !rule.style?.height) continue;
+
+            try {
+                if (node.matches(rule.selectorText)) {
+                    return rule.style.height;
+                }
+            } catch {
+                continue;
+            }
+        }
+    }
+
+    return null;
+};
+
+const getAuthoredHeight = (node) => node?.style?.height || getRuleHeight(node);
 
 const getParentHeightWithoutSelf = (node) => {
     const parent = node?.parentElement;
@@ -129,12 +170,49 @@ const getParentHeightWithoutSelf = (node) => {
     return parentHeight;
 };
 
+const getAncestorAuthoredHeightWithoutSelf = (node) => {
+    if (!node) return 0;
+
+    const previousDisplay = node.style.display;
+    node.style.display = "none";
+
+    let current = node.parentElement;
+    let height = 0;
+
+    while (current && current !== document.body && current !== document.documentElement) {
+        if (isUsableHeightValue(getAuthoredHeight(current))) {
+            height = current.getBoundingClientRect().height;
+            break;
+        }
+
+        current = current.parentElement;
+    }
+
+    node.style.display = previousDisplay;
+
+    return height;
+};
+
+const getRefSize = ({ ref, axis }) => {
+    const el = getRefElement(ref);
+    if (!el?.getBoundingClientRect) return null;
+
+    const rect = el.getBoundingClientRect();
+    const value = axis === "x" ? rect.width : rect.height;
+
+    return value > 0 ? `${value}px` : null;
+};
+
 const useVars = (p) => {
     const {
         Variant,
         flexProps = EMPTY_FLEX_PROPS,
         width,
         height,
+        widthByRef,
+        heightByRef,
+        widthById,
+        heightById,
         scrollBarProps = EMPTY_SCROLL_BAR_PROPS,
         exportData: scrollBoxExportData,
         __hasParentUiComponent,
@@ -143,8 +221,11 @@ const useVars = (p) => {
 
     const containerRef = useRef(null);
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
-    const { measuredHeight, scrollBarExportedData, setLocal } = baseStore.useLocal({
+    const { measuredWidth, measuredHeight, hasMeasuredHeight, scrollBarExportedData, setLocal } =
+        baseStore.useLocal({
+        measuredWidth: null,
         measuredHeight: null,
+        hasMeasuredHeight: false,
         scrollBarExportedData: pickScrollBarLayoutData(),
     });
 
@@ -177,7 +258,12 @@ const useVars = (p) => {
             height,
             flexProps,
         });
-        const explicitWidth = width ?? flexProps.width ?? restProps.width;
+        const explicitWidth = getExplicitWidth({
+            width,
+            flexProps,
+            restProps,
+        });
+        const shouldRender = explicitHeight != null || measuredHeight != null || !hasMeasuredHeight;
         const style = {
             ...(restProps.style || {}),
             ...(flexProps.style || {}),
@@ -191,34 +277,109 @@ const useVars = (p) => {
         const mergedFlexProps = {
             ...restProps,
             ...flexProps,
-            width: explicitWidth ?? "100%",
-            height: explicitHeight ?? measuredHeight ?? 0,
+            width: explicitWidth ?? measuredWidth ?? "100%",
+            ...(shouldRender ? { height: explicitHeight ?? measuredHeight } : {}),
             style,
         };
 
-        return mergeDefaultAlignment(mergePadding(mergedFlexProps, scrollBarExportedData));
-    }, [flexProps, height, measuredHeight, restProps, scrollBarExportedData, width]);
+        return {
+            shouldRender,
+            flexProps: mergeDefaultAlignment(mergePadding(mergedFlexProps, scrollBarExportedData)),
+        };
+    }, [
+        flexProps,
+        hasMeasuredHeight,
+        height,
+        measuredHeight,
+        measuredWidth,
+        restProps,
+        scrollBarExportedData,
+        width,
+    ]);
 
     useLayoutEffect(() => {
         if (getExplicitHeight({ height, flexProps }) != null) return;
+        const refEl = getRefElement(heightByRef);
+        const idEl =
+            typeof document !== "undefined" && heightById
+                ? document.getElementById(heightById)
+                : null;
+        const source = refEl || idEl;
 
-        const parentHeight = getParentHeightWithoutSelf(containerRef.current);
-        const nextHeight = parentHeight > 0 ? `min(${parentHeight}px, 100vh)` : 200;
+        const syncHeight = () => {
+            const refHeight = getRefSize({
+                ref: source,
+                axis: "y",
+            });
+            const ancestorHeight = refHeight
+                ? 0
+                : getAncestorAuthoredHeightWithoutSelf(containerRef.current);
+            const parentHeight =
+                refHeight || ancestorHeight ? 0 : getParentHeightWithoutSelf(containerRef.current);
+            const nextHeight =
+                refHeight ||
+                (ancestorHeight > 0 ? `min(${ancestorHeight}px, 100vh)` : null) ||
+                (parentHeight > 0 ? `min(${parentHeight}px, 100vh)` : null);
 
-        setLocal((s) => {
-            if (s.measuredHeight === nextHeight) return;
-            s.measuredHeight = nextHeight;
-        });
-    }, [flexProps, height, setLocal]);
+            setLocal((s) => {
+                if (s.hasMeasuredHeight && s.measuredHeight === nextHeight) return;
+                s.hasMeasuredHeight = true;
+                s.measuredHeight = nextHeight;
+            });
+        };
+
+        syncHeight();
+
+        if (!source || typeof ResizeObserver === "undefined") return;
+
+        const observer = new ResizeObserver(syncHeight);
+        observer.observe(source);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [flexProps, height, heightById, heightByRef, setLocal]);
+
+    useLayoutEffect(() => {
+        if (getExplicitWidth({ width, flexProps, restProps }) != null) return;
+        const refEl = getRefElement(widthByRef);
+        const idEl =
+            typeof document !== "undefined" && widthById ? document.getElementById(widthById) : null;
+        const source = refEl || idEl;
+
+        const syncWidth = () => {
+            const nextWidth = getRefSize({
+                ref: source,
+                axis: "x",
+            });
+
+            setLocal((s) => {
+                if (s.measuredWidth === nextWidth) return;
+                s.measuredWidth = nextWidth;
+            });
+        };
+
+        syncWidth();
+
+        if (!source || typeof ResizeObserver === "undefined") return;
+
+        const observer = new ResizeObserver(syncWidth);
+        observer.observe(source);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [flexProps, restProps, setLocal, width, widthById, widthByRef]);
     /* Return */
     return useExportData(
         {
             exportData: scrollBoxExportData,
             Variant,
-            flexProps: organizedFlexProps,
+            flexProps: organizedFlexProps.flexProps,
             scrollBarProps: mergedScrollBarProps,
             theme,
             containerRef,
+            shouldRender: organizedFlexProps.shouldRender,
             ...restProps,
         },
         scrollBarExportedData,

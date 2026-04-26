@@ -4,10 +4,15 @@ import { ScrollFlex } from "./";
 import { generateRandom } from "../generateRandom";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
+import { useRef } from "react";
 
 const longText = generateRandom.loremIpsum(1000);
 
+const HEIGHT_BY_ID_DEMO_SOURCE = "ds-scrollflex-height-by-id-demo";
+
 const X = () => {
+    const flexRef1 = useRef(null);
+
     return (
         <Ds.page
             title="<ScrollFlex>"
@@ -64,43 +69,120 @@ const X = () => {
             <Ds.block
                 title="Auto Width & Height"
                 description="If width or height is not provided, ScrollFlex attempts to fill its parent’s width and height. Because CSS height depends on the parent chain, this may not always produce the expected result. If no valid height can be resolved from the parent tree, ScrollFlex falls back to 200. Otherwise, it uses the parent’s height."
-                code={`import { ScrollFlex } from "${SYS.basePath}"
+                code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
-                        <ScrollFlex
-                        variant="with3DShadow"
-                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
-                        scrollBarProps={{ variant: "primary", fillMode: true }}
-                    >
-                        {longText}
-                    </ScrollFlex>`}
-                example={
-                    <>
-                        {/* <Flex gap={10}>
-                            <Flex height={100}>
+                    <Flex gap={10}>
+                        /* First Flex won't be displayed because it and its parents have no height */
+                        <Flex>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
+                            <Flex>
+                                <ScrollFlex>{longText}</ScrollFlex>
+                            </Flex>
+                        </Flex>
+                        <Flex height={150}>
+                            <Flex>
                                 <Flex>
                                     <ScrollFlex>{longText}</ScrollFlex>
                                 </Flex>
                             </Flex>
-                            <Flex height={150}>
-                                <ScrollFlex>{longText}</ScrollFlex>
-                            </Flex>
+                        </Flex>
+                    </Flex>`}
+                example={
+                    <Flex gap={10}>
+                        <Flex>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
                             <Flex>
                                 <ScrollFlex>{longText}</ScrollFlex>
                             </Flex>
-                        </Flex> */}
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "stretch",
-                                width: "100%",
-                                height: 50,
-                            }}
-                        >
-                            <div style={{ backgroundColor: "red", flex: 1 }}>Sol</div>
-                            <div style={{ backgroundColor: "skyblue", flex: 1 }}>
+                        </Flex>
+                        <Flex height={150}>
+                            <Flex>
+                                <Flex>
+                                    <ScrollFlex>{longText}</ScrollFlex>
+                                </Flex>
+                            </Flex>
+                        </Flex>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Relative Height & Width"
+                description={`You can set the height of ScrollFlex by referencing another DOM element that is not in the same region. You can use a React ref to point to this element.
+
+                    The "height" or "flexProps.height" props take precedence over the "heightByRef" and "heightById" props.
+
+                    The same feature can be used for width via the "widthByRef" or "widthById" props.`}
+                code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
+                
+                    <Flex gap={10}>
+                        /* First Flex won't be displayed because it and its parents have no height */
+                        <Flex>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
+                            <Flex>
                                 <ScrollFlex>{longText}</ScrollFlex>
-                            </div>
+                            </Flex>
+                        </Flex>
+                        <Flex height={150}>
+                            <Flex>
+                                <Flex>
+                                    <ScrollFlex>{longText}</ScrollFlex>
+                                </Flex>
+                            </Flex>
+                        </Flex>
+                    </Flex>`}
+                example={
+                    <>
+                        <Flex height={150} ref={flexRef1}>
+                            Source heightByRef
+                        </Flex>
+                        <Flex gap={10} align="start">
+                            <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>
+                        </Flex>
+                    </>
+                }
+            />
+            <Ds.block
+                title="Relative Height by DOM id"
+                description={`Same as heightByRef, but the source element is resolved with document.getElementById. Use a stable, page-unique id on the element whose height you want to mirror.
+
+                    Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width.`}
+                code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
+
+                    const HEIGHT_SOURCE_ID = "${HEIGHT_BY_ID_DEMO_SOURCE}"
+
+                    <>
+                        <div id={HEIGHT_SOURCE_ID} style={{ height: 150 }}>
+                            Source of heightById
                         </div>
+                        <Flex gap={10} align="start">
+                            <ScrollFlex heightById={HEIGHT_SOURCE_ID}>{longText}</ScrollFlex>
+                        </Flex>
+                    </>`}
+                example={
+                    <>
+                        <div id={HEIGHT_BY_ID_DEMO_SOURCE} style={{ height: 150 }}>
+                            <Flex height="100%">Source height (by id)</Flex>
+                        </div>
+                        <Flex gap={10} align="start">
+                            <ScrollFlex heightById={HEIGHT_BY_ID_DEMO_SOURCE}>
+                                {longText}
+                            </ScrollFlex>
+                        </Flex>
                     </>
                 }
             />
@@ -113,9 +195,29 @@ const X = () => {
                     },
                     height: {
                         description:
-                            "ScrollBox height. Uses parent rect height when omitted and maxHeight is not provided.",
+                            "ScrollFlex height. Explicit height takes precedence over reference-based height.",
                         type: "number | string",
-                        defaultValue: "parent height",
+                        defaultValue: "undefined",
+                    },
+                    heightByRef: {
+                        description:
+                            "Uses a React ref element's height when height and flexProps.height are not provided.",
+                        type: "React ref | HTMLElement",
+                    },
+                    heightById: {
+                        description:
+                            "Uses a DOM element's height by id when height, flexProps.height, and heightByRef are not provided.",
+                        type: "string",
+                    },
+                    widthByRef: {
+                        description:
+                            "Uses a React ref element's width when width and flexProps.width are not provided.",
+                        type: "React ref | HTMLElement",
+                    },
+                    widthById: {
+                        description:
+                            "Uses a DOM element's width by id when width, flexProps.width, and widthByRef are not provided.",
+                        type: "string",
                     },
                     scrollBarProps: {
                         description: (
