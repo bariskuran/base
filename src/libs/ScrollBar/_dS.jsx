@@ -27,15 +27,18 @@ const TwoAxisLargeContent = ({ children, inProps, short }) => (
 
 export const CustomVariant = styled.div`
     ${() => css`
-        background: skyblue;
-
+        &[data-slot="track"] {
+            background: skyblue;
+            overflow: visible !important;
+        }
         & > [data-slot="thumb"] {
+            transform: scaleX(20);
             background: blue;
-            transform: scale(2);
-            border-radius: 50rem !important;
         }
     `}
 `;
+
+const CustomVariantX = () => <ScrollBar variant={CustomVariant} thickness={2} enableThumbScale />;
 
 const X = () => (
     <Ds.page
@@ -261,57 +264,73 @@ const X = () => (
         />
         <Ds.block
             title="Variants"
+            description="As in the rest of the Base library, you can change the variant using a prop, or by using the compound component pattern as Component.variantName."
             code={`import { ScrollBar } from "${SYS.basePath}";
 
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
-                            <ScrollBar fillMode />
-                        </TwoAxisLargeContent>`}
+                    <Flex xAlign="start" gap={10}>
+                        <TwoAxisLargeContent>
+                            <ScrollBar />
+                        </TwoAxisLargeContent>
+                        <TwoAxisLargeContent>
+                            <ScrollBar variant="primary" />
+                        </TwoAxisLargeContent>
+                        <TwoAxisLargeContent>
+                            <ScrollBar.fullTop />
+                        </TwoAxisLargeContent>
+                    </Flex>`}
             example={
-                <Flex xAlign="start" gap={10}>
-                    <TwoAxisLargeContent>
-                        <ScrollBar />
-                    </TwoAxisLargeContent>
-                    <TwoAxisLargeContent>
-                        <ScrollBar variant="primary" />
-                    </TwoAxisLargeContent>
-                    <TwoAxisLargeContent>
-                        <ScrollBar variant="fullTop" />
-                    </TwoAxisLargeContent>
-                </Flex>
+                <Ds.variant
+                    variants={[
+                        [
+                            "default",
+                            <TwoAxisLargeContent key="default">
+                                <ScrollBar />
+                            </TwoAxisLargeContent>,
+                        ],
+                        [
+                            "primary",
+                            <TwoAxisLargeContent key="primary">
+                                <ScrollBar variant="primary" />
+                            </TwoAxisLargeContent>,
+                        ],
+                        [
+                            "fullTop",
+                            <TwoAxisLargeContent key="fullTop">
+                                <ScrollBar.fullTop />
+                            </TwoAxisLargeContent>,
+                        ],
+                    ]}
+                />
             }
         />
         <Ds.block
             title="Custom Variant"
+            description={`As shown in the example code, you can fully style the track and thumb using your own custom CSS. Since some styles are set by the component itself, you may need to use !important to override them.
+                
+                I can't fully guarantee all behaviors when using custom variants. Therefore, please be careful and test thoroughly when creating your own variant.`}
             code={`import { ScrollBar, styled, css } from "${SYS.basePath}";
 
-export const CustomVariant = styled.div\`
-\${({
-    theme,
-    $barPosition,
-    $truckColor,
-    $thumbColor,
-    $isScrollbarActive,
-    $mirror,
-    $enableThumbScale,
-}) => css\`
+                    export const CustomVariant = styled.div\`
+                        ${() => css`
+                            &[data-slot="track"] {
+                                background: skyblue;
+                                overflow: visible !important;
+                            }
+                            & > [data-slot="thumb"] {
+                                transform: scaleX(20);
+                                background: blue;
+                            }
+                        `}
+                    \`};
 
-    & > [data-slot="track"] {
-    background:red;
-    }
-
-    & > [data-slot="thumb"] {
-    }
-\`}
-\`;
-
-<TwoAxisLargeContent>
-    <ScrollBar variant={CustomVariant} />
-</TwoAxisLargeContent>
+                    <TwoAxisLargeContent>
+                        <ScrollBar variant={CustomVariant} />
+                    </TwoAxisLargeContent>
 `}
             example={
                 <Flex xAlign="start" gap={10}>
                     <TwoAxisLargeContent>
-                        <ScrollBar variant={CustomVariant} />
+                        <ScrollBar variant={CustomVariant} thickness={2} enableThumbScale />
                     </TwoAxisLargeContent>
                 </Flex>
             }

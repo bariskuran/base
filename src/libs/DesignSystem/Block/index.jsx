@@ -53,15 +53,15 @@ const Block = ({ title, description, code, example, lastBlock }) => {
             <S.line $lastBlock={lastBlock} />
             <Flex.column justify="start">
                 {(example || description) && ajax === 0 && (
-                    <S.contentArea>
-                        <div>{example}</div>
+                    <S.contentArea area-title="Block Content">
+                        <Flex.row justify="start">{example}</Flex.row>
                         <Typo.span whiteSpace="pre-line" balance>
                             {description}
                         </Typo.span>
                     </S.contentArea>
                 )}
                 {((code && ajax === 1) || (!example && !description && code)) && (
-                    <S.contentArea>
+                    <S.contentArea area-title="Block Content">
                         <CodeViewer>{code}</CodeViewer>
                     </S.contentArea>
                 )}

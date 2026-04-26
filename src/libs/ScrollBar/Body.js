@@ -8,7 +8,7 @@ const S = styled.div`
             transition:
                 background-color 0.5s,
                 opacity 0.5s;
-            opacity: ${$disableOpacityEffect ? 1 : $isScrollbarActive ? 1 : 0.3};
+            opacity: ${$disableOpacityEffect ? 1 : $isScrollbarActive ? 1 : 0.2};
 
             & > [data-slot="thumb"] {
                 border-radius: 2rem;

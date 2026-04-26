@@ -38,6 +38,42 @@ const X = () => {
                     </ScrollFlex>
                 }
             />
+            <Ds.block
+                title="Advanced usage"
+                description="You can further customize ScrollFlex using Flex and ScrollBar props."
+                code={`import { ScrollFlex } from "${SYS.basePath}"
+                
+                        <ScrollFlex
+                        variant="with3DShadow"
+                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
+                        scrollBarProps={{ variant: "primary", fillMode: true }}
+                    >
+                        {longText}
+                    </ScrollFlex>`}
+                example={
+                    <ScrollFlex
+                        variant="with3DShadow"
+                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
+                        scrollBarProps={{ variant: "primary", fillMode: true }}
+                    >
+                        {longText}
+                    </ScrollFlex>
+                }
+            />
+            <Ds.block
+                title="Auto Width & Height"
+                description="When width or height is not provided, ScrollFlex will automatically use the parent width and height. This approach may not always give the right result."
+                code={`import { ScrollFlex } from "${SYS.basePath}"
+                
+                        <ScrollFlex
+                        variant="with3DShadow"
+                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
+                        scrollBarProps={{ variant: "primary", fillMode: true }}
+                    >
+                        {longText}
+                    </ScrollFlex>`}
+                example={<ScrollFlex>{longText}</ScrollFlex>}
+            />
             <Ds.api
                 props={{
                     width: {

@@ -110,6 +110,7 @@ const Bar = ({
             onMouseDown={onTruckMouseDown}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
+            data-slot="track"
             $barPosition={barPosition}
             $mirror={mirror}
             $truckColor={truckColor}

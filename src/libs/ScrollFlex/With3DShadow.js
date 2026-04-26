@@ -7,9 +7,7 @@ export const S = styled(Flex)`
 
         ${!$disableShadow &&
         css`
-            box-shadow:
-                15px 15px 10px -12px rgba(0, 0, 0, 0.2),
-                2px 2px 7px -3px rgba(0, 0, 0, 0.5);
+            ${theme.get3DShadow({ depth: 5, hoverDepth: 1 })}
         `}
     `}
 `;

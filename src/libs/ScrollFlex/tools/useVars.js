@@ -115,6 +115,10 @@ const mergeDefaultAlignment = (props) => {
     };
 };
 
+const getExplicitHeight = ({ height, flexProps }) => height ?? flexProps.height;
+
+const getAutoHeight = (parentHeight) => (parentHeight ? `min(${parentHeight}, 100vh)` : "100%");
+
 const useVars = (p) => {
     const {
         Variant,
@@ -159,17 +163,34 @@ const useVars = (p) => {
     );
 
     const organizedFlexProps = useMemo(() => {
+        const explicitHeight = getExplicitHeight({
+            height,
+            flexProps,
+        });
+        const explicitWidth = width ?? flexProps.width ?? restProps.width;
+        const style = {
+            ...(restProps.style || {}),
+            ...(flexProps.style || {}),
+            maxHeight: "100vh",
+        };
+
+        if (explicitWidth != null && style.width == null) {
+            style.width = getCssSize(explicitWidth);
+        }
+
         const mergedFlexProps = {
+            ...restProps,
             ...flexProps,
-            width: width ?? flexProps.width ?? restProps.width ?? "100%",
-            height: height ?? flexProps.height ?? restProps.height ?? parentHeight ?? "100%",
+            width: explicitWidth ?? "100%",
+            height: explicitHeight ?? getAutoHeight(parentHeight),
+            style,
         };
 
         return mergeDefaultAlignment(mergePadding(mergedFlexProps, scrollBarExportedData));
     }, [flexProps, height, parentHeight, restProps, scrollBarExportedData, width]);
 
     useLayoutEffect(() => {
-        if (height != null || flexProps.height != null || restProps.height != null) return;
+        if (getExplicitHeight({ height, flexProps }) != null) return;
         if (typeof ResizeObserver === "undefined") return;
 
         const parent = containerRef.current?.parentElement;

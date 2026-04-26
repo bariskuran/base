@@ -4,6 +4,7 @@ import code from "./CodeViewer";
 import api from "./ApiViewer";
 import page from "./Page";
 import block from "./Block";
+import variant from "./VariantViewer";
 
 export const sitemap = [
     ["How To Setup", undefined, l(() => import("./_dS")), { index: true }],
@@ -36,6 +37,7 @@ export const designSystemRoutes = [
 
 const Ds = {
     code,
+    variant,
     api,
     page,
     block,

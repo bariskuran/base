@@ -26,25 +26,25 @@ export const disableBrowserScrollBar = ({ host, styleEl }) => {
     if (isRootLike) {
         styleEl.textContent = `
             html, body {
-                scrollbar-width: none !important;
-                -ms-overflow-style: none !important;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
             }
 
             html::-webkit-scrollbar,
             body::-webkit-scrollbar {
-                display: none !important;
+                display: none;
             }
         `;
     } else {
         styleEl.textContent = `
             [data-scrollbar-hide="${uid}"] {
-                scrollbar-width: none !important;
-                -ms-overflow-style: none !important;
-                overscroll-behavior: contain !important;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                overscroll-behavior: contain;
             }
 
             [data-scrollbar-hide="${uid}"]::-webkit-scrollbar {
-                display: none !important;
+                display: none;
             }
         `;
     }

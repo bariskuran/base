@@ -629,10 +629,10 @@ const useVars = (p) => {
         const prevBodyUserSelect = bodyEl.style.userSelect;
 
         if (dragAxis) {
-            html.style.setProperty("cursor", "grabbing", "important");
-            bodyEl.style.setProperty("cursor", "grabbing", "important");
-            html.style.setProperty("user-select", "none", "important");
-            bodyEl.style.setProperty("user-select", "none", "important");
+            html.style.cursor = "grabbing";
+            bodyEl.style.cursor = "grabbing";
+            html.style.userSelect = "none";
+            bodyEl.style.userSelect = "none";
         } else {
             html.style.cursor = prevHtmlCursor;
             bodyEl.style.cursor = prevBodyCursor;
