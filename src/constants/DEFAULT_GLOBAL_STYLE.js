@@ -37,6 +37,7 @@ export const DEFAULT_GLOBAL_STYLE = css`
         position: relative;
         font-variant-ligatures: no-common-ligatures;
         box-sizing: border-box;
+        min-height: 0;
     }
 
     button {

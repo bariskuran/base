@@ -14,7 +14,7 @@ const S = styled.div`
         &::after {
             content: "";
             position: absolute;
-            bottom: -3rem;
+            bottom: 0rem;
             left: 0;
             width: 100%;
             height: 3rem;

@@ -30,12 +30,13 @@ const S = styled.div`
         transition: all 0.5s;
         position: relative;
         width: ${$fullWidth ? "100%" : "auto"};
+        line-height: 1;
 
         &::before,
         &::after {
             content: "";
             position: absolute;
-            bottom: -3rem;
+            bottom: -2rem;
             left: 0;
             width: 100%;
             height: 2rem;

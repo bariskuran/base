@@ -3,6 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { ScrollFlex } from "./";
 import { generateRandom } from "../generateRandom";
 import { Button } from "../Button";
+import { Flex } from "../Flex";
 
 const longText = generateRandom.loremIpsum(1000);
 
@@ -26,7 +27,7 @@ const X = () => {
         >
             <Ds.block
                 title="Basic usage"
-                description="It is recommended to specify both width and height when using ScrollFlex. This will give you the cleanest result."
+                description="It is recommended to specify especially height when using ScrollFlex. This will give you the cleanest result."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
                 
                         <ScrollFlex width={200} height={100}>
@@ -62,7 +63,7 @@ const X = () => {
             />
             <Ds.block
                 title="Auto Width & Height"
-                description="When width or height is not provided, ScrollFlex will automatically use the parent width and height. This approach may not always give the right result."
+                description="If width or height is not provided, ScrollFlex attempts to fill its parent’s width and height. Because CSS height depends on the parent chain, this may not always produce the expected result. If no valid height can be resolved from the parent tree, ScrollFlex falls back to 200. Otherwise, it uses the parent’s height."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
                 
                         <ScrollFlex
@@ -72,7 +73,36 @@ const X = () => {
                     >
                         {longText}
                     </ScrollFlex>`}
-                example={<ScrollFlex>{longText}</ScrollFlex>}
+                example={
+                    <>
+                        {/* <Flex gap={10}>
+                            <Flex height={100}>
+                                <Flex>
+                                    <ScrollFlex>{longText}</ScrollFlex>
+                                </Flex>
+                            </Flex>
+                            <Flex height={150}>
+                                <ScrollFlex>{longText}</ScrollFlex>
+                            </Flex>
+                            <Flex>
+                                <ScrollFlex>{longText}</ScrollFlex>
+                            </Flex>
+                        </Flex> */}
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "stretch",
+                                width: "100%",
+                                height: 50,
+                            }}
+                        >
+                            <div style={{ backgroundColor: "red", flex: 1 }}>Sol</div>
+                            <div style={{ backgroundColor: "skyblue", flex: 1 }}>
+                                <ScrollFlex>{longText}</ScrollFlex>
+                            </div>
+                        </div>
+                    </>
+                }
             />
             <Ds.api
                 props={{
