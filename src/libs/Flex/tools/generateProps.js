@@ -480,3 +480,36 @@ export const generateProps = ({
 
     return removeUndefinedDeep(obj);
 };
+
+export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
+    "bgColor",
+    "color",
+    "borderRadius",
+    "direction",
+    "flex",
+    "padding",
+    "paddingLeft",
+    "paddingRight",
+    "paddingTop",
+    "paddingBottom",
+    "margin",
+    "marginLeft",
+    "marginRight",
+    "marginTop",
+    "marginBottom",
+    "width",
+    "height",
+    "align",
+    "xAlign",
+    "yAlign",
+    "gap",
+    "alignSelf",
+    "justifyContent",
+    "justify",
+    "alignItems",
+    "inCommonProps",
+    "inProps",
+    "wrap",
+    "responsive",
+    "exportData",
+]);

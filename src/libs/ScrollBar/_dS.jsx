@@ -38,8 +38,6 @@ export const CustomVariant = styled.div`
     `}
 `;
 
-const CustomVariantX = () => <ScrollBar variant={CustomVariant} thickness={2} enableThumbScale />;
-
 const X = () => (
     <Ds.page
         title="<ScrollBar>"
@@ -267,17 +265,9 @@ const X = () => (
             description="As in the rest of the Base library, you can change the variant using a prop, or by using the compound component pattern as Component.variantName."
             code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <Flex xAlign="start" gap={10}>
-                        <TwoAxisLargeContent>
-                            <ScrollBar />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar variant="primary" />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar.fullTop />
-                        </TwoAxisLargeContent>
-                    </Flex>`}
+                    <ScrollBar />
+                    <ScrollBar variant="primary" />
+                    <ScrollBar.fullTop />`}
             example={
                 <Ds.variant
                     variants={[

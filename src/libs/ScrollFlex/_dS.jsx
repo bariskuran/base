@@ -7,7 +7,6 @@ import { Flex } from "../Flex";
 import { useRef } from "react";
 
 const longText = generateRandom.loremIpsum(1000);
-
 const HEIGHT_BY_ID_DEMO_SOURCE = "ds-scrollflex-height-by-id-demo";
 
 const X = () => {
@@ -50,7 +49,7 @@ const X = () => {
                 code={`import { ScrollFlex } from "${SYS.basePath}"
                 
                         <ScrollFlex
-                        variant="with3DShadow"
+                        variant="hoverShadow"
                         flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
                         scrollBarProps={{ variant: "primary", fillMode: true }}
                     >
@@ -58,7 +57,7 @@ const X = () => {
                     </ScrollFlex>`}
                 example={
                     <ScrollFlex
-                        variant="with3DShadow"
+                        variant="hoverShadow"
                         flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
                         scrollBarProps={{ variant: "primary", fillMode: true }}
                     >
@@ -124,35 +123,19 @@ const X = () => {
                     The same feature can be used for width via the "widthByRef" or "widthById" props.`}
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
-                    <Flex gap={10}>
-                        /* First Flex won't be displayed because it and its parents have no height */
-                        <Flex>
-                            <ScrollFlex>{longText}</ScrollFlex>
-                        </Flex>
-                        <Flex height={150}>
-                            <ScrollFlex>{longText}</ScrollFlex>
-                        </Flex>
-                        <Flex height={150}>
-                            <Flex>
-                                <ScrollFlex>{longText}</ScrollFlex>
-                            </Flex>
-                        </Flex>
-                        <Flex height={150}>
-                            <Flex>
-                                <Flex>
-                                    <ScrollFlex>{longText}</ScrollFlex>
-                                </Flex>
-                            </Flex>
-                        </Flex>
-                    </Flex>`}
+                    /* Height source can be anywhere in the DOM; it does not need to share the same parent/root. */
+                    <Flex height={150} ref={flexRef1}>
+                       Source heightByRef
+                    </Flex>
+
+                    /* ScrollFlex */
+                    <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>`}
                 example={
                     <>
                         <Flex height={150} ref={flexRef1}>
                             Source heightByRef
                         </Flex>
-                        <Flex gap={10} align="start">
-                            <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>
-                        </Flex>
+                        <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>
                     </>
                 }
             />
@@ -163,27 +146,58 @@ const X = () => {
                     Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width.`}
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
 
-                    const HEIGHT_SOURCE_ID = "${HEIGHT_BY_ID_DEMO_SOURCE}"
+                    /* Height source can be anywhere in the DOM; it does not need to share the same parent/root. */
+                    <Flex height={150} id="unique-id">
+                       Source heightByRef
+                    </Flex>
 
-                    <>
-                        <div id={HEIGHT_SOURCE_ID} style={{ height: 150 }}>
-                            Source of heightById
-                        </div>
-                        <Flex gap={10} align="start">
-                            <ScrollFlex heightById={HEIGHT_SOURCE_ID}>{longText}</ScrollFlex>
-                        </Flex>
-                    </>`}
+                    /* ScrollFlex */
+                    <ScrollFlex heightById="unique-id">{longText}</ScrollFlex>`}
                 example={
                     <>
-                        <div id={HEIGHT_BY_ID_DEMO_SOURCE} style={{ height: 150 }}>
-                            <Flex height="100%">Source height (by id)</Flex>
-                        </div>
-                        <Flex gap={10} align="start">
-                            <ScrollFlex heightById={HEIGHT_BY_ID_DEMO_SOURCE}>
-                                {longText}
-                            </ScrollFlex>
+                        <Flex id={HEIGHT_BY_ID_DEMO_SOURCE} height={150}>
+                            Source heightById
                         </Flex>
+                        <ScrollFlex heightById={HEIGHT_BY_ID_DEMO_SOURCE}>{longText}</ScrollFlex>
                     </>
+                }
+            />
+            <Ds.block
+                title="Variants"
+                description="As in the rest of the Base library, you can change the variant using a prop, or by using the compound component pattern as Component.variantName."
+                code={`import { ScrollFlex } from "${SYS.basePath}";
+                    
+                    <ScrollFlex ... />
+                    <ScrollFlex.border ... /> // same as default
+                    <ScrollFlex variant="shadow" ... />
+                    <ScrollFlex.hoverShadow `}
+                example={
+                    <Ds.variant
+                        variants={[
+                            [
+                                "border",
+                                <Flex width={150} height={100} key="border">
+                                    <ScrollFlex height={100}>{longText}</ScrollFlex>
+                                </Flex>,
+                            ],
+                            [
+                                "shadow",
+                                <Flex width={150} height={100} key="shadow">
+                                    <ScrollFlex.shadow height={100} key="shadow">
+                                        {longText}
+                                    </ScrollFlex.shadow>
+                                </Flex>,
+                            ],
+                            [
+                                "hoverShadow",
+                                <Flex width={150} height={100} key="hoverShadow">
+                                    <ScrollFlex.hoverShadow height={100}>
+                                        {longText}
+                                    </ScrollFlex.hoverShadow>
+                                </Flex>,
+                            ],
+                        ]}
+                    />
                 }
             />
             <Ds.api

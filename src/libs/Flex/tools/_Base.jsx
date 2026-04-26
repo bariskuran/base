@@ -1,9 +1,20 @@
 import { Children } from "react";
 import { S } from "./_styled.js";
 import { useVars } from "./useVars.js";
+import { getFlexDomRestProps } from "./getFlexDomRestProps.js";
 
-export const Base = ({ children, content, className, style, forwardedRef, ...props }) => {
+export const Base = ({
+    children,
+    content,
+    className,
+    style,
+    forwardedRef,
+    Variant: _variant,
+    __hasParentUiComponent: _hasParentUiComponent,
+    ...props
+}) => {
     const childrenCount = Children.count(children || content);
+    const domRest = getFlexDomRestProps(props);
     const {
         bgColor,
         color,
@@ -31,6 +42,7 @@ export const Base = ({ children, content, className, style, forwardedRef, ...pro
             ref={forwardedRef}
             className={className}
             style={style}
+            {...domRest}
             $bgColor={bgColor}
             $color={color}
             $borderRadius={borderRadius}
