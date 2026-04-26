@@ -27,13 +27,11 @@ const TwoAxisLargeContent = ({ children, inProps, short }) => (
 
 export const CustomVariant = styled.div`
     ${() => css`
-        & > [data-slot="track"] {
-            background: yellow;
-        }
+        background: skyblue;
 
         & > [data-slot="thumb"] {
             background: blue;
-            transform: scale(1.5);
+            transform: scale(2);
             border-radius: 50rem !important;
         }
     `}

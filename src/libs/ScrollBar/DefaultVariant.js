@@ -24,16 +24,13 @@ export const DefaultVariant = styled.div`
                   : "right center";
 
         return css`
+            // root is track
             background-color: ${theme.colorAlpha(mainColor, 0.2)};
             transition:
                 background-color 1s,
                 opacity 1s;
             transform-origin: ${transformOrigin};
             opacity: ${$disableOpacityEffect ? 1 : $isScrollbarActive ? 0.5 : 0.2};
-
-            & > [data-slot="track"] {
-                /* opacity: ${$isScrollbarActive ? 0.5 : 0.2}; */
-            }
 
             & > [data-slot="thumb"] {
                 border-radius: 5rem;
