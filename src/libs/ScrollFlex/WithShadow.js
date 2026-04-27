@@ -3,8 +3,6 @@ import { Flex } from "../Flex";
 
 export const S = styled(Flex)`
     ${({ $disableShadow }) => css`
-        overflow: auto;
-
         ${!$disableShadow &&
         css`
             box-shadow:

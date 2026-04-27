@@ -7,7 +7,14 @@ import { Flex } from "../Flex";
 import { useRef } from "react";
 
 const longText = generateRandom.loremIpsum(1000);
+const shortText = generateRandom.loremIpsum(50);
 const HEIGHT_BY_ID_DEMO_SOURCE = "ds-scrollflex-height-by-id-demo";
+
+const Content = ({ width, height, short }) => (
+    <Flex width={width} height={height} yAlign="start" xAlign="start">
+        {short ? shortText : longText}
+    </Flex>
+);
 
 const X = () => {
     const flexRef1 = useRef(null);
@@ -66,6 +73,46 @@ const X = () => {
                 }
             />
             <Ds.block
+                title="Auto Axis Management"
+                description="Scrollbar automatically manages the axis of the scrollbar based on the content size."
+                code={`import { ScrollFlex } from "${SYS.basePath}"
+                
+                        <ScrollFlex
+                        variant="hoverShadow"
+                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
+                        scrollBarProps={{ variant: "primary", fillMode: true }}
+                    >
+                        {longText}
+                    </ScrollFlex>`}
+                example={
+                    // <ScrollFlex
+                    //     variant="hoverShadow"
+                    //     flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
+                    //     scrollBarProps={{ variant: "primary", fillMode: true }}
+                    // >
+                    //     {longText}
+                    // </ScrollFlex>
+                    <Flex xAlign="start" gap={10}>
+                        <ScrollFlex width={150} height={100}>
+                            <Content width={1500} />
+                        </ScrollFlex>
+                        <ScrollFlex width={150} height={100}>
+                            <Content />
+                        </ScrollFlex>
+                        <ScrollFlex
+                            width={150}
+                            height={100}
+                            scrollBarProps={{ mirror: true, opposite: true }}
+                        >
+                            <Content width={1500} />
+                        </ScrollFlex>
+                        <ScrollFlex width={150} height={100} scrollBarProps={{ mirror: true }}>
+                            <Content />
+                        </ScrollFlex>
+                    </Flex>
+                }
+            />
+            <Ds.block
                 title="Auto Width & Height"
                 description="If width or height is not provided, ScrollFlex attempts to fill its parent’s width and height. Because CSS height depends on the parent chain, this may not always produce the expected result. If no valid height can be resolved from the parent tree, ScrollFlex falls back to 200. Otherwise, it uses the parent’s height."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
@@ -116,9 +163,7 @@ const X = () => {
             />
             <Ds.block
                 title="Relative Height & Width"
-                description={`You can set the height of ScrollFlex by referencing another DOM element that is not in the same region. You can use a React ref to point to this element.
-
-                    The "height" or "flexProps.height" props take precedence over the "heightByRef" and "heightById" props.
+                description={`You can set the height of ScrollFlex by referencing another DOM element that is not in the same region. You can use a React ref to point to this element. The "height" or "flexProps.height" props take precedence over the "heightByRef" and "heightById" props.
 
                     The same feature can be used for width via the "widthByRef" or "widthById" props.`}
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
@@ -141,9 +186,7 @@ const X = () => {
             />
             <Ds.block
                 title="Relative Height by DOM id"
-                description={`Same as heightByRef, but the source element is resolved with document.getElementById. Use a stable, page-unique id on the element whose height you want to mirror.
-
-                    Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width.`}
+                description="Same as heightByRef, but the source element is resolved with document.getElementById. Use a stable, page-unique id on the element whose height you want to mirror. Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
 
                     /* Height source can be anywhere in the DOM; it does not need to share the same parent/root. */

@@ -35,63 +35,50 @@ const normalizeCalcValue = (value) =>
           )
         : value;
 
-const unwrapCalc = (value) => {
-    const v = getCssSize(value);
-    const match = typeof v === "string" ? v.match(/^calc\((.*)\)$/) : null;
-    return match ? match[1] : v;
-};
-
-const splitCssQuad = (value) => {
-    if (value == null) return [undefined, undefined, undefined, undefined];
-    if (typeof value === "number") return [value, value, value, value];
-
-    const parts = String(value).trim().split(/\s+/).filter(Boolean);
-    if (parts.length === 0) return [undefined, undefined, undefined, undefined];
-    if (parts.length === 1) return [parts[0], parts[0], parts[0], parts[0]];
-    if (parts.length === 2) return [parts[0], parts[1], parts[0], parts[1]];
-    if (parts.length === 3) return [parts[0], parts[1], parts[2], parts[1]];
-    return [parts[0], parts[1], parts[2], parts[3]];
-};
-
-const addCssValues = (base, extra) => {
-    if (!extra) return base;
-    if (base == null) return extra;
-    return `calc(${unwrapCalc(base)} + ${unwrapCalc(extra)})`;
-};
-
 const getScrollBarSpace = ({ edgeMargin, thickness } = {}) => {
     if (edgeMargin == null || thickness == null) return null;
-    return `${edgeMargin * 2}px + ${thickness}rem`;
+    return `${edgeMargin}px + ${thickness}rem`;
 };
 
-const mergePadding = (props, scrollBarData) => {
-    const hasVisibleBar =
-        scrollBarData?.top || scrollBarData?.right || scrollBarData?.bottom || scrollBarData?.left;
+const resolveContentPaddingStyle = (props = {}) => {
+    const {
+        padding,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft,
+    } = props;
+
     const hasUserPadding =
-        props.padding != null ||
-        props.paddingTop != null ||
-        props.paddingRight != null ||
-        props.paddingBottom != null ||
-        props.paddingLeft != null;
+        padding != null ||
+        paddingTop != null ||
+        paddingRight != null ||
+        paddingBottom != null ||
+        paddingLeft != null;
 
-    if (!hasVisibleBar && hasUserPadding) return props;
-
-    const scrollBarSpace = getScrollBarSpace(scrollBarData);
-    if (hasVisibleBar && !scrollBarSpace) return props;
-
-    const { padding, paddingTop, paddingRight, paddingBottom, paddingLeft, ...rest } = props;
-    const [top, right, bottom, left] = splitCssQuad(hasUserPadding ? padding : 10);
+    const basePadding = hasUserPadding ? padding : 10;
 
     return {
-        ...rest,
-        padding: [
-            addCssValues(paddingTop ?? top, scrollBarData.top ? scrollBarSpace : null),
-            addCssValues(paddingRight ?? right, scrollBarData.right ? scrollBarSpace : null),
-            addCssValues(paddingBottom ?? bottom, scrollBarData.bottom ? scrollBarSpace : null),
-            addCssValues(paddingLeft ?? left, scrollBarData.left ? scrollBarSpace : null),
-        ]
-            .map((item) => getCssSize(item))
-            .join(" "),
+        padding: getCssSize(basePadding),
+        ...(paddingTop != null ? { paddingTop: getCssSize(paddingTop) } : {}),
+        ...(paddingRight != null ? { paddingRight: getCssSize(paddingRight) } : {}),
+        ...(paddingBottom != null ? { paddingBottom: getCssSize(paddingBottom) } : {}),
+        ...(paddingLeft != null ? { paddingLeft: getCssSize(paddingLeft) } : {}),
+    };
+};
+
+const getShellGutters = (scrollBarData) => {
+    const s = getScrollBarSpace(scrollBarData);
+    const edge = (key) => {
+        if (!s || !scrollBarData?.[key]) return "0px";
+        return `calc(${s})`;
+    };
+
+    return {
+        gutterTop: edge("top"),
+        gutterRight: edge("right"),
+        gutterBottom: edge("bottom"),
+        gutterLeft: edge("left"),
     };
 };
 
@@ -282,9 +269,20 @@ const useVars = (p) => {
             style,
         };
 
+        const contentPaddingStyle = resolveContentPaddingStyle(mergedFlexProps);
+        const {
+            padding: _padding,
+            paddingTop: _paddingTop,
+            paddingRight: _paddingRight,
+            paddingBottom: _paddingBottom,
+            paddingLeft: _paddingLeft,
+            ...flexPropsWithoutPadding
+        } = mergedFlexProps;
+
         return {
             shouldRender,
-            flexProps: mergeDefaultAlignment(mergePadding(mergedFlexProps, scrollBarExportedData)),
+            flexProps: mergeDefaultAlignment(flexPropsWithoutPadding),
+            contentPaddingStyle,
         };
     }, [
         flexProps,
@@ -293,9 +291,13 @@ const useVars = (p) => {
         measuredHeight,
         measuredWidth,
         restProps,
-        scrollBarExportedData,
         width,
     ]);
+
+    const shellGutters = useMemo(
+        () => getShellGutters(scrollBarExportedData),
+        [scrollBarExportedData],
+    );
 
     useLayoutEffect(() => {
         if (getExplicitHeight({ height, flexProps }) != null) return;
@@ -380,7 +382,9 @@ const useVars = (p) => {
             theme,
             containerRef,
             shouldRender: organizedFlexProps.shouldRender,
+            contentPaddingStyle: organizedFlexProps.contentPaddingStyle,
             ...restProps,
+            shellGutters,
         },
         scrollBarExportedData,
     );

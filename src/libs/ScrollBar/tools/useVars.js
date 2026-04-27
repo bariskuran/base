@@ -13,6 +13,8 @@ const useVars = (p) => {
     const {
         Variant,
         body = false,
+        sourceByRef,
+        sourceById,
         disableX = false,
         disableY = false,
         opposite = false,
@@ -33,11 +35,18 @@ const useVars = (p) => {
 
     const trackMargin = trackMarginProp ?? 5;
     const edgeMargin = edgeMarginProp ?? 5;
+    const hasExternalSource =
+        sourceByRef != null || (typeof sourceById === "string" && sourceById.trim() !== "");
+    const effectiveTrackMargin = hasExternalSource ? 0 : trackMargin;
+    const effectiveEdgeMargin = hasExternalSource ? 0 : edgeMargin;
+    const effectiveOpposite = hasExternalSource ? false : opposite;
+    const effectiveMirror = hasExternalSource ? false : mirror;
 
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
     const {
         resolvedHost,
+        resolvedSource,
         overlayHost,
         hostRect,
         x,
@@ -49,6 +58,7 @@ const useVars = (p) => {
         setLocal,
     } = baseStore.useLocal({
         resolvedHost: null,
+        resolvedSource: null,
         overlayHost: null,
         hostRect: null,
         dragAxis: null,
@@ -83,8 +93,8 @@ const useVars = (p) => {
     const colors = colorGet(truckColor || theme.foreground);
 
     const getBarPositionForAxis = (axis) => {
-        if (axis === "y") return opposite ? "horizontal" : "vertical";
-        return opposite ? "vertical" : "horizontal";
+        if (axis === "y") return effectiveOpposite ? "horizontal" : "vertical";
+        return effectiveOpposite ? "vertical" : "horizontal";
     };
 
     const getClientValueForAxis = (axis, e) => {
@@ -94,6 +104,20 @@ const useVars = (p) => {
 
     const xBarPosition = getBarPositionForAxis("x");
     const yBarPosition = getBarPositionForAxis("y");
+
+    const resolveExternalSource = () => {
+        if (typeof document === "undefined") return null;
+
+        const refEl = sourceByRef?.current || sourceByRef || null;
+        if (refEl?.nodeType === 1) return refEl;
+
+        if (sourceById) {
+            const idEl = document.getElementById(sourceById);
+            if (idEl) return idEl;
+        }
+
+        return null;
+    };
 
     useLayoutEffect(() => {
         if (typeof document === "undefined") return;
@@ -105,19 +129,22 @@ const useVars = (p) => {
 
         if (!host) return;
 
+        const source = resolveExternalSource() || host;
+
         setLocal((s) => {
             s.resolvedHost = host;
+            s.resolvedSource = source;
             s.overlayHost = host.parentElement || null;
         });
-    }, [body, setLocal]);
+    }, [body, setLocal, sourceByRef, sourceById]);
 
     const normalizedScrollSource =
         typeof document === "undefined" ||
-        !resolvedHost ||
-        resolvedHost === document.body ||
-        resolvedHost === document.documentElement
+        !resolvedSource ||
+        resolvedSource === document.body ||
+        resolvedSource === document.documentElement
             ? window
-            : resolvedHost;
+            : resolvedSource;
 
     const isWindowLike =
         normalizedScrollSource === window ||
@@ -169,22 +196,24 @@ const useVars = (p) => {
             scrollAxis: "x",
             visualAxis: xBarPosition === "vertical" ? "y" : "x",
             maxLength,
-            trackMargin,
+            trackMargin: effectiveTrackMargin,
             minThumbLength,
             exactThumbSize,
             fillMode,
             source: normalizedScrollSource,
+            visualSource: resolvedHost,
         });
 
         const yProps = getThumbProps({
             scrollAxis: "y",
             visualAxis: yBarPosition === "vertical" ? "y" : "x",
             maxLength,
-            trackMargin,
+            trackMargin: effectiveTrackMargin,
             minThumbLength,
             exactThumbSize,
             fillMode,
             source: normalizedScrollSource,
+            visualSource: resolvedHost,
         });
 
         setLocal((s) => {
@@ -220,13 +249,13 @@ const useVars = (p) => {
         resolvedHost,
         isWindowLike,
         maxLength,
-        trackMargin,
+        effectiveTrackMargin,
         minThumbLength,
         exactThumbSize,
         fillMode,
-        opposite,
-        mirror,
-        edgeMargin,
+        effectiveOpposite,
+        effectiveMirror,
+        effectiveEdgeMargin,
     ]);
 
     useLayoutEffect(() => {
@@ -359,11 +388,11 @@ const useVars = (p) => {
         resolvedHost,
         normalizedScrollSource,
         isWindowLike,
-        opposite,
-        mirror,
+        effectiveOpposite,
+        effectiveMirror,
         maxLength,
-        trackMargin,
-        edgeMargin,
+        effectiveTrackMargin,
+        effectiveEdgeMargin,
     ]);
 
     useEffect(() => {
@@ -406,11 +435,11 @@ const useVars = (p) => {
     }, [
         resolvedHost,
         isWindowLike,
-        opposite,
-        mirror,
+        effectiveOpposite,
+        effectiveMirror,
         maxLength,
-        trackMargin,
-        edgeMargin,
+        effectiveTrackMargin,
+        effectiveEdgeMargin,
         exactThumbSize,
         fillMode,
     ]);
@@ -662,8 +691,8 @@ const useVars = (p) => {
     const isDraggingY = dragAxis === "y";
     const getVisibleEdge = (isVisible, barPosition) => {
         if (!isVisible) return {};
-        if (barPosition === "vertical") return mirror ? { left: true } : { right: true };
-        return mirror ? { top: true } : { bottom: true };
+        if (barPosition === "vertical") return effectiveMirror ? { left: true } : { right: true };
+        return effectiveMirror ? { top: true } : { bottom: true };
     };
     const visibleEdges = {
         top: false,
@@ -683,8 +712,8 @@ const useVars = (p) => {
             body,
             disableX,
             disableY,
-            opposite,
-            mirror,
+            opposite: effectiveOpposite,
+            mirror: effectiveMirror,
             xBarPosition,
             yBarPosition,
             truckColor,
@@ -692,8 +721,8 @@ const useVars = (p) => {
             colors,
             thickness,
             maxLength,
-            edgeMargin,
-            trackMargin,
+            edgeMargin: effectiveEdgeMargin,
+            trackMargin: effectiveTrackMargin,
             minThumbLength,
             exactThumbSize,
             fillMode,
@@ -726,7 +755,7 @@ const useVars = (p) => {
             bottom: visibleEdges.bottom,
             left: visibleEdges.left,
             right: visibleEdges.right,
-            edgeMargin,
+            edgeMargin: effectiveEdgeMargin,
             thickness,
             isDraggingX,
             isDraggingY,

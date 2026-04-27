@@ -14,8 +14,14 @@ const getThumbProps = ({
     exactThumbSize,
     fillMode = false,
     source = typeof window !== "undefined" ? window : undefined,
+    visualSource = source,
 } = {}) => {
-    if (typeof window === "undefined" || typeof document === "undefined" || !source) {
+    if (
+        typeof window === "undefined" ||
+        typeof document === "undefined" ||
+        !source ||
+        !visualSource
+    ) {
         return {
             thumbLength: 0,
             thumbPosition: 0,
@@ -33,6 +39,10 @@ const getThumbProps = ({
 
     const isWindowLike =
         source === window || source === document.body || source === document.documentElement;
+    const isVisualWindowLike =
+        visualSource === window ||
+        visualSource === document.body ||
+        visualSource === document.documentElement;
 
     const visibleLength = isWindowLike
         ? isScrollY
@@ -42,13 +52,13 @@ const getThumbProps = ({
           ? source.clientHeight
           : source.clientWidth;
 
-    const visualHostLength = isWindowLike
+    const visualHostLength = isVisualWindowLike
         ? isVisualY
             ? window.innerHeight
             : window.innerWidth
         : isVisualY
-          ? source.clientHeight
-          : source.clientWidth;
+          ? visualSource.clientHeight
+          : visualSource.clientWidth;
 
     const trackLength = Math.max(
         0,

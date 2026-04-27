@@ -3,8 +3,6 @@ import { Flex } from "../Flex";
 
 export const S = styled(Flex)`
     ${({ theme, $disableShadow }) => css`
-        overflow: auto;
-
         ${!$disableShadow &&
         css`
             ${theme.get3DShadow({ depth: 5, hoverDepth: 1 })}
