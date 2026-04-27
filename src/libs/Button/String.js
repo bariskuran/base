@@ -70,5 +70,7 @@ const X = {
     variant: S,
     bgColor: "transparent",
     color: "foreground",
+    hoverBgColor: "transparent",
+    activeBgColor: "transparent",
 };
 export default X;

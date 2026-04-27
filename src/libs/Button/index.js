@@ -12,7 +12,7 @@ import SquareOnRight from "./SquareOnRight.js";
 export const Button = componentCreator({
     name: "Button",
     BaseComp: Base,
-    DefaultVariant: DefaultVariant,
+    DefaultVariant,
     variants: {
         error: { bgColor: "error" },
         success: { bgColor: "success" },
@@ -24,6 +24,7 @@ export const Button = componentCreator({
         animatedBg: AnimatedBg,
         string: String,
         plain: Plain,
+        default: DefaultVariant,
         squareOnRight: SquareOnRight,
         closeIcon: {
             ...Plain,

@@ -153,3 +153,5 @@ export { NotifierTest } from "./libs/NotifierListener/NotifierTest";
 export { Space } from "./libs/Space";
 export { default as DS } from "./libs/DesignSystem";
 export { columnTypes, COLUMN_SIZES } from "./libs/columnTypes";
+export { Dropdown } from "./libs/Dropdown";
+export { TextArea } from "./libs/TextArea";

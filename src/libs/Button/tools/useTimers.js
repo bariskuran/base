@@ -1,6 +1,13 @@
 import { useTimer } from "../../useTimer";
 import { useMemo } from "react";
 
+const normalizeTimerMs = (value, fallback) => {
+    if (value == null || value === "") return fallback;
+    const n = Number(value);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.max(0, n);
+};
+
 export const useTimers = (p) => {
     const {
         label,
@@ -13,16 +20,25 @@ export const useTimers = (p) => {
         onDelayEnd,
         runAction,
         getTimerBaseName,
+        clickCooldownMs,
+        showOnClickHoldMs,
     } = p || {};
+
+    const cooldownMs = normalizeTimerMs(clickCooldownMs, 1000);
+    const showOnClickHoldDurationMs = normalizeTimerMs(showOnClickHoldMs, 2000);
 
     const timerBaseName = useMemo(
         () => getTimerBaseName({ label, prefix, suffix, icon }),
         [label, prefix, suffix, icon],
     );
 
-    const { start: showOnClickValuesStart, isRunning: isShowOnClickValuesRunning } = useTimer({
+    const {
+        start: showOnClickValuesStart,
+        stop: showOnClickValuesStop,
+        isRunning: isShowOnClickValuesRunning,
+    } = useTimer({
         timerName: `showOnClickValues-${timerBaseName}`,
-        refreshTime: 2000,
+        refreshTime: showOnClickHoldDurationMs,
         loop: false,
         onStart: () =>
             setLocal?.((s) => {
@@ -37,7 +53,7 @@ export const useTimers = (p) => {
 
     const { start: clickBlockerStart, isRunning: isClickBlockerRunning } = useTimer({
         timerName: `clickBlocker-${timerBaseName}`,
-        refreshTime: 1000,
+        refreshTime: cooldownMs,
         loop: false,
         onStart: () =>
             setLocal?.((s) => {
@@ -66,6 +82,7 @@ export const useTimers = (p) => {
 
     return {
         showOnClickValuesStart,
+        showOnClickValuesStop,
         isShowOnClickValuesRunning,
         clickBlockerStart,
         isClickBlockerRunning,

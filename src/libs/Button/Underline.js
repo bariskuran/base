@@ -7,7 +7,7 @@ const S = styled.div`
         $isActivated,
         // $isPending,
         // $disabled,
-        // $isJustIcon,
+        $isJustIcon,
         // $bgColor,
         // $hoverBgColor,
         // $activeBgColor,
@@ -26,11 +26,8 @@ const S = styled.div`
     }) => css`
         all: unset;
         display: flex;
-        cursor: pointer;
         transition: all 0.5s;
-        position: relative;
         width: ${$fullWidth ? "100%" : "auto"};
-        line-height: 1;
 
         &::before,
         &::after {
@@ -51,24 +48,19 @@ const S = styled.div`
         }
 
         & > [data-slot="label"] {
+            ${!$isJustIcon &&
+            css`
+                min-width: 75rem;
+            `}
+
             display: flex;
             justify-content: center;
             align-items: center;
             text-transform: uppercase;
+            padding: 6rem 20rem;
             letter-spacing: 0.5rem;
             font-weight: 600;
             font-size: 12rem;
-            padding: 5rem 10rem;
-            transition: all 0.5s;
-        }
-
-        & > [data-slot="prefix"],
-        & > [data-slot="suffix"] {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: max-content;
-            padding: 4rem;
             transition: all 0.5s;
         }
 
@@ -84,5 +76,6 @@ const S = styled.div`
 export const X = {
     variant: S,
     bgColor: "background",
+    activeBgColor: "transparent",
 };
 export default X;

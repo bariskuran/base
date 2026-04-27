@@ -41,8 +41,8 @@ const ButtonVariants = ({ Com }) => (
                 icon: "abstract12",
                 width: 20,
                 color: "success",
-                onHoverColor: "green",
-                onHoverIcon: "eye",
+                hoverColor: "green",
+                hoverIcon: "eye",
                 bgColor: "yellow",
                 text: "Test",
             }}
@@ -52,7 +52,7 @@ const ButtonVariants = ({ Com }) => (
             primary
             icon={{
                 icon: "abstract20",
-                onHoverIcon: "abstract21",
+                hoverIcon: "abstract21",
                 width: 16,
             }}
         />
@@ -61,7 +61,7 @@ const ButtonVariants = ({ Com }) => (
             outlined
             icon={{
                 icon: "abstract20",
-                onHoverIcon: "abstract21",
+                hoverIcon: "abstract21",
                 width: 16,
             }}
         />
@@ -71,7 +71,7 @@ const ButtonVariants = ({ Com }) => (
             primary
             icon={{
                 icon: "abstract20",
-                onHoverIcon: "abstract21",
+                hoverIcon: "abstract21",
                 width: 16,
             }}
         />
@@ -82,12 +82,12 @@ const ButtonVariants = ({ Com }) => (
                 icon: "abstract20",
                 width: 18,
                 color: "red",
-                onHoverIcon: "abstract21",
-                onHoverColor: "yellow",
-                onHoverWidth: 20,
-                onActiveIcon: "abstract22",
-                onActiveColor: "white",
-                onActiveWidth: 22,
+                hoverIcon: "abstract21",
+                hoverColor: "yellow",
+                hoverWidth: 20,
+                activeIcon: "abstract22",
+                activeColor: "white",
+                activeWidth: 22,
             }}
         />
         <Com
@@ -96,12 +96,12 @@ const ButtonVariants = ({ Com }) => (
                 icon: "abstract20",
                 width: 18,
                 color: "red",
-                onHoverIcon: "abstract21",
-                onHoverColor: "yellow",
-                onHoverWidth: 20,
-                onActiveIcon: "abstract22",
-                onActiveColor: "white",
-                onActiveWidth: 22,
+                hoverIcon: "abstract21",
+                hoverColor: "yellow",
+                hoverWidth: 20,
+                activeIcon: "abstract22",
+                activeColor: "white",
+                activeWidth: 22,
             }}
         />
         <Com onClick={() => console.log("click")} icon={{ icon: "abstract20" }} />

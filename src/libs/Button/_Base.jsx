@@ -10,22 +10,25 @@ export const Base = (props = {}) => {
         isMatch, // pointer-events: none;
         Variant,
         prefix,
-        c,
         isHovered,
         isActivated,
         label,
         variantProps,
         minWidth,
-        activeLabel,
         hoverLabel,
+        activeLabel,
+        pendingLabel,
         isJustIcon,
         icon,
         suffix,
+        showPendingLabel,
         showActiveLabel,
         showHoverLabel,
         showDefaultLabel,
         popTip,
         fullWidth,
+        iconPalette,
+        isPending,
     } = useVars(props);
 
     /* RETURN */
@@ -36,9 +39,10 @@ export const Base = (props = {}) => {
                     <IconArea
                         areaName="prefix"
                         obj={prefix}
-                        color={c}
+                        iconPalette={iconPalette}
                         hoverManually={isHovered}
                         isActive={isActivated}
+                        pendingManually={isPending}
                     />
                     {label != null && (
                         <div
@@ -46,31 +50,42 @@ export const Base = (props = {}) => {
                             style={minWidth ? { minWidth: `${minWidth}rem` } : {}}
                         >
                             <S.LabelStack>
-                                <LabelLayer a={[showDefaultLabel, "label-default", label, true]} />
+                                <LabelLayer
+                                    a={[showDefaultLabel, "label-default", label, true]}
+                                    isJustIcon={isJustIcon}
+                                />
                                 <LabelLayer
                                     a={[showHoverLabel, "label-hover", hoverLabel, hoverLabel]}
+                                    isJustIcon={isJustIcon}
                                 />
                                 <LabelLayer
                                     a={[showActiveLabel, "label-active", activeLabel, activeLabel]}
+                                    isJustIcon={isJustIcon}
+                                />
+                                <LabelLayer
+                                    a={[showPendingLabel, "label-pending", pendingLabel, pendingLabel]}
+                                    isJustIcon={isJustIcon}
                                 />
                             </S.LabelStack>
                         </div>
                     )}
                     {isJustIcon && (
                         <IconArea
-                            areaName="label"
+                            areaName="centeredIcon"
                             obj={icon}
-                            color={c}
+                            iconPalette={iconPalette}
                             hoverManually={isHovered}
                             isActive={isActivated}
+                            pendingManually={isPending}
                         />
                     )}
                     <IconArea
                         areaName="suffix"
                         obj={suffix}
-                        color={c}
+                        iconPalette={iconPalette}
                         hoverManually={isHovered}
                         isActive={isActivated}
+                        pendingManually={isPending}
                     />
                 </Variant>
             </ScaleWrapper>
@@ -83,5 +98,12 @@ const PopTipWrapper = ({ popTip, children }) => {
     return <PopTip content={popTip}>{children}</PopTip>;
 };
 
-const LabelLayer = ({ a: [visible, name, children, condition] = [] }) =>
-    condition && <S.LabelLayer $visible={visible} data-slot={name} children={children} />;
+const LabelLayer = ({ a: [visible, name, children, condition] = [], isJustIcon }) =>
+    condition && (
+        <S.LabelLayer
+            $visible={visible}
+            data-slot={name}
+            children={children}
+            $isJustIcon={isJustIcon}
+        />
+    );

@@ -5,6 +5,15 @@ import { baseStore } from "../@baseStore";
 import { PopTip } from "../PopTip";
 import { byPath } from "../byPath";
 
+const spin360 = keyframes`
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+`;
+
 const pulseTwice = keyframes`
     0% {
         transform: scale(1);
@@ -50,6 +59,24 @@ const LayerBox = styled.span`
             transform 0.18s ease;
         transform: scale(${$scale});
         transform-origin: center center;
+    `}
+`;
+
+const SpinBox = styled.span`
+    ${({ $spin }) => css`
+        position: absolute;
+        inset: 0;
+        display: block;
+        transform-origin: center center;
+
+        ${$spin &&
+        css`
+            animation: ${spin360} 1s linear infinite;
+
+            @media (prefers-reduced-motion: reduce) {
+                animation: none;
+            }
+        `}
     `}
 `;
 
@@ -178,7 +205,7 @@ const resolveVisualScale = ({
     return fallback;
 };
 
-const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive }) => {
+const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive, spinPending }) => {
     if (!meta) return null;
 
     const { Content, viewW, viewH, opticalScale, centerX, centerY } = meta;
@@ -190,26 +217,28 @@ const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive }) =>
 
     return (
         <LayerBox $visible={visible} $scale={scale}>
-            <PulseBox $enablePulse={enablePulse} $isActive={isActive}>
-                <Svg
-                    $fill={fill}
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    viewBox={`0 0 ${viewW} ${viewH}`}
-                    preserveAspectRatio="xMidYMid meet"
-                    aria-hidden="true"
-                    focusable="false"
-                >
-                    <g transform={opticalTransform}>
-                        {typeof Content === "string" ? (
-                            <path d={Content} />
-                        ) : Content ? (
-                            <Content />
-                        ) : null}
-                    </g>
-                </Svg>
-            </PulseBox>
+            <SpinBox $spin={spinPending}>
+                <PulseBox $enablePulse={enablePulse} $isActive={isActive}>
+                    <Svg
+                        $fill={fill}
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlnsXlink="http://www.w3.org/1999/xlink"
+                        viewBox={`0 0 ${viewW} ${viewH}`}
+                        preserveAspectRatio="xMidYMid meet"
+                        aria-hidden="true"
+                        focusable="false"
+                    >
+                        <g transform={opticalTransform}>
+                            {typeof Content === "string" ? (
+                                <path d={Content} />
+                            ) : Content ? (
+                                <Content />
+                            ) : null}
+                        </g>
+                    </Svg>
+                </PulseBox>
+            </SpinBox>
         </LayerBox>
     );
 };
@@ -225,21 +254,28 @@ export const Icon = ({
     width = 14,
     size,
     w,
-    onHoverIcon: onHoverIconProp,
-    onHoverColor,
-    onHoverScale,
-    onHoverWidth,
-    onHoverW,
-    onHoverSize,
-    onActiveIcon: onActiveIconProp,
-    onActiveColor,
-    onActiveScale,
-    onActiveWidth,
-    onActiveW,
-    onActiveSize,
+    hoverIcon: hoverIconProp,
+    hoverColor,
+    hoverScale,
+    hoverWidth,
+    hoverW,
+    hoverSize,
+    activeIcon: activeIconProp,
+    activeColor,
+    activeScale,
+    activeWidth,
+    activeW,
+    activeSize,
+    pendingIcon: pendingIconProp,
+    pendingColor,
+    pendingScale,
+    pendingWidth,
+    pendingW,
+    pendingSize,
     popTipProps = {},
     hoverManually = false,
     activeManually = false,
+    pendingManually = false,
     disableScaleEffect = false,
     disablePulseEffect = false,
 }) => {
@@ -252,61 +288,85 @@ export const Icon = ({
     const iconsLibrary = useMemo(() => normalizeIconsLibrary(iconsLibraryRaw), [iconsLibraryRaw]);
     const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
 
-    const activeState = !!activeManually;
-    const hoverState = !!(hoverManually || isSelfHover) && !activeState;
+    const pendingState = !!pendingManually;
+    const activeState = !!activeManually && !pendingState;
+    const hoverState =
+        !!(hoverManually || isSelfHover) && !activeState && !pendingState;
 
-    const onHoverIcon = onHoverIconProp || null;
-    const onActiveIcon = onActiveIconProp || null;
+    const hoverGlyph = hoverIconProp || null;
+    const activeGlyph = activeIconProp || null;
+    const pendingGlyph = pendingIconProp || null;
 
     const baseMeta = useMemo(() => createIconMeta(icon, allIcons), [icon, allIcons]);
-    const hoverMeta = useMemo(() => createIconMeta(onHoverIcon, allIcons), [onHoverIcon, allIcons]);
+    const hoverMeta = useMemo(() => createIconMeta(hoverGlyph, allIcons), [hoverGlyph, allIcons]);
     const activeMeta = useMemo(
-        () => createIconMeta(onActiveIcon, allIcons),
-        [onActiveIcon, allIcons],
+        () => createIconMeta(activeGlyph, allIcons),
+        [activeGlyph, allIcons],
+    );
+    const pendingMeta = useMemo(
+        () => createIconMeta(pendingGlyph, allIcons),
+        [pendingGlyph, allIcons],
     );
 
-    const finalColorRaw = activeState
-        ? onActiveColor || color
-        : hoverState
-          ? onHoverColor || color
-          : color;
+    const finalColorRaw = pendingState
+        ? pendingColor || color
+        : activeState
+          ? activeColor || color
+          : hoverState
+            ? hoverColor || color
+            : color;
 
     const finalColor = resolveThemeColor(theme, finalColorRaw);
     const baseSize = resolveSize(size, w, width);
 
     const hoverScaleValue = resolveVisualScale({
-        explicitScale: onHoverScale,
-        widthAlias: onHoverWidth,
-        widthAliasShort: onHoverW,
-        widthAliasSize: onHoverSize,
+        explicitScale: hoverScale,
+        widthAlias: hoverWidth,
+        widthAliasShort: hoverW,
+        widthAliasSize: hoverSize,
         baseSize,
         fallback: 1,
     });
 
     const activeScaleValue = resolveVisualScale({
-        explicitScale: onActiveScale,
-        widthAlias: onActiveWidth,
-        widthAliasShort: onActiveW,
-        widthAliasSize: onActiveSize,
+        explicitScale: activeScale,
+        widthAlias: activeWidth,
+        widthAliasShort: activeW,
+        widthAliasSize: activeSize,
+        baseSize,
+        fallback: 1,
+    });
+
+    const pendingScaleValue = resolveVisualScale({
+        explicitScale: pendingScale,
+        widthAlias: pendingWidth,
+        widthAliasShort: pendingW,
+        widthAliasSize: pendingSize,
         baseSize,
         fallback: 1,
     });
 
     const finalScale = disableScaleEffect
         ? 1
-        : activeState
-          ? activeScaleValue
-          : hoverState
-            ? hoverScaleValue
-            : 1;
+        : pendingState
+          ? pendingScaleValue
+          : activeState
+            ? activeScaleValue
+            : hoverState
+              ? hoverScaleValue
+              : 1;
 
-    const shouldRenderHoverLayer = !!(onHoverIconProp && hoverMeta);
-    const shouldRenderActiveLayer = !!(onActiveIconProp && activeMeta);
+    const shouldRenderHoverLayer = !!(hoverIconProp && hoverMeta);
+    const shouldRenderActiveLayer = !!(activeIconProp && activeMeta);
+    const shouldRenderPendingLayer = !!(pendingIconProp && pendingMeta);
+    const shouldUsePendingLayer = pendingState && shouldRenderPendingLayer;
     const shouldUseHoverLayer = hoverState && shouldRenderHoverLayer;
     const shouldUseActiveLayer = activeState && shouldRenderActiveLayer;
-    const showBaseLayer = !shouldUseHoverLayer && !shouldUseActiveLayer;
+    const showBaseLayer =
+        !shouldUsePendingLayer && !shouldUseHoverLayer && !shouldUseActiveLayer;
     const showHoverLayer = shouldUseHoverLayer;
     const showActiveLayer = shouldUseActiveLayer;
+    const showPendingLayer = shouldUsePendingLayer;
 
     const pulseEnabled = !disablePulseEffect;
 
@@ -332,7 +392,13 @@ export const Icon = ({
                     visible={showBaseLayer}
                     fill={finalColor}
                     scale={finalScale}
-                    enablePulse={pulseEnabled && activeState && !shouldRenderActiveLayer}
+                    spinPending={pendingState && showBaseLayer}
+                    enablePulse={
+                        pulseEnabled &&
+                        activeState &&
+                        !shouldRenderActiveLayer &&
+                        !pendingState
+                    }
                     isActive={activeState}
                 />
 
@@ -355,6 +421,18 @@ export const Icon = ({
                         scale={finalScale}
                         enablePulse={pulseEnabled && activeState}
                         isActive={activeState}
+                    />
+                )}
+
+                {shouldRenderPendingLayer && (
+                    <IconLayer
+                        meta={pendingMeta}
+                        visible={showPendingLayer}
+                        fill={finalColor}
+                        scale={finalScale}
+                        spinPending={showPendingLayer}
+                        enablePulse={false}
+                        isActive={false}
                     />
                 )}
             </Root>

@@ -12,9 +12,10 @@ const CustomTriangle = () => (
 );
 
 const X = () => {
-    const { isHover, isActive, setLocalByPath } = baseStore.useLocal({
+    const { isHover, isActive, isPending, setLocalByPath } = baseStore.useLocal({
         isHover: false,
         isActive: false,
+        isPending: false,
     });
 
     /* RETURN */
@@ -100,30 +101,30 @@ const X = () => {
                 code={`import { Icon } from "${SYS.basePath}";
 
                     <Flex gap={20} xAlign="start">
-                        <Icon icon="copy" onHoverIcon="check" onHoverColor="green" />
-                        <Icon icon="download" width={14} onHoverScale={1.4} onHoverColor="dodgerblue" />
-                        <Icon icon="search" width={14} onHoverScale={4} disableScaleEffect onHoverColor="dodgerblue" hoverManually={isHover} />
+                        <Icon icon="copy" hoverIcon="check" hoverColor="green" />
+                        <Icon icon="download" width={14} hoverScale={1.4} hoverColor="dodgerblue" />
+                        <Icon icon="search" width={14} hoverScale={4} disableScaleEffect hoverColor="dodgerblue" hoverManually={isHover} />
                     </Flex>`}
                 example={
                     <Flex gap={20} xAlign="start">
                         <Icon
                             icon="copy"
-                            onHoverIcon="check"
-                            onHoverColor="green"
+                            hoverIcon="check"
+                            hoverColor="green"
                             hoverManually={isHover}
                         />
                         <Icon
                             icon="download"
                             width={14}
-                            onHoverScale={1.4}
-                            onHoverColor="dodgerblue"
+                            hoverScale={1.4}
+                            hoverColor="dodgerblue"
                             hoverManually={isHover}
                         />
                         <Icon
                             icon="search"
                             width={14}
-                            onHoverScale={4}
-                            onHoverColor="dodgerblue"
+                            hoverScale={4}
+                            hoverColor="dodgerblue"
                             hoverManually={isHover}
                             disableScaleEffect
                         />
@@ -144,30 +145,30 @@ const X = () => {
                 code={`import { Icon } from "${SYS.basePath}";
 
                     <Flex gap={20} xAlign="start">
-                        <Icon icon="copy" onActiveIcon="check" onActiveColor="green" activeManually={isActive} />
-                        <Icon icon="copy" width={14} onActiveScale={1.4} onActiveColor="tomato" activeManually={isActive} />
-                        <Icon icon="copy" width={14} onActiveScale={1.8} onActiveColor="primary" activeManually={isActive} disablePulseEffect />
+                        <Icon icon="copy" activeIcon="check" activeColor="green" activeManually={isActive} />
+                        <Icon icon="copy" width={14} activeScale={1.4} activeColor="tomato" activeManually={isActive} />
+                        <Icon icon="copy" width={14} activeScale={1.8} activeColor="primary" activeManually={isActive} disablePulseEffect />
                     </Flex>`}
                 example={
                     <Flex gap={20} xAlign="start">
                         <Icon
                             icon="copy"
-                            onActiveIcon="check"
-                            onActiveColor="green"
+                            activeIcon="check"
+                            activeColor="green"
                             activeManually={isActive}
                         />
                         <Icon
                             icon="download"
                             width={14}
-                            onActiveColor="blue"
-                            onActiveScale={1.8}
+                            activeColor="blue"
+                            activeScale={1.8}
                             activeManually={isActive}
                         />
                         <Icon
                             icon="search"
                             width={14}
-                            onActiveColor="primary"
-                            onActiveScale={3}
+                            activeColor="primary"
+                            activeScale={3}
                             activeManually={isActive}
                             disablePulseEffect
                         />
@@ -180,7 +181,42 @@ const X = () => {
                     </Flex>
                 }
             />
+            <Ds.block
+                title="Pending state"
+                description={`Pending state can switch the icon, color and scale. 
+                    
+                    Technically, <Icon> component can not trigger pending state itself. But, you can trigger it manually with pendingManually (boolean) prop inside your component.
+                    
+                    In the pending state, the icon rotates 360 degrees. It is recommended to choose icons that are suitable for this type of animation. `}
+                code={`import { Icon } from "${SYS.basePath}";
 
+                    <Icon icon="copy" pendingIcon="loading" pendingColor="green" pendingManually={isPending} />
+                    <Icon icon="download" width={14} pendingIcon="loading2" pendingColor="blue" pendingScale={1.8} pendingManually={isPending} />`}
+                example={
+                    <Flex gap={20} xAlign="start">
+                        <Icon
+                            icon="copy"
+                            pendingIcon="loading"
+                            pendingColor="green"
+                            pendingManually={isPending}
+                        />
+                        <Icon
+                            icon="download"
+                            width={14}
+                            pendingIcon="loading2"
+                            pendingColor="blue"
+                            pendingScale={1.8}
+                            pendingManually={isPending}
+                        />
+                        <div
+                            onMouseEnter={() => setLocalByPath("isPending", true)}
+                            onMouseLeave={() => setLocalByPath("isPending", false)}
+                        >
+                            pendingManually
+                        </div>
+                    </Flex>
+                }
+            />
             <Ds.block
                 title="PopTip integration"
                 description={
@@ -228,21 +264,21 @@ const X = () => {
                         required: false,
                         defaultValue: "10",
                     },
-                    onHoverIcon: {
+                    hoverIcon: {
                         description: "Icon shown on hover state.",
                         type: "string | array",
                         required: false,
                         defaultValue: "null",
                     },
-                    onHoverColor: {
+                    hoverColor: {
                         description: "Color shown on hover state.",
                         type: "string",
                         required: false,
                         defaultValue: "null",
                     },
-                    onHoverWidth: {
+                    hoverWidth: {
                         description:
-                            "Size shown on hover state. Shorthands: 'onHoverSize' && 'onHoverW'",
+                            "Size shown on hover state. Shorthands: 'hoverSize' && 'hoverW'",
                         type: "number",
                         required: false,
                         defaultValue: "null",
@@ -253,27 +289,59 @@ const X = () => {
                         required: false,
                         defaultValue: "false",
                     },
-                    onActiveIcon: {
+                    activeIcon: {
                         description: "Icon shown on active state.",
                         type: "string | array",
                         required: false,
                         defaultValue: "null",
                     },
-                    onActiveColor: {
+                    activeColor: {
                         description: "Color shown on active state.",
                         type: "string",
                         required: false,
                         defaultValue: "null",
                     },
-                    onActiveWidth: {
+                    activeWidth: {
                         description:
-                            "Size shown on active state. Shorthands: 'onActiveSize' && 'onActiveW'",
+                            "Size shown on active state. Shorthands: 'activeSize' && 'activeW'",
                         type: "number",
                         required: false,
                         defaultValue: "null",
                     },
                     activeManually: {
                         description: "Triggers active visuals manually.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    pendingIcon: {
+                        description:
+                            "Icon shown while pending (e.g. navigation loading). Takes precedence over hover/active when pending.",
+                        type: "string | array",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    pendingColor: {
+                        description: "Color while pending.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    pendingWidth: {
+                        description: "Size while pending. Shorthands: 'pendingSize' && 'pendingW'",
+                        type: "number",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    pendingScale: {
+                        description: "Visual scale override while pending.",
+                        type: "number",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    pendingManually: {
+                        description:
+                            "Triggers pending visuals manually (e.g. alongside Router loading state).",
                         type: "boolean",
                         required: false,
                         defaultValue: "false",

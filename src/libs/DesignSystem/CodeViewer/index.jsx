@@ -391,8 +391,8 @@ const CodeViewer = ({
                         icon: "copy",
                         width: 16,
                         color: "greys.shade30",
-                        onHoverColor: "greys.shade60",
-                        onActiveIcon: "check",
+                        hoverColor: "greys.shade60",
+                        activeIcon: "check",
                     }}
                     popTip="Copy to clipboard"
                 />

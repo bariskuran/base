@@ -1,7 +1,8 @@
 import { useMatch, useNavigation, useNavigate, Link, useResolvedPath } from "react-router-dom";
+import { useEffect } from "react";
 import { baseStore } from "../../@baseStore";
 import { useTimers } from "./useTimers.js";
-import { generateColors } from "./generateColors.js";
+import { getButtonColorPalette } from "./generateColors.js";
 import { useExportData } from "../../useExportedData";
 
 export const useVars = ({
@@ -9,6 +10,7 @@ export const useVars = ({
     label,
     hoverLabel,
     activeLabel,
+    pendingLabel,
     onClick,
     to,
     href,
@@ -37,11 +39,20 @@ export const useVars = ({
     hoverBgColor,
     activeBgColor,
     color,
+    hoverColor,
+    activeColor,
+    pendingBgColor,
+    pendingColor,
     alphaRate,
     //
     popTip,
     exportData,
     fullWidth, // left - right da olabilir.
+    pendingManually,
+    skipClickCooldown,
+    skipShowOnClickHold,
+    clickCooldownMs,
+    showOnClickHoldMs,
 }) => {
     const navigate = useNavigate();
     const url = href || to || urlProp;
@@ -58,12 +69,20 @@ export const useVars = ({
 
     const isMatch = !disableUseMatch && isMatch1;
     const navigation = useNavigation();
-    const isPending = navigation.state === "loading";
+    const isPending = navigation.state === "loading" || !!pendingManually;
 
-    const { setLocal, showOnClickValues, isHover, clickBlocker, isActive } = baseStore.useLocal({
+    const {
+        setLocal,
+        showOnClickValues,
+        isHover,
+        clickBlocker,
+        isActive,
+        isActivated: isPointerDown,
+    } = baseStore.useLocal({
         showOnClickValues: false,
         isHover: false,
         isActive: false,
+        isActivated: false,
         clickBlocker: false,
     });
 
@@ -79,8 +98,8 @@ export const useVars = ({
             clickBlockerStart,
         },
     ) => {
-        !isShowOnClickValuesRunning && showOnClickValuesStart?.();
-        !isClickBlockerRunning && clickBlockerStart?.();
+        if (!skipShowOnClickHold && !isShowOnClickValuesRunning) showOnClickValuesStart?.();
+        if (!skipClickCooldown && !isClickBlockerRunning) clickBlockerStart?.();
         onClick?.(e);
 
         if (!url) return;
@@ -108,10 +127,12 @@ export const useVars = ({
         onDelayEnd,
         runAction,
         getTimerBaseName,
+        clickCooldownMs,
+        showOnClickHoldMs,
     });
 
     const handleClick = (e) => {
-        if (disabled || clickBlocker || isMatch || timers.isDelayRunning) {
+        if (disabled || blockedByClickCooldown || isMatch || timers.isDelayRunning) {
             e.preventDefault();
             e.stopPropagation();
             return;
@@ -137,33 +158,59 @@ export const useVars = ({
             timers.isShowOnClickValuesRunning ||
             isMatch ||
             isActive ||
+            isPointerDown ||
             timers.isDelayRunning) &&
-        !disabled;
+        !disabled &&
+        !isPending;
 
-    const isHovered = (hoverManually || isHover) && !disabled && !isActivated;
+    useEffect(() => {
+        if (!timers.isShowOnClickValuesRunning) return;
+        const hasRouteOrTimerHold =
+            (activeManually || isMatch || isActive || timers.isDelayRunning) && !disabled;
+        if (hasRouteOrTimerHold) return;
+        timers.showOnClickValuesStop();
+    }, [isMatch, isActive, activeManually]);
+
+    const isHovered =
+        (hoverManually || isHover) && !disabled && !isActivated && !isPending;
     const isJustIcon = !label && icon;
 
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
-    const [bgC1, bgC2, bgC3, c, i1, i2] = generateColors({
+    const iconPalette = getButtonColorPalette({
         primary,
         secondary,
         bgColor,
         color,
         hoverBgColor,
         activeBgColor,
+        hoverColor,
+        activeColor,
+        pendingBgColor,
+        pendingColor,
         alphaRate,
         outlined,
         theme,
     });
-    // if (label === "Copy") {
-    //     console.log(bgC1, bgC2);
-    // }
+    const interaction = disabled
+        ? "default"
+        : isPending
+          ? "pending"
+          : isActivated
+            ? "active"
+            : isHovered
+              ? "hover"
+              : "default";
+    const { bg, color: c } = iconPalette[interaction];
+    const i1 = iconPalette.inverse1;
+    const i2 = iconPalette.inverse2;
 
     const as = !url ? "button" : isExternalUrl ? "a" : Link;
 
+    const blockedByClickCooldown = !skipClickCooldown && clickBlocker;
+
     const shouldBindClickHandler =
-        disabled || clickBlocker || isMatch || (delay && delay > 0) || !!onClick;
+        disabled || blockedByClickCooldown || isMatch || (delay && delay > 0) || !!onClick;
 
     const commonProps = {
         ...(shouldBindClickHandler ? { onClick: handleClick } : {}),
@@ -195,12 +242,10 @@ export const useVars = ({
         $outlined: outlined,
         $size: size,
         $isJustIcon: isJustIcon,
-        $bgColor: bgColor || bgC1,
-        $hoverBgColor: hoverBgColor || bgC2,
-        $activeBgColor: activeBgColor || bgC3,
-        $color: color || c,
-        $inverseColor1: i1,
-        $inverseColor2: i2,
+        $bgColor: bgColor,
+        $color: color,
+        $resolvedBg: bg,
+        $resolvedColor: c,
         $prefixBgColor: prefix?.bgColor,
         $prefixColor: prefix?.color,
         $suffixBgColor: suffix?.bgColor,
@@ -238,7 +283,7 @@ export const useVars = ({
         ...(as === "a" || as === Link ? linkAProps : buttonProps),
 
         style: {
-            background: bgC1,
+            background: bg,
             color: c,
             ...(minHeight ? { minHeight: `${minHeight}rem` } : {}),
             ...(outlined ? { border: `1px solid ${c}` } : {}),
@@ -253,13 +298,17 @@ export const useVars = ({
         },
     };
 
-    const showActiveLabel = (showOnClickValues || isActivated) && activeLabel != null;
-    const showHoverLabel = !showActiveLabel && isHovered && hoverLabel != null;
-    const showDefaultLabel = !showActiveLabel && !showHoverLabel;
+    const showPendingLabel = isPending && !disabled && pendingLabel != null;
+    const showActiveLabel =
+        !showPendingLabel && (showOnClickValues || isActivated) && activeLabel != null;
+    const showHoverLabel =
+        !showPendingLabel && !showActiveLabel && isHovered && hoverLabel != null;
+    const showDefaultLabel = !showPendingLabel && !showActiveLabel && !showHoverLabel;
 
     return useExportData(
         {
             exportData,
+            showPendingLabel,
             showActiveLabel,
             showHoverLabel,
             showDefaultLabel,
@@ -269,9 +318,7 @@ export const useVars = ({
             isJustIcon,
             Variant,
             theme,
-            bgC1,
-            bgC2,
-            bgC3,
+            bg,
             c,
             i1,
             i2,
@@ -293,6 +340,7 @@ export const useVars = ({
             label,
             hoverLabel,
             activeLabel,
+            pendingLabel,
             onClick,
             to,
             href,
@@ -319,8 +367,18 @@ export const useVars = ({
             hoverBgColor,
             activeBgColor,
             color,
+            hoverColor,
+            activeColor,
+            pendingBgColor,
+            pendingColor,
             alphaRate,
             fullWidth,
+            iconPalette,
+            pendingManually,
+            skipClickCooldown,
+            skipShowOnClickHold,
+            clickCooldownMs,
+            showOnClickHoldMs,
         },
         {
             showOnClickValues,

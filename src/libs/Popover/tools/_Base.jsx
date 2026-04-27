@@ -34,7 +34,7 @@ export const Base = ({ children, ...p }) => {
                     outlined: true,
                     icon: {
                         icon: "threeDotsLarge",
-                        onActiveIcon: "threeDotsLargeHorizontal",
+                        activeIcon: "threeDotsLargeHorizontal",
                         width: 18,
                     },
                 })}

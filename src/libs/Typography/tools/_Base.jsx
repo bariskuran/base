@@ -61,9 +61,9 @@ export const Base = (props) => {
             icon={{
                 icon: "copy",
                 width: 14,
-                onActiveIcon: "check",
-                onHoverColor: vars.color,
-                onActiveColor: "primary",
+                activeIcon: "check",
+                hoverColor: vars.color,
+                activeColor: "primary",
             }}
         />
     );

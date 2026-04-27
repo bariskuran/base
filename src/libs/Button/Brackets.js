@@ -4,13 +4,11 @@ const S = styled.div`
     ${({
         theme,
         $isHovered,
-        // $isActivated,
+        $isActivated,
         // $isPending,
         // $disabled,
         // $isJustIcon,
         // $bgColor,
-        // $hoverBgColor,
-        // $activeBgColor,
         // $color,
         // $prefixBgColor,
         // $prefixColor,
@@ -25,10 +23,25 @@ const S = styled.div`
     }) => css`
         all: unset;
         display: flex;
-        cursor: pointer;
         overflow: hidden;
         border-radius: 5rem;
         transition: all 0.5s;
+        overflow: visible;
+
+        &::before,
+        &::after {
+            content: "[";
+            position: relative;
+            display: block;
+            font-size: 225%;
+            color: ${theme.primary};
+            transition: all 0.5s;
+            line-height: 1;
+        }
+
+        &::after {
+            content: "]";
+        }
 
         & > [data-slot="label"] {
             display: flex;
@@ -38,43 +51,30 @@ const S = styled.div`
             letter-spacing: 0.5rem;
             font-weight: 600;
             font-size: 12rem;
-            padding: 4rem;
+            padding: 6rem 20rem;
             transition: all 0.5s;
         }
 
-        & > [data-slot="prefix"],
-        & > [data-slot="suffix"] {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: max-content;
-            padding: 4rem;
-            transition: all 0.5s;
-        }
-
-        ${$isHovered &&
+        ${($isHovered || $isActivated) &&
         css`
-            background: ${theme.backgrounds.shade10} !important;
-
-            & > [data-slot="prefix"],
-            & > [data-slot="suffix"] {
-                transform: scale(1.1) translateX(-3rem);
+            &::before {
+                transform: scale(1.2) translate(-2rem, -1px);
+                transform-origin: right center;
             }
-
-            & > [data-slot="suffix"] {
-                transform: scale(1.1) translateX(3rem);
+            &::after {
+                transform: scale(1.2) translate(2rem, -1px);
+                transform-origin: left center;
             }
         `}
-
-        &:active {
-            transform: scale(0.8);
-        }
     `}
 `;
 export const X = {
     variant: S,
-    prefix: { icon: "bracketLeft", width: 22, color: "primary" },
-    suffix: { icon: "bracketRight", width: 22, color: "primary" },
-    bgColor: "background",
+    // prefix: { icon: "bracketLeft", width: 22, color: "primary" },
+    // suffix: { icon: "bracketRight", width: 22, color: "primary" },
+    bgColor: "transparent",
+    hoverBgColor: "transparent",
+    activeBgColor: "transparent",
+    color: "foreground",
 };
 export default X;

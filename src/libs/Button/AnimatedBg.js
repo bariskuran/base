@@ -8,9 +8,7 @@ const S = styled.div`
         $isActivated,
         // $isPending,
         $isJustIcon,
-        // $bgColor,
-        $hoverBgColor,
-        $activeBgColor,
+        $resolvedBg,
         // $color,
         // $prefixBgColor,
         // $prefixColor,
@@ -26,9 +24,7 @@ const S = styled.div`
         all: unset;
         display: flex;
         transition: all 0.2s linear 0.25s;
-        cursor: pointer;
         overflow: hidden;
-        position: relative;
 
         &::before {
             content: "";
@@ -37,23 +33,16 @@ const S = styled.div`
             left: 0;
             width: 0%;
             height: 100%;
-            background: ${$hoverBgColor};
+            background: ${$resolvedBg};
             transition: all 0.25s;
         }
 
-        ${$isHovered &&
+        ${($isHovered || $isActivated) &&
         css`
             transition: none;
 
             &::before {
                 width: 100%;
-            }
-        `}
-
-        ${$isActivated &&
-        css`
-            &::before {
-                background: ${$activeBgColor};
             }
         `}
 
@@ -65,20 +54,11 @@ const S = styled.div`
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8rem;
             text-transform: uppercase;
             letter-spacing: 0.5rem;
             font-weight: 600;
             font-size: 12rem;
-        }
-
-        & > [data-slot="prefix"],
-        & > [data-slot="suffix"] {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: max-content;
-            padding: 8rem;
+            padding: 6rem 20rem;
         }
     `}
 `;

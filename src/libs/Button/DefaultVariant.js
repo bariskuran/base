@@ -19,7 +19,7 @@ export const DefaultVariant = styled.div`
         $isActivated,
         // $isPending,
         // $bgColor,
-        $hoverBgColor,
+        // $hoverBgColor,
         // $activeBgColor,
         // $color,
         // $prefixBgColor,
@@ -36,12 +36,10 @@ export const DefaultVariant = styled.div`
         all: unset;
         display: flex;
         transition: all 0.2s;
-        cursor: pointer;
         border-radius: 5rem;
 
         ${$isHovered &&
         css`
-            background: ${$hoverBgColor} !important;
             transform: translateY(-3rem);
         `}
 
@@ -51,28 +49,25 @@ export const DefaultVariant = styled.div`
         `}
 
         & > [data-slot="label"] {
-            /* ${!$isJustIcon &&
+            ${!$isJustIcon &&
             css`
                 min-width: 75rem;
-            `} */
+            `}
 
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 6rem;
+            padding: 6rem 20rem;
             text-transform: uppercase;
             letter-spacing: 0.5rem;
             font-weight: 600;
             font-size: 12rem;
+            min-height: 20rem;
+            min-width: 20rem;
         }
 
-        & > [data-slot="prefix"],
-        & > [data-slot="suffix"] {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: max-content;
-            padding: 6rem;
-        }
+        /* & > [data-slot="prefix"],
+        & > [data-slot="suffix"],
+        & > [data-slot="centeredIcon"] {} */
     `}
 `;

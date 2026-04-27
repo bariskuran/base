@@ -16,9 +16,9 @@ const Block = ({ title, description, code, example, lastBlock }) => {
     return (
         <S.container $lastBlock={lastBlock}>
             <S.titleArea>
-                <Typo.h5 selfAlign="right" margin="0 0 10rem 0" fitContent balance>
+                <Typo.h6 selfAlign="right" margin="0 0 10rem 0" fitContent balance>
                     {title}
-                </Typo.h5>
+                </Typo.h6>
                 {enableAjax && (
                     <S.ajaxArea>
                         <Button.underline
@@ -31,14 +31,16 @@ const Block = ({ title, description, code, example, lastBlock }) => {
                             icon={{
                                 icon: "search",
                                 width: 14,
-                                onActiveColor: "primary",
+                                activeColor: "primary",
+                                disablePulseEffect: true,
                             }}
                         />
                         <Button.underline
                             icon={{
                                 icon: "code",
                                 width: 14,
-                                onActiveColor: "primary",
+                                activeColor: "primary",
+                                disablePulseEffect: true,
                             }}
                             onClick={() =>
                                 setLocal((s) => {

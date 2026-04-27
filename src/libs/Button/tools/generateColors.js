@@ -4,7 +4,68 @@ import { colorAlpha } from "../../colorAlpha";
 import { colorTinter } from "../../colorTinter";
 import { byPath } from "../../byPath";
 
-export const generateColors = ({
+const bareHex = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+
+const resolvePathOrRaw = (theme, v) => {
+    if (v == null || v === "") return null;
+    const raw = byPath.get(theme, v) || theme[v] || v;
+    if (typeof raw === "string") {
+        const t = raw.trim();
+        if (bareHex.test(t) && !t.startsWith("#")) return `#${t.replace(/^#/, "")}`;
+    }
+    return raw;
+};
+
+const getInteractiveRate = (baseRate, luminanceValue, type = "hover") => {
+    if (typeof luminanceValue !== "number") {
+        return type === "active" ? baseRate * 2 : baseRate;
+    }
+    const base = type === "active" ? baseRate * 2 : baseRate;
+    const multiplier = luminanceValue < 0.5 ? 1 + (0.5 - luminanceValue) * 2.4 : 1;
+    return Math.min(100, base * multiplier);
+};
+
+const contrastFromTheme = (theme) => {
+    const isForegroundLight = colorConverter(theme.foreground).luminance >= 0.5;
+    return {
+        lightColor: isForegroundLight ? theme.foreground : theme.background,
+        darkColor: isForegroundLight ? theme.background : theme.foreground,
+    };
+};
+
+const isForegroundLightGlobal = (theme) => colorConverter(theme.foreground).luminance >= 0.5;
+
+const textForSolidBg = (theme, textToken, baseFallbackHex) => {
+    const resolved = resolvePathOrRaw(theme, textToken);
+    if (resolved) return resolved;
+    if (!baseFallbackHex) {
+        const { lightColor, darkColor } = contrastFromTheme(theme);
+        return isForegroundLightGlobal(theme) ? darkColor : lightColor;
+    }
+    const f = colorConverter(baseFallbackHex);
+    if (!f || typeof f.luminance !== "number") {
+        const { lightColor, darkColor } = contrastFromTheme(theme);
+        return isForegroundLightGlobal(theme) ? darkColor : lightColor;
+    }
+    const isLight = f.luminance >= 0.5;
+    const { lightColor, darkColor } = contrastFromTheme(theme);
+    return isLight ? darkColor : lightColor;
+};
+
+const isTransparentSurface = (v) => {
+    if (v == null) return true;
+    if (typeof v === "string" && v.trim().toLowerCase() === "transparent") return true;
+    const f = colorConverter(v);
+    if (!f) return true;
+    const a = f.rgbaArray?.[3];
+    if (typeof a === "number" && a < 0.02) return true;
+    return false;
+};
+
+/**
+ * Tüm default / hover / active yüzey + metin setleri. Icon, label vb. için toplu kullanılır.
+ */
+export const getButtonColorPalette = ({
     theme,
     primary,
     secondary,
@@ -12,6 +73,10 @@ export const generateColors = ({
     color,
     hoverBgColor,
     activeBgColor,
+    hoverColor,
+    activeColor,
+    pendingBgColor,
+    pendingColor,
     alphaRate = 10,
     outlined = false,
 }) => {
@@ -20,7 +85,7 @@ export const generateColors = ({
         : secondary
           ? theme.secondary
           : bgColor
-            ? byPath.get(theme, bgColor) || theme[bgColor] || bgColor
+            ? resolvePathOrRaw(theme, bgColor) || bgColor
             : theme.foreground || colorAlpha("black", 0.8);
 
     const bg1Formats = colorConverter(selectedBgColor);
@@ -31,26 +96,12 @@ export const generateColors = ({
     const toneFn = isLight ? colorShader : colorTinter;
     const inverseToneFn = isLight ? colorTinter : colorShader;
 
-    const getInteractiveRate = (baseRate, luminanceValue, type = "hover") => {
-        if (typeof luminanceValue !== "number") {
-            return type === "active" ? baseRate * 2 : baseRate;
-        }
-
-        const base = type === "active" ? baseRate * 2 : baseRate;
-        const multiplier = luminanceValue < 0.5 ? 1 + (0.5 - luminanceValue) * 2.4 : 1;
-
-        return Math.min(100, base * multiplier);
-    };
-
     const hoverRate = getInteractiveRate(alphaRate, luminance, "hover");
     const activeRate = getInteractiveRate(alphaRate, luminance, "active");
 
-    const resolvedHoverBg = hoverBgColor
-        ? byPath.get(theme, hoverBgColor) || theme[hoverBgColor] || hoverBgColor
-        : null;
-    const resolvedActiveBg = activeBgColor
-        ? byPath.get(theme, activeBgColor) || theme[activeBgColor] || activeBgColor
-        : null;
+    const resolvedHoverBg = resolvePathOrRaw(theme, hoverBgColor);
+    const resolvedActiveBg = resolvePathOrRaw(theme, activeBgColor);
+    const resolvedPendingBg = resolvePathOrRaw(theme, pendingBgColor);
 
     const normalBg1 = selectedHex8;
     const normalBg2 = resolvedHoverBg || toneFn(selectedHex8, hoverRate);
@@ -59,21 +110,108 @@ export const generateColors = ({
     const inverse1 = inverseToneFn(selectedHex8, hoverRate);
     const inverse2 = inverseToneFn(selectedHex8, activeRate);
 
-    const isForegroundLight = colorConverter(theme.foreground).luminance >= 0.5;
-    const lightColor = isForegroundLight ? theme.foreground : theme.background;
-    const darkColor = isForegroundLight ? theme.background : theme.foreground;
-    const normalColor = color || (isLight ? darkColor : lightColor);
+    const solidTextFallback = (stateBg) =>
+        isTransparentSurface(stateBg) ? textForSolidBg(theme, null, normalBg1) : textForSolidBg(theme, null, stateBg);
 
     if (outlined) {
         const overlayBase = isLight ? "#ffffff" : "#000000";
         const outlinedBg1 = "transparent";
         const outlinedBg2 = resolvedHoverBg || colorAlpha(overlayBase, hoverRate / 100);
         const outlinedBg3 = resolvedActiveBg || colorAlpha(overlayBase, activeRate / 100);
-        const outlinedColor = color || selectedBgColor;
+        const baseLabel = resolvePathOrRaw(theme, color) || selectedBgColor;
 
-        console.log(hoverBgColor, resolvedHoverBg, outlinedBg1, outlinedBg2);
-        return [outlinedBg1, outlinedBg2, outlinedBg3, outlinedColor, inverse1, inverse2];
+        return {
+            default: {
+                bg: outlinedBg1,
+                color: resolvePathOrRaw(theme, color) || selectedBgColor,
+            },
+            hover: {
+                bg: outlinedBg2,
+                color:
+                    resolvePathOrRaw(theme, hoverColor) || resolvePathOrRaw(theme, color) || baseLabel,
+            },
+            active: {
+                bg: outlinedBg3,
+                color:
+                    resolvePathOrRaw(theme, activeColor) || resolvePathOrRaw(theme, color) || baseLabel,
+            },
+            pending: {
+                bg: resolvedPendingBg || outlinedBg2,
+                color:
+                    resolvePathOrRaw(theme, pendingColor) ||
+                    resolvePathOrRaw(theme, color) ||
+                    baseLabel,
+            },
+            inverse1,
+            inverse2,
+        };
     }
 
-    return [normalBg1, normalBg2, normalBg3, normalColor, inverse1, inverse2];
+    const pendingBgSolid = resolvedPendingBg || normalBg2;
+
+    return {
+        default: {
+            bg: normalBg1,
+            color: textForSolidBg(theme, color, normalBg1),
+        },
+        hover: {
+            bg: normalBg2,
+            color:
+                resolvePathOrRaw(theme, hoverColor) || resolvePathOrRaw(theme, color) || solidTextFallback(normalBg2),
+        },
+        active: {
+            bg: normalBg3,
+            color:
+                resolvePathOrRaw(theme, activeColor) ||
+                resolvePathOrRaw(theme, color) ||
+                solidTextFallback(normalBg3),
+        },
+        pending: {
+            bg: pendingBgSolid,
+            color:
+                resolvePathOrRaw(theme, pendingColor) ||
+                resolvePathOrRaw(theme, color) ||
+                solidTextFallback(pendingBgSolid),
+        },
+        inverse1,
+        inverse2,
+    };
+};
+
+export const resolveButtonColors = ({
+    theme,
+    primary,
+    secondary,
+    bgColor,
+    color,
+    hoverBgColor,
+    activeBgColor,
+    hoverColor,
+    activeColor,
+    alphaRate = 10,
+    outlined = false,
+    isHovered,
+    isActivated,
+}) => {
+    const palette = getButtonColorPalette({
+        theme,
+        primary,
+        secondary,
+        bgColor,
+        color,
+        hoverBgColor,
+        activeBgColor,
+        hoverColor,
+        activeColor,
+        alphaRate,
+        outlined,
+    });
+    const interaction = isActivated ? "active" : isHovered ? "hover" : "default";
+    const { bg, color: c } = palette[interaction];
+    return {
+        bg,
+        color: c,
+        inverse1: palette.inverse1,
+        inverse2: palette.inverse2,
+    };
 };
