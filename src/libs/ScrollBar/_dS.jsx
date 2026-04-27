@@ -283,7 +283,12 @@ const X = () => {
                         <Flex {...flexProps} id={SOURCE_BY_ID}>
                             {longText}
                         </Flex>
-                        <Flex width={150} height={150} bgColor="aliceblue">
+                        <Flex
+                            width={150}
+                            height={150}
+                            bgColor="aliceblue"
+                            aria-label="source by ref"
+                        >
                             <ScrollBar sourceByRef={flexRef1} />
                         </Flex>
                         <Flex width={20} height={200}>

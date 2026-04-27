@@ -732,6 +732,7 @@ const useVars = (p) => {
             overlayHost,
             normalizedScrollSource,
             isWindowLike,
+            hasExternalSource,
             hostRect,
             anchorRef,
             xTruckRef,

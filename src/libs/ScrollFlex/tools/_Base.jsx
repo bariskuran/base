@@ -3,12 +3,10 @@ import useVars from "./useVars";
 import { ScrollBar } from "../../ScrollBar";
 import ContextProvider from "../../ContextProviderForUiComponents";
 import { S } from "./_styled.js";
-import { useRef } from "react";
 
 const Context = createContext(null);
 
 export const Base = ({ children, ...p }) => {
-    const sourceByRef = useRef(null);
     const {
         Variant,
         flexProps,
@@ -33,10 +31,8 @@ export const Base = ({ children, ...p }) => {
                     $gutterBottom={gutterBottom}
                     $gutterLeft={gutterLeft}
                 >
-                    <S.content style={contentPaddingStyle} ref={sourceByRef}>
-                        {children}
-                    </S.content>
-                    <ScrollBar {...scrollBarProps} sourceByRef={sourceByRef} />
+                    <S.content style={contentPaddingStyle}>{children}</S.content>
+                    <ScrollBar {...scrollBarProps} />
                 </S.shell>
             </Variant>
         </ContextProvider>

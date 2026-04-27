@@ -30,6 +30,7 @@ const Bar = ({
     thumbPosition,
     barPosition,
     mirror,
+    hasExternalSource,
 }) => {
     const docEl = typeof document !== "undefined" ? document.documentElement : null;
     const viewportWidth =
@@ -87,6 +88,9 @@ const Bar = ({
               left: trackStartOffset + "px",
               [mirror ? "top" : "bottom"]: edgeMargin + "px",
           };
+    const externalPositionStyle = {
+        position: "relative",
+    };
 
     const shouldUseMinThumb = exactThumbSize == null && !fillMode;
     const verticalThumbTransform = enableThumbScale
@@ -125,7 +129,11 @@ const Bar = ({
             $disableOpacityEffect={disableOpacityEffect}
             style={{
                 ...baseStyle,
-                ...(isWindowLike ? windowLikePositionStyle : hostLikePositionStyle),
+                ...(isWindowLike
+                    ? windowLikePositionStyle
+                    : hasExternalSource
+                      ? externalPositionStyle
+                      : hostLikePositionStyle),
                 zIndex: 9999999999,
                 display: "flex",
                 justifyContent: "flex-start",
@@ -204,6 +212,7 @@ export const Base = (p) => {
         handleOnMouseEnter,
         handleOnMouseLeave,
         mirror,
+        hasExternalSource,
     } = useVars(p);
 
     const bars = (
@@ -237,6 +246,7 @@ export const Base = (p) => {
                     thumbPosition={y.thumbPosition}
                     barPosition={yBarPosition}
                     mirror={mirror}
+                    hasExternalSource={hasExternalSource}
                 />
             )}
 
@@ -269,13 +279,14 @@ export const Base = (p) => {
                     thumbPosition={x.thumbPosition}
                     barPosition={xBarPosition}
                     mirror={mirror}
+                    hasExternalSource={hasExternalSource}
                 />
             )}
         </>
     );
 
     const overlay =
-        !isWindowLike && overlayHost && hostRect
+        !isWindowLike && !hasExternalSource && overlayHost && hostRect
             ? createPortal(
                   <div
                       data-scrollbar-overlay=""
@@ -299,7 +310,7 @@ export const Base = (p) => {
     return (
         <>
             <S.anchor ref={anchorRef} />
-            {isWindowLike ? bars : overlay}
+            {isWindowLike ? bars : hasExternalSource ? bars : overlay}
         </>
     );
 };
