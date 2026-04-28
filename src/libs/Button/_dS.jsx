@@ -66,7 +66,7 @@ const X = () => {
             releasedOn="1.0.0"
             description="Button is combination of RRD's <Link>, HTML's<a> and <button> elements. It automatically detects the content and renders the appropriate element."
         >
-            {/* <Ds.block
+            <Ds.block
                 description="Keep in mind that not all features work for all variants."
                 example={
                     <Flex xAlign="start" gap={10}>
@@ -90,7 +90,7 @@ const X = () => {
                     </Flex>
                 }
             />
-            <Ds.block
+            {/* <Ds.block
                 title="Basic Usage"
                 code={`import { Button } from "${SYS.basePath}";
 
@@ -308,7 +308,7 @@ const X = () => {
                         </div>
                     </Flex>
                 }
-            /> */}
+            /> 
             <Ds.block
                 title="Disabling Cooldown and onHold"
                 description={`There are 2 automatic behaviors Buttons display. You can disable them using the skipClickCooldown and skipOnClickHold props.
@@ -316,7 +316,10 @@ const X = () => {
                     cooldown prevents the Button from being clicked multiple times in quick succession (about ~1 second). onHold starts a show-on-click timer (about ~2 seconds) for the activeLabel after the Button is clicked.You can change these durations with the clickCooldownMs and onClickHoldMs props.`}
                 code={`import { Button } from "${SYS.basePath}";
                 
-                        <ButtonVaria`}
+                        <Button onClick={triggerNotifier} label="both enabled" />
+                        <Button onClick={triggerNotifier} label="cooldown disabled" skipClickCooldown />
+                        <Button onClick={triggerNotifier} label="onHold disabled" skipOnClickHold />
+                        <Button onClick={triggerNotifier} label="both disabled" skipClickCooldown skipOnClickHold />`}
                 example={
                     <Flex xAlign="start" gap={10}>
                         <ButtonVariant onClick={triggerNotifier} label="both enabled" />
@@ -335,6 +338,116 @@ const X = () => {
                             label="both disabled"
                             skipClickCooldown
                             skipOnClickHold
+                        />
+                    </Flex>
+                }
+            /> 
+            <Ds.block
+                title="Disabling Button"
+                description="Disable entire button function via disabled prop."
+                code={`import { Button } from "${SYS.basePath}";
+                
+                        <Button onClick={triggerNotifier} label="disabled" disabled />`}
+                example={
+                    <Flex xAlign="start" gap={10}>
+                        <ButtonVariant onClick={triggerNotifier} label="disabled" disabled />
+                    </Flex>
+                }
+            /> 
+            <Ds.block
+                title="Resizing Button"
+                description="You can resize the Button using the size prop. The value is a percentage of the original size."
+                code={`import { Button } from "${SYS.basePath}";
+                
+                        <Button onClick={triggerNotifier} label="Regular" size={100} />
+                        <Button onClick={triggerNotifier} label="Smaller" size={80} />
+                        <Button onClick={triggerNotifier} label="Larger" size={120} />`}
+                example={
+                    <Flex xAlign="start" gap={10}>
+                        <ButtonVariant onClick={triggerNotifier} label="Regular" size={100} />
+                        <ButtonVariant onClick={triggerNotifier} label="Smaller" size={80} />
+                        <ButtonVariant onClick={triggerNotifier} label="Larger" size={120} />
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Outlined Button"
+                description="When 'outlined' prop is enabled, Button uses bgColor as border color."
+                code={`import { Button } from "${SYS.basePath}";
+                
+                        <ButtonVariant label="button" onClick={onClick} prefix={{ icon: "abstract2" }} outlined />
+                        <ButtonVariant label="button" onClick={onClick} suffix={{ icon: "abstract2" }} outlined />
+                        <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} outlined />`}
+                example={
+                    <Flex xAlign="start" gap={10}>
+                        <ButtonVariant
+                            label="button"
+                            onClick={onClick}
+                            prefix={{ icon: "abstract2" }}
+                            outlined
+                        />
+                        <ButtonVariant
+                            label="button"
+                            onClick={onClick}
+                            suffix={{ icon: "abstract2" }}
+                            outlined
+                        />
+                        <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} outlined />
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Integrated PopTip"
+                description={
+                    <>
+                        Enables integrated PopTip component. You can specify the tooltip content and
+                        configuration using the popTip+floatingUi props.
+                        <br />
+                        <br />
+                        Check out{" "}
+                        <Button.string to="/design-system/floatingUi" label="FloatingUi" /> for more
+                        details.
+                    </>
+                }
+                code={`import { Button } from "${SYS.basePath}";
+                
+                        <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} popTip="PopTip enabled" />
+                        <Button onClick={onClick} icon={{ icon: "abstract2" }} popTip={{ content: "PopTip enabled", bgColor: "success" }} />`}
+                example={
+                    <Flex xAlign="start" gap={10}>
+                        <ButtonVariant
+                            label="button"
+                            onClick={onClick}
+                            prefix={{ icon: "abstract2" }}
+                            popTip="PopTip enabled"
+                        />
+                        <ButtonVariant
+                            onClick={onClick}
+                            icon={{ icon: "abstract2" }}
+                            popTip={{ content: "PopTip enabled", bgColor: "success" }}
+                        />
+                    </Flex>
+                }
+            />*/}
+            <Ds.block
+                title="Full Width"
+                description="When 'fullWidth' prop is enabled, Button takes the full width of its container. It can be boolean and for the text alignment, it can be 'left', 'center' or 'right'."
+                code={`import { Button } from "${SYS.basePath}";
+                
+                        <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} popTip="PopTip enabled" />
+                        <Button onClick={onClick} icon={{ icon: "abstract2" }} popTip={{ content: "PopTip enabled", bgColor: "success" }} />`}
+                example={
+                    <Flex xAlign="start" gap={10}>
+                        <ButtonVariant
+                            label="button"
+                            onClick={onClick}
+                            prefix={{ icon: "abstract2" }}
+                            fullWidth
+                        />
+                        <ButtonVariant
+                            onClick={onClick}
+                            icon={{ icon: "abstract2" }}
+                            fullWidth="right"
                         />
                     </Flex>
                 }

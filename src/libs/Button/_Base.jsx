@@ -1,3 +1,4 @@
+import { isValidElement } from "react";
 import { S } from "./tools/_styled.js";
 import { useVars } from "./tools/useVars.js";
 import { IconArea } from "./tools/IconArea.jsx";
@@ -29,12 +30,13 @@ export const Base = (props = {}) => {
         fullWidth,
         iconPalette,
         isPending,
+        disabled,
     } = useVars(props);
 
     /* RETURN */
     return (
         <PopTipWrapper popTip={popTip}>
-            <ScaleWrapper size={size} isMatch={isMatch} fullWidth={fullWidth}>
+            <ScaleWrapper size={size} isMatch={isMatch} fullWidth={fullWidth} disabled={disabled}>
                 <Variant {...variantProps}>
                     <IconArea
                         areaName="prefix"
@@ -100,7 +102,16 @@ export const Base = (props = {}) => {
 
 const PopTipWrapper = ({ popTip, children }) => {
     if (!popTip) return children;
-    return <PopTip content={popTip}>{children}</PopTip>;
+    if (Array.isArray(popTip)) return children;
+
+    if (isValidElement(popTip) || typeof popTip === "string") {
+        return <PopTip content={popTip}>{children}</PopTip>;
+    }
+
+    if (typeof popTip === "object") {
+        return <PopTip {...popTip}>{children}</PopTip>;
+    }
+    return null;
 };
 
 const LabelLayer = ({ a: [visible, name, children, condition] = [], isJustIcon }) =>

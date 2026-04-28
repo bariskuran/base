@@ -53,7 +53,7 @@ export const S = {
         position: relative;
         display: inline-block;
         vertical-align: middle;
-        cursor: pointer;
+        cursor: ${({ $disabled }) => ($disabled ? "default" : "pointer")};
 
         ${({ $size }) =>
             $size &&

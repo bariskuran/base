@@ -71,13 +71,14 @@ export const useVars = ({
     const navigation = useNavigation();
     const isPending = navigation.state === "loading" || !!pendingManually;
 
-    const { setLocal, showOnClickValues, isHover, clickBlocker, isActive, isPressed } = baseStore.useLocal({
-        showOnClickValues: false,
-        isHover: false,
-        isActive: false,
-        isPressed: false,
-        clickBlocker: false,
-    });
+    const { setLocal, showOnClickValues, isHover, clickBlocker, isActive, isPressed } =
+        baseStore.useLocal({
+            showOnClickValues: false,
+            isHover: false,
+            isActive: false,
+            isPressed: false,
+            clickBlocker: false,
+        });
 
     const getTimerBaseName = ({ label, prefix, suffix, icon }) =>
         label || prefix?.icon || suffix?.icon || icon?.icon || icon || "unknown";
@@ -283,7 +284,7 @@ export const useVars = ({
                 ? {
                       opacity: 0.5,
                       pointerEvents: "none",
-                      filter: "blur(2rem)",
+                      filter: "blur(1.5rem)",
                       transition: "none",
                   }
                 : {}),
