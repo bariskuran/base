@@ -19,6 +19,7 @@ export const sitemap = [
     ["<FloatingUi>", "floatingUi", l(() => import("../FloatingUi/_dS"))],
     ["<PopTip>", "popTip", l(() => import("../PopTip/_dS"))],
     //
+    /* yeni gelenler buraya eklenecek. */
 ];
 
 export const designSystemRoutes = [

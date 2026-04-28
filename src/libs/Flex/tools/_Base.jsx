@@ -25,6 +25,7 @@ export const Base = ({
         width,
         height,
         flex,
+        flexFlow,
         flexGrow,
         flexShrink,
         flexBasis,
@@ -38,6 +39,9 @@ export const Base = ({
         rowGap,
         columnGap,
         alignSelf,
+        placeContent,
+        placeItems,
+        placeSelf,
         inProps,
         overflow,
         overflowX,
@@ -66,6 +70,7 @@ export const Base = ({
             $alignSelf={alignSelf}
             $inProps={inProps}
             $flex={flex}
+            $flexFlow={flexFlow}
             $flexGrow={flexGrow}
             $flexShrink={flexShrink}
             $flexBasis={flexBasis}
@@ -76,6 +81,9 @@ export const Base = ({
             $overflowX={overflowX}
             $overflowY={overflowY}
             $alignContent={alignContent}
+            $placeContent={placeContent}
+            $placeItems={placeItems}
+            $placeSelf={placeSelf}
             $wrap={wrap}
             $rowGap={rowGap}
             $columnGap={columnGap}

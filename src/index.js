@@ -159,7 +159,6 @@ export { columnTypes, COLUMN_SIZES } from "./libs/columnTypes";
 export { FlexTestPage } from "./libs/Flex/tools/FlexTestPage";
 export { ButtonListTest } from "./libs/ButtonList/ButtonListTest";
 export { BaseFormTest } from "./libs/@baseForm/BaseFormTest";
-export { PopTipTest } from "./libs/PopTip/PopTipTest";
 export { PopoverTest } from "./libs/Popover/PopoverTest";
 export { TypoTest } from "./libs/Typography/TypoTest";
 export { NotifierTest } from "./libs/NotifierListener/NotifierTest";
