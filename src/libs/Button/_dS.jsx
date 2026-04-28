@@ -66,7 +66,7 @@ const X = () => {
             releasedOn="1.0.0"
             description="Button is combination of RRD's <Link>, HTML's<a> and <button> elements. It automatically detects the content and renders the appropriate element."
         >
-            <Ds.block
+            {/* <Ds.block
                 description="Keep in mind that not all features work for all variants."
                 example={
                     <Flex xAlign="start" gap={10}>
@@ -201,13 +201,11 @@ const X = () => {
             />
             <Ds.block
                 title="Hover & Active & Pending Management"
-                description={`Our Buttons make strong use of the CSS hover and active states. In addition, with the hoverManually and activeManually props, you can control the hover and active behavior of the Button programmatically from outside the component.
+                description={`Our Buttons make strong use of the CSS hover and active states. In addition, with the hoverManually and activeManually props, you can control the hover and active behavior of the Button programmatically from outside the component. By using different variations, you can achieve a range of visual effects.
                     
-                    By using different variations, you can achieve a range of visual effects.
-                    
-                    Note: If you use hoverLabel or activeLabel alongside label, the UI will size itself to the longest text. This prevents layout shifting as labels change, but for best results, try to keep the length of these texts similar.
-                    
-                    The Button will be activated automatically when the route matches. To disable it, use the disableUseMatch prop.
+                    Note: If you use hoverLabel or activeLabel alongside label, the UI will size itself to the longest text. This prevents layout shifting as labels change, but for best results, try to keep the length of these texts similar. The Button will be activated automatically when the route matches. To disable it, use the disableUseMatch prop.
+
+                    In the pending state, the icon rotates 360 degrees. It is recommended to choose icons that are suitable for this type of animation.
                     `}
                 code={`import { Button } from "${SYS.basePath}";
                 
@@ -310,21 +308,18 @@ const X = () => {
                         </div>
                     </Flex>
                 }
-            />
+            /> */}
             <Ds.block
                 title="Disabling Cooldown and onHold"
-                description={`There are 2 automatic behaviors Buttons display. You can disable them using the skipClickCooldown and skipShowOnClickHold props.
+                description={`There are 2 automatic behaviors Buttons display. You can disable them using the skipClickCooldown and skipOnClickHold props.
                     
-                    cooldown prevents the Button from being clicked multiple times in quick succession (about ~1 second). onHold starts a show-on-click timer (about ~2 seconds) for the activeLabel after the Button is clicked.You can change these durations with the clickCooldownMs and showOnClickHoldMs props.`}
+                    cooldown prevents the Button from being clicked multiple times in quick succession (about ~1 second). onHold starts a show-on-click timer (about ~2 seconds) for the activeLabel after the Button is clicked.You can change these durations with the clickCooldownMs and onClickHoldMs props.`}
                 code={`import { Button } from "${SYS.basePath}";
                 
                         <ButtonVaria`}
                 example={
                     <Flex xAlign="start" gap={10}>
-                        <ButtonVariant
-                            onClick={triggerNotifier}
-                            label="cooldown & onHold enabled"
-                        />
+                        <ButtonVariant onClick={triggerNotifier} label="both enabled" />
                         <ButtonVariant
                             onClick={triggerNotifier}
                             label="cooldown disabled"
@@ -333,13 +328,13 @@ const X = () => {
                         <ButtonVariant
                             onClick={triggerNotifier}
                             label="onHold disabled"
-                            skipShowOnClickHold
+                            skipOnClickHold
                         />
                         <ButtonVariant
                             onClick={triggerNotifier}
                             label="both disabled"
                             skipClickCooldown
-                            skipShowOnClickHold
+                            skipOnClickHold
                         />
                     </Flex>
                 }
@@ -360,9 +355,9 @@ const X = () => {
                         required: false,
                         defaultValue: "false",
                     },
-                    skipShowOnClickHold: {
+                    skipOnClickHold: {
                         description:
-                            "Tıklamada activeLabel için show-on-click zamanlayıcısını başlatmaz (süre: showOnClickHoldMs).",
+                            "Tıklamada activeLabel için show-on-click zamanlayıcısını başlatmaz (süre: onClickHoldMs).",
                         type: "boolean",
                         required: false,
                         defaultValue: "false",
@@ -374,7 +369,7 @@ const X = () => {
                         required: false,
                         defaultValue: "1000",
                     },
-                    showOnClickHoldMs: {
+                    onClickHoldMs: {
                         description:
                             "Tıklamadan sonra activeLabel / show-on-click durumunun sürdürülme süresi (milisaniye). Varsayılan 2000.",
                         type: "number",

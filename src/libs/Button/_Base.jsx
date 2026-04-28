@@ -63,7 +63,12 @@ export const Base = (props = {}) => {
                                     isJustIcon={isJustIcon}
                                 />
                                 <LabelLayer
-                                    a={[showPendingLabel, "label-pending", pendingLabel, pendingLabel]}
+                                    a={[
+                                        showPendingLabel,
+                                        "label-pending",
+                                        pendingLabel,
+                                        pendingLabel,
+                                    ]}
                                     isJustIcon={isJustIcon}
                                 />
                             </S.LabelStack>

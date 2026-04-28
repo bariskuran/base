@@ -50,9 +50,9 @@ export const useVars = ({
     fullWidth, // left - right da olabilir.
     pendingManually,
     skipClickCooldown,
-    skipShowOnClickHold,
+    skipOnClickHold,
     clickCooldownMs,
-    showOnClickHoldMs,
+    onClickHoldMs,
 }) => {
     const navigate = useNavigate();
     const url = href || to || urlProp;
@@ -71,18 +71,11 @@ export const useVars = ({
     const navigation = useNavigation();
     const isPending = navigation.state === "loading" || !!pendingManually;
 
-    const {
-        setLocal,
-        showOnClickValues,
-        isHover,
-        clickBlocker,
-        isActive,
-        isActivated: isPointerDown,
-    } = baseStore.useLocal({
+    const { setLocal, showOnClickValues, isHover, clickBlocker, isActive, isPressed } = baseStore.useLocal({
         showOnClickValues: false,
         isHover: false,
         isActive: false,
-        isActivated: false,
+        isPressed: false,
         clickBlocker: false,
     });
 
@@ -98,7 +91,7 @@ export const useVars = ({
             clickBlockerStart,
         },
     ) => {
-        if (!skipShowOnClickHold && !isShowOnClickValuesRunning) showOnClickValuesStart?.();
+        if (!skipOnClickHold && !isShowOnClickValuesRunning) showOnClickValuesStart?.();
         if (!skipClickCooldown && !isClickBlockerRunning) clickBlockerStart?.();
         onClick?.(e);
 
@@ -128,7 +121,7 @@ export const useVars = ({
         runAction,
         getTimerBaseName,
         clickCooldownMs,
-        showOnClickHoldMs,
+        onClickHoldMs,
     });
 
     const handleClick = (e) => {
@@ -155,10 +148,10 @@ export const useVars = ({
 
     const isActivated =
         (activeManually ||
+            (skipOnClickHold && isPressed) ||
             timers.isShowOnClickValuesRunning ||
             isMatch ||
             isActive ||
-            isPointerDown ||
             timers.isDelayRunning) &&
         !disabled &&
         !isPending;
@@ -171,8 +164,7 @@ export const useVars = ({
         timers.showOnClickValuesStop();
     }, [isMatch, isActive, activeManually]);
 
-    const isHovered =
-        (hoverManually || isHover) && !disabled && !isActivated && !isPending;
+    const isHovered = (hoverManually || isHover) && !disabled && !isPending;
     const isJustIcon = !label && icon;
 
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
@@ -254,24 +246,24 @@ export const useVars = ({
 
         onPointerDown: () =>
             setLocal((s) => {
-                s.isActivated = true;
+                s.isPressed = true;
             }),
 
         onPointerUp: () =>
             setLocal((s) => {
-                s.isActivated = false;
+                s.isPressed = false;
             }),
 
         onPointerLeave: () =>
             setLocal((s) => {
                 s.isHover = false;
-                s.isActivated = false;
+                s.isPressed = false;
             }),
 
         onPointerCancel: () =>
             setLocal((s) => {
-                s.isActivated = false;
                 s.isHover = false;
+                s.isPressed = false;
             }),
 
         onPointerEnter: () =>
@@ -301,8 +293,7 @@ export const useVars = ({
     const showPendingLabel = isPending && !disabled && pendingLabel != null;
     const showActiveLabel =
         !showPendingLabel && (showOnClickValues || isActivated) && activeLabel != null;
-    const showHoverLabel =
-        !showPendingLabel && !showActiveLabel && isHovered && hoverLabel != null;
+    const showHoverLabel = !showPendingLabel && !showActiveLabel && isHovered && hoverLabel != null;
     const showDefaultLabel = !showPendingLabel && !showActiveLabel && !showHoverLabel;
 
     return useExportData(
@@ -376,9 +367,9 @@ export const useVars = ({
             iconPalette,
             pendingManually,
             skipClickCooldown,
-            skipShowOnClickHold,
+            skipOnClickHold,
             clickCooldownMs,
-            showOnClickHoldMs,
+            onClickHoldMs,
         },
         {
             showOnClickValues,

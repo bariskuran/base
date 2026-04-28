@@ -21,11 +21,11 @@ export const useTimers = (p) => {
         runAction,
         getTimerBaseName,
         clickCooldownMs,
-        showOnClickHoldMs,
+        onClickHoldMs,
     } = p || {};
 
     const cooldownMs = normalizeTimerMs(clickCooldownMs, 1000);
-    const showOnClickHoldDurationMs = normalizeTimerMs(showOnClickHoldMs, 2000);
+    const showOnClickHoldDurationMs = normalizeTimerMs(onClickHoldMs, 2000);
 
     const timerBaseName = useMemo(
         () => getTimerBaseName({ label, prefix, suffix, icon }),
