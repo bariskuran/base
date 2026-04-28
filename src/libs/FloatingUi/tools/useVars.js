@@ -83,8 +83,10 @@ const useVars = (p) => {
             setLocal,
             alignXFromUser,
             alignYFromUser,
+            currentAlignX: alignX,
+            currentAlignY: alignY,
         });
-    }, [status, setLocal, alignXFromUser, alignYFromUser]);
+    }, [status, setLocal, alignXFromUser, alignYFromUser, alignX, alignY]);
 
     /**
      *

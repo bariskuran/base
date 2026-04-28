@@ -41,11 +41,14 @@ const getFloatingRectForMeasure = (floatingEl, viewportOffset = 20) => {
 const getPosition = ({
     gap = 20,
     viewportOffset = 20,
+    stickiness = 8,
     childrenRef,
     floatingRef,
     setLocal,
     alignXFromUser,
     alignYFromUser,
+    currentAlignX = "center",
+    currentAlignY = "top",
 } = {}) => {
     const childrenEl = childrenRef?.current;
     const floatingEl = floatingRef?.current;
@@ -87,6 +90,9 @@ const getPosition = ({
 
     const canFitTop = topYViewport >= viewportOffset;
     const canFitBottom = bottomYViewport + floatingRect.height <= viewportHeight - viewportOffset;
+    const canFitTopSticky = topYViewport >= viewportOffset - stickiness;
+    const canFitBottomSticky =
+        bottomYViewport + floatingRect.height <= viewportHeight - viewportOffset + stickiness;
 
     let positionY;
 
@@ -94,6 +100,12 @@ const getPosition = ({
         alignY = "top";
         positionY = topY;
     } else if (alignYFromUser === "bottom" && canFitBottom) {
+        alignY = "bottom";
+        positionY = bottomY;
+    } else if (!alignYFromUser && currentAlignY === "top" && canFitTopSticky) {
+        alignY = "top";
+        positionY = topY;
+    } else if (!alignYFromUser && currentAlignY === "bottom" && canFitBottomSticky) {
         alignY = "bottom";
         positionY = bottomY;
     } else {
@@ -143,6 +155,15 @@ const getPosition = ({
     const canFitRightX =
         rightAlignedXViewport >= viewportOffset &&
         rightAlignedXViewport + floatingRect.width <= viewportWidth - viewportOffset;
+    const canFitCenterXSticky =
+        centerXViewport >= viewportOffset - stickiness &&
+        centerXViewport + floatingRect.width <= viewportWidth - viewportOffset + stickiness;
+    const canFitLeftXSticky =
+        leftAlignedXViewport >= viewportOffset - stickiness &&
+        leftAlignedXViewport + floatingRect.width <= viewportWidth - viewportOffset + stickiness;
+    const canFitRightXSticky =
+        rightAlignedXViewport >= viewportOffset - stickiness &&
+        rightAlignedXViewport + floatingRect.width <= viewportWidth - viewportOffset + stickiness;
 
     let positionX = centerX;
 
@@ -153,6 +174,15 @@ const getPosition = ({
         alignX = "left";
         positionX = leftAlignedX;
     } else if (alignXFromUser === "right" && canFitRightX) {
+        alignX = "right";
+        positionX = rightAlignedX;
+    } else if (!alignXFromUser && currentAlignX === "center" && canFitCenterXSticky) {
+        alignX = "center";
+        positionX = centerX;
+    } else if (!alignXFromUser && currentAlignX === "left" && canFitLeftXSticky) {
+        alignX = "left";
+        positionX = leftAlignedX;
+    } else if (!alignXFromUser && currentAlignX === "right" && canFitRightXSticky) {
         alignX = "right";
         positionX = rightAlignedX;
     } else {

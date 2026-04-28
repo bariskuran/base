@@ -38,7 +38,6 @@ export const useFloatingAutoUpdate = ({ open, referenceEl, floatingEl, onUpdate 
     const frameRef = useRef(null);
     const loopRef = useRef(null);
     const lastRectRef = useRef(null);
-    const lastRunRef = useRef(0);
 
     useLayoutEffect(() => {
         if (!open || !referenceEl || !floatingEl) return;
@@ -46,17 +45,11 @@ export const useFloatingAutoUpdate = ({ open, referenceEl, floatingEl, onUpdate 
         frameRef.current = null;
         loopRef.current = null;
         lastRectRef.current = null;
-        lastRunRef.current = 0;
-
-        const THROTTLE_MS = 80;
 
         const scheduleUpdate = () => {
-            const now = performance.now();
-            if (now - lastRunRef.current < THROTTLE_MS) return;
             if (frameRef.current) return;
             frameRef.current = requestAnimationFrame(() => {
                 frameRef.current = null;
-                lastRunRef.current = performance.now();
                 onUpdate?.();
             });
         };
