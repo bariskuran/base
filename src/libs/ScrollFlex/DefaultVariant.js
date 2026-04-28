@@ -1,8 +1,6 @@
 import styled, { css } from "styled-components";
-import { Flex } from "../Flex";
 
-// export const DefaultVariant = styled.div`
-export const DefaultVariant = styled(Flex)`
+export const DefaultVariant = styled.div`
     ${({ theme, $borderColor }) => {
         const colors = theme.colorGet($borderColor || theme.background);
 

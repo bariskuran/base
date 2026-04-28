@@ -387,7 +387,7 @@ const CodeViewer = ({
                         copyToClipboard(normalizedContent, { addToNotifier: true });
                     }}
                     bgColor="greys.shade15"
-                    prefix={{
+                    icon={{
                         icon: "copy",
                         width: 16,
                         color: "greys.shade30",

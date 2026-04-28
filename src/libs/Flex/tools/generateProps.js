@@ -353,6 +353,41 @@ const generateFlexItemSizing = ({ flex, width, height, parentDirection }) => {
     };
 };
 
+const generateRootFlexSizing = ({
+    flex,
+    width,
+    height,
+    direction,
+    hasExplicitWidth,
+    hasExplicitHeight,
+}) => {
+    const normalizedFlex = flex == null ? undefined : String(flex).trim();
+    if (normalizedFlex) {
+        return {
+            flex: normalizedFlex,
+            width: undefined,
+            height: undefined,
+        };
+    }
+
+    const normalizedWidth = cssNormalizeSize(width);
+    const normalizedHeight = cssNormalizeSize(height);
+    const isColumn = direction === "column" || direction === "column-reverse";
+
+    const autoFlex =
+        isColumn && hasExplicitHeight && height != null
+            ? `0 0 ${normalizedHeight}`
+            : !isColumn && hasExplicitWidth && width != null
+              ? `0 0 ${normalizedWidth}`
+              : undefined;
+
+    return {
+        flex: autoFlex,
+        width: normalizedWidth,
+        height: normalizedHeight,
+    };
+};
+
 const generateInProps = ({
     inCommonProps,
     inProps,
@@ -388,6 +423,8 @@ export const generateProps = ({
     const merged1 = deepMerge(sysDefaults, props);
     const bpOverride = props?.responsive?.[currentBreakpoint] || {};
     const mergedObj = deepMerge(merged1, bpOverride);
+    const hasExplicitWidth = props?.width != null || bpOverride?.width != null;
+    const hasExplicitHeight = props?.height != null || bpOverride?.height != null;
 
     const {
         bgColor,
@@ -410,11 +447,18 @@ export const generateProps = ({
         //
         width,
         height,
+        flexGrow,
+        flexShrink,
+        flexBasis,
+        order,
         align,
         xAlign,
         yAlign,
         gap,
+        rowGap,
+        columnGap,
         alignSelf,
+        alignContent,
         justifyContent,
         justify,
         alignItems,
@@ -422,6 +466,8 @@ export const generateProps = ({
         inCommonProps,
         inProps,
         wrap,
+        overflowX,
+        overflowY,
     } = mergedObj;
 
     const currDirection = generateDirection(direction);
@@ -433,17 +479,24 @@ export const generateProps = ({
               height,
               parentDirection,
           })
-        : {
+        : generateRootFlexSizing({
               flex,
-              width: flex == null ? cssNormalizeSize(width) : undefined,
-              height: flex == null ? cssNormalizeSize(height) : undefined,
-          };
+              width,
+              height,
+              direction: currDirection,
+              hasExplicitWidth,
+              hasExplicitHeight,
+          });
 
     const obj = {
         ...manageColors({ bgColor, color }),
         borderRadius: cssNormalizeSize(borderRadius),
         direction: currDirection,
         flex: baseSizing.flex,
+        flexGrow: flexGrow == null ? undefined : String(flexGrow),
+        flexShrink: flexShrink == null ? undefined : String(flexShrink),
+        flexBasis: cssNormalizeSize(flexBasis),
+        order: order == null ? undefined : String(order),
         padding: generate4DirectionProps([
             padding,
             paddingTop,
@@ -466,7 +519,12 @@ export const generateProps = ({
             alignItems,
         }),
         gap: cssNormalizeSize(gap),
+        rowGap: cssNormalizeSize(rowGap),
+        columnGap: cssNormalizeSize(columnGap),
         alignSelf: generateAlignSelf({ alignSelf }),
+        alignContent: mapAlignItems(alignContent),
+        overflowX,
+        overflowY,
         wrap: normalizeWrap(wrap),
         inProps: generateInProps({
             inCommonProps,
@@ -499,16 +557,25 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "marginBottom",
     "width",
     "height",
+    "flexGrow",
+    "flexShrink",
+    "flexBasis",
+    "order",
     "align",
     "xAlign",
     "yAlign",
     "gap",
+    "rowGap",
+    "columnGap",
     "alignSelf",
+    "alignContent",
     "justifyContent",
     "justify",
     "alignItems",
     "inCommonProps",
     "inProps",
+    "overflowX",
+    "overflowY",
     "wrap",
     "responsive",
     "exportData",

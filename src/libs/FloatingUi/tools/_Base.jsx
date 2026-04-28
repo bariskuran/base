@@ -15,6 +15,7 @@ export const Base = ({ children, content, ...p }) => {
         childrenRef,
         floatingRef,
         bgColor,
+        color,
         isMounted,
         positionX,
         positionY,
@@ -52,6 +53,7 @@ export const Base = ({ children, content, ...p }) => {
                           <Variant
                               ref={floatingRef}
                               $bgColor={bgColor}
+                              $color={color}
                               aria-label="floating-ui"
                               $positionX={positionX}
                               $positionY={positionY}

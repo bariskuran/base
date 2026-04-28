@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components";
-import { Flex } from "../Flex";
 
-export const S = styled(Flex)`
+export const S = styled.div`
     ${({ theme, $disableShadow }) => css`
         ${!$disableShadow &&
         css`

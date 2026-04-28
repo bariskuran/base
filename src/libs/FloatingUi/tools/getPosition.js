@@ -62,9 +62,6 @@ const getPosition = ({
         };
     }
 
-    const scrollX = window.scrollX || window.pageXOffset || 0;
-    const scrollY = window.scrollY || window.pageYOffset || 0;
-
     const childrenRect = childrenEl.getBoundingClientRect();
     const floatingRect = getFloatingRectForMeasure(floatingEl, viewportOffset);
     if (!floatingRect) return;
@@ -85,9 +82,6 @@ const getPosition = ({
     const topYViewport = childrenRect.top - floatingRect.height - gap;
     const bottomYViewport = childrenRect.bottom + gap;
 
-    const topY = topYViewport + scrollY;
-    const bottomY = bottomYViewport + scrollY;
-
     const canFitTop = topYViewport >= viewportOffset;
     const canFitBottom = bottomYViewport + floatingRect.height <= viewportHeight - viewportOffset;
     const canFitTopSticky = topYViewport >= viewportOffset - stickiness;
@@ -98,33 +92,33 @@ const getPosition = ({
 
     if (alignYFromUser === "top" && canFitTop) {
         alignY = "top";
-        positionY = topY;
+        positionY = topYViewport;
     } else if (alignYFromUser === "bottom" && canFitBottom) {
         alignY = "bottom";
-        positionY = bottomY;
+        positionY = bottomYViewport;
     } else if (!alignYFromUser && currentAlignY === "top" && canFitTopSticky) {
         alignY = "top";
-        positionY = topY;
+        positionY = topYViewport;
     } else if (!alignYFromUser && currentAlignY === "bottom" && canFitBottomSticky) {
         alignY = "bottom";
-        positionY = bottomY;
+        positionY = bottomYViewport;
     } else {
         if (canFitTop) {
             alignY = "top";
-            positionY = topY;
+            positionY = topYViewport;
         } else if (canFitBottom) {
             alignY = "bottom";
-            positionY = bottomY;
+            positionY = bottomYViewport;
         } else {
             const topSpace = childrenRect.top - gap;
             const bottomSpace = viewportHeight - childrenRect.bottom - gap;
 
             if (bottomSpace >= topSpace) {
                 alignY = "bottom";
-                positionY = bottomY;
+                positionY = bottomYViewport;
             } else {
                 alignY = "top";
-                positionY = topY;
+                positionY = topYViewport;
             }
         }
     }
@@ -139,10 +133,6 @@ const getPosition = ({
     const centerXViewport = childrenRect.left + childrenRect.width / 2 - floatingRect.width / 2;
     const leftAlignedXViewport = childrenRect.left;
     const rightAlignedXViewport = childrenRect.right - floatingRect.width;
-
-    const centerX = centerXViewport + scrollX;
-    const leftAlignedX = leftAlignedXViewport + scrollX;
-    const rightAlignedX = rightAlignedXViewport + scrollX;
 
     const canFitCenterX =
         centerXViewport >= viewportOffset &&
@@ -165,26 +155,26 @@ const getPosition = ({
         rightAlignedXViewport >= viewportOffset - stickiness &&
         rightAlignedXViewport + floatingRect.width <= viewportWidth - viewportOffset + stickiness;
 
-    let positionX = centerX;
+    let positionX = centerXViewport;
 
     if (alignXFromUser === "center" && canFitCenterX) {
         alignX = "center";
-        positionX = centerX;
+        positionX = centerXViewport;
     } else if (alignXFromUser === "left" && canFitLeftX) {
         alignX = "left";
-        positionX = leftAlignedX;
+        positionX = leftAlignedXViewport;
     } else if (alignXFromUser === "right" && canFitRightX) {
         alignX = "right";
-        positionX = rightAlignedX;
+        positionX = rightAlignedXViewport;
     } else if (!alignXFromUser && currentAlignX === "center" && canFitCenterXSticky) {
         alignX = "center";
-        positionX = centerX;
+        positionX = centerXViewport;
     } else if (!alignXFromUser && currentAlignX === "left" && canFitLeftXSticky) {
         alignX = "left";
-        positionX = leftAlignedX;
+        positionX = leftAlignedXViewport;
     } else if (!alignXFromUser && currentAlignX === "right" && canFitRightXSticky) {
         alignX = "right";
-        positionX = rightAlignedX;
+        positionX = rightAlignedXViewport;
     } else {
         const centerLeftOverflow = centerXViewport < viewportOffset;
         const centerRightOverflow =
@@ -192,25 +182,29 @@ const getPosition = ({
 
         if (!centerLeftOverflow && !centerRightOverflow) {
             alignX = "center";
-            positionX = centerX;
+            positionX = centerXViewport;
         } else if (canFitLeftX) {
             alignX = "left";
-            positionX = leftAlignedX;
+            positionX = leftAlignedXViewport;
         } else if (canFitRightX) {
             alignX = "right";
-            positionX = rightAlignedX;
+            positionX = rightAlignedXViewport;
         } else {
             alignX = centerLeftOverflow ? "left" : "right";
             positionX = Math.min(
-                Math.max(centerX, scrollX + viewportOffset),
-                scrollX + viewportWidth - floatingRect.width - viewportOffset,
+                Math.max(centerXViewport, viewportOffset),
+                viewportWidth - floatingRect.width - viewportOffset,
             );
         }
     }
 
     positionX = Math.min(
-        Math.max(positionX, scrollX + viewportOffset),
-        scrollX + viewportWidth - floatingRect.width - viewportOffset,
+        Math.max(positionX, viewportOffset),
+        viewportWidth - floatingRect.width - viewportOffset,
+    );
+    positionY = Math.min(
+        Math.max(positionY, viewportOffset),
+        viewportHeight - floatingRect.height - viewportOffset,
     );
 
     setLocal((s) => {

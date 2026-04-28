@@ -77,21 +77,19 @@ const X = () => {
                 description="Scrollbar automatically manages the axis of the scrollbar based on the content size."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
                 
-                        <ScrollFlex
-                        variant="hoverShadow"
-                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
-                        scrollBarProps={{ variant: "primary", fillMode: true }}
-                    >
-                        {longText}
-                    </ScrollFlex>`}
+                        <ScrollFlex width={150} height={100}>
+                            <Content width={1500} />
+                        </ScrollFlex>
+                        <ScrollFlex width={150} height={100}>
+                            <Content />
+                        </ScrollFlex>
+                        <ScrollFlex width={150} height={100} scrollBarProps={{ mirror: true, opposite: true }} >
+                            <Content width={1500} />
+                        </ScrollFlex>
+                        <ScrollFlex width={150} height={100} scrollBarProps={{ mirror: true }}>
+                            <Content />
+                        </ScrollFlex>`}
                 example={
-                    // <ScrollFlex
-                    //     variant="hoverShadow"
-                    //     flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
-                    //     scrollBarProps={{ variant: "primary", fillMode: true }}
-                    // >
-                    //     {longText}
-                    // </ScrollFlex>
                     <Flex xAlign="start" gap={10}>
                         <ScrollFlex width={150} height={100}>
                             <Content width={1500} />

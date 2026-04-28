@@ -25,14 +25,23 @@ export const Base = ({
         width,
         height,
         flex,
+        flexGrow,
+        flexShrink,
+        flexBasis,
+        order,
         minHeight,
         minWidth,
         justifyContent,
         alignItems,
+        alignContent,
         gap,
+        rowGap,
+        columnGap,
         alignSelf,
         inProps,
         overflow,
+        overflowX,
+        overflowY,
         wrap,
     } = useVars({ props, childrenCount });
 
@@ -57,10 +66,19 @@ export const Base = ({
             $alignSelf={alignSelf}
             $inProps={inProps}
             $flex={flex}
+            $flexGrow={flexGrow}
+            $flexShrink={flexShrink}
+            $flexBasis={flexBasis}
+            $order={order}
             $minHeight={minHeight}
             $minWidth={minWidth}
             $overflow={overflow}
+            $overflowX={overflowX}
+            $overflowY={overflowY}
+            $alignContent={alignContent}
             $wrap={wrap}
+            $rowGap={rowGap}
+            $columnGap={columnGap}
         >
             {children ?? content}
         </S.container>

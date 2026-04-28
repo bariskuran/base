@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Flex } from "../../Flex";
 
 const shellShouldForward = (prop) =>
     !["$gutterTop", "$gutterRight", "$gutterBottom", "$gutterLeft"].includes(prop);
@@ -19,7 +20,7 @@ export const S = {
         padding-bottom: ${(p) => p.$gutterBottom};
         padding-left: ${(p) => p.$gutterLeft};
     `,
-    content: styled.div`
+    content: styled(Flex)`
         position: relative;
         box-sizing: border-box;
         flex: 1 1 auto;

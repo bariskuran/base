@@ -1,138 +1,21 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { Flex } from "../Flex";
-import { FloatingUi } from "../FloatingUi";
-import { useState } from "react";
-import { Button } from "../Button";
-
 const X = () => {
-    const [open, setOpen] = useState(false);
-
     /* RETURN */
     return (
         <Ds.page
             title="<FloatingUi>"
             releasedOn="1.0.0"
             description={`FloatingUi renders floating content relative to a trigger element, with
-                    controllable position and style. The open state is not managed internally by FloatingUi.
-                    It needs to be controlled externally. Therefore, in this test page, all open props are set to true.
-                    
-                    Components like PopTip, Popover, PopConfirm, and Button use FloatingUi. You can also check out these components; they share the same FloatingUi props.`}
+                    controllable position and style. The open state of FloatingUi is controlled externally; in other words, it is a helper component. For detailed usage examples, you can check components like PopOver, PopTip, PopConfirm, and Button. `}
         >
             <Ds.block
                 title="Basic Usage"
                 code={`import { FloatingUi } from "${SYS.basePath}";
 
                     <FloatingUi content="Default floating content" open={true}>
-                        <Flex xAlign="start" bgColor="foreground" color="background" padding={10}> Float around me </Flex>
+                        Content
                     </FloatingUi>`}
-                example={
-                    <FloatingUi content="Default floating content" open={true}>
-                        <Flex xAlign="start" bgColor="foreground" color="background" padding={10}>
-                            Float around me
-                        </Flex>
-                    </FloatingUi>
-                }
-            />
-            <Ds.block
-                title="Position and Arrow"
-                code={`import { FloatingUi } from "${SYS.basePath}";
-
-                        <FloatingUi
-                            content={<div>Top / Start</div>}
-                            alignX="start"
-                            alignY="top"
-                        >
-                            <button>Top Start</button>
-                        </FloatingUi>
-
-                        <FloatingUi
-                            content={<div>Bottom / End (no arrow)</div>}
-                            alignX="end"
-                            alignY="bottom"
-                            disableArrow
-                        >
-                            <button>Bottom End</button>
-                        </FloatingUi>`}
-                example={
-                    <Flex xAlign="start" gap={10}>
-                        {/* <FloatingUi content={<div>Top / Start</div>} alignX="start" alignY="top">
-                            <Button.underline label="Top Start" />
-                        </FloatingUi>
-                        <FloatingUi
-                            content={<div>Bottom / End (no arrow)</div>}
-                            alignX="end"
-                            alignY="bottom"
-                            disableArrow
-                        >
-                            <Button.underline label="Bottom End" />
-                        </FloatingUi> */}
-                        <FloatingUi
-                            content="Bottom / End (no arrow)"
-                            alignX="end"
-                            alignY="bottom"
-                            disableArrow
-                            open={true}
-                        >
-                            <Flex
-                                xAlign="start"
-                                bgColor="foreground"
-                                color="background"
-                                padding={10}
-                            >
-                                Float around me without arrow
-                            </Flex>
-                        </FloatingUi>
-                        <FloatingUi content="Top / Start" alignX="start" alignY="top" open={true}>
-                            <Flex
-                                xAlign="start"
-                                bgColor="foreground"
-                                color="background"
-                                padding={10}
-                            >
-                                Float around me
-                            </Flex>
-                        </FloatingUi>
-                    </Flex>
-                }
-            />
-            <Ds.block
-                title="Theme and Escape Behavior"
-                code={`import { FloatingUi } from "${SYS.basePath}";
-
-                        <FloatingUi
-                            content={<div>Primary floating</div>}
-                            primary
-                            enableEscaping={false}
-                        >
-                            <button>Primary</button>
-                        </FloatingUi>
-
-                        <FloatingUi
-                            content={<div>Custom background</div>}
-                            bgColor="success"
-                            uniqueId="floating-example-2"
-                        >
-                            <button>Custom BG</button>
-                        </FloatingUi>`}
-                example={
-                    <Flex xAlign="start" gap={10}>
-                        <FloatingUi
-                            content={<div>Primary floating</div>}
-                            primary
-                            enableEscaping={false}
-                        >
-                            <Button.underline label="Primary" />
-                        </FloatingUi>
-                        <FloatingUi
-                            content={<div>Custom background</div>}
-                            bgColor="success"
-                            uniqueId="floating-example-2"
-                        >
-                            <Button.underline label="Custom BG" />
-                        </FloatingUi>
-                    </Flex>
-                }
             />
             <Ds.api
                 props={{
@@ -195,6 +78,12 @@ const X = () => {
                         type: "string",
                         required: false,
                         defaultValue: "theme.background",
+                    },
+                    color: {
+                        description: "Overrides auto-calculated text color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "auto",
                     },
                     uniqueId: {
                         description: "Unique id for coordinating popover state.",

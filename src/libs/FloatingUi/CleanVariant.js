@@ -41,7 +41,7 @@ export const CleanVariant = styled.div`
                 opacity: 0;
             `}
 
-            position: absolute;
+            position: fixed;
             top: ${$positionY || 150}px;
             left: ${$positionX || 150}px;
             z-index: 1000;
@@ -61,7 +61,7 @@ export const CleanVariant = styled.div`
 
             &::before {
                 content: "";
-                position: absolute;
+                position: fixed;
                 width: 18rem;
                 height: 10rem;
 

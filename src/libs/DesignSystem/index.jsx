@@ -16,8 +16,9 @@ export const sitemap = [
     ["iconLibrary", "iconLibrary", l(() => import("../@Icon/_dSLibrary"))],
     ["<ScrollFlex>", "scrollFlex", l(() => import("../ScrollFlex/_dS"))],
     ["<Button>", "button", l(() => import("../Button/_dS"))],
-    //
     ["<FloatingUi>", "floatingUi", l(() => import("../FloatingUi/_dS"))],
+    ["<PopTip>", "popTip", l(() => import("../PopTip/_dS"))],
+    //
 ];
 
 export const designSystemRoutes = [

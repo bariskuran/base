@@ -24,14 +24,23 @@ export const Base = ({ children, ...p }) => {
 
     return (
         <ContextProvider Context={Context}>
-            <Variant ref={containerRef} {...flexProps} $borderColor={borderColor}>
+            <Variant ref={containerRef} $borderColor={borderColor} aria-label="ScrollFlex">
                 <S.shell
                     $gutterTop={gutterTop}
                     $gutterRight={gutterRight}
                     $gutterBottom={gutterBottom}
                     $gutterLeft={gutterLeft}
                 >
-                    <S.content style={contentPaddingStyle}>{children}</S.content>
+                    <S.content
+                        aria-label="ScrollFlex content"
+                        {...flexProps}
+                        style={{
+                            ...contentPaddingStyle,
+                            ...(flexProps?.style || {}),
+                        }}
+                    >
+                        {children}
+                    </S.content>
                     <ScrollBar {...scrollBarProps} />
                 </S.shell>
             </Variant>
