@@ -12,14 +12,22 @@ export const S = {
         `}
     `,
     navigation: styled.div`
-        display: flex;
-        flex-direction: column;
         min-height: 100vh;
-        height: 100%;
+        max-height: 100vh;
         flex: 0 0 300rem;
         margin-bottom: 100rem;
+    `,
+    navigationContent: styled.div`
+        width: 300rem;
+        max-height: 100vh;
+        display: flex;
+        flex-direction: column;
         align-items: flex-end;
-        border-right: 1px solid ${({ theme }) => theme.greys.shade40};
+        padding-right: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-bottom: 75rem;
     `,
     logoArea: styled.div`
         display: flex;
@@ -29,6 +37,7 @@ export const S = {
     `,
     content: styled.div`
         width: 100%;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
         gap: 10rem;

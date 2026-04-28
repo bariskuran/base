@@ -6,8 +6,6 @@ import { baseStore } from "../../@baseStore";
 const sysDefaults = {
     direction: "row",
     width: "100%",
-    xAlign: "center",
-    yAlign: "center",
     gap: 0,
 };
 

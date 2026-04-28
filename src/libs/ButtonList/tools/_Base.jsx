@@ -7,12 +7,12 @@ export const Base = (p = {}) => {
 
     /* RETURN */
     return (
-        <ScrollFlex {...scrollFlexProps}>
-            <Variant $direction={direction} $gap={gap} $colors={colors}>
+        <Variant $direction={direction} $gap={gap} $colors={colors}>
+            <ScrollFlex {...scrollFlexProps}>
                 {preparedItems.map((item, i) => (
                     <Button key={i} {...item} />
                 ))}
-            </Variant>
-        </ScrollFlex>
+            </ScrollFlex>
+        </Variant>
     );
 };

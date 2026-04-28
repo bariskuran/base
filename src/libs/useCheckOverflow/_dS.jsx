@@ -1,0 +1,49 @@
+import Ds from "../DesignSystem";
+import { SYS } from "../../constants/SYS";
+import { useCheckOverflow } from ".";
+import { useRef } from "react";
+import { Card } from "../Card";
+import { Typography } from "../Typography";
+import { Flex } from "../Flex";
+
+const Demo = () => {
+    const ref = useRef(null);
+    const { isOverflowingX, isOverflowingY, isOverflowing } = useCheckOverflow({ ref });
+
+    return (
+        <Flex.column xAlign="start" gap={8}>
+            <Card ref={ref} width={220} height={80} overflow="auto" padding={8}>
+                Very long very long very long very long very long content for overflow checks.
+            </Card>
+            <Typography.span>{`overflow: ${String(isOverflowing)}`}</Typography.span>
+            <Typography.span>{`x: ${String(isOverflowingX)} y: ${String(isOverflowingY)}`}</Typography.span>
+        </Flex.column>
+    );
+};
+
+const X = () => (
+    <Ds.page title="<useCheckOverflow>" releasedOn="1.0.0" description="Detects overflow on element/window.">
+        <Ds.block
+            title="Element Overflow Detection"
+            code={`import { useCheckOverflow } from "${SYS.basePath}";
+
+const ref = useRef(null);
+const { isOverflowing } = useCheckOverflow({ ref });`}
+            example={<Demo />}
+        />
+        <Ds.api
+            props={{
+                ref: { description: "Target ref object.", type: "RefObject<Element>", required: false, defaultValue: "undefined" },
+                target: { description: "Direct target element/window override.", type: "Element | Window", required: false, defaultValue: "undefined" },
+                return: {
+                    description: "Overflow flags: isOverflowing, isOverflowingX, isOverflowingY.",
+                    type: "object",
+                    required: true,
+                    defaultValue: "{ false, false, false }",
+                },
+            }}
+        />
+    </Ds.page>
+);
+
+export default X;
