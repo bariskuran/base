@@ -90,7 +90,7 @@ const X = () => {
                     </Flex>
                 }
             />
-            {/* <Ds.block
+            <Ds.block
                 title="Basic Usage"
                 code={`import { Button } from "${SYS.basePath}";
 
@@ -308,7 +308,7 @@ const X = () => {
                         </div>
                     </Flex>
                 }
-            /> 
+            />
             <Ds.block
                 title="Disabling Cooldown and onHold"
                 description={`There are 2 automatic behaviors Buttons display. You can disable them using the skipClickCooldown and skipOnClickHold props.
@@ -341,7 +341,7 @@ const X = () => {
                         />
                     </Flex>
                 }
-            /> 
+            />
             <Ds.block
                 title="Disabling Button"
                 description="Disable entire button function via disabled prop."
@@ -353,7 +353,7 @@ const X = () => {
                         <ButtonVariant onClick={triggerNotifier} label="disabled" disabled />
                     </Flex>
                 }
-            /> 
+            />
             <Ds.block
                 title="Resizing Button"
                 description="You can resize the Button using the size prop. The value is a percentage of the original size."
@@ -428,85 +428,295 @@ const X = () => {
                         />
                     </Flex>
                 }
-            />*/}
+            />
             <Ds.block
                 title="Full Width"
                 description="When 'fullWidth' prop is enabled, Button takes the full width of its container. It can be boolean and for the text alignment, it can be 'left', 'center' or 'right'."
                 code={`import { Button } from "${SYS.basePath}";
                 
-                        <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} popTip="PopTip enabled" />
-                        <Button onClick={onClick} icon={{ icon: "abstract2" }} popTip={{ content: "PopTip enabled", bgColor: "success" }} />`}
+                        <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} fullWidth="right" />
+                        <Button onClick={onClick} icon={{ icon: "abstract2" }} fullWidth />`}
                 example={
                     <Flex xAlign="start" gap={10}>
                         <ButtonVariant
                             label="button"
                             onClick={onClick}
                             prefix={{ icon: "abstract2" }}
-                            fullWidth
-                        />
-                        <ButtonVariant
-                            onClick={onClick}
-                            icon={{ icon: "abstract2" }}
                             fullWidth="right"
                         />
+                        <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} fullWidth />
                     </Flex>
                 }
             />
             <Ds.api
                 props={{
-                    pendingManually: {
-                        description:
-                            "Pending görünümünü zorlar (Router navigation loading ile birleşir). İkonlar için pendingIcon vb. ile kullanın.",
+                    variant: {
+                        description: "Variant name or custom styled variant.",
+                        type: "string | component",
+                        required: false,
+                        defaultValue: '"default"',
+                    },
+                    label: {
+                        description: "Default button label.",
+                        type: "string | ReactNode",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    hoverLabel: {
+                        description: "Label shown on hover.",
+                        type: "string | ReactNode",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    activeLabel: {
+                        description: "Label shown in active/on-click state.",
+                        type: "string | ReactNode",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    pendingLabel: {
+                        description: "Label shown in pending state.",
+                        type: "string | ReactNode",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    icon: {
+                        description: "Center icon object.",
+                        type: "object",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    prefix: {
+                        description: "Prefix icon object.",
+                        type: "object",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    suffix: {
+                        description: "Suffix icon object.",
+                        type: "object",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    onClick: {
+                        description: "Click callback.",
+                        type: "function",
+                        required: false,
+                        defaultValue: "undefined",
+                    },
+                    to: {
+                        description: "React Router internal link target.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    href: {
+                        description: "External link target.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    url: {
+                        description: "Works the same as href/to URL target.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    _blank: {
+                        description: "Opens link in a new tab.",
                         type: "boolean",
                         required: false,
                         defaultValue: "false",
                     },
+                    disabled: {
+                        description: "Disables the button.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    primary: {
+                        description: "Uses theme primary color set.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    secondary: {
+                        description: "Uses theme secondary color set.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    bgColor: {
+                        description: "Default background color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "theme.foreground",
+                    },
+                    hoverBgColor: {
+                        description: "Hover background color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "auto",
+                    },
+                    activeBgColor: {
+                        description: "Active background color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "auto",
+                    },
+                    pendingBgColor: {
+                        description: "Pending background color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    color: {
+                        description: "Default text/icon color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "auto-contrast",
+                    },
+                    hoverColor: {
+                        description: "Hover text/icon color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "auto",
+                    },
+                    activeColor: {
+                        description: "Active text/icon color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "auto",
+                    },
+                    pendingColor: {
+                        description: "Pending text/icon color.",
+                        type: "string",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    alphaRate: {
+                        description: "Auto hover/active tone intensity.",
+                        type: "number",
+                        required: false,
+                        defaultValue: "10",
+                    },
+                    outlined: {
+                        description: "Enables outlined appearance.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    minWidth: {
+                        description: "Button minimum width (rem).",
+                        type: "number",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    minLabelWidth: {
+                        description: "Label minimum width (rem).",
+                        type: "number",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    minHeight: {
+                        description: "Button minimum height (rem).",
+                        type: "number",
+                        required: false,
+                        defaultValue: "null",
+                    },
+                    size: {
+                        description: "Overall button scale (%).",
+                        type: "number",
+                        required: false,
+                        defaultValue: "100",
+                    },
+                    fullWidth: {
+                        description: "Full width + alignment (true/left/center/right).",
+                        type: "boolean | string",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    hoverManually: {
+                        description: "Forces hover state externally.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    activeManually: {
+                        description: "Forces active state externally.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    pendingManually: {
+                        description: "Forces pending state externally.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    disableUseMatch: {
+                        description: "Disables auto-active state from route match.",
+                        type: "boolean",
+                        required: false,
+                        defaultValue: "false",
+                    },
+                    delay: {
+                        description: "Delays click/navigation execution in seconds.",
+                        type: "number",
+                        required: false,
+                        defaultValue: "0",
+                    },
+                    onDelayStart: {
+                        description: "Called when delay starts.",
+                        type: "function",
+                        required: false,
+                        defaultValue: "undefined",
+                    },
+                    onDelayEnd: {
+                        description: "Called when delay ends.",
+                        type: "function",
+                        required: false,
+                        defaultValue: "undefined",
+                    },
                     skipClickCooldown: {
-                        description:
-                            "Tıklama sonrası otomatik tıklama engelini başlatmaz ve mevcut engeli de yok sayar (süre: clickCooldownMs).",
+                        description: "Skips click cooldown timer.",
                         type: "boolean",
                         required: false,
                         defaultValue: "false",
                     },
                     skipOnClickHold: {
-                        description:
-                            "Tıklamada activeLabel için show-on-click zamanlayıcısını başlatmaz (süre: onClickHoldMs).",
+                        description: "Skips on-click hold timer.",
                         type: "boolean",
                         required: false,
                         defaultValue: "false",
                     },
                     clickCooldownMs: {
-                        description:
-                            "Üst üste tıklamayı engelleyen zamanlayıcı süresi (milisaniye). Varsayılan 1000.",
+                        description: "Click cooldown duration in milliseconds.",
                         type: "number",
                         required: false,
                         defaultValue: "1000",
                     },
                     onClickHoldMs: {
-                        description:
-                            "Tıklamadan sonra activeLabel / show-on-click durumunun sürdürülme süresi (milisaniye). Varsayılan 2000.",
+                        description: "On-click hold duration in milliseconds.",
                         type: "number",
                         required: false,
                         defaultValue: "2000",
                     },
-                    pendingLabel: {
-                        description:
-                            "Pending durumunda gösterilecek metin (hover/active ile aynı mantık; pending önceliklidir).",
-                        type: "string",
+                    popTip: {
+                        description: "PopTip content or PopTip props object.",
+                        type: "string | ReactNode | object",
                         required: false,
                         defaultValue: "null",
                     },
-                    pendingBgColor: {
-                        description:
-                            "Pending durumunda arka plan rengi (tema anahtarı veya ham renk). Boşsa hover ile aynı tonda fallback.",
-                        type: "string",
+                    exportData: {
+                        description: "Debug/export data passthrough.",
+                        type: "boolean | object",
                         required: false,
-                        defaultValue: "null",
+                        defaultValue: "false",
                     },
-                    pendingColor: {
-                        description:
-                            "Pending durumunda metin ve outlined kenarlık rengi. Boşsa color / otomatik kontrast.",
-                        type: "string",
+                    children: {
+                        description: "Optional children content.",
+                        type: "ReactNode",
                         required: false,
                         defaultValue: "null",
                     },

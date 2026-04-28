@@ -201,6 +201,8 @@ export const useVars = ({
     const as = !url ? "button" : isExternalUrl ? "a" : Link;
 
     const blockedByClickCooldown = !skipClickCooldown && clickBlocker;
+    const fullWidthJustifyContent =
+        fullWidth === "left" ? "flex-start" : fullWidth === "right" ? "flex-end" : "center";
 
     const shouldBindClickHandler =
         disabled || blockedByClickCooldown || isMatch || (delay && delay > 0) || !!onClick;
@@ -278,6 +280,8 @@ export const useVars = ({
         style: {
             background: bg,
             color: c,
+            ...(fullWidth ? { width: "100%" } : {}),
+            ...(fullWidth ? { justifyContent: fullWidthJustifyContent } : {}),
             ...(minHeight ? { minHeight: `${minHeight}rem` } : {}),
             ...(outlined ? { border: `1px solid ${c}` } : {}),
             ...(disabled

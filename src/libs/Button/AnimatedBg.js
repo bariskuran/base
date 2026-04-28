@@ -64,5 +64,6 @@ const S = styled.div`
 `;
 export const X = {
     variant: S,
+    alphaRate: 15,
 };
 export default X;

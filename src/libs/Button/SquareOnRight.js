@@ -26,7 +26,6 @@ const S = styled.div`
     }) => css`
         all: unset;
         display: flex;
-        cursor: pointer;
         transition: all 0.5s;
         position: relative;
         width: ${$fullWidth ? "100%" : "auto"} !important;
@@ -34,17 +33,12 @@ const S = styled.div`
 
         & > [data-slot="label"] {
             display: flex;
-            justify-content: ${$fullWidth === "right"
-                ? "flex-end"
-                : $fullWidth === "left"
-                  ? "flex-start"
-                  : "center"};
             align-items: center;
             letter-spacing: 0.5rem;
             font-weight: 600;
-            font-size: 16rem;
+            font-size: 14rem;
             transition: all 0.5s;
-            padding: 8rem;
+            padding: 4rem 8rem;
         }
 
         & > [data-slot="prefix"],
@@ -65,7 +59,7 @@ const S = styled.div`
         &:after {
             content: "";
             width: 0;
-            height: 40rem;
+            height: 30rem;
             background: ${theme.primary};
             transition: all 0.5s;
         }
@@ -73,6 +67,10 @@ const S = styled.div`
         ${$isActivated &&
         css`
             background: ${theme.colorAlpha(theme.primary, 0.1)} !important;
+
+            & > [data-slot="label"] {
+                padding: 4rem 12rem;
+            }
 
             &:after {
                 width: 10rem;
