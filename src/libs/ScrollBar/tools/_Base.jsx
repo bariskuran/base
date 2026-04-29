@@ -30,7 +30,6 @@ const Bar = ({
     thumbPosition,
     barPosition,
     mirror,
-    hasExternalSource,
 }) => {
     const docEl = typeof document !== "undefined" ? document.documentElement : null;
     const viewportWidth =
@@ -77,20 +76,18 @@ const Bar = ({
               [mirror ? "top" : "bottom"]: edgeMargin + "rem",
           };
 
+    /** Host / overlay ile aynı; sourceByRef akışında da kenardan edgeMargin rem ile içeri alınır (px kullanınca ~5px görünmez kalıyordu). */
     const hostLikePositionStyle = isBarVertical
         ? {
               position: "absolute",
               top: trackStartOffset + "px",
-              [mirror ? "left" : "right"]: edgeMargin + "px",
+              [mirror ? "left" : "right"]: edgeMargin + "rem",
           }
         : {
               position: "absolute",
               left: trackStartOffset + "px",
-              [mirror ? "top" : "bottom"]: edgeMargin + "px",
+              [mirror ? "top" : "bottom"]: edgeMargin + "rem",
           };
-    const externalPositionStyle = {
-        position: "relative",
-    };
 
     const shouldUseMinThumb = exactThumbSize == null && !fillMode;
     const verticalThumbTransform = enableThumbScale
@@ -129,11 +126,7 @@ const Bar = ({
             $disableOpacityEffect={disableOpacityEffect}
             style={{
                 ...baseStyle,
-                ...(isWindowLike
-                    ? windowLikePositionStyle
-                    : hasExternalSource
-                      ? externalPositionStyle
-                      : hostLikePositionStyle),
+                ...(isWindowLike ? windowLikePositionStyle : hostLikePositionStyle),
                 zIndex: 9999999999,
                 display: "flex",
                 justifyContent: "flex-start",
@@ -246,7 +239,6 @@ export const Base = (p) => {
                     thumbPosition={y.thumbPosition}
                     barPosition={yBarPosition}
                     mirror={mirror}
-                    hasExternalSource={hasExternalSource}
                 />
             )}
 
@@ -279,7 +271,6 @@ export const Base = (p) => {
                     thumbPosition={x.thumbPosition}
                     barPosition={xBarPosition}
                     mirror={mirror}
-                    hasExternalSource={hasExternalSource}
                 />
             )}
         </>

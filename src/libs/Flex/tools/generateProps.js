@@ -64,10 +64,7 @@ const normalizeCalcExpression = (value) => {
         }
 
         const inner = value.slice(i + 5, closeIndex);
-        const normalizedInner = normalizeCalcExpression(inner).replace(
-            /calc\(([^()]*)\)/g,
-            "$1",
-        );
+        const normalizedInner = normalizeCalcExpression(inner).replace(/calc\(([^()]*)\)/g, "$1");
 
         result += `calc(${normalizeCalcOperators(normalizedInner)})`;
         i = closeIndex;
@@ -591,4 +588,5 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "wrap",
     "responsive",
     "exportData",
+    "scrollBarProps",
 ]);

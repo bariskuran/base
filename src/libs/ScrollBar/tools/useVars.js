@@ -315,10 +315,28 @@ const useVars = (p) => {
                 }
             }
 
-            target.style.overscrollBehavior = "contain";
-
             if (disableX) target.style.overflowX = "hidden";
             if (disableY) target.style.overflowY = "hidden";
+        });
+
+        const overflowNow = getAxisOverflow({
+            source: normalizedScrollSource,
+            isWindowLike,
+        });
+
+        /** Taşma yokken contain sayfa scroll zincirini keser; yalnızca gerçekten kaydırılabilir eksende uygula. */
+        const shouldApplyOverscrollContain =
+            isWindowLike ||
+            ((!disableX && overflowNow.isOverflowingX) ||
+                (!disableY && overflowNow.isOverflowingY));
+
+        targets.forEach((target, index) => {
+            if (!target?.style) return;
+
+            const prev = prevValues[index];
+            target.style.overscrollBehavior = shouldApplyOverscrollContain
+                ? "contain"
+                : prev.overscrollBehavior;
         });
 
         return () => {
@@ -331,7 +349,16 @@ const useVars = (p) => {
                 target.style.overscrollBehavior = overscrollBehavior;
             });
         };
-    }, [resolvedHost, normalizedScrollSource, isWindowLike, body, disableX, disableY]);
+    }, [
+        resolvedHost,
+        normalizedScrollSource,
+        isWindowLike,
+        body,
+        disableX,
+        disableY,
+        x.isOverflowing,
+        y.isOverflowing,
+    ]);
 
     useEffect(() => {
         if (typeof document === "undefined") return;

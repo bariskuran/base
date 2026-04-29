@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { useExportData } from "../../useExportedData";
 import { clamp } from "./clamp";
 import { getAutoOverlayRect } from "./getAutoOverlayRect";
+import { getScrollMetrics } from "./getScrollMetrics";
 import { getThumb } from "./getThumb";
 import { getTrackLength } from "./getTrackLength";
 import { hideNativeScrollbar } from "./hideNativeScrollbar";
@@ -250,10 +251,16 @@ const useVars = (p) => {
             }
         }
 
-        source.style.overscrollBehavior = "contain";
-
         if (disableX) source.style.overflowX = "hidden";
         if (disableY) source.style.overflowY = "hidden";
+
+        const ox = !disableX && getScrollMetrics({ source, axis: "x", body }).isOverflowing;
+        const oy = !disableY && getScrollMetrics({ source, axis: "y", body }).isOverflowing;
+        const shouldApplyOverscrollContain = body || ox || oy;
+
+        source.style.overscrollBehavior = shouldApplyOverscrollContain
+            ? "contain"
+            : previous.overscrollBehavior;
 
         return () => {
             source.style.overflow = previous.overflow;
@@ -261,7 +268,7 @@ const useVars = (p) => {
             source.style.overflowY = previous.overflowY;
             source.style.overscrollBehavior = previous.overscrollBehavior;
         };
-    }, [source, body, disableX, disableY]);
+    }, [source, body, disableX, disableY, metrics.x.isOverflowing, metrics.y.isOverflowing]);
 
     useEffect(() => {
         if (!isBrowser()) return;

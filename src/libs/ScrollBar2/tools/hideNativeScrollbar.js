@@ -34,7 +34,6 @@ export const hideNativeScrollbar = ({ source, body }) => {
         [data-base-scrollbar-hide="${uid}"] {
             scrollbar-width: none;
             -ms-overflow-style: none;
-            overscroll-behavior: contain;
         }
 
         [data-base-scrollbar-hide="${uid}"]::-webkit-scrollbar {

@@ -1,60 +1,23 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { Flex } from "./";
+import { generateRandom } from "../generateRandom";
 
-const Box = ({ c = "#ddd", t }) => (
-    <div style={{ background: c, padding: 8, borderRadius: 6 }}>{t}</div>
+const longText = generateRandom.loremIpsum(100);
+const shortText = generateRandom.loremIpsum(50);
+
+const Item = () => (
+    <Flex bgColor="greys.shade20" width={50} height={50}>
+        item
+    </Flex>
 );
 
-const Item = () => <div style={{ background: "red", width: 50, height: 50 }}>item</div>;
+const Items = () => [...Array(40)].map((_, i) => <Item key={i} />);
 
 const Content = ({ direction = "row" }) => (
-    <div style={{ display: "flex", flexDirection: direction, gap: 10 }}>
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-        <Item />
-    </div>
+    <Flex direction={direction} gap={10}>
+        <Items />
+    </Flex>
 );
 
 const X = () => (
@@ -71,19 +34,30 @@ const X = () => (
                   <div>A</div><div>B</div>
                 </Flex>`}
             example={
-                <div
-                    style={{
-                        width: "100%",
-                        maxWidth: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 10,
-                        position: "relative",
-                    }}
-                >
+                <Flex direction="column" gap={10}>
                     <Flex>
                         <Content />
                     </Flex>
+                    <Flex>{shortText}</Flex>
+                    <Flex gap={10}>
+                        <Flex width={100}>{shortText}</Flex>
+                        <Flex width={100} height={100}>
+                            {longText}
+                        </Flex>
+                        <Flex width={100}>
+                            <Content direction="column" />
+                        </Flex>
+                        <Flex width={100} height={100} bgColor="skyblue">
+                            <Content direction="column" />
+                        </Flex>
+                        <Flex width={100} height={100} direction="column">
+                            <Items />
+                        </Flex>
+                    </Flex>
+
+                    {/* <Flex width={100} height={100}>
+                        <Content direction="column" />
+                    </Flex> */}
                     {/* <Flex
                         width={100}
                         height={100}
@@ -94,7 +68,7 @@ const X = () => (
                     {/* <div style={{ width: "100%", height: 100, backgroundColor: "aliceblue" }}>
                         test
                     </div> */}
-                </div>
+                </Flex>
             }
         />
         {/* <Ds.api
