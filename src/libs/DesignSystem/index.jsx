@@ -86,6 +86,8 @@ export const sitemap = [
         l(() => import("../useScrollWidthHeight/_dS")),
     ],
     ["useTimer", "useTimer", l(() => import("../useTimer/_dS"))],
+    ["ScrollBar2", "scrollBar2", l(() => import("../ScrollBar2/_dS"))],
+    ["Flex2", "flex2", l(() => import("../Flex2/_dS"))],
 ];
 
 export const designSystemRoutes = [
