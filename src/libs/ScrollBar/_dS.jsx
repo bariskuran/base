@@ -394,6 +394,13 @@ const X = () => {
                         required: false,
                         defaultValue: "undefined",
                     },
+                    positionSourceByRef: {
+                        description:
+                            "Sets the visual positioning host via ref/element while scrolling still uses sourceByRef/sourceById or auto host.",
+                        type: "React ref | HTMLElement",
+                        required: false,
+                        defaultValue: "undefined",
+                    },
                     variant: {
                         description: "Visual variant component used to render the scrollbar track.",
                         type: "React component",

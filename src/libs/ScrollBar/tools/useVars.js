@@ -15,6 +15,8 @@ const useVars = (p) => {
         body = false,
         sourceByRef,
         sourceById,
+        /** Yalnızca konum/ölçü host'u: sourceByRef kaydırma kaynağından bağımsız olarak track hizasını belirler. */
+        positionSourceByRef,
         disableX = false,
         disableY = false,
         opposite = false,
@@ -119,13 +121,23 @@ const useVars = (p) => {
         return null;
     };
 
-    useLayoutEffect(() => {
-        if (typeof document === "undefined") return;
+    const resolveLayoutHostEl = () => {
+        if (typeof document === "undefined") return null;
+        if (body) return document.documentElement;
 
-        const host = getScrollHost({
+        const fromProp = positionSourceByRef?.current ?? positionSourceByRef;
+        if (fromProp?.nodeType === 1) return fromProp;
+
+        return getScrollHost({
             node: anchorRef.current,
             body,
         });
+    };
+
+    useLayoutEffect(() => {
+        if (typeof document === "undefined") return;
+
+        const host = resolveLayoutHostEl();
 
         if (!host) return;
 
@@ -136,7 +148,7 @@ const useVars = (p) => {
             s.resolvedSource = source;
             s.overlayHost = host.parentElement || null;
         });
-    }, [body, setLocal, sourceByRef, sourceById]);
+    }, [body, setLocal, sourceByRef, sourceById, positionSourceByRef]);
 
     const normalizedScrollSource =
         typeof document === "undefined" ||
@@ -174,18 +186,32 @@ const useVars = (p) => {
     const syncHostRect = () => {
         if (typeof document === "undefined") return;
 
+        const layoutHost = resolveLayoutHostEl();
+        const hostForMeasure = layoutHost ?? resolvedHost;
+        if (!hostForMeasure) return;
+
         const rect = getHostRect({
-            host: resolvedHost,
+            host: hostForMeasure,
             isWindowLike,
         });
 
         setLocal((s) => {
             s.hostRect = rect;
+            if (layoutHost && s.resolvedHost !== layoutHost) {
+                s.resolvedHost = layoutHost;
+                s.overlayHost = layoutHost.parentElement || null;
+            }
         });
     };
 
     const syncMetrics = () => {
-        if (!resolvedHost || !normalizedScrollSource) return;
+        if (!normalizedScrollSource) return;
+
+        /** Pencere kaydırmada visualSource window/döküman olmalı; positionSourceByRef yalnızca konteyner kaydırmada. */
+        const visualHost = isWindowLike
+            ? resolvedHost
+            : resolveLayoutHostEl() ?? resolvedHost;
+        if (!visualHost && !isWindowLike) return;
 
         const overflow = getAxisOverflow({
             source: normalizedScrollSource,
@@ -201,7 +227,7 @@ const useVars = (p) => {
             exactThumbSize,
             fillMode,
             source: normalizedScrollSource,
-            visualSource: resolvedHost,
+            visualSource: visualHost,
         });
 
         const yProps = getThumbProps({
@@ -213,7 +239,7 @@ const useVars = (p) => {
             exactThumbSize,
             fillMode,
             source: normalizedScrollSource,
-            visualSource: resolvedHost,
+            visualSource: visualHost,
         });
 
         setLocal((s) => {

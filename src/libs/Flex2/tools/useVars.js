@@ -14,6 +14,7 @@ import { buildFlex2ScrollbarPadding } from "./buildFlex2ScrollbarPadding.js";
 export const useVars = ({ props, children, content, className, style, forwardedRef }) => {
     const [currentBreakpoint] = baseStore.useGlobal((s) => [s._clientData.currentBreakpoint]);
     const contentRef = useRef(null);
+    const containerRef = useRef(null);
     const { exportData: exportDataForScrollBar, ...exportedData } = useExportedData();
     const childrenCount = Children.count(children ?? content);
 
@@ -42,8 +43,11 @@ export const useVars = ({ props, children, content, className, style, forwardedR
          * Bu otomatik kısaltmayı kabuğa taşımayıp yalnızca flex-shrink: 0 ile genişlik korunur.
          */
         const generatedFlexTrimmed =
-            typeof generatedProps.flex === "string" ? generatedProps.flex.trim() : generatedProps.flex;
-        const widthStr = typeof width === "string" ? width.trim() : width != null ? String(width) : "";
+            typeof generatedProps.flex === "string"
+                ? generatedProps.flex.trim()
+                : generatedProps.flex;
+        const widthStr =
+            typeof width === "string" ? width.trim() : width != null ? String(width) : "";
         /** Row kök için üretilen flex hep genişlik bazlıdır; üst column'da yanlış eksene gider — height verilmiş olsa da aynı pattern. */
         const skipAutoWidthFlexBasis =
             Boolean(generatedFlexTrimmed) &&
@@ -92,9 +96,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
 
     /** Kabukta explicit height varken grid ilk satırı minmax(0,1fr) ile dikeyde dolabilir (ara shellClip olmadan). */
     const hasExplicitShellHeight = useMemo(
-        () =>
-            containerSizingProps.height != null &&
-            containerSizingProps.height !== "",
+        () => containerSizingProps.height != null && containerSizingProps.height !== "",
         [containerSizingProps.height],
     );
 
@@ -143,6 +145,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
             containerStyle,
             contentStyle,
             calculatedValue,
+            containerRef,
             calculatedValues: calculatedValue,
             scrollBarProps: props?.scrollBarProps || {},
         },

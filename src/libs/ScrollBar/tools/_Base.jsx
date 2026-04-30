@@ -92,15 +92,15 @@ const Bar = ({
     const shouldUseMinThumb = exactThumbSize == null && !fillMode;
     const verticalThumbTransform = enableThumbScale
         ? fillMode
-          ? "translate3d(0, 0, 0) scale(1.5, 1)"
-          : `translate3d(0, ${thumbPosition}px, 0) scale(1.5, 1)`
+            ? "translate3d(0, 0, 0) scale(1.5, 1)"
+            : `translate3d(0, ${thumbPosition}px, 0) scale(1.5, 1)`
         : fillMode
           ? "translate3d(0, 0, 0)"
           : `translate3d(0, ${thumbPosition}px, 0)`;
     const horizontalThumbTransform = enableThumbScale
         ? fillMode
-          ? "translate3d(0, 0, 0) scale(1, 1.5)"
-          : `translate3d(${thumbPosition}px, 0, 0) scale(1, 1.5)`
+            ? "translate3d(0, 0, 0) scale(1, 1.5)"
+            : `translate3d(${thumbPosition}px, 0, 0) scale(1, 1.5)`
         : fillMode
           ? "translate3d(0, 0, 0)"
           : `translate3d(${thumbPosition}px, 0, 0)`;

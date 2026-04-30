@@ -50,7 +50,7 @@ const X = () => (
                         <Flex width={100} height={100} bgColor="skyblue">
                             <Content direction="column" />
                         </Flex>
-                        <Flex width={100} height={100} direction="column">
+                        <Flex width={100} height={100} direction="column" gap={10}>
                             <Items />
                         </Flex>
                     </Flex>

@@ -203,15 +203,5 @@ export const S = {
         min-width: 0;
         min-height: 0;
         ${(p) => createFlexCssTree(p)}
-        /* Kaynak div grid hücresini doldurur; dar çocuklar scrollbar’ı kabuk genişliğine kilitlemez. */
-        width: 100%;
-        justify-self: stretch;
-        align-self: stretch;
-        ${(p) =>
-            p.$hasExplicitShellHeight
-                ? css`
-                      height: 100%;
-                  `
-                : ""}
     `,
 };
