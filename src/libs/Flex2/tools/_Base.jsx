@@ -49,6 +49,7 @@ const Render = ({
             aria-label="Flex content"
             ref={contentRef}
             style={contentStyle}
+            $hasExplicitShellHeight={hasExplicitShellHeight}
             {...toTransientFlexContentProps(contentStyleProps)}
         >
             {children ?? content}
