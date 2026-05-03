@@ -15,7 +15,6 @@ const useVars = (p) => {
         body = false,
         sourceByRef,
         sourceById,
-        /** Yalnızca konum/ölçü host'u: sourceByRef kaydırma kaynağından bağımsız olarak track hizasını belirler. */
         positionSourceByRef,
         disableX = false,
         disableY = false,
@@ -27,6 +26,8 @@ const useVars = (p) => {
         maxLength,
         trackMargin: trackMarginProp,
         edgeMargin: edgeMarginProp,
+        edgeMarginX: edgeMarginXProp,
+        edgeMarginY: edgeMarginYProp,
         minThumbLength = 24,
         exactThumbSize,
         fillMode = false,
@@ -37,12 +38,21 @@ const useVars = (p) => {
 
     const trackMargin = trackMarginProp ?? 5;
     const edgeMargin = edgeMarginProp ?? 5;
+    const edgeMarginX = edgeMarginXProp;
+    const edgeMarginY = edgeMarginYProp;
     const hasExternalSource =
         sourceByRef != null || (typeof sourceById === "string" && sourceById.trim() !== "");
-    const effectiveTrackMargin = hasExternalSource ? 0 : trackMargin;
-    const effectiveEdgeMargin = hasExternalSource ? 0 : edgeMargin;
-    const effectiveOpposite = hasExternalSource ? false : opposite;
-    const effectiveMirror = hasExternalSource ? false : mirror;
+    const hasExternalPositionSource = positionSourceByRef != null;
+    const hasSplitPositionSource = hasExternalSource && hasExternalPositionSource;
+    const isExternalInlineMode = hasExternalSource && !hasExternalPositionSource;
+    const effectiveTrackMargin = isExternalInlineMode ? 0 : trackMargin;
+    const effectiveEdgeMargin = isExternalInlineMode ? 0 : edgeMargin;
+    const effectiveEdgeMarginX =
+        isExternalInlineMode ? 0 : edgeMarginX != null ? edgeMarginX : edgeMargin;
+    const effectiveEdgeMarginY =
+        isExternalInlineMode ? 0 : edgeMarginY != null ? edgeMarginY : edgeMargin;
+    const effectiveOpposite = isExternalInlineMode ? false : opposite;
+    const effectiveMirror = isExternalInlineMode ? false : mirror;
 
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
@@ -120,14 +130,14 @@ const useVars = (p) => {
 
         return null;
     };
+    const resolvePositionSource = () => {
+        if (typeof document === "undefined") return null;
+        const refEl = positionSourceByRef?.current || positionSourceByRef || null;
+        return refEl?.nodeType === 1 ? refEl : null;
+    };
 
     const resolveLayoutHostEl = () => {
         if (typeof document === "undefined") return null;
-        if (body) return document.documentElement;
-
-        const fromProp = positionSourceByRef?.current ?? positionSourceByRef;
-        if (fromProp?.nodeType === 1) return fromProp;
-
         return getScrollHost({
             node: anchorRef.current,
             body,
@@ -142,11 +152,12 @@ const useVars = (p) => {
         if (!host) return;
 
         const source = resolveExternalSource() || host;
+        const positionSource = resolvePositionSource() || source;
 
         setLocal((s) => {
-            s.resolvedHost = host;
+            s.resolvedHost = positionSource;
             s.resolvedSource = source;
-            s.overlayHost = host.parentElement || null;
+            s.overlayHost = positionSource?.parentElement || null;
         });
     }, [body, setLocal, sourceByRef, sourceById, positionSourceByRef]);
 
@@ -185,32 +196,22 @@ const useVars = (p) => {
 
     const syncHostRect = () => {
         if (typeof document === "undefined") return;
-
-        const layoutHost = resolveLayoutHostEl();
-        const hostForMeasure = layoutHost ?? resolvedHost;
-        if (!hostForMeasure) return;
+        if (!resolvedHost) return;
 
         const rect = getHostRect({
-            host: hostForMeasure,
+            host: resolvedHost,
             isWindowLike,
         });
 
         setLocal((s) => {
             s.hostRect = rect;
-            if (layoutHost && s.resolvedHost !== layoutHost) {
-                s.resolvedHost = layoutHost;
-                s.overlayHost = layoutHost.parentElement || null;
-            }
         });
     };
 
     const syncMetrics = () => {
         if (!normalizedScrollSource) return;
 
-        /** Pencere kaydırmada visualSource window/döküman olmalı; positionSourceByRef yalnızca konteyner kaydırmada. */
-        const visualHost = isWindowLike
-            ? resolvedHost
-            : resolveLayoutHostEl() ?? resolvedHost;
+        const visualHost = resolvedHost;
         if (!visualHost && !isWindowLike) return;
 
         const overflow = getAxisOverflow({
@@ -350,11 +351,10 @@ const useVars = (p) => {
             isWindowLike,
         });
 
-        /** Taşma yokken contain sayfa scroll zincirini keser; yalnızca gerçekten kaydırılabilir eksende uygula. */
         const shouldApplyOverscrollContain =
             isWindowLike ||
-            ((!disableX && overflowNow.isOverflowingX) ||
-                (!disableY && overflowNow.isOverflowingY));
+            (!disableX && overflowNow.isOverflowingX) ||
+            (!disableY && overflowNow.isOverflowingY);
 
         targets.forEach((target, index) => {
             if (!target?.style) return;
@@ -775,6 +775,8 @@ const useVars = (p) => {
             thickness,
             maxLength,
             edgeMargin: effectiveEdgeMargin,
+            edgeMarginX: effectiveEdgeMarginX,
+            edgeMarginY: effectiveEdgeMarginY,
             trackMargin: effectiveTrackMargin,
             minThumbLength,
             exactThumbSize,
@@ -786,6 +788,7 @@ const useVars = (p) => {
             normalizedScrollSource,
             isWindowLike,
             hasExternalSource,
+            hasSplitPositionSource,
             hostRect,
             anchorRef,
             xTruckRef,
@@ -810,6 +813,8 @@ const useVars = (p) => {
             left: visibleEdges.left,
             right: visibleEdges.right,
             edgeMargin: effectiveEdgeMargin,
+            edgeMarginX: effectiveEdgeMarginX,
+            edgeMarginY: effectiveEdgeMarginY,
             thickness,
             isDraggingX,
             isDraggingY,

@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorPickHigherContrast } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const sample = colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");
 
@@ -20,7 +20,7 @@ const { winner, ratioA, ratioB } = colorPickHigherContrast(
   "#111111",
   "#3b82f6"
 );`}
-            example={<Typography.span children={JSON.stringify(sample)} />}
+            example={<Typo.span children={JSON.stringify(sample)} />}
         />
         <Ds.api
             props={{

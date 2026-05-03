@@ -1,79 +1,79 @@
 {
-    "name": "@bariskuran/base",
-    "version": "1.0.0",
-    "private": false,
-    "license": "MIT",
-    "description": "Advanced hooks, functions, components for React projects.",
-    "keywords": [
-        "react",
-        "hooks",
-        "components",
-        "functions",
-        "pxa",
-        "base",
-        "bariskuran",
-        "store",
-        "baseStore",
-        "date",
-        "time",
-        "baseDate",
-        "icons",
-        "baseIcons",
-        "form",
-        "baseForm",
-        "fetch",
-        "baseFetch",
-        "helpers"
-    ],
-    "author": "Baris Kuran <bariskuran@gmail.com> (thepxa.co.uk)",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/bariskuran/base.git"
-    },
-    "main": "src/index.js",
-    "module": "src/index.js",
-    "exports": {
-        ".": {
-            "import": "./src/index.js",
-            "require": "./src/index.js"
-        }
-    },
-    "sideEffects": false,
-    "scripts": {
-        "build": "node builder.cjs",
-        "test": "vitest",
-        "test:watch": "vitest --watch",
-        "test:ui": "vitest --ui"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "@eslint/compat": "2.0.1",
-        "@eslint/eslintrc": "3.3.0",
-        "@eslint/js": "9.39.2",
-        "@testing-library/dom": "^10.4.1",
-        "@testing-library/jest-dom": "^6.9.1",
-        "@testing-library/react": "^16.3.2",
-        "@vitejs/plugin-react": "5.1.2",
-        "eslint": "9.39.2",
-        "eslint-plugin-import": "2.32.0",
-        "eslint-plugin-react": "7.37.5",
-        "eslint-plugin-react-hooks": "7.0.1",
-        "globals": "17.0.0",
-        "jsdom": "^27.4.0",
-        "prettier": "3.8.1",
-        "react": "19.2.3",
-        "react-dom": "19.2.3",
-        "react-router-dom": "7.12.0",
-        "react-syntax-highlighter": "16.1.0",
-        "styled-components": "^6.3.8",
-        "vite": "7.3.1",
-        "vite-plugin-eslint": "1.8.1",
-        "vitest": "^4.0.18"
-    },
-    "peerDependencies": {
-        "react": ">=17.0.0",
-        "react-dom": ">=17.0.0",
-        "react-router-dom": ">=6.0.0",
-        "styled-components": ">=6.0.0"
+  "name": "@bariskuran/base",
+  "version": "1.0.0",
+  "private": false,
+  "license": "MIT",
+  "description": "Advanced hooks, functions, components for React projects.",
+  "keywords": [
+    "react",
+    "hooks",
+    "components",
+    "functions",
+    "pxa",
+    "base",
+    "bariskuran",
+    "store",
+    "baseStore",
+    "date",
+    "time",
+    "baseDate",
+    "icons",
+    "baseIcons",
+    "form",
+    "baseForm",
+    "fetch",
+    "baseFetch",
+    "helpers"
+  ],
+  "author": "Baris Kuran <bariskuran@gmail.com> (thepxa.co.uk)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bariskuran/base.git"
+  },
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.js"
     }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "node builder.cjs",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@eslint/compat": "2.0.1",
+    "@eslint/eslintrc": "3.3.0",
+    "@eslint/js": "9.39.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@vitejs/plugin-react": "5.1.2",
+    "eslint": "9.39.2",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "globals": "17.0.0",
+    "jsdom": "^27.4.0",
+    "prettier": "3.8.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-router-dom": "7.12.0",
+    "react-syntax-highlighter": "16.1.0",
+    "styled-components": "^6.3.8",
+    "vite": "7.3.1",
+    "vite-plugin-eslint": "1.8.1",
+    "vitest": "^4.0.18"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "react-router-dom": ">=6.0.0",
+    "styled-components": ">=6.0.0"
+  }
 }

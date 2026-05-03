@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { clearUndefinedDeep } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const sample = {
     a: 1,
@@ -21,9 +21,7 @@ const X = () => (
             code={`import { clearUndefinedDeep } from "${SYS.basePath}";
 
 const cleaned = clearUndefinedDeep(sample);`}
-            example={
-                <Typography.span children={JSON.stringify(clearUndefinedDeep(sample), null, 2)} />
-            }
+            example={<Typo.span children={JSON.stringify(clearUndefinedDeep(sample), null, 2)} />}
         />
         <Ds.api
             props={{

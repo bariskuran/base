@@ -20,7 +20,8 @@ const Bar = ({
     thickness,
     maxLength,
     trackMargin,
-    edgeMargin,
+    edgeMarginX,
+    edgeMarginY,
     minThumbLength,
     exactThumbSize,
     fillMode,
@@ -41,6 +42,7 @@ const Bar = ({
     const hostH = hostRect?.clientHeight || hostRect?.height || viewportHeight;
 
     const isBarVertical = barPosition === "vertical";
+    const resolvedEdgeMargin = isBarVertical ? edgeMarginY : edgeMarginX;
 
     const barLength = isBarVertical
         ? maxLength
@@ -68,25 +70,24 @@ const Bar = ({
         ? {
               position: "fixed",
               top: trackStartOffset + "px",
-              [mirror ? "left" : "right"]: edgeMargin + "rem",
+              [mirror ? "left" : "right"]: resolvedEdgeMargin + "rem",
           }
         : {
               position: "fixed",
               left: trackStartOffset + "px",
-              [mirror ? "top" : "bottom"]: edgeMargin + "rem",
+              [mirror ? "top" : "bottom"]: resolvedEdgeMargin + "rem",
           };
 
-    /** Host / overlay ile aynı; sourceByRef akışında da kenardan edgeMargin rem ile içeri alınır (px kullanınca ~5px görünmez kalıyordu). */
     const hostLikePositionStyle = isBarVertical
         ? {
               position: "absolute",
               top: trackStartOffset + "px",
-              [mirror ? "left" : "right"]: edgeMargin + "rem",
+              [mirror ? "left" : "right"]: resolvedEdgeMargin + "rem",
           }
         : {
               position: "absolute",
               left: trackStartOffset + "px",
-              [mirror ? "top" : "bottom"]: edgeMargin + "rem",
+              [mirror ? "top" : "bottom"]: resolvedEdgeMargin + "rem",
           };
 
     const shouldUseMinThumb = exactThumbSize == null && !fillMode;
@@ -107,6 +108,7 @@ const Bar = ({
 
     return (
         <Variant
+            aria-label="ScrollBar"
             ref={truckRef}
             onMouseDown={onTruckMouseDown}
             onMouseEnter={onMouseEnter}
@@ -179,7 +181,8 @@ export const Base = (p) => {
         thickness,
         maxLength,
         trackMargin,
-        edgeMargin,
+        edgeMarginX,
+        edgeMarginY,
         minThumbLength,
         exactThumbSize,
         fillMode,
@@ -206,6 +209,7 @@ export const Base = (p) => {
         handleOnMouseLeave,
         mirror,
         hasExternalSource,
+        hasSplitPositionSource,
     } = useVars(p);
 
     const bars = (
@@ -229,7 +233,8 @@ export const Base = (p) => {
                     thickness={thickness}
                     maxLength={maxLength}
                     trackMargin={trackMargin}
-                    edgeMargin={edgeMargin}
+                    edgeMarginX={edgeMarginX}
+                    edgeMarginY={edgeMarginY}
                     minThumbLength={minThumbLength}
                     exactThumbSize={exactThumbSize}
                     fillMode={fillMode}
@@ -261,7 +266,8 @@ export const Base = (p) => {
                     thickness={thickness}
                     maxLength={maxLength}
                     trackMargin={trackMargin}
-                    edgeMargin={edgeMargin}
+                    edgeMarginX={edgeMarginX}
+                    edgeMarginY={edgeMarginY}
                     minThumbLength={minThumbLength}
                     exactThumbSize={exactThumbSize}
                     fillMode={fillMode}
@@ -277,7 +283,7 @@ export const Base = (p) => {
     );
 
     const overlay =
-        !isWindowLike && !hasExternalSource && overlayHost && hostRect
+        !isWindowLike && (!hasExternalSource || hasSplitPositionSource) && overlayHost && hostRect
             ? createPortal(
                   <div
                       data-scrollbar-overlay=""
@@ -287,7 +293,7 @@ export const Base = (p) => {
                           left: hostRect.overlayLeft + "px",
                           width: (hostRect.clientWidth || hostRect.width || 0) + "px",
                           height: (hostRect.clientHeight || hostRect.height || 0) + "px",
-                          overflow: "hidden",
+                          overflow: "initial",
                           pointerEvents: "none",
                           zIndex: 9999999999,
                       }}
@@ -301,7 +307,7 @@ export const Base = (p) => {
     return (
         <>
             <S.anchor ref={anchorRef} />
-            {isWindowLike ? bars : hasExternalSource ? bars : overlay}
+            {isWindowLike ? bars : hasExternalSource && !hasSplitPositionSource ? bars : overlay}
         </>
     );
 };

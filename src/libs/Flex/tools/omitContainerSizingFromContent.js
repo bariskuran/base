@@ -14,7 +14,10 @@ export const omitContainerSizingFromContent = (props = {}) => {
         flexShrink: _flexShrink,
         flexBasis: _flexBasis,
         alignSelf: _alignSelf,
+        justifySelf: _justifySelf,
+        placeSelf: _placeSelf,
         order: _order,
+        borderRadius: _borderRadius,
         ...rest
     } = props;
 

@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isPlainObject } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const X = () => (
     <Ds.page title="<isPlainObject>" releasedOn="1.0.0" description="Checks plain-object values.">
@@ -13,9 +13,9 @@ isPlainObject({ a: 1 }); // true
 isPlainObject(new Date()); // false`}
             example={
                 <>
-                    <Typography.span children={`{} => ${String(isPlainObject({}))}`} />
-                    <Typography.span children={`Date => ${String(isPlainObject(new Date()))}`} />
-                    <Typography.span children={`[] => ${String(isPlainObject([]))}`} />
+                    <Typo.span children={`{} => ${String(isPlainObject({}))}`} />
+                    <Typo.span children={`Date => ${String(isPlainObject(new Date()))}`} />
+                    <Typo.span children={`[] => ${String(isPlainObject([]))}`} />
                 </>
             }
         />

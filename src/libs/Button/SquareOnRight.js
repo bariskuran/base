@@ -1,29 +1,7 @@
 import styled, { css } from "styled-components";
 
 const S = styled.div`
-    ${({
-        theme,
-        $isHovered,
-        $isActivated,
-        // $isPending,
-        // $disabled,
-        // $isJustIcon,
-        // $bgColor,
-        // $hoverBgColor,
-        // $activeBgColor,
-        // $color,
-        // $prefixBgColor,
-        // $prefixColor,
-        // $suffixBgColor,
-        // $suffixColor,
-        // $minHeight,
-        // $minWidth,
-        // $minLabelWidth,
-        // $inverseColor1,
-        // $inverseColor2,
-        // $size,
-        $fullWidth,
-    }) => css`
+    ${({ theme, $isHovered, $isActivated, $fullWidth }) => css`
         all: unset;
         display: flex;
         transition: all 0.5s;
@@ -34,11 +12,10 @@ const S = styled.div`
         & > [data-slot="label"] {
             display: flex;
             align-items: center;
-            letter-spacing: 0.5rem;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 14rem;
-            transition: all 0.5s;
-            padding: 4rem 8rem;
+            transition: padding 0.5s;
+            padding: 4rem 12rem;
         }
 
         & > [data-slot="prefix"],
@@ -51,29 +28,31 @@ const S = styled.div`
             transition: all 0.5s;
         }
 
-        ${$isHovered &&
-        css`
-            background: ${theme.colorAlpha(theme.primary, 0.2)} !important;
-        `}
-
         &:after {
             content: "";
             width: 0;
-            height: 30rem;
-            background: ${theme.primary};
+            height: 33rem;
+            background: ${theme.greys.shade50};
             transition: all 0.5s;
         }
+
+        ${$isHovered &&
+        css`
+            background: ${theme.colorAlpha(theme.primary, 0.3)} !important;
+        `}
 
         ${$isActivated &&
         css`
             background: ${theme.colorAlpha(theme.primary, 0.1)} !important;
 
             & > [data-slot="label"] {
-                padding: 4rem 12rem;
+                padding: 4rem 20rem;
+                font-weight: 600;
             }
 
             &:after {
-                width: 10rem;
+                background: ${theme.primary};
+                width: 10px;
             }
         `}
     `}

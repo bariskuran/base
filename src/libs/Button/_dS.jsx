@@ -214,99 +214,103 @@ const X = () => {
                         <Button label="submit" hoverLabel="are you sure?" activeLabel="submitted" pendingLabel="processing" onClick={onClick} bgColor="success" hoverBgColor="error" activeBgColor="foreground" hoverManually={hoverManually} activeManually={activeManually} pendingManually={pendingManually} prefix={{ icon: "fullArrowRight", hoverIcon: "warning", activeIcon: "check", pendingIcon: "loading3", }} />
                         <Button label="match route" to="/design-system/button" />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
-                        <ButtonVariant
-                            onClick={onClick}
-                            label="click"
-                            hoverLabel="hovered"
-                            activeLabel="active"
-                            pendingLabel="pending"
-                            hoverManually={hoverManually}
-                            activeManually={activeManually}
-                            pendingManually={pendingManually}
-                        />
-                        <ButtonVariant
-                            label="button"
-                            hoverLabel="hovered"
-                            activeLabel="active"
-                            pendingLabel="pending"
-                            onClick={onClick}
-                            bgColor="error"
-                            hoverBgColor="foreground"
-                            activeBgColor="foreground"
-                            hoverManually={hoverManually}
-                            activeManually={activeManually}
-                            pendingManually={pendingManually}
-                            prefix={{
-                                icon: "abstract2",
-                                hoverIcon: "abstract3",
-                                activeIcon: "abstract4",
-                                pendingIcon: "loading",
-                            }}
-                        />
-                        <ButtonVariant
-                            label="submit"
-                            hoverLabel="are you sure?"
-                            activeLabel="submitted"
-                            pendingLabel="processing"
-                            onClick={onClick}
-                            bgColor="success"
-                            hoverBgColor="error"
-                            activeBgColor="foreground"
-                            hoverManually={hoverManually}
-                            activeManually={activeManually}
-                            pendingManually={pendingManually}
-                            prefix={{
-                                icon: "fullArrowRight",
-                                hoverIcon: "warning",
-                                activeIcon: "check",
-                                pendingIcon: "loading3",
-                            }}
-                        />
-                        <ButtonVariant label="match route" to="/design-system/button" />
-                        <div
-                            onMouseEnter={() => {
-                                setLocal((s) => {
-                                    s.hoverManually = true;
-                                });
-                            }}
-                            onMouseLeave={() => {
-                                setLocal((s) => {
-                                    s.hoverManually = false;
-                                });
-                            }}
-                        >
-                            hoverManually
-                        </div>
-                        <div
-                            onMouseEnter={() => {
-                                setLocal((s) => {
-                                    s.activeManually = true;
-                                });
-                            }}
-                            onMouseLeave={() => {
-                                setLocal((s) => {
-                                    s.activeManually = false;
-                                });
-                            }}
-                        >
-                            activeManually
-                        </div>
-                        <div
-                            onMouseEnter={() => {
-                                setLocal((s) => {
-                                    s.pendingManually = true;
-                                });
-                            }}
-                            onMouseLeave={() => {
-                                setLocal((s) => {
-                                    s.pendingManually = false;
-                                });
-                            }}
-                        >
-                            pendingManually
-                        </div>
-                    </Flex>
+                    <Flex.column xAlign="start" gap={10}>
+                        <Flex gap={10}>
+                            <ButtonVariant
+                                onClick={onClick}
+                                label="click"
+                                hoverLabel="hovered"
+                                activeLabel="active"
+                                pendingLabel="pending"
+                                hoverManually={hoverManually}
+                                activeManually={activeManually}
+                                pendingManually={pendingManually}
+                            />
+                            <ButtonVariant
+                                label="button"
+                                hoverLabel="hovered"
+                                activeLabel="active"
+                                pendingLabel="pending"
+                                onClick={onClick}
+                                bgColor="error"
+                                hoverBgColor="foreground"
+                                activeBgColor="foreground"
+                                hoverManually={hoverManually}
+                                activeManually={activeManually}
+                                pendingManually={pendingManually}
+                                prefix={{
+                                    icon: "abstract2",
+                                    hoverIcon: "abstract3",
+                                    activeIcon: "abstract4",
+                                    pendingIcon: "loading",
+                                }}
+                            />
+                            <ButtonVariant
+                                label="submit"
+                                hoverLabel="are you sure?"
+                                activeLabel="submitted"
+                                pendingLabel="processing"
+                                onClick={onClick}
+                                bgColor="success"
+                                hoverBgColor="error"
+                                activeBgColor="foreground"
+                                hoverManually={hoverManually}
+                                activeManually={activeManually}
+                                pendingManually={pendingManually}
+                                prefix={{
+                                    icon: "fullArrowRight",
+                                    hoverIcon: "warning",
+                                    activeIcon: "check",
+                                    pendingIcon: "loading3",
+                                }}
+                            />
+                            <ButtonVariant label="match route" to="/design-system/button" />
+                        </Flex>
+                        <Flex gap={10}>
+                            <div
+                                onMouseEnter={() => {
+                                    setLocal((s) => {
+                                        s.hoverManually = true;
+                                    });
+                                }}
+                                onMouseLeave={() => {
+                                    setLocal((s) => {
+                                        s.hoverManually = false;
+                                    });
+                                }}
+                            >
+                                hoverManually
+                            </div>
+                            <div
+                                onMouseEnter={() => {
+                                    setLocal((s) => {
+                                        s.activeManually = true;
+                                    });
+                                }}
+                                onMouseLeave={() => {
+                                    setLocal((s) => {
+                                        s.activeManually = false;
+                                    });
+                                }}
+                            >
+                                activeManually
+                            </div>
+                            <div
+                                onMouseEnter={() => {
+                                    setLocal((s) => {
+                                        s.pendingManually = true;
+                                    });
+                                }}
+                                onMouseLeave={() => {
+                                    setLocal((s) => {
+                                        s.pendingManually = false;
+                                    });
+                                }}
+                            >
+                                pendingManually
+                            </div>
+                        </Flex>
+                    </Flex.column>
                 }
             />
             <Ds.block

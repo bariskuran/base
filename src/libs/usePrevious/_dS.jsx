@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { usePrevious } from ".";
 import { useState } from "react";
 import { Button } from "../Button";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 import { Flex } from "../Flex";
 
 const Demo = () => {
@@ -12,7 +12,7 @@ const Demo = () => {
     return (
         <Flex.column xAlign="start" gap={8}>
             <Button label={`count: ${count}`} onClick={() => setCount((v) => v + 1)} />
-            <Typography.span>{`previous: ${String(previous)}`}</Typography.span>
+            <Typo.span>{`previous: ${String(previous)}`}</Typo.span>
         </Flex.column>
     );
 };
@@ -28,7 +28,12 @@ const [prev, setPrev] = usePrevious(value);`}
         />
         <Ds.api
             props={{
-                value: { description: "Current value to track.", type: "any", required: true, defaultValue: "undefined" },
+                value: {
+                    description: "Current value to track.",
+                    type: "any",
+                    required: true,
+                    defaultValue: "undefined",
+                },
                 return: {
                     description: "[previousValue, setPreviousValue]",
                     type: "[any, (value:any) => void]",

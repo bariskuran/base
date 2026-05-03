@@ -13,7 +13,8 @@ export const manageColors = ({ bgColor, color } = {}) => {
     };
 };
 
-const mergeCommonAndItem = (common = {}, item = {}) => {
+/** childrenCommon + childrenProps[slot] birleşimi (cloneElement ile iç bileşene iletmek için). */
+export const mergeCommonAndItem = (common = {}, item = {}) => {
     const merged = { ...common };
 
     Object.keys(item).forEach((key) => {
@@ -291,6 +292,21 @@ const generateAlignSelf = ({ alignSelf }) => {
     return mapped;
 };
 
+const generateJustifySelf = ({ justifySelf }) => {
+    if (justifySelf == null) return undefined;
+
+    const raw = typeof justifySelf === "string" ? justifySelf.trim() : justifySelf;
+    const mappedX = mapXAlign(raw);
+
+    if (mappedX != null) return mappedX;
+
+    const mappedJustify = mapJustify(typeof raw === "string" ? raw : String(raw));
+
+    if (mappedJustify != null) return mappedJustify;
+
+    return typeof raw === "string" ? raw : undefined;
+};
+
 const generateFlexItemSizing = ({ flex, width, height, parentDirection }) => {
     const normalizedFlex = flex == null ? undefined : String(flex).trim();
     const isColumn = parentDirection === "column" || parentDirection === "column-reverse";
@@ -386,20 +402,23 @@ const generateRootFlexSizing = ({
 };
 
 const generateInProps = ({
-    inCommonProps,
-    inProps,
+    childCommon,
+    perChildOverrides,
     childrenCount = 0,
     currentBreakpoint,
     sysDefaults = {},
     parentDirection,
 }) => {
-    const total = Math.max(childrenCount, Array.isArray(inProps) ? inProps.length : 0);
+    const total = Math.max(
+        childrenCount,
+        Array.isArray(perChildOverrides) ? perChildOverrides.length : 0,
+    );
 
-    if (!inCommonProps && !Array.isArray(inProps)) return undefined;
+    if (!childCommon && !Array.isArray(perChildOverrides)) return undefined;
 
     return Array.from({ length: total }).map((_, index) => {
-        const commonRaw = inCommonProps || {};
-        const itemRaw = Array.isArray(inProps) ? inProps[index] || {} : {};
+        const commonRaw = childCommon || {};
+        const itemRaw = Array.isArray(perChildOverrides) ? perChildOverrides[index] || {} : {};
 
         return generateProps({
             props: mergeCommonAndItem(commonRaw, itemRaw),
@@ -410,6 +429,92 @@ const generateInProps = ({
     });
 };
 
+/** Flex UI props: JSX/HTML tarzı kebab-case → React camelCase (camel tanımlıysa dokunulmaz). */
+export const FLEX_PROPS_KEBAB_TO_CAMEL = Object.freeze({
+    "align-self": "alignSelf",
+    "justify-self": "justifySelf",
+    "place-self": "placeSelf",
+    "place-content": "placeContent",
+    "place-items": "placeItems",
+    "align-content": "alignContent",
+    "justify-content": "justifyContent",
+    "align-items": "alignItems",
+    "flex-grow": "flexGrow",
+    "flex-shrink": "flexShrink",
+    "flex-basis": "flexBasis",
+    "flex-flow": "flexFlow",
+    "flex-direction": "direction",
+    "flex-wrap": "wrap",
+    "border-radius": "borderRadius",
+    "padding-left": "paddingLeft",
+    "padding-right": "paddingRight",
+    "padding-top": "paddingTop",
+    "padding-bottom": "paddingBottom",
+    "margin-left": "marginLeft",
+    "margin-right": "marginRight",
+    "margin-top": "marginTop",
+    "margin-bottom": "marginBottom",
+    "row-gap": "rowGap",
+    "column-gap": "columnGap",
+    overflow: "overflow",
+    "overflow-x": "overflowX",
+    "overflow-y": "overflowY",
+    "min-width": "minWidth",
+    "min-height": "minHeight",
+    "max-width": "maxWidth",
+    "max-height": "maxHeight",
+    "background-color": "bgColor",
+    "bg-color": "bgColor",
+    "x-align": "xAlign",
+    "y-align": "yAlign",
+    "disable-scrollbar": "disableScrollBar",
+    "children-common": "childrenCommon",
+    "children-props": "childrenProps",
+});
+
+const hasOwn = (o, key) => Object.prototype.hasOwnProperty.call(o, key);
+
+export const mergeFlexKebabPropAliases = (source) => {
+    if (source == null || typeof source !== "object") return {};
+
+    const out = { ...source };
+
+    for (const [kebab, camel] of Object.entries(FLEX_PROPS_KEBAB_TO_CAMEL)) {
+        if (!hasOwn(source, kebab)) continue;
+        if (!hasOwn(source, camel)) out[camel] = source[kebab];
+    }
+
+    return out;
+};
+
+/** responsive breakpoint nesnelerindeki kebab anahtarları da camel'e çevrilir. */
+export const normalizeFlexPropsWithResponsiveAliases = (props) => {
+    if (props == null || typeof props !== "object") return {};
+
+    const top = mergeFlexKebabPropAliases(props);
+
+    if (!props.responsive || typeof props.responsive !== "object") return top;
+
+    const responsive = {};
+
+    for (const [bp, overrides] of Object.entries(props.responsive)) {
+        responsive[bp] =
+            overrides && typeof overrides === "object" && !Array.isArray(overrides)
+                ? mergeFlexKebabPropAliases(overrides)
+                : overrides;
+    }
+
+    return { ...top, responsive };
+};
+
+/** `full` → `width: "100%"` (width açıkça verilmediyse). */
+const resolveFlexFullWidthShorthand = (merged) => {
+    if (merged == null || typeof merged !== "object") return merged;
+    const { full, ...rest } = merged;
+    if (full !== true || rest.width != null) return rest;
+    return { ...rest, width: "100%" };
+};
+
 export const generateProps = ({
     props = {},
     currentBreakpoint,
@@ -417,11 +522,18 @@ export const generateProps = ({
     childrenCount = 0,
     parentDirection,
 }) => {
-    const merged1 = deepMerge(sysDefaults, props);
-    const bpOverride = props?.responsive?.[currentBreakpoint] || {};
-    const mergedObj = deepMerge(merged1, bpOverride);
-    const hasExplicitWidth = props?.width != null || bpOverride?.width != null;
-    const hasExplicitHeight = props?.height != null || bpOverride?.height != null;
+    const propsNorm = normalizeFlexPropsWithResponsiveAliases(props);
+    const merged1 = deepMerge(sysDefaults, propsNorm);
+    const bpOverride = propsNorm?.responsive?.[currentBreakpoint] || {};
+    const mergedObj = resolveFlexFullWidthShorthand(
+        mergeFlexKebabPropAliases(deepMerge(merged1, bpOverride)),
+    );
+    const hasExplicitWidth =
+        propsNorm?.width != null ||
+        bpOverride?.width != null ||
+        propsNorm?.full === true ||
+        bpOverride?.full === true;
+    const hasExplicitHeight = propsNorm?.height != null || bpOverride?.height != null;
 
     const {
         bgColor,
@@ -456,6 +568,7 @@ export const generateProps = ({
         rowGap,
         columnGap,
         alignSelf,
+        justifySelf,
         placeContent,
         placeItems,
         placeSelf,
@@ -464,12 +577,15 @@ export const generateProps = ({
         justify,
         alignItems,
         //
-        inCommonProps,
-        inProps,
+        childrenCommon,
+        childrenProps,
         wrap,
+        overflow,
         overflowX,
         overflowY,
     } = mergedObj;
+
+    const childCommon = childrenCommon;
 
     const currDirection = generateDirection(direction);
 
@@ -524,16 +640,18 @@ export const generateProps = ({
         rowGap: cssNormalizeSize(rowGap),
         columnGap: cssNormalizeSize(columnGap),
         alignSelf: generateAlignSelf({ alignSelf }),
+        justifySelf: generateJustifySelf({ justifySelf }),
         placeContent,
         placeItems,
         placeSelf,
         alignContent: mapAlignItems(alignContent),
+        overflow,
         overflowX,
         overflowY,
         wrap: normalizeWrap(wrap),
         inProps: generateInProps({
-            inCommonProps,
-            inProps,
+            childCommon,
+            perChildOverrides: childrenProps,
             currentBreakpoint,
             sysDefaults: {},
             childrenCount,
@@ -574,6 +692,7 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "rowGap",
     "columnGap",
     "alignSelf",
+    "justifySelf",
     "placeContent",
     "placeItems",
     "placeSelf",
@@ -582,11 +701,19 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "justify",
     "alignItems",
     "inCommonProps",
+    "childrenCommon",
     "inProps",
+    "childrenProps",
+    "overflow",
     "overflowX",
     "overflowY",
     "wrap",
     "responsive",
     "exportData",
+    "disableScrollBar",
     "scrollBarProps",
+    "typo",
+    "typography",
+    "full",
+    ...Object.keys(FLEX_PROPS_KEBAB_TO_CAMEL),
 ]);

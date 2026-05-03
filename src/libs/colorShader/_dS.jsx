@@ -2,14 +2,18 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorShader } from ".";
 import { Flex } from "../Flex";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const b = "#4f46e5";
 const s20 = colorShader(b, 20);
 const s50 = colorShader(b, 50);
 
 const X = () => (
-    <Ds.page title="<colorShader>" releasedOn="1.0.0" description="Darkens color or increases alpha.">
+    <Ds.page
+        title="<colorShader>"
+        releasedOn="1.0.0"
+        description="Darkens color or increases alpha."
+    >
         <Ds.block
             title="Basic Usage"
             code={`import { colorShader } from "${SYS.basePath}";
@@ -46,7 +50,7 @@ const dark50 = colorShader("#4f46e5", 50);`}
                 },
             }}
         />
-        <Typography.span children={`base: ${b} / shade20: ${s20} / shade50: ${s50}`} />
+        <Typo.span children={`base: ${b} / shade20: ${s20} / shade50: ${s50}`} />
     </Ds.page>
 );
 

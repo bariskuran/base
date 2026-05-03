@@ -1,4 +1,4 @@
-import { Typo } from "../../Typography";
+import { Typo } from "../../Typo";
 import { Flex } from "../../Flex";
 import S from "./_styled";
 

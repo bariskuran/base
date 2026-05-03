@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorContrastRatio } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const ratio1 = colorContrastRatio("#ffffff", "#111111");
 const ratio2 = colorContrastRatio("#ffbf00", "#ffffff");
@@ -18,7 +18,7 @@ const X = () => (
 
 const ratio = colorContrastRatio("#ffffff", "#111111");`}
             example={
-                <Typography.span children={`#fff vs #111 => ${ratio1} | #ffbf00 vs #fff => ${ratio2}`} />
+                <Typo.span children={`#fff vs #111 => ${ratio1} | #ffbf00 vs #fff => ${ratio2}`} />
             }
         />
         <Ds.api

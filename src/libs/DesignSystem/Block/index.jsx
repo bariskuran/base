@@ -1,5 +1,5 @@
 import S from "./_styled";
-import { Typo } from "../../Typography";
+import { Typo } from "../../Typo";
 import { baseStore } from "../../@baseStore";
 import { Button } from "../../Button";
 import { Flex } from "../../Flex";
@@ -53,7 +53,7 @@ const Block = ({ title, description, code, example, lastBlock }) => {
                 )}
             </S.titleArea>
             <S.line $lastBlock={lastBlock} />
-            <Flex.column justify="start">
+            <Flex.column justify="start" full>
                 {(example || description) && ajax === 0 && (
                     <S.contentArea area-title="Block Content">
                         <Flex.row justify="start">{example}</Flex.row>

@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { typeOf } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const multi = typeOf(1, "x", null, [], new Date(0));
 
@@ -15,16 +15,22 @@ typeOf(null); // "null"
 typeOf(1, "x", []); // ["number","string","array"]`}
             example={
                 <>
-                    <Typography.span children={`typeOf(null): ${typeOf(null)}`} />
-                    <Typography.span children={`typeOf(...): ${JSON.stringify(multi)}`} />
+                    <Typo.span children={`typeOf(null): ${typeOf(null)}`} />
+                    <Typo.span children={`typeOf(...): ${JSON.stringify(multi)}`} />
                 </>
             }
         />
         <Ds.api
             props={{
-                "...args": { description: "One or more values to inspect.", type: "any[]", required: false, defaultValue: "[]" },
+                "...args": {
+                    description: "One or more values to inspect.",
+                    type: "any[]",
+                    required: false,
+                    defaultValue: "[]",
+                },
                 return: {
-                    description: "undefined with no args, string with one arg, array with multiple args.",
+                    description:
+                        "undefined with no args, string with one arg, array with multiple args.",
                     type: "undefined | string | string[]",
                     required: true,
                     defaultValue: "undefined",

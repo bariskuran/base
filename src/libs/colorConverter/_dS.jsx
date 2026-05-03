@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorConverter } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const data = colorConverter("#3498db");
 
@@ -16,15 +16,13 @@ const X = () => (
             code={`import { colorConverter } from "${SYS.basePath}";
 
 const data = colorConverter("#3498db");`}
-            example={<Typography.span children={JSON.stringify(data)} />}
+            example={<Typo.span children={JSON.stringify(data)} />}
         />
         <Ds.block
             title="Object Input"
             code={`colorConverter({ hslArray: [200, 70, 45] });`}
             example={
-                <Typography.span
-                    children={JSON.stringify(colorConverter({ hslArray: [200, 70, 45] }))}
-                />
+                <Typo.span children={JSON.stringify(colorConverter({ hslArray: [200, 70, 45] }))} />
             }
         />
         <Ds.api

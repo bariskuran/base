@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { generateRandom } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const X = () => (
     <Ds.page
@@ -18,14 +18,14 @@ generateRandom.text(12, { useUpperCase: true, useNumbers: true });
 generateRandom.loremIpsum(15);`}
             example={
                 <>
-                    <Typography.span children={`number: ${generateRandom.number(10, 99)}`} />
-                    <Typography.span
+                    <Typo.span children={`number: ${generateRandom.number(10, 99)}`} />
+                    <Typo.span
                         children={`text: ${generateRandom.text(12, {
                             useUpperCase: true,
                             useNumbers: true,
                         })}`}
                     />
-                    <Typography.span children={generateRandom.loremIpsum(12)} />
+                    <Typo.span children={generateRandom.loremIpsum(12)} />
                 </>
             }
         />

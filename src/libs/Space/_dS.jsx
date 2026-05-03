@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { Space } from ".";
 import { Card } from "../Card";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const X = () => (
     <Ds.page title="<Space>" releasedOn="1.0.0" description="Vertical spacer component.">
@@ -10,14 +10,14 @@ const X = () => (
             title="Preset and Custom Size"
             code={`import { Space } from "${SYS.basePath}";
 
-<Typography>Top</Typography>
+<Typo>Top</Typo>
 <Space size="xl" />
-<Typography>Bottom</Typography>`}
+<Typo>Bottom</Typo>`}
             example={
                 <Card padding={12}>
-                    <Typography.span children="Top" />
+                    <Typo.span children="Top" />
                     <Space size="xl" />
-                    <Typography.span children="Bottom" />
+                    <Typo.span children="Bottom" />
                 </Card>
             }
         />

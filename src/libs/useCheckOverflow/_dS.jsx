@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { useCheckOverflow } from ".";
 import { useRef } from "react";
 import { Card } from "../Card";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 import { Flex } from "../Flex";
 
 const Demo = () => {
@@ -15,14 +15,18 @@ const Demo = () => {
             <Card ref={ref} width={220} height={80} overflow="auto" padding={8}>
                 Very long very long very long very long very long content for overflow checks.
             </Card>
-            <Typography.span>{`overflow: ${String(isOverflowing)}`}</Typography.span>
-            <Typography.span>{`x: ${String(isOverflowingX)} y: ${String(isOverflowingY)}`}</Typography.span>
+            <Typo.span>{`overflow: ${String(isOverflowing)}`}</Typo.span>
+            <Typo.span>{`x: ${String(isOverflowingX)} y: ${String(isOverflowingY)}`}</Typo.span>
         </Flex.column>
     );
 };
 
 const X = () => (
-    <Ds.page title="<useCheckOverflow>" releasedOn="1.0.0" description="Detects overflow on element/window.">
+    <Ds.page
+        title="<useCheckOverflow>"
+        releasedOn="1.0.0"
+        description="Detects overflow on element/window."
+    >
         <Ds.block
             title="Element Overflow Detection"
             code={`import { useCheckOverflow } from "${SYS.basePath}";
@@ -33,8 +37,18 @@ const { isOverflowing } = useCheckOverflow({ ref });`}
         />
         <Ds.api
             props={{
-                ref: { description: "Target ref object.", type: "RefObject<Element>", required: false, defaultValue: "undefined" },
-                target: { description: "Direct target element/window override.", type: "Element | Window", required: false, defaultValue: "undefined" },
+                ref: {
+                    description: "Target ref object.",
+                    type: "RefObject<Element>",
+                    required: false,
+                    defaultValue: "undefined",
+                },
+                target: {
+                    description: "Direct target element/window override.",
+                    type: "Element | Window",
+                    required: false,
+                    defaultValue: "undefined",
+                },
                 return: {
                     description: "Overflow flags: isOverflowing, isOverflowingX, isOverflowingY.",
                     type: "object",

@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorGet } from ".";
 import { Flex } from "../Flex";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const c1 = colorGet("primary");
 const c2 = colorGet("foregrounds.tint50");
@@ -12,12 +12,16 @@ const Swatch = ({ label, color, opposite }) => (
         <div style={{ width: 80, height: 26, borderRadius: 6, background: color, color: opposite }}>
             {label}
         </div>
-        <Typography.span children={`${color} / opposite: ${opposite}`} />
+        <Typo.span children={`${color} / opposite: ${opposite}`} />
     </Flex.column>
 );
 
 const X = () => (
-    <Ds.page title="<colorGet>" releasedOn="1.0.0" description="Theme/css color resolver + helpers.">
+    <Ds.page
+        title="<colorGet>"
+        releasedOn="1.0.0"
+        description="Theme/css color resolver + helpers."
+    >
         <Ds.block
             title="Basic Usage"
             code={`import { colorGet } from "${SYS.basePath}";
@@ -37,7 +41,7 @@ const c = colorGet("primary");
 const a = c.colorApi.shade20;
 const b = c.colorApi.tint30;`}
             example={
-                <Typography.span
+                <Typo.span
                     children={`shade20: ${c1?.colorApi?.shade20} | tint30: ${c1?.colorApi?.tint30}`}
                 />
             }

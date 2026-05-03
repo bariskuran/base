@@ -105,6 +105,13 @@ const Svg = styled.svg`
         fill: ${$fill || theme.foreground};
         color: ${$fill || theme.foreground};
         pointer-events: none;
+        transition:
+            fill 0.2s ease,
+            color 0.2s ease;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
     `}
 `;
 

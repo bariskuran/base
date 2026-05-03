@@ -33,8 +33,8 @@ export const sitemap = [
     ["findDifferences", "findDifferences", l(() => import("../findDifferences/_dS"))],
     ["Flag", "flag", l(() => import("../@Flag/_dS"))],
     ["flagLibrary", "flagLibrary", l(() => import("../@Flag/_dSLibrary"))],
-    ["Flex", "flex", l(() => import("../Flex/_dS"))],
     ["FloatingUi", "floatingUi", l(() => import("../FloatingUi/_dS"))],
+    ["Flex", "flex", l(() => import("../Flex/_dS"))],
     ["generateRandom", "generateRandom", l(() => import("../generateRandom/_dS"))],
     ["getText", "getText", l(() => import("../getText/_dS"))],
     ["getTimeDifference", "getTimeDifference", l(() => import("../getTimeDifference/_dS"))],
@@ -57,7 +57,7 @@ export const sitemap = [
     ["Space", "space", l(() => import("../Space/_dS"))],
     ["stringCaseConverter", "stringCaseConverter", l(() => import("../stringCaseConverter/_dS"))],
     ["typeOf", "typeOf", l(() => import("../typeOf/_dS"))],
-    ["Typography", "typography", l(() => import("../Typography/_dS"))],
+    ["Typo", "typo", l(() => import("../Typo/_dS"))],
     ["useBaseEffect", "useBaseEffect", l(() => import("../useBaseEffect/_dS"))],
     ["useCheckOverflow", "useCheckOverflow", l(() => import("../useCheckOverflow/_dS"))],
     [
@@ -86,8 +86,6 @@ export const sitemap = [
         l(() => import("../useScrollWidthHeight/_dS")),
     ],
     ["useTimer", "useTimer", l(() => import("../useTimer/_dS"))],
-    ["ScrollBar2", "scrollBar2", l(() => import("../ScrollBar2/_dS"))],
-    ["Flex2", "flex2", l(() => import("../Flex2/_dS"))],
 ];
 
 export const designSystemRoutes = [

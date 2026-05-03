@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { deepMerge } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const before = { a: 1, nested: { x: 10, y: 20 }, list: [1, 2] };
 const incoming = { nested: { y: 99 }, list: [4], b: 2 };
@@ -17,13 +17,13 @@ const merged = deepMerge(
   { a: 1, nested: { x: 10, y: 20 } },
   { nested: { y: 99 }, b: 2 }
 );`}
-            example={<Typography.span children={JSON.stringify(merged)} />}
+            example={<Typo.span children={JSON.stringify(merged)} />}
         />
         <Ds.block
             title="Merge Rules"
             code={`deepMerge({ list: [1, 2, 3] }, { list: [4] }); // arrays are replaced`}
             example={
-                <Typography.span
+                <Typo.span
                     children={`before: ${JSON.stringify(before)} | incoming: ${JSON.stringify(incoming)}`}
                 />
             }

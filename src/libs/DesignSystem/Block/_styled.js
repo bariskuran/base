@@ -14,8 +14,8 @@ const S = {
             `}
     `,
     titleArea: styled.div`
-        max-width: 125rem;
-        min-width: 125rem;
+        max-width: 175rem;
+        min-width: 175rem;
         box-sizing: border-box;
         padding: 10rem;
         padding-top: 30rem;

@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { sortBy } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const asc = ["10px", "2px", "1px"].sort(sortBy.asc);
 const desc = ["a", "c", "b"].sort(sortBy.desc);
@@ -16,8 +16,8 @@ const X = () => (
 ["a", "c", "b"].sort(sortBy.desc);`}
             example={
                 <>
-                    <Typography.span children={`asc: ${JSON.stringify(asc)}`} />
-                    <Typography.span children={`desc: ${JSON.stringify(desc)}`} />
+                    <Typo.span children={`asc: ${JSON.stringify(asc)}`} />
+                    <Typo.span children={`desc: ${JSON.stringify(desc)}`} />
                 </>
             }
         />

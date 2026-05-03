@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { getText } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const customLib = {
     save: { tr: "Kaydet", en: "Save" },
@@ -18,8 +18,10 @@ getText("save", { save: { tr: "Kaydet", en: "Save" } });
 getText({ tr: "Merhaba", en: "Hello" });`}
             example={
                 <>
-                    <Typography.span children={`key+library: ${getText("save", customLib)}`} />
-                    <Typography.span children={`entry object: ${getText({ tr: "Merhaba", en: "Hello" })}`} />
+                    <Typo.span children={`key+library: ${getText("save", customLib)}`} />
+                    <Typo.span
+                        children={`entry object: ${getText({ tr: "Merhaba", en: "Hello" })}`}
+                    />
                 </>
             }
         />

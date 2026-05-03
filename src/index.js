@@ -140,25 +140,9 @@ export { get3DShadow } from "./libs/colorGet3DShadow";
 export { colorGet } from "./libs/colorGet";
 export { Flex } from "./libs/Flex";
 export { removeUndefined, removeUndefinedDeep } from "./libs/removeUndefined";
-export { Typo, Typo as Typography } from "./libs/Typography";
+export { Typo, Typography } from "./libs/Typo";
 export { Dropdown } from "./libs/Dropdown";
 export { TextArea } from "./libs/TextArea";
 export { Space } from "./libs/Space";
 export { default as DS } from "./libs/DesignSystem";
 export { columnTypes, COLUMN_SIZES } from "./libs/columnTypes";
-
-//
-//
-//
-//
-// BUNLAR SONRADAN KALDIRILACAK. DESSYS yapılınca.
-//
-//
-//
-//
-export { FlexTestPage } from "./libs/Flex/tools/FlexTestPage";
-export { ButtonListTest } from "./libs/ButtonList/ButtonListTest";
-export { BaseFormTest } from "./libs/@baseForm/BaseFormTest";
-export { PopoverTest } from "./libs/Popover/PopoverTest";
-export { TypoTest } from "./libs/Typography/TypoTest";
-export { NotifierTest } from "./libs/NotifierListener/NotifierTest";

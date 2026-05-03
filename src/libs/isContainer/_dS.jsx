@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isContainer } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const X = () => (
     <Ds.page title="<isContainer>" releasedOn="1.0.0" description="Checks array or plain object.">
@@ -14,9 +14,9 @@ isContainer({}); // true
 isContainer(new Date()); // false`}
             example={
                 <>
-                    <Typography.span children={`[] => ${String(isContainer([]))}`} />
-                    <Typography.span children={`{} => ${String(isContainer({}))}`} />
-                    <Typography.span children={`Date => ${String(isContainer(new Date()))}`} />
+                    <Typo.span children={`[] => ${String(isContainer([]))}`} />
+                    <Typo.span children={`{} => ${String(isContainer({}))}`} />
+                    <Typo.span children={`Date => ${String(isContainer(new Date()))}`} />
                 </>
             }
         />

@@ -1,29 +1,29 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { Typo as Typography } from ".";
+import { Typo } from ".";
 import { Card } from "../Card";
 import { Flex } from "../Flex";
 
 const X = () => (
-    <Ds.page title="<Typography>" releasedOn="1.0.0" description="Text component with rich style variants.">
+    <Ds.page title="<Typo>" releasedOn="1.0.0" description="Text component with rich style variants.">
         <Ds.block
             title="Basic Variants"
-            code={`import { Typography } from "${SYS.basePath}";
+            code={`import { Typo } from "${SYS.basePath}";
 
-<Typography.h3>Heading</Typography.h3>
-<Typography.p>Body text</Typography.p>
-<Typography.quote>Quoted text</Typography.quote>`}
+<Typo.h3>Heading</Typo.h3>
+<Typo.p>Body text</Typo.p>
+<Typo.quote>Quoted text</Typo.quote>`}
             example={
                 <Flex.column xAlign="start" gap={8}>
-                    <Typography.h3>Heading</Typography.h3>
-                    <Typography.p>Body text example</Typography.p>
-                    <Typography.quote>Quoted text example</Typography.quote>
+                    <Typo.h3>Heading</Typo.h3>
+                    <Typo.p>Body text example</Typo.p>
+                    <Typo.quote>Quoted text example</Typo.quote>
                 </Flex.column>
             }
         />
         <Ds.block
             title="Clamp and Copyable"
-            code={`<Typography
+            code={`<Typo
   clamp={2}
   copyable
   maxWidth={260}
@@ -31,7 +31,7 @@ const X = () => (
 />`}
             example={
                 <Card padding={10} width={280}>
-                    <Typography
+                    <Typo
                         clamp={2}
                         copyable
                         maxWidth={260}

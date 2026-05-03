@@ -13,7 +13,7 @@ const S = {
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            min-width: 200rem;
+            min-width: 250rem;
             box-sizing: border-box;
             text-wrap: balance;
             white-space: normal;
@@ -32,9 +32,9 @@ const S = {
     `,
     row1: styled.div`
         display: flex;
-        flex: 0 0 125rem;
-        width: 125rem;
-        min-width: 125rem;
+        flex: 0 0 175rem;
+        width: 175rem;
+        min-width: 175rem;
         box-sizing: border-box;
     `,
     row2: styled.div`

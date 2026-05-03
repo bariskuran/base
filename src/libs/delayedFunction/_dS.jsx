@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { delayedFunction } from ".";
 import { Button } from "../Button";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
@@ -36,8 +36,8 @@ delayed.isPending();`}
                         <Button label="Run delayed" onClick={() => delayed.run()} />
                         <Button label="Run now" onClick={() => delayed.runNow()} />
                         <Button label="Cancel" onClick={() => delayed.cancel()} />
-                        <Typography.span children={`count: ${count}`} />
-                        <Typography.span children={`pending: ${String(delayed.isPending())}`} />
+                        <Typo.span children={`count: ${count}`} />
+                        <Typo.span children={`pending: ${String(delayed.isPending())}`} />
                     </>
                 }
             />

@@ -19,10 +19,12 @@ const flexProps = {
     xAlign: "start",
     overflow: "hidden",
     padding: 10,
+    /** Flex iç gömülü ScrollBar ile örnekteki <ScrollBar /> çiftlenmesin */
+    disableScrollBar: true,
 };
 
-const TwoAxisLargeContent = ({ children, inProps, short }) => (
-    <Flex {...flexProps} inProps={inProps}>
+const TwoAxisLargeContent = ({ children, childrenProps, short }) => (
+    <Flex {...flexProps} childrenProps={childrenProps}>
         <div>{short ? shortText : longText}</div>
         {children}
     </Flex>
@@ -76,7 +78,7 @@ const X = () => {
                     const longText = generateRandom.loremIpsum(1000);
                     const shortText = generateRandom.loremIpsum(50);
 
-                    const TwoAxisLargeContent = ({ children, inProps, short }) => (
+                    const TwoAxisLargeContent = ({ children, childrenProps, short }) => (
                         <Flex
                             width={150}
                             height={100}
@@ -85,7 +87,7 @@ const X = () => {
                             xAlign="start"
                             overflow="hidden"
                             padding={10}
-                            inProps={inProps}
+                            childrenProps={childrenProps}
                         >
                             <div>{short ? shortText : longText}</div>
                             {children}
@@ -93,10 +95,10 @@ const X = () => {
                     );
 
                     <Flex xAlign="start" gap={10}>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar />
                         </TwoAxisLargeContent>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]} short>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]} short>
                             <ScrollBar />
                         </TwoAxisLargeContent>
                         <TwoAxisLargeContent>
@@ -105,10 +107,10 @@ const X = () => {
                     </Flex>`}
                 example={
                     <Flex xAlign="start" gap={10}>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar />
                         </TwoAxisLargeContent>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]} short>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]} short>
                             <ScrollBar />
                         </TwoAxisLargeContent>
                         <TwoAxisLargeContent>
@@ -125,19 +127,19 @@ const X = () => {
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
                     <Flex xAlign="start" gap={10}>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableX />
                         </TwoAxisLargeContent>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableY />
                         </TwoAxisLargeContent>
                     </Flex>`}
                 example={
                     <Flex xAlign="start" gap={10}>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableX />
                         </TwoAxisLargeContent>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableY />
                         </TwoAxisLargeContent>
                     </Flex>
@@ -153,10 +155,10 @@ const X = () => {
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
                     <Flex xAlign="start" gap={10}>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableX />
                         </TwoAxisLargeContent>
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableY />
                         </TwoAxisLargeContent>
                     </Flex>`}
@@ -256,7 +258,7 @@ const X = () => {
                 description="You can change the behavior of the thumb. When you enable this prop, the thumb will fill the entire track area. fillMode ignores minThumbLength, exactThumbSize props."
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar fillMode />
                         </TwoAxisLargeContent>`}
                 example={
@@ -272,7 +274,7 @@ const X = () => {
                     This gives you flexibility with the position of the ScrollBar. When either of these two props is enabled, automatic positioning props such as mirror and opposite, as well as positioning-related props like trackMargin and edgeMargin, are disabled.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                        <TwoAxisLargeContent inProps={[{ width: 1500 }]}>
+                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar fillMode />
                         </TwoAxisLargeContent>`}
                 example={
@@ -288,10 +290,11 @@ const X = () => {
                             height={150}
                             bgColor="aliceblue"
                             aria-label="source by ref"
+                            disableScrollBar
                         >
                             <ScrollBar sourceByRef={flexRef1} />
                         </Flex>
-                        <Flex width={20} height={200}>
+                        <Flex width={20} height={200} disableScrollBar>
                             <ScrollBar sourceById={SOURCE_BY_ID} />
                         </Flex>
                     </Flex>
@@ -396,7 +399,7 @@ const X = () => {
                     },
                     positionSourceByRef: {
                         description:
-                            "Sets the visual positioning host via ref/element while scrolling still uses sourceByRef/sourceById or auto host.",
+                            "Controls which element is used for scrollbar positioning via ref. When omitted, source element is used.",
                         type: "React ref | HTMLElement",
                         required: false,
                         defaultValue: "undefined",
@@ -473,6 +476,20 @@ const X = () => {
                         type: "number",
                         required: false,
                         defaultValue: "5",
+                    },
+                    edgeMarginX: {
+                        description:
+                            "Edge margin for scrollbars rendered in horizontal position. Overrides edgeMargin for horizontal bars.",
+                        type: "number",
+                        required: false,
+                        defaultValue: "undefined",
+                    },
+                    edgeMarginY: {
+                        description:
+                            "Edge margin for scrollbars rendered in vertical position. Overrides edgeMargin for vertical bars.",
+                        type: "number",
+                        required: false,
+                        defaultValue: "undefined",
                     },
                     minThumbLength: {
                         description:

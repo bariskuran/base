@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorContrast } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const result = colorContrast("#ffffff", "#0077ff", 4.5);
 
@@ -16,13 +16,13 @@ const X = () => (
             code={`import { colorContrast } from "${SYS.basePath}";
 
 const result = colorContrast("#ffffff", "#0077ff", 4.5);`}
-            example={<Typography.span children={JSON.stringify(result)} />}
+            example={<Typo.span children={JSON.stringify(result)} />}
         />
         <Ds.block
             title="With Options"
             code={`colorContrast("#111111", "#00aaff", 7, { tolerance: 0.1, step: 2 });`}
             example={
-                <Typography.span
+                <Typo.span
                     children={JSON.stringify(
                         colorContrast("#111111", "#00aaff", 7, { tolerance: 0.1, step: 2 }),
                     )}

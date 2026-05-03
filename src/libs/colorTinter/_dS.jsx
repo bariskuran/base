@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorTinter } from ".";
 import { Flex } from "../Flex";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const b = "#4f46e5";
 const t20 = colorTinter(b, 20);
@@ -46,7 +46,7 @@ const tint50 = colorTinter("#4f46e5", 50);`}
                 },
             }}
         />
-        <Typography.span children={`base: ${b} / tint20: ${t20} / tint50: ${t50}`} />
+        <Typo.span children={`base: ${b} / tint20: ${t20} / tint50: ${t50}`} />
     </Ds.page>
 );
 

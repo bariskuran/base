@@ -10,6 +10,8 @@ const CONTAINER_STYLE_KEYS = new Set([
     "flexShrink",
     "flexBasis",
     "alignSelf",
+    "justifySelf",
+    "placeSelf",
     "order",
     "boxSizing",
     "position",
@@ -18,16 +20,6 @@ const CONTAINER_STYLE_KEYS = new Set([
     "bottom",
     "left",
     "zIndex",
-    "margin",
-    "marginTop",
-    "marginRight",
-    "marginBottom",
-    "marginLeft",
-    "padding",
-    "paddingTop",
-    "paddingRight",
-    "paddingBottom",
-    "paddingLeft",
     "overflow",
     "overflowX",
     "overflowY",
@@ -41,7 +33,7 @@ export const SHELL_SURFACE_PROP_KEYS = ["bgColor", "color", "background", "backg
 
 /**
  * Kullanıcının inline style objesini shell (container) ve iç flex (content) olarak böler.
- * Bilinmeyen anahtarlar içerik tarafına düşer.
+ * padding/margin kabukta değil içerikte (ScrollBar ile çakışmaması için); bilinmeyen anahtarlar içerik tarafına düşer.
  */
 export const splitUserStyle = (style) => {
     if (!style || typeof style !== "object") {

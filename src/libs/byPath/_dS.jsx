@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { byPath } from ".";
 import { Flex } from "../Flex";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const source = { user: { profile: { name: "Baris" } }, items: [{ id: 1 }] };
 const mapped = byPath.mapping(source, { username: "user.profile.name", firstId: "items.0.id" });
@@ -19,13 +19,13 @@ const next = byPath.set(data, "user.profile.age", 29);
 const cleared = byPath.delete(next, "user.profile.name");`}
             example={
                 <Flex.column xAlign="start" gap={5}>
-                    <Typography.span children={`get: ${byPath.get(source, "user.profile.name")}`} />
-                    <Typography.span
+                    <Typo.span children={`get: ${byPath.get(source, "user.profile.name")}`} />
+                    <Typo.span
                         children={`set age: ${JSON.stringify(
                             byPath.set(source, "user.profile.age", 29).user.profile,
                         )}`}
                     />
-                    <Typography.span
+                    <Typo.span
                         children={`delete name: ${JSON.stringify(
                             byPath.delete(source, "user.profile.name").user.profile,
                         )}`}
@@ -39,7 +39,7 @@ const cleared = byPath.delete(next, "user.profile.name");`}
   username: "user.profile.name",
   firstId: "items.0.id",
 });`}
-            example={<Typography.span children={JSON.stringify(mapped)} />}
+            example={<Typo.span children={JSON.stringify(mapped)} />}
         />
         <Ds.api
             props={{

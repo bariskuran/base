@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isNumber } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const X = () => (
     <Ds.page title="<isNumber>" releasedOn="1.0.0" description="Checks finite numeric values.">
@@ -14,9 +14,9 @@ isNumber("12.4"); // true
 isNumber("abc"); // false`}
             example={
                 <>
-                    <Typography.span children={`12 => ${String(isNumber(12))}`} />
-                    <Typography.span children={`"12.4" => ${String(isNumber("12.4"))}`} />
-                    <Typography.span children={`"abc" => ${String(isNumber("abc"))}`} />
+                    <Typo.span children={`12 => ${String(isNumber(12))}`} />
+                    <Typo.span children={`"12.4" => ${String(isNumber("12.4"))}`} />
+                    <Typo.span children={`"abc" => ${String(isNumber("abc"))}`} />
                 </>
             }
         />

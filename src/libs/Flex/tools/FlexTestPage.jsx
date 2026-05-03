@@ -38,7 +38,7 @@ export const FlexTestPage = () => {
                 bgColor="#ddd"
                 padding={2}
                 gap={2}
-                inCommonProps={{
+                childrenCommon={{
                     align: "center",
                 }}
             >
@@ -99,10 +99,10 @@ export const FlexTestPage = () => {
                 <Item>Normal</Item>
             </Flex>
 
-            {/* 12 - inProps basic */}
+            {/* 12 - childrenProps basic */}
             <Flex
                 gap={2}
-                inProps={[
+                childrenProps={[
                     {
                         width: 100,
                         bgColor: "#ff0000",
@@ -117,9 +117,9 @@ export const FlexTestPage = () => {
                 <div>Right fluid?</div>
             </Flex>
 
-            {/* 13 - inProps 3 child */}
+            {/* 13 - childrenProps 3 child */}
             <Flex
-                inProps={[
+                childrenProps={[
                     {
                         width: "20%",
                         bgColor: "#ff0000",
@@ -139,19 +139,19 @@ export const FlexTestPage = () => {
                 <div>10rem</div>
             </Flex>
 
-            {/* 14 - nested inProps */}
+            {/* 14 - nested childrenProps */}
             <Flex
                 direction="row"
                 gap={5}
                 padding={2}
                 bgColor="#efefef"
-                inProps={[
+                childrenProps={[
                     {
                         width: 20,
                         bgColor: "#ffd6d6",
                         direction: "column",
                         gap: 10,
-                        inProps: [
+                        childrenProps: [
                             { bgColor: "#ff0000", padding: 10 },
                             { bgColor: "#00ff00", padding: 10 },
                         ],
@@ -183,16 +183,16 @@ export const FlexTestPage = () => {
                 <Item>Responsive 2</Item>
             </Flex>
 
-            {/* 16 - responsive inProps */}
+            {/* 16 - responsive childrenProps */}
             <Flex
                 gap={2}
                 padding={2}
                 bgColor="#efefef"
-                inProps={[{ width: 10, bgColor: "#ffd6d6" }, { bgColor: "#d6ffd6" }]}
+                childrenProps={[{ width: 10, bgColor: "#ffd6d6" }, { bgColor: "#d6ffd6" }]}
                 responsive={{
                     phone: {
                         direction: "column",
-                        inProps: [
+                        childrenProps: [
                             { width: "100%", bgColor: "#ffcccc" },
                             { width: "100%", bgColor: "#ccffcc" },
                         ],
@@ -215,7 +215,7 @@ export const FlexTestPage = () => {
                 gap={2}
                 padding={2}
                 bgColor="#efefef"
-                inCommonProps={{ bgColor: "red" }}
+                childrenCommon={{ bgColor: "red" }}
             >
                 <Item>x alias</Item>
                 <Item>x alias</Item>

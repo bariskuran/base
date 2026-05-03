@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isEqual, useIsEqual } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 import { Button } from "../Button";
 
@@ -18,7 +18,7 @@ const X = () => {
 
 isEqual({ a: 1 }, { a: 1 }); // true
 isEqual([1,2], [2,1]); // false`}
-                example={<Typography.span children={`isEqual sample => ${String(eq)}`} />}
+                example={<Typo.span children={`isEqual sample => ${String(eq)}`} />}
             />
             <Ds.block
                 title="useIsEqual Hook"
@@ -33,7 +33,7 @@ isEqual([1,2], [2,1]); // false`}
                                 })
                             }
                         />
-                        <Typography.span children={`stable: ${JSON.stringify(stable)}`} />
+                        <Typo.span children={`stable: ${JSON.stringify(stable)}`} />
                     </>
                 }
             />
@@ -48,7 +48,8 @@ isEqual([1,2], [2,1]); // false`}
                             "{ treatFalsiesAsEqual:false, maxKeys:500, maxDepth:10, useHashShortcut:true }",
                     },
                     "useIsEqual(value)": {
-                        description: "Hook that only updates stored value when deep-equal check fails.",
+                        description:
+                            "Hook that only updates stored value when deep-equal check fails.",
                         type: "(any) => any",
                         required: true,
                         defaultValue: "hook",

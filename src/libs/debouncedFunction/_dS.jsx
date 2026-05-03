@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { debouncedFunction } from ".";
 import { Button } from "../Button";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
@@ -31,7 +31,7 @@ fn();`}
                 example={
                     <>
                         <Button label="Spam click" onClick={runDebounced} />
-                        <Typography.span children={`Triggered count: ${count}`} />
+                        <Typo.span children={`Triggered count: ${count}`} />
                     </>
                 }
             />
@@ -42,7 +42,7 @@ fn();`}
   isThrottle: true,
   getFirst: true,
 });`}
-                example={<Typography.span children="Use isThrottle for interval-based triggering." />}
+                example={<Typo.span children="Use isThrottle for interval-based triggering." />}
             />
             <Ds.api
                 props={{
@@ -58,7 +58,7 @@ fn();`}
                         type: "object",
                         required: false,
                         defaultValue:
-                            '{ delay: 500, isThrottle: false, getFirst: false, functionName: random }',
+                            "{ delay: 500, isThrottle: false, getFirst: false, functionName: random }",
                     },
                     "settings.delay": {
                         description: "Wait duration in milliseconds.",

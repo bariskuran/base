@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { getTimeDifference } from ".";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const a = Date.now();
 const b = a + 1000 * 60 * 60 * 26 + 3500; // 1 day + 2h + 3.5s
@@ -18,7 +18,7 @@ const X = () => (
             code={`import { getTimeDifference } from "${SYS.basePath}";
 
 const diff = getTimeDifference(startTs, endTs);`}
-            example={<Typography.span children={JSON.stringify(diff)} />}
+            example={<Typo.span children={JSON.stringify(diff)} />}
         />
         <Ds.api
             props={{

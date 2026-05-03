@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorAlpha } from ".";
 import { Flex } from "../Flex";
-import { Typography } from "../Typography";
+import { Typo } from "../Typo";
 
 const c20 = colorAlpha("#0077ff", 20);
 const c80 = colorAlpha("#0077ff", 80);
@@ -10,7 +10,7 @@ const c80 = colorAlpha("#0077ff", 80);
 const Swatch = ({ color, label }) => (
     <Flex.column xAlign="start" gap={4}>
         <div style={{ width: 60, height: 24, borderRadius: 6, background: color }} />
-        <Typography.span children={`${label}: ${color}`} />
+        <Typo.span children={`${label}: ${color}`} />
     </Flex.column>
 );
 

@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import S from "./_styled";
 import { PopTip } from "../../PopTip";
-import { Typo } from "../../Typography";
+import { Typo } from "../../Typo";
 import Block from "../Block";
 import { copyToClipboard } from "../../copyToClipboard";
 import { sortBy } from "../../sortBy";

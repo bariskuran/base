@@ -18,12 +18,19 @@ const Layout = () => {
 
     /* RETURN */
     return (
-        <S.container $vars={vars}>
-            <ScrollBar.primary body maxLength={40} fillMode disableX />
-            <S.navigation>
-                <S.navigationContent>
-                    <ScrollBar disableX edgeMargin={0} trackMargin={0} variant="primary" />
-                    <S.logoArea>
+        <S.container $vars={vars} aria-label="Design System">
+            <ScrollBar.primary maxLength={40} fillMode disableX />
+            <S.navigation aria-label="Navigation">
+                <Flex.column
+                    height="100vh"
+                    flex="0 0 300rem"
+                    paddingBottom={75}
+                    scrollBarProps={{
+                        trackMargin: 0,
+                        edgeMargin: -4,
+                    }}
+                >
+                    <Flex margin="10rem 0" full>
                         <Button.plain
                             to="/design-system"
                             bgColor="transparent"
@@ -35,24 +42,22 @@ const Layout = () => {
                                 width: 125,
                             }}
                         />
-                    </S.logoArea>
-                    <Flex.column>
-                        {sorted.map(([name, path], i) => (
-                            <Button.squareOnRight
-                                key={path || i}
-                                to={path || "/design-system"}
-                                label={name}
-                                bgColor="transparent"
-                                color="foreground"
-                                fullWidth="right"
-                            />
-                        ))}
-                    </Flex.column>
-                </S.navigationContent>
+                    </Flex>
+                    {sorted.map(([name, path], i) => (
+                        <Button.squareOnRight
+                            key={path || i}
+                            to={path || "/design-system"}
+                            label={name}
+                            bgColor="transparent"
+                            color="foreground"
+                            fullWidth="right"
+                        />
+                    ))}
+                </Flex.column>
             </S.navigation>
-            <S.content>
+            <Flex.column full flex="1 1 auto" gap={10} padding="30rem">
                 <Outlet />
-            </S.content>
+            </Flex.column>
         </S.container>
     );
 };
