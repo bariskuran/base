@@ -7,7 +7,7 @@ import {
     useRef,
 } from "react";
 import { baseStore } from "../../@baseStore";
-import { useExportData, useExportedData } from "../../useExportedData";
+import { useExportData } from "../../useExportedData";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { deepMerge } from "../../deepMerge";
 import {
@@ -18,17 +18,13 @@ import {
 } from "./generateProps.js";
 import { getFlexDomRestProps } from "./getFlexDomRestProps.js";
 import { sysDefaults } from "./sysDefaults.js";
-import { pickContainerSizing } from "./pickContainerSizing.js";
-import { omitContainerSizingFromContent } from "./omitContainerSizingFromContent.js";
 import { splitUserStyle, SHELL_SURFACE_PROP_KEYS } from "./splitUserStyle.js";
 import { mergeStyles } from "./mergeStyles.js";
-import { buildFlex2ScrollbarPadding } from "./buildFlex2ScrollbarPadding.js";
 import { resolveFlexTypoWrap } from "./resolveFlexTypoWrap.js";
 
 export const useVars = ({ props, children, content, className, style, forwardedRef }) => {
     const [currentBreakpoint] = baseStore.useGlobal((s) => [s._clientData.currentBreakpoint]);
-    const contentRef = useRef(null);
-    const containerRef = useRef(null);
+    const rootRef = useRef(null);
 
     const propsNorm = useMemo(() => normalizeFlexPropsWithResponsiveAliases(props), [props]);
 
@@ -38,20 +34,16 @@ export const useVars = ({ props, children, content, className, style, forwardedR
         return mergeFlexKebabPropAliases(deepMerge(merged1, bpOverride));
     }, [propsNorm, currentBreakpoint]);
 
-    /** Kök prop veya responsive breakpoint + isteğe bağlı scrollBarProps.disableScrollBar */
-    const disableScrollBar = Boolean(
-        mergedBreakpointRow.disableScrollBar ??
-            (mergedBreakpointRow.scrollBarProps &&
-                typeof mergedBreakpointRow.scrollBarProps === "object" &&
-                mergedBreakpointRow.scrollBarProps.disableScrollBar),
-    );
-
-    const { exportData: exportDataForScrollBar, ...exportedData } = useExportedData();
     const childrenCount = Children.count(children ?? content);
 
     const { containerStyle: userContainerStyle, contentStyle: userContentStyle } = useMemo(
         () => splitUserStyle(style),
         [style],
+    );
+
+    const userRootStyle = useMemo(
+        () => mergeStyles(userContainerStyle, userContentStyle),
+        [userContainerStyle, userContentStyle],
     );
 
     const generatedProps = useMemo(
@@ -70,7 +62,6 @@ export const useVars = ({ props, children, content, className, style, forwardedR
         return resolveFlexTypoWrap(raw);
     }, [mergedBreakpointRow.typography, mergedBreakpointRow.typo]);
 
-    /** Bileşik çocuklar (Flex vb.): nth-child CSS kabuğa gidiyordu; maskelenip props clone ile içeri aktarılır. */
     const maskedChildIndexedFlexProps = useMemo(() => {
         const raw = generatedProps.inProps;
         const nodes = children ?? content;
@@ -122,25 +113,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
         });
     }, [children, content, mergedBreakpointRow.childrenCommon, mergedBreakpointRow.childrenProps]);
 
-    const scrollBarPropsMergedRaw = useMemo(() => {
-        const sb = mergedBreakpointRow.scrollBarProps;
-        return sb && typeof sb === "object" ? sb : {};
-    }, [mergedBreakpointRow.scrollBarProps]);
-
-    const calculatedValue = useMemo(() => {
-        if (disableScrollBar) {
-            return buildFlex2ScrollbarPadding({}, { body: true });
-        }
-        return buildFlex2ScrollbarPadding(exportedData, scrollBarPropsMergedRaw);
-    }, [disableScrollBar, exportedData, scrollBarPropsMergedRaw]);
-
-    /**
-     * Kabuk (S.container): ölçü, taşma, grid/flex-item hizası (alignSelf, justifySelf, placeSelf), order,
-     * flexGrow/shrink/basis, padding/margin/borderRadius, yüzey renkleri.
-     * İç flex (S.content): direction, gap, wrap, justifyContent/alignItems (justify/xAlign/yAlign → buraya),
-     * placeContent/placeItems, alignContent, childrenProps; ortak taban childrenCommon (bileşik çocuklara cloneElement ile aktarılır; nth-child yalnızca doğrudan DOM çocuklarında).
-     */
-    const containerSizingProps = useMemo(() => {
+    const rootSizingProps = useMemo(() => {
         const width = generatedProps.width ?? cssNormalizeSize(propsNorm?.width);
         const height = generatedProps.height ?? cssNormalizeSize(propsNorm?.height);
 
@@ -159,7 +132,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
         const shellFlexShrink =
             generatedProps.flexShrink ?? (skipAutoWidthFlexBasis ? String(0) : undefined);
 
-        return pickContainerSizing({
+        return {
             width,
             height,
             minWidth: generatedProps.minWidth ?? cssNormalizeSize(propsNorm?.minWidth),
@@ -177,7 +150,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
             justifySelf: generatedProps.justifySelf,
             placeSelf: generatedProps.placeSelf,
             order: generatedProps.order,
-        });
+        };
     }, [generatedProps, propsNorm]);
 
     const surfaceFromGeneratedProps = useMemo(() => {
@@ -190,67 +163,65 @@ export const useVars = ({ props, children, content, className, style, forwardedR
         return Object.keys(s).length ? s : undefined;
     }, [generatedProps]);
 
-    /**
-     * Kabuk (container): yalnızca köşe vb. ScrollBar’ın ayırdığı padding ($padding*) burada kalır;
-     * kullanıcı padding/margin’i içerikte (S.content) — aksi halde inline padding scrollbar alanını ezer.
-     */
     const shellChromeFromGenerated = useMemo(() => {
         const out = {};
         if (generatedProps.borderRadius != null) out.borderRadius = generatedProps.borderRadius;
         return Object.keys(out).length ? out : undefined;
     }, [generatedProps]);
 
-    const contentStyleProps = useMemo(() => {
-        const rest = { ...generatedProps };
-        for (const k of SHELL_SURFACE_PROP_KEYS) delete rest[k];
-        rest.inProps = maskedChildIndexedFlexProps;
-        return omitContainerSizingFromContent(rest);
-    }, [generatedProps, maskedChildIndexedFlexProps]);
+    const transientTreeProps = useMemo(() => {
+        const r = { ...generatedProps };
+        for (const k of SHELL_SURFACE_PROP_KEYS) delete r[k];
+        if (generatedProps.borderRadius != null) delete r.borderRadius;
+        r.inProps = maskedChildIndexedFlexProps;
+        r.width = rootSizingProps.width;
+        r.height = rootSizingProps.height;
+        r.minWidth = rootSizingProps.minWidth;
+        r.minHeight = rootSizingProps.minHeight;
+        r.maxWidth = rootSizingProps.maxWidth;
+        r.maxHeight = rootSizingProps.maxHeight;
+        r.overflow = rootSizingProps.overflow;
+        r.overflowX = rootSizingProps.overflowX;
+        r.overflowY = rootSizingProps.overflowY;
+        r.flex = rootSizingProps.flex;
+        r.flexGrow = rootSizingProps.flexGrow;
+        r.flexShrink = rootSizingProps.flexShrink;
+        r.flexBasis = rootSizingProps.flexBasis;
+        r.alignSelf = rootSizingProps.alignSelf;
+        r.justifySelf = rootSizingProps.justifySelf;
+        r.placeSelf = rootSizingProps.placeSelf;
+        r.order = rootSizingProps.order;
+        return r;
+    }, [generatedProps, maskedChildIndexedFlexProps, rootSizingProps]);
 
-    const hasExplicitShellHeight = useMemo(
-        () => containerSizingProps.height != null && containerSizingProps.height !== "",
-        [containerSizingProps.height],
+    const hasExplicitHeight = useMemo(
+        () => rootSizingProps.height != null && rootSizingProps.height !== "",
+        [rootSizingProps.height],
     );
 
-    const containerStyle = useMemo(() => {
+    const rootStyle = useMemo(() => {
         const sizingOverrides = {
-            width: containerSizingProps.width,
-            height: containerSizingProps.height,
-            minWidth: containerSizingProps.minWidth,
-            minHeight: containerSizingProps.minHeight,
-            maxWidth: containerSizingProps.maxWidth,
-            maxHeight: containerSizingProps.maxHeight,
-            overflow: containerSizingProps.overflow,
-            overflowX: containerSizingProps.overflowX,
-            overflowY: containerSizingProps.overflowY,
+            width: rootSizingProps.width,
+            height: rootSizingProps.height,
+            minWidth: rootSizingProps.minWidth,
+            minHeight: rootSizingProps.minHeight,
+            maxWidth: rootSizingProps.maxWidth,
+            maxHeight: rootSizingProps.maxHeight,
+            overflow: rootSizingProps.overflow,
+            overflowX: rootSizingProps.overflowX,
+            overflowY: rootSizingProps.overflowY,
         };
 
         return mergeStyles(
-            mergeStyles(
-                mergeStyles(surfaceFromGeneratedProps, userContainerStyle),
-                shellChromeFromGenerated,
-            ),
+            mergeStyles(mergeStyles(surfaceFromGeneratedProps, userRootStyle), shellChromeFromGenerated),
             sizingOverrides,
         );
-    }, [
-        surfaceFromGeneratedProps,
-        userContainerStyle,
-        shellChromeFromGenerated,
-        containerSizingProps,
-    ]);
+    }, [surfaceFromGeneratedProps, userRootStyle, shellChromeFromGenerated, rootSizingProps]);
 
-    const contentStyle = userContentStyle;
-
-    const flexAriaLabels = useMemo(() => {
+    const flexAriaLabel = useMemo(() => {
         const raw = props?.["aria-label"];
-        if (raw == null || raw === "") {
-            return { container: "Flex container", content: "Flex content" };
-        }
-        const base = String(raw).trim();
-        return {
-            container: `${base}-container`,
-            content: `${base}-content`,
-        };
+        if (raw == null || raw === "") return "Flex";
+        return String(raw).trim();
     }, [props]);
 
     const domRestProps = useMemo(() => {
@@ -260,39 +231,23 @@ export const useVars = ({ props, children, content, className, style, forwardedR
         return rest;
     }, [props]);
 
-    /** ScrollBar’a iletilecek props (disableScrollBar strip). */
-    const scrollBarPropsForMount = useMemo(() => {
-        const sb = mergedBreakpointRow.scrollBarProps;
-        if (!sb || typeof sb !== "object") return {};
-        const { disableScrollBar: _omitSb, ...rest } = sb;
-        return rest;
-    }, [mergedBreakpointRow.scrollBarProps]);
-
     return useExportData(
         {
             exportData: props?.exportData,
             style,
             className,
             forwardedRef,
-            containerRef,
+            rootRef,
             children,
             content,
             domRestProps,
-            flexAriaLabels,
+            flexAriaLabel,
             mergedFlexChildren,
             typographyWrap,
-            contentRef,
-            exportDataForScrollBar,
-            containerSizingProps,
-            contentStyleProps,
-            hasExplicitShellHeight,
-            containerStyle,
-            contentStyle,
-            calculatedValue,
-            calculatedValues: calculatedValue,
-            disableScrollBar,
-            scrollBarProps: scrollBarPropsForMount,
+            transientTreeProps,
+            hasExplicitHeight,
+            rootStyle,
         },
-        calculatedValue,
+        {},
     );
 };

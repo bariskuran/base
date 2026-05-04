@@ -344,6 +344,10 @@ const useVars = (p) => {
 
             if (disableX) target.style.overflowX = "hidden";
             if (disableY) target.style.overflowY = "hidden";
+
+            /* Tek eksende custom bar: diğer eksende native taşmayı kilitleme (ör. Y listesi + disableX). */
+            if (!disableX && disableY) target.style.overflowY = "visible";
+            if (disableX && !disableY) target.style.overflowX = "visible";
         });
 
         const overflowNow = getAxisOverflow({

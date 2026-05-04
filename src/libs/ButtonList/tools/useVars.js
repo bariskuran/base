@@ -1,70 +1,56 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { deepMerge } from "../../deepMerge";
-import { baseStore } from "../../@baseStore";
-import { colorGet } from "../../colorGet";
 import { useExportData } from "../../useExportedData";
 
-const useVars = (p) => {
-    /**
-     *
-     * Incoming Props
-     *
-     */
+const useVars = (p = {}) => {
     const {
-        items,
-        commonProps,
-        direction = "column",
-        gap = 5,
-        bgColor,
         Variant,
-        maxHeight,
-        maxWidth,
-        scrollFlexProps = {},
+        forwardedRef,
+        buttons = [],
+        commonButtonProps = {},
+        flexProps = {},
+        scrollBarProps = {},
         exportData,
-    } = p || {};
+    } = p;
 
-    /**
-     *
-     * States
-     **
-     */
-    const [theme] = baseStore.useGlobal((s) => [s.theme]);
-    const defaultBackgorund = theme?.background;
-    const colors = colorGet(bgColor || defaultBackgorund);
+    const flexScrollRef = useRef(null);
 
-    /**
-     *
-     * Vars
-     **
-     */
     const preparedItems = useMemo(
-        () =>
-            items.map((item) => {
-                return deepMerge(commonProps, item);
-            }),
-        [items, commonProps],
+        () => buttons.map((item) => deepMerge(commonButtonProps, item)),
+        [buttons, commonButtonProps],
     );
 
-    /* Return */
+    const resolvedFlexProps = useMemo(() => {
+        const fp = flexProps || {};
+        const out = { ...fp };
+        if (out.width == null) out.width = "100%";
+        return out;
+    }, [flexProps]);
+
+    const mergedScrollBarProps = useMemo(
+        () => ({
+            ...scrollBarProps,
+            edgeMargin: scrollBarProps?.edgeMargin ?? -5,
+            sourceByRef: scrollBarProps?.sourceByRef ?? flexScrollRef,
+        }),
+        [scrollBarProps],
+    );
+
     return useExportData(
         {
             exportData,
-            ...p,
-            items,
-            commonProps,
-            direction,
-            gap,
-            colors: colors || {},
             Variant,
-            scrollFlexProps: {
-                ...scrollFlexProps,
-                ...(maxHeight ? { maxHeight } : {}),
-                ...(maxWidth ? { maxWidth } : {}),
-            },
+            forwardedRef,
+            flexScrollRef,
+            resolvedFlexProps,
+            mergedScrollBarProps,
+            buttons,
+            commonButtonProps,
         },
         {
             preparedItems,
         },
     );
 };
+
 export default useVars;

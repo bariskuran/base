@@ -19,11 +19,11 @@ export const sitemap = [
     ["colorGet", "colorGet", l(() => import("../colorGet/_dS"))],
     ["colorGet3dShadow", "colorGet3dShadow", l(() => import("../colorGet3DShadow/_dS"))],
     [
-        "colorPickHigherContrast>",
+        "colorPickHigherContrast",
         "colorPickHigherContrast",
         l(() => import("../colorPickHigherContrast/_dS")),
     ],
-    ["colorShader>", "colorShader", l(() => import("../colorShader/_dS"))],
+    ["colorShader", "colorShader", l(() => import("../colorShader/_dS"))],
     ["colorTinter", "colorTinter", l(() => import("../colorTinter/_dS"))],
     ["copyToClipboard", "copyToClipboard", l(() => import("../copyToClipboard/_dS"))],
     ["debouncedFunction", "debouncedFunction", l(() => import("../debouncedFunction/_dS"))],

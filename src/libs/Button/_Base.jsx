@@ -49,7 +49,10 @@ export const Base = (props = {}) => {
                     {label != null && (
                         <div
                             data-slot="label"
-                            style={minWidth ? { minWidth: `${minWidth}rem` } : {}}
+                            style={{
+                                userSelect: "none",
+                                ...(minWidth ? { minWidth: `${minWidth}rem` } : {}),
+                            }}
                         >
                             <S.LabelStack>
                                 <LabelLayer

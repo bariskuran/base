@@ -1,12 +1,11 @@
 import styled, { css } from "styled-components";
 
 export const DefaultVariant = styled.div`
-    ${({ $direction, $gap, $colors }) => css`
-        all: unset;
-        display: flex;
-        flex-direction: ${$direction};
-        gap: ${$gap + "rem"};
-        /* background: ${$colors.color}; */
-        /* color: ${$colors.opposite}; */
+    ${() => css`
+        box-sizing: border-box;
+        position: relative;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
     `}
 `;

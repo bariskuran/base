@@ -1,7 +1,7 @@
 // Flag/index.jsx
 import { useMemo } from "react";
-import { flags } from "../Icon/flags";
-import { Icon } from "../Icon";
+import { flags } from "./flags";
+import { Icon } from "../@Icon";
 
 export const Flag = ({ flag, ...props }) => {
     const resolvedFlag = useMemo(() => {

@@ -5,15 +5,12 @@ export const PopoverTest = () => {
     return (
         <Popover>
             <ButtonList
-                scrollBoxProps={
-                    {
-                        // variant: "threeD",
-                        // disableShadow: true,
-                        // scrollBarProps: { variant: "defaultVariant" }
-                    }
-                }
-                maxHeight={200}
-                items={[
+                flexProps={{
+                    direction: "column",
+                    maxHeight: 200,
+                    overflowY: "auto",
+                }}
+                buttons={[
                     {
                         variant: "error",
                         label: "test",
@@ -55,8 +52,31 @@ export const PopoverTest = () => {
                     { label: "test2", onClick: () => console.log("click2") },
                     { label: "test2", onClick: () => console.log("click2") },
                     { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
+                    { label: "test2", onClick: () => console.log("click2") },
                 ]}
-                commonProps={{
+                commonButtonProps={{
                     variant: "success",
                     prefix: {
                         icon: "user",

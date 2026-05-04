@@ -1,9 +1,8 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { ButtonList } from ".";
-import { Flex } from "../Flex";
 
-const items = [
+const buttons = [
     {
         variant: "error",
         label: "test",
@@ -28,9 +27,11 @@ const items = [
     { label: "test2", onClick: () => console.log("click2") },
     { label: "test2", onClick: () => console.log("click2") },
     { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
 ];
 
-const commonProps = {
+const commonButtonProps = {
     variant: "success",
     prefix: {
         icon: "user",
@@ -45,75 +46,47 @@ const X = () => {
                 title="Basic Usage"
                 code={`import { ButtonList } from "${SYS.basePath}";
 
-                    <ButtonList items={[{ label: "Edit" }, { label: "Delete" }]} />`}
-                example={<ButtonList items={items} />}
-            />
-            <Ds.block
-                title="Common Props + Direction"
-                code={`<ButtonList
-                            direction="row"
-                            gap={10}
-                            commonProps={{ size: 90, outlined: true }}
-                            items={items}
-                        />`}
+                    <ButtonList
+                        buttons={[{ label: "Edit" }, { label: "Delete" }]}
+                        flexProps={{ direction: "column", gap: 5 }}
+                    />`}
                 example={
-                    <Flex xAlign="start">
-                        <ButtonList commonProps={commonProps} items={items} />
-                    </Flex>
+                    <ButtonList.column
+                        buttons={buttons}
+                        commonButtonProps={commonButtonProps}
+                        flexProps={{ gap: 5, maxHeight: 280, overflowY: "auto" }}
+                    />
                 }
             />
             <Ds.api
                 props={{
-                    items: {
-                        description: "Button prop objects to render.",
+                    buttons: {
+                        description: "Her biri Button’a giden prop nesneleri.",
                         type: "array",
                         required: true,
                         defaultValue: "[]",
                     },
-                    commonProps: {
-                        description: "Merged into each item.",
+                    commonButtonProps: {
+                        description: "Her butonla deepMerge edilir; öğe alanları bunun üzerine yazar.",
                         type: "object",
                         required: false,
                         defaultValue: "{}",
                     },
-                    direction: {
-                        description: "Layout direction: row | column.",
-                        type: "string",
+                    flexProps: {
+                        description:
+                            "İç Flex’e iletilir. width verilmezse varsayılan width: 100% uygulanır; direction/gap Flex sysDefaults (row, gap 0) veya bu nesne ile gelir. Dikey liste için ButtonList.column veya flexProps.direction: \"column\" kullanın.",
+                        type: "object",
                         required: false,
-                        defaultValue: '"column"',
+                        defaultValue: "{}",
                     },
-                    gap: {
-                        description: "Gap between buttons.",
-                        type: "number",
-                        required: false,
-                        defaultValue: "5",
-                    },
-                    bgColor: {
-                        description: "Container tone source color.",
-                        type: "string",
-                        required: false,
-                        defaultValue: "theme.background",
-                    },
-                    maxHeight: {
-                        description: "Forwards maxHeight to ScrollFlex.",
-                        type: "number | string",
-                        required: false,
-                        defaultValue: "undefined",
-                    },
-                    maxWidth: {
-                        description: "Forwards maxWidth to ScrollFlex.",
-                        type: "number | string",
-                        required: false,
-                        defaultValue: "undefined",
-                    },
-                    scrollFlexProps: {
-                        description: "Additional ScrollFlex props.",
+                    scrollBarProps: {
+                        description: "ScrollBar’a iletilir; sourceByRef yoksa kaydırma alanı olarak iç Flex kullanılır.",
                         type: "object",
                         required: false,
                         defaultValue: "{}",
                     },
                     variant: {
-                        description: "Variant name or custom styled variant.",
+                        description: "Variant adı veya özel styled variant.",
                         type: "string | component",
                         required: false,
                         defaultValue: '"default"',

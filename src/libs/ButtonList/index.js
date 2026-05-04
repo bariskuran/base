@@ -9,7 +9,6 @@ export const ButtonList = componentCreator({
     DefaultVariant,
     CleanVariant,
     variants: {
-        row: { direction: "row" },
-        column: { direction: "column" },
+        column: { flexProps: { direction: "column" } },
     },
 });

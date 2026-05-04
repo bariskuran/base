@@ -1,10 +1,6 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { Flex } from "./";
-import { generateRandom } from "../generateRandom";
-
-const longText = generateRandom.loremIpsum(100);
-const shortText = generateRandom.loremIpsum(50);
 
 const Item = () => (
     <Flex bgColor="greys.shade20" width={50} height={50}>
@@ -12,16 +8,8 @@ const Item = () => (
     </Flex>
 );
 
-const Items = () => [...Array(40)].map((_, i) => <Item key={i} />);
-
 const Box = ({ c = "#ddd", t }) => (
     <div style={{ background: c, padding: 8, borderRadius: 6 }}>{t}</div>
-);
-
-const Content = ({ direction = "row" }) => (
-    <Flex direction={direction} gap={10} bgColor="skyblue" width="100%">
-        <Items />
-    </Flex>
 );
 
 const X = () => (
@@ -38,12 +26,15 @@ const X = () => (
             <Flex gap={10} padding={8}>
                 <div>A</div><div>B</div><div>C</div>
             </Flex>
-            <Flex direction="column" gap={10} padding={8}>
+            <Flex.column gap={10} padding={8}>
+                <div>A</div><div>B</div><div>C</div>
+            </Flex.column>
+            <Flex gap={5} bgColor="#fff" padding={5} alignSelf="end">
                 <div>A</div><div>B</div><div>C</div>
             </Flex>
-            <Flex.column gap={5} bgColor="#fff" padding={5} alignSelf="end">
+            <Flex direction="column-reverse gap={10} padding={8} >
                 <div>A</div><div>B</div><div>C</div>
-            </Flex.column>`}
+            </Flex>`}
             example={
                 <Flex direction="row" gap={10} aria-label="Block1" align="start">
                     <Flex gap={10} bgColor="#fff" padding={8}>
@@ -56,17 +47,16 @@ const X = () => (
                         <Box t="B" />
                         <Box t="C" />
                     </Flex>
-                    <Flex.column
-                        gap={10}
-                        bgColor="#fff"
-                        padding={8}
-                        alignSelf="end"
-                        aria-label="Block2"
-                    >
+                    <Flex gap={10} bgColor="#fff" padding={8} alignSelf="end">
                         <Box t="A" />
                         <Box t="B" />
                         <Box t="C" />
-                    </Flex.column>
+                    </Flex>
+                    <Flex direction="column-reverse" gap={10} bgColor="#fff" padding={8}>
+                        <Box t="A" />
+                        <Box t="B" />
+                        <Box t="C" />
+                    </Flex>
                 </Flex>
             }
         />
@@ -89,7 +79,7 @@ const X = () => (
                         B
                     </Flex>
                     <Flex height={120} bgColor="#dbeafe" align-items="end">
-                        B
+                        C
                     </Flex>
                 </Flex>
             }
@@ -99,7 +89,7 @@ const X = () => (
             description="The sizing props are exactly the same as CSS flex."
             code={`import { Flex } from "${SYS.basePath}";
             
-                <Flex width="100%" direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
+                <Flex width={200} direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                     <Flex width={50} bgColor="#dbeafe" padding={6}>
                         Fixed
                     </Flex>
@@ -108,7 +98,7 @@ const X = () => (
                     </Flex>
                 </Flex>`}
             example={
-                <Flex width="100%" direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
+                <Flex width={200} direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                     <Flex width={50} bgColor="#dbeafe" padding={6}>
                         Fixed
                     </Flex>
@@ -120,13 +110,13 @@ const X = () => (
         />
         <Ds.block
             title="full"
-            description='width="100%" yazmak yerine boolean full kullanılabilir; width verilmişse full yok sayılır. responsive breakpoint içinde de kullanılabilir.'
+            description='Instead of writing width="100%", you can use the boolean full prop. If width is provided, full will be ignored. It can also be used within responsive breakpoints.'
             code={`import { Flex } from "${SYS.basePath}";
 
-<Flex full direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
-    <Flex width={50} bgColor="#dbeafe" padding={6}>Fixed</Flex>
-    <Flex flex="1 1 auto" bgColor="#dcfce7" padding={6}>Grow</Flex>
-</Flex>`}
+                 <Flex full direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
+                     <Flex width={50} bgColor="#dbeafe" padding={6}>Fixed</Flex>
+                     <Flex flex="1 1 auto" bgColor="#dcfce7" padding={6}>Grow</Flex>
+                 </Flex>`}
             example={
                 <Flex full direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                     <Flex width={50} bgColor="#dbeafe" padding={6}>
@@ -226,91 +216,6 @@ const X = () => (
             }
         />
         <Ds.block
-            title="ScrollBar Integration"
-            description="ScrollBar is enabled by default; customize with scrollBarProps. If disableScrollBar is set, the custom ScrollBar is not mounted and shell padding for the track is skipped. When ScrollBar is on, the shell uses overflow hidden and the inner flex area uses overflow auto so scrolling still works; when ScrollBar is off, no default overflow is applied on the shell—set overflow / overflowX / overflowY yourself (e.g. for scale effects)."
-            code={`import { Flex } from "${SYS.basePath}";
-
-                    <Flex width={100} height={100} disableScrollBar>
-                        {shortText}
-                    </Flex>
-                    <Flex width={100} height={100}>
-                        {longText}
-                    </Flex>
-                    <Flex width={100} height={100} disableScrollBar>
-                        <Content direction="column" />
-                    </Flex>
-                    <Flex width={100} height={100} bgColor="aliceblue" direction="column" gap={10} >
-                        <Items />
-                    </Flex>
-                    <Flex width={100} height={100} bgColor="aliceblue" direction="column" gap={10} scrollBarProps={{ mirror: true }} >
-                        <Items />
-                    </Flex>
-                    <Flex width={100} height={100} bgColor="aliceblue" direction="column" gap={10} scrollBarProps={{ opposite: true }} >
-                        <Items />
-                    </Flex>
-                    <Flex width={100} height={100} bgColor="aliceblue" direction="column" gap={10} scrollBarProps={{ opposite: true, mirror: true }} >
-                        <Items />
-                    </Flex>`}
-            example={
-                <Flex direction="column" gap={10}>
-                    <Flex>
-                        <Content />
-                    </Flex>
-                    <Flex>{shortText}</Flex>
-                    <Flex gap={10}>
-                        <Flex width={100} height={100} disableScrollBar>
-                            {shortText}
-                        </Flex>
-                        <Flex width={100} height={100}>
-                            {longText}
-                        </Flex>
-                        <Flex width={100} height={100} disableScrollBar>
-                            <Content direction="column" />
-                        </Flex>
-                        <Flex
-                            width={100}
-                            height={100}
-                            bgColor="aliceblue"
-                            direction="column"
-                            gap={10}
-                        >
-                            <Items />
-                        </Flex>
-                        <Flex
-                            width={100}
-                            height={100}
-                            bgColor="aliceblue"
-                            direction="column"
-                            gap={10}
-                            scrollBarProps={{ mirror: true }}
-                        >
-                            <Items />
-                        </Flex>
-                        <Flex
-                            width={100}
-                            height={100}
-                            bgColor="aliceblue"
-                            direction="column"
-                            gap={10}
-                            scrollBarProps={{ opposite: true }}
-                        >
-                            <Items />
-                        </Flex>
-                        <Flex
-                            width={100}
-                            height={100}
-                            bgColor="aliceblue"
-                            direction="column"
-                            gap={10}
-                            scrollBarProps={{ opposite: true, mirror: true }}
-                        >
-                            <Items />
-                        </Flex>
-                    </Flex>
-                </Flex>
-            }
-        />
-        <Ds.block
             title="responsive feature"
             description="responsive prop allows you to customize the Flex container for different screen sizes. You can use the responsive prop to customize the Flex container for different screen sizes."
             code={`import { Flex } from "${SYS.basePath}";
@@ -359,13 +264,22 @@ const X = () => (
         <Ds.block
             title="Typo integration"
             description='Wraps content with Typo: typo="h6" → Typo.h6. In the typography object, type + Typo props are provided together.'
+            code={`import { Flex } from "${SYS.basePath}";
+
+                <Flex typo="h6" padding={12}>
+                    h6
+                </Flex>
+                <Flex typography={{ type: "p", bold: true }} padding={12}>
+                    typography item, bold is true
+                </Flex>
+            `}
             example={
                 <Flex.column gap={8}>
                     <Flex typo="h6" padding={12}>
                         h6
                     </Flex>
                     <Flex typography={{ type: "p", bold: true }} padding={12}>
-                        typography nesnesi: kalın paragraf
+                        typography item, bold is true
                     </Flex>
                 </Flex.column>
             }
@@ -644,37 +558,20 @@ const X = () => (
                     defaultValue: "undefined",
                 },
                 overflow: {
-                    description:
-                        "Kabuk overflow kısayolu. ScrollBar açıkken (varsayılan) kabuk için hidden + eksenler yalnızca sen verdiğinde uygulanır; ScrollBar kapalıyken varsayılan overflow yok, bu prop tamamen senin.",
+                    description: "Overflow shorthand (CSS).",
                     type: "string",
                     required: false,
                     defaultValue: "undefined",
                 },
                 overflowX: {
-                    description:
-                        "ScrollBar açıkken eksen verilmezse hidden; ScrollBar kapalıyken yalnızca verdiğin değer.",
+                    description: "overflow-x.",
                     type: "string",
                     required: false,
                     defaultValue: "undefined",
                 },
                 overflowY: {
-                    description:
-                        "ScrollBar açıkken eksen verilmezse hidden; ScrollBar kapalıyken yalnızca verdiğin değer.",
+                    description: "overflow-y.",
                     type: "string",
-                    required: false,
-                    defaultValue: "undefined",
-                },
-                disableScrollBar: {
-                    description:
-                        "Gömülü ScrollBar’ı kapatır; kabukta varsayılan overflow:hidden uygulanmaz (scale vb. için). Track için ek padding de yapılmaz.",
-                    type: "boolean",
-                    required: false,
-                    defaultValue: "false",
-                },
-                scrollBarProps: {
-                    description:
-                        "ScrollBar bileşenine iletilen prop çantası (exportData ile ölçü alınır).",
-                    type: "object",
                     required: false,
                     defaultValue: "undefined",
                 },

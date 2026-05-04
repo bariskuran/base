@@ -467,7 +467,6 @@ export const FLEX_PROPS_KEBAB_TO_CAMEL = Object.freeze({
     "bg-color": "bgColor",
     "x-align": "xAlign",
     "y-align": "yAlign",
-    "disable-scrollbar": "disableScrollBar",
     "children-common": "childrenCommon",
     "children-props": "childrenProps",
 });
@@ -710,8 +709,6 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "wrap",
     "responsive",
     "exportData",
-    "disableScrollBar",
-    "scrollBarProps",
     "typo",
     "typography",
     "full",

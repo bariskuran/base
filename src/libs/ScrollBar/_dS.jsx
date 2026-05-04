@@ -19,8 +19,6 @@ const flexProps = {
     xAlign: "start",
     overflow: "hidden",
     padding: 10,
-    /** Flex iç gömülü ScrollBar ile örnekteki <ScrollBar /> çiftlenmesin */
-    disableScrollBar: true,
 };
 
 const TwoAxisLargeContent = ({ children, childrenProps, short }) => (
@@ -290,11 +288,10 @@ const X = () => {
                             height={150}
                             bgColor="aliceblue"
                             aria-label="source by ref"
-                            disableScrollBar
                         >
                             <ScrollBar sourceByRef={flexRef1} />
                         </Flex>
-                        <Flex width={20} height={200} disableScrollBar>
+                        <Flex width={20} height={200}>
                             <ScrollBar sourceById={SOURCE_BY_ID} />
                         </Flex>
                     </Flex>

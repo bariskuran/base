@@ -21,15 +21,8 @@ const Layout = () => {
         <S.container $vars={vars} aria-label="Design System">
             <ScrollBar.primary maxLength={40} fillMode disableX />
             <S.navigation aria-label="Navigation">
-                <Flex.column
-                    height="100vh"
-                    flex="0 0 300rem"
-                    paddingBottom={75}
-                    scrollBarProps={{
-                        trackMargin: 0,
-                        edgeMargin: -4,
-                    }}
-                >
+                <Flex.column height="100vh" flex="0 0 300rem" paddingBottom={75}>
+                    <ScrollBar disableX trackMargin={0} edgeMargin={-4} />
                     <Flex margin="10rem 0" full>
                         <Button.plain
                             to="/design-system"
