@@ -6,6 +6,7 @@ import { baseStore } from "../@baseStore";
 import { useTimer } from "../useTimer";
 import { Dropdown } from "../Dropdown";
 import { useMemo } from "react";
+import { buttonVariants } from "./";
 
 const url = "https://www.google.com";
 const link = "/design-system";
@@ -72,13 +73,10 @@ const X = () => {
                     <Flex xAlign="start" gap={10}>
                         <Dropdown
                             options={[
-                                { label: "animatedBg", value: "animatedBg" },
-                                { label: "brackets", value: "brackets" },
-                                { label: "default", value: "default" },
-                                { label: "plain", value: "plain" },
-                                { label: "squareOnRight", value: "squareOnRight" },
-                                { label: "string", value: "string" },
-                                { label: "underline", value: "underline" },
+                                ...Object.keys(buttonVariants).map((key) => ({
+                                    label: key,
+                                    value: key,
+                                })),
                             ]}
                             value={selectedVariant}
                             onChange={(value) => {
@@ -450,6 +448,20 @@ const X = () => {
                         />
                         <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} fullWidth />
                     </Flex>
+                }
+            />
+            <Ds.block
+                title="Generic Variants"
+                example={
+                    <Ds.variant
+                        variants={[
+                            ["closeIcon", <Button.closeIcon key="error" />],
+                            [
+                                "withCopyIcon",
+                                <Button.withCopyIcon label="withCopyIcon" key="withCopyIcon" />,
+                            ],
+                        ]}
+                    />
                 }
             />
             <Ds.api

@@ -1,29 +1,7 @@
 import styled, { css } from "styled-components";
 
 const S = styled.div`
-    ${({
-        theme,
-        $isHovered,
-        $isActivated,
-        // $isPending,
-        // $disabled,
-        $isJustIcon,
-        // $bgColor,
-        // $hoverBgColor,
-        // $activeBgColor,
-        // $color,
-        // $prefixBgColor,
-        // $prefixColor,
-        // $suffixBgColor,
-        // $suffixColor,
-        // $minHeight,
-        // $minWidth,
-        // $minLabelWidth,
-        // $inverseColor1,
-        // $inverseColor2,
-        // $size,
-        $fullWidth,
-    }) => css`
+    ${({ theme, $isHovered, $isActivated, $isJustIcon, $fullWidth }) => css`
         all: unset;
         display: flex;
         transition: all 0.5s;
@@ -76,6 +54,8 @@ const S = styled.div`
 export const X = {
     variant: S,
     bgColor: "background",
+    hoverBgColor: "backgrounds.shade5",
+    color: "foreground",
     activeBgColor: "transparent",
 };
 export default X;

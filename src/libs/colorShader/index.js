@@ -1,7 +1,9 @@
 import { colorConverter } from "../colorConverter";
+import { colorFind } from "../colorFind";
 
 export const colorShader = (hex = "#f00", percent = 0) => {
     percent = Math.min(100, Math.max(0, percent));
+    hex = colorFind(hex, { output: "hex8" }) || hex;
 
     const normalizedHex = hex.replace("#", "").toLowerCase();
 

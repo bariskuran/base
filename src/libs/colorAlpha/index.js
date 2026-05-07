@@ -1,11 +1,9 @@
 import { colorConverter } from "../colorConverter";
-import { colorGet } from "../colorGet";
+import { colorFind } from "../colorFind";
 
 const resolveColorInput = (input) => {
     if (typeof input !== "string") return input;
-
-    const fromTheme = colorGet(input)?.color;
-    return fromTheme ?? input;
+    return colorFind(input, { output: "hex8" }) ?? input;
 };
 
 export const colorAlpha = (color, alpha = 50) => {

@@ -2,7 +2,7 @@ import { baseStore } from "../@baseStore";
 import { colorConverter } from "../colorConverter";
 import { colorShader } from "../colorShader";
 import { colorTinter } from "../colorTinter";
-import { byPath } from "../byPath";
+import { colorFind } from "../colorFind";
 
 const getTheme = () => {
     try {
@@ -12,43 +12,8 @@ const getTheme = () => {
     }
 };
 
-const getFromTheme = (input) => {
-    if (!input || typeof input !== "string") return undefined;
-
-    const theme = getTheme();
-    const color = input.trim();
-
-    if (color.includes(".")) {
-        const v = byPath.get(theme, color);
-        return typeof v === "string" ? v : undefined;
-    }
-
-    const v = theme?.[color];
-    return typeof v === "string" ? v : undefined;
-};
-
-const isValidCssColor = (color) => {
-    if (typeof color !== "string") return false;
-    if (typeof document === "undefined") return false;
-
-    const s = new Option().style;
-    s.color = "";
-    s.color = color.trim();
-
-    return s.color !== "";
-};
-
 const resolveColor = (input) => {
-    if (!input || typeof input !== "string") return undefined;
-
-    const color = input.trim();
-
-    const themeColor = getFromTheme(color);
-    if (themeColor && typeof themeColor === "string") return themeColor;
-
-    if (isValidCssColor(color)) return color;
-
-    return undefined;
+    return colorFind(input, { output: "hex8" });
 };
 
 const clamp = (num, min = 0, max = 100) => Math.min(max, Math.max(min, Number(num) || 0));

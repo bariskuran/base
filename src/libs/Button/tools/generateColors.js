@@ -2,18 +2,11 @@ import { colorConverter } from "../../colorConverter";
 import { colorShader } from "../../colorShader";
 import { colorAlpha } from "../../colorAlpha";
 import { colorTinter } from "../../colorTinter";
-import { byPath } from "../../byPath";
-
-const bareHex = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+import { colorFind } from "../../colorFind";
 
 const resolvePathOrRaw = (theme, v) => {
     if (v == null || v === "") return null;
-    const raw = byPath.get(theme, v) || theme[v] || v;
-    if (typeof raw === "string") {
-        const t = raw.trim();
-        if (bareHex.test(t) && !t.startsWith("#")) return `#${t.replace(/^#/, "")}`;
-    }
-    return raw;
+    return colorFind(v, { theme, output: "hex8" }) || v;
 };
 
 const getInteractiveRate = (baseRate, luminanceValue, type = "hover") => {

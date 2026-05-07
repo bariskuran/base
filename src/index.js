@@ -72,6 +72,7 @@ export { baseStore } from "./libs/@baseStore";
 export { baseStore as cs } from "./libs/@baseStore";
 export { byPath } from "./libs/byPath";
 export { colorAlpha } from "./libs/colorAlpha";
+export { colorFind } from "./libs/colorFind";
 export { colorWcagMatch } from "./libs/colorWcagMatch";
 export { colorContrastRatio } from "./libs/colorContrastRatio";
 export { colorConverter } from "./libs/colorConverter";

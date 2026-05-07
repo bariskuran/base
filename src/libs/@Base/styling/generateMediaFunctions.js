@@ -10,6 +10,7 @@ import { colorShader } from "../../colorShader";
 import { colorConverter } from "../../colorConverter";
 import { colorWcagMatch } from "../../colorWcagMatch";
 import { colorGet } from "../../colorGet";
+import { colorFind } from "../../colorFind";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { cssSpacingResolver } from "../../cssSpacingResolver";
 import { get3DShadow } from "../../colorGet3DShadow";
@@ -117,6 +118,7 @@ export const generateMediaFunctions = ({
     mediaFunctions.colorConverter = colorConverter;
     mediaFunctions.colorWcagMatch = colorWcagMatch;
     mediaFunctions.colorGet = colorGet;
+    mediaFunctions.colorFind = colorFind;
     mediaFunctions.get3DShadow = get3DShadow;
     mediaFunctions.cssNormalizeSize = cssNormalizeSize;
     mediaFunctions.cssSpacingResolver = cssSpacingResolver;

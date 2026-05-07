@@ -179,7 +179,31 @@ const X = () => {
                 title="Basic usage"
                 code={`import { colorWcagMatch } from "${SYS.basePath}";
 
-                const result = colorWcagMatch("#ffffff", "#0077ff", wcag, { tolerance, step });`}
+                //result
+                
+                {
+                    "color": "#0072f5",
+                    "colorFormats": {
+                            "hex6": "#0072f5",
+                            "hex8": "#0072f5ff",
+                            "rgbArray": [ 0, 114, 245 ],
+                            "rgbString": "rgb(0, 114, 245)",
+                            "rgbaArray": [ 0, 114, 245, 1 ],
+                            "rgbaString": "rgba(0, 114, 245, 1)",
+                            "hsbArray": [ 212, 100, 96 ],
+                            "hsbString": "hsb(212, 100%, 96%)",
+                            "hsbaArray": [ 212, 100, 96, 1 ],
+                            "hsbaString": "hsba(212, 100%, 96% / 1)",
+                            "hslArray": [ 212, 100, 48 ],
+                            "hslString": "hsl(212, 100%, 48%)",
+                            "hslaArray": [ 212, 100, 48, 1 ],
+                            "hslaString": "hsla(212, 100%, 48% / 1)",
+                            "luminance": 0.18627,
+                            "linearRgbaArray": [ 0, 0.16826940018969075, 0.9130986517934192, 1 ]
+                    },
+                    "finalRatio": 4.44,
+                    "lightness": 48
+                }`}
                 example={
                     <Flex.column gap={10}>
                         <Flex gap={10}>

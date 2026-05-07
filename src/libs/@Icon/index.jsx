@@ -3,8 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 import { icons } from "./icons";
 import { baseStore } from "../@baseStore";
 import { PopTip } from "../PopTip";
-import { byPath } from "../byPath";
-import { colorGet } from "../colorGet";
+import { colorFind } from "../colorFind";
 
 const spin360 = keyframes`
     from {
@@ -155,11 +154,7 @@ const isValidIconArray = (value) => {
 const resolveThemeColor = (theme, value) => {
     if (!value) return value;
     if (typeof value !== "string") return value;
-
-    const fromColorGet = colorGet(value)?.color;
-    if (typeof fromColorGet === "string") return fromColorGet;
-
-    return byPath.get(theme, value) ?? theme?.[value] ?? value;
+    return colorFind(value, { theme, output: "hex8" }) ?? value;
 };
 
 const normalizeIconsLibrary = (value) => {

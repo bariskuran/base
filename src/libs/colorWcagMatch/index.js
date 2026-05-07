@@ -1,5 +1,6 @@
 import { colorConverter } from "../colorConverter";
 import { colorContrastRatio } from "../colorContrastRatio";
+import { colorFind } from "../colorFind";
 
 /**
  *  * @example
@@ -35,10 +36,13 @@ export const colorWcagMatch = (background, targetColor, wcagRatio = 4.5, opts = 
     const minTarget = target - tolerance;
     const maxTarget = target + tolerance;
 
-    const bg = colorConverter({ hex6: background });
+    const resolvedBackground = colorFind(background, { output: "hex8" }) || background;
+    const resolvedTargetColor = colorFind(targetColor, { output: "hex8" }) || targetColor;
+
+    const bg = colorConverter({ hex8: resolvedBackground });
     const l1 = bg?.luminance;
 
-    const tone = colorConverter({ hex6: targetColor });
+    const tone = colorConverter({ hex8: resolvedTargetColor });
     const [hue, sat] = tone?.hslArray || [];
 
     if (typeof l1 !== "number") {
@@ -87,7 +91,7 @@ export const colorWcagMatch = (background, targetColor, wcagRatio = 4.5, opts = 
         best.ratio ??
         (typeof finalFormats?.luminance === "number"
             ? getRatioFromLuminance(l1, finalFormats.luminance)
-            : colorContrastRatio(background, finalFormats.hex6));
+            : colorContrastRatio(resolvedBackground, finalFormats.hex6));
 
     return {
         color: finalFormats.hex6,
