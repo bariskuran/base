@@ -10,7 +10,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useMouseXY>"
+        title="useMouseXY()"
         releasedOn="1.0.0"
         description="Tracks mouse coordinates with throttle."
     >
@@ -22,18 +22,13 @@ const [x, y] = useMouseXY(80);`}
             example={<Demo />}
         />
         <Ds.api
+            args="useMouseXY(delay);"
+            returns="Tuple [x, y] of latest mouse coordinates."
             props={{
                 delay: {
                     description: "Throttle delay in milliseconds.",
                     type: "number",
-                    required: false,
                     defaultValue: "100",
-                },
-                return: {
-                    description: "Current mouse coordinates [x, y].",
-                    type: "[number, number]",
-                    required: true,
-                    defaultValue: "[0, 0]",
                 },
             }}
         />

@@ -20,7 +20,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useDebouncedFunction>"
+        title="useDebouncedFunction()"
         releasedOn="1.0.0"
         description="Memoized debounce/throttle function hook."
     >
@@ -32,48 +32,37 @@ const fn = useDebouncedFunction(handler, { delay: 500 });`}
             example={<Demo />}
         />
         <Ds.api
+            args="useDebouncedFunction(fn, settings);"
+            returns="Stable debounced or throttled function."
             props={{
                 fn: {
                     description: "Function to debounce/throttle.",
                     type: "function",
                     required: true,
-                    defaultValue: "undefined",
                 },
                 settings: {
                     description: "Debounce settings object.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "settings.delay": {
                     description: "Delay in milliseconds.",
                     type: "number",
-                    required: false,
                     defaultValue: "500",
                 },
                 "settings.isThrottle": {
                     description: "Throttle mode.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.getFirst": {
                     description: "Executes first call immediately.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.functionName": {
                     description: "Optional function label.",
                     type: "string",
-                    required: false,
-                    defaultValue: "undefined",
-                },
-                return: {
-                    description: "Debounced function.",
-                    type: "function",
-                    required: true,
-                    defaultValue: "function",
                 },
             }}
         />

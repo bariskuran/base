@@ -13,7 +13,7 @@ export const sitemap = [
     ["byPath", "byPath", l(() => import("../byPath/_dS"))],
     ["clearUndefinedDeep", "clearUndefinedDeep", l(() => import("../clearUndefinedDeep/_dS"))],
     ["colorAlpha", "colorAlpha", l(() => import("../colorAlpha/_dS"))],
-    ["colorContrast", "colorContrast", l(() => import("../colorContrast/_dS"))],
+    ["colorWcagMatch", "colorWcagMatch", l(() => import("../colorWcagMatch/_dS"))],
     ["colorContrastRatio", "colorContrastRatio", l(() => import("../colorContrastRatio/_dS"))],
     ["colorConverter", "colorConverter", l(() => import("../colorConverter/_dS"))],
     ["colorGet", "colorGet", l(() => import("../colorGet/_dS"))],
@@ -86,6 +86,7 @@ export const sitemap = [
         l(() => import("../useScrollWidthHeight/_dS")),
     ],
     ["useTimer", "useTimer", l(() => import("../useTimer/_dS"))],
+    ["useLinkIntoView", "useLinkIntoView", l(() => import("../useLinkIntoView/_dS"))],
 ];
 
 export const designSystemRoutes = [

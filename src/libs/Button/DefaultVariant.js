@@ -37,15 +37,18 @@ export const DefaultVariant = styled.div`
         display: flex;
         transition: all 0.2s;
         border-radius: 5rem;
+        will-change: transform;
 
         ${$isHovered &&
         css`
             transform: translateY(-3rem);
+            box-shadow: 0 4rem 12rem rgba(0, 0, 0, 0.18);
         `}
 
         ${$isActivated &&
         css`
-            transform: translateY(3rem) scale(0.9);
+            transform: translateY(3rem);
+            box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.12) inset;
         `}
 
         & > [data-slot="label"] {

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-export const CleanVariant = styled.div`
+export const PlainVariant = styled.div`
     ${({
         theme,
         // $bgColor,
@@ -78,18 +78,18 @@ export const CleanVariant = styled.div`
                     right: 8rem;
                 `}
 
-        ${$alignX === "center" &&
+                ${$alignX === "center" &&
                 css`
                     left: 50%;
                     transform: translateX(-50%);
                 `}
 
-        ${$alignY === "top" &&
+                ${$alignY === "top" &&
                 css`
                     bottom: -9rem;
                 `}
 
-        ${$alignY === "bottom" &&
+                ${$alignY === "bottom" &&
                 css`
                     top: -9rem;
                     transform: ${$alignX === "center"

@@ -8,7 +8,7 @@ import { colorAlpha } from "../../colorAlpha";
 import { colorTinter } from "../../colorTinter";
 import { colorShader } from "../../colorShader";
 import { colorConverter } from "../../colorConverter";
-import { colorContrast } from "../../colorContrast";
+import { colorWcagMatch } from "../../colorWcagMatch";
 import { colorGet } from "../../colorGet";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { cssSpacingResolver } from "../../cssSpacingResolver";
@@ -115,7 +115,7 @@ export const generateMediaFunctions = ({
     mediaFunctions.colorTinter = colorTinter;
     mediaFunctions.colorShader = colorShader;
     mediaFunctions.colorConverter = colorConverter;
-    mediaFunctions.colorContrast = colorContrast;
+    mediaFunctions.colorWcagMatch = colorWcagMatch;
     mediaFunctions.colorGet = colorGet;
     mediaFunctions.get3DShadow = get3DShadow;
     mediaFunctions.cssNormalizeSize = cssNormalizeSize;

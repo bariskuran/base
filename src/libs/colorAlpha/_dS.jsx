@@ -3,55 +3,80 @@ import { SYS } from "../../constants/SYS";
 import { colorAlpha } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
+import { Space } from "../Space";
+import { colorGet } from "../colorGet";
 
-const c20 = colorAlpha("#0077ff", 20);
-const c80 = colorAlpha("#0077ff", 80);
+const Swatch = ({ source, alpha }) => {
+    const color = colorAlpha(source, alpha);
+    const sourceColor = colorGet(source).color;
 
-const Swatch = ({ color, label }) => (
-    <Flex.column xAlign="start" gap={4}>
-        <div style={{ width: 60, height: 24, borderRadius: 6, background: color }} />
-        <Typo.span children={`${label}: ${color}`} />
-    </Flex.column>
-);
+    return (
+        <Flex.column>
+            <Typo.span children={`source: ${source}`} />
+            <Typo.span children={`alpha: ${alpha}`} />
+            <Typo.span children={`result: ${color}`} />
+            <Flex gap={4} marginTop={20}>
+                <div style={{ width: 24, height: 24, borderRadius: 6, background: sourceColor }} />
+                <div style={{ width: 24, height: 24, borderRadius: 6, background: color }} />
+            </Flex>
+        </Flex.column>
+    );
+};
 
-const X = () => (
-    <Ds.page title="<colorAlpha>" releasedOn="1.0.0" description="Applies alpha to a color.">
-        <Ds.block
-            title="Basic Usage"
-            code={`import { colorAlpha } from "${SYS.basePath}";
+const X = () => {
+    return (
+        <Ds.page
+            title="colorAlpha()"
+            releasedOn="1.0.0"
+            description="Applies alpha to a color. This function can also be found under the theme or imported from base."
+        >
+            <Ds.block
+                title="Basic usage"
+                description="Accepts any kind of color string. hex, hexa, rgb, rgba, theme, theme.path. string etc."
+                code={`import { colorAlpha } from "${SYS.basePath}";
 
-const hex8 = colorAlpha("#0077ff", 35); // alpha as percent
-const hex8b = colorAlpha("#0077ff", 0.35); // alpha as 0..1`}
-            example={
-                <Flex xAlign="start" gap={20}>
-                    <Swatch color={c20} label="20%" />
-                    <Swatch color={c80} label="80%" />
-                </Flex>
-            }
-        />
-        <Ds.api
-            props={{
-                color: {
-                    description: "Base color input.",
-                    type: "string | object",
-                    required: true,
-                    defaultValue: "undefined",
-                },
-                alpha: {
-                    description: "Opacity ratio (0..1) or percent (0..100).",
-                    type: "number",
-                    required: false,
-                    defaultValue: "50",
-                },
-                return: {
-                    description: "Hex8 color string.",
-                    type: "string",
-                    required: true,
-                    defaultValue: "computed",
-                },
-            }}
-        />
-    </Ds.page>
-);
+                        colorAlpha("#07f", 35);
+                        colorAlpha("#0077ff", 0.35);
+                        colorAlpha("red", 0.35);
+                        colorAlpha("primary", 50);
+                        colorAlpha(theme.primary, 0.5);
+
+                        // or inside styled-component =>
+                        
+                        \`\${({ theme }) => css\`
+                            color: \${theme.colorAlpha(theme.primary, 35)};
+                        \`}\``}
+                example={
+                    <Flex.column xAlign="start" gap={16} padding={10}>
+                        <Flex xAlign="start" gap={20}>
+                            <Swatch source="#07f" alpha={0.2} />
+                            <Swatch source="#0077ff" alpha={60} />
+                            <Swatch source="red" alpha={50} />
+                            <Swatch source="primary" alpha={50} />
+                            <Swatch source="#0077ff99" alpha={50} />
+                        </Flex>
+                        <Space size="l" />
+                    </Flex.column>
+                }
+            />
+            <Ds.api
+                args="colorAlpha(color, alpha);"
+                props={{
+                    color: {
+                        description: "Base color input.",
+                        type: "string | object",
+                        required: true,
+                    },
+                    alpha: {
+                        description: "Opacity ratio (0..1) or percent (1..100).",
+                        type: "number",
+                        defaultValue: "50",
+                    },
+                }}
+                returns="Hex8 color string."
+            />
+        </Ds.page>
+    );
+};
 
 export default X;

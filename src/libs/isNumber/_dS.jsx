@@ -1,42 +1,75 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isNumber } from ".";
+import { Flex } from "../Flex";
 import { Typo } from "../Typo";
+import { Button } from "../Button";
+import { Space } from "../Space";
+import { baseStore } from "../@baseStore";
 
-const X = () => (
-    <Ds.page title="<isNumber>" releasedOn="1.0.0" description="Checks finite numeric values.">
-        <Ds.block
-            title="Basic Usage"
-            code={`import { isNumber } from "${SYS.basePath}";
+const X = () => {
+    const { output, setLocal } = baseStore.useLocal({ output: null });
 
-isNumber(12); // true
-isNumber("12.4"); // true
-isNumber("abc"); // false`}
-            example={
-                <>
-                    <Typo.span children={`12 => ${String(isNumber(12))}`} />
-                    <Typo.span children={`"12.4" => ${String(isNumber("12.4"))}`} />
-                    <Typo.span children={`"abc" => ${String(isNumber("abc"))}`} />
-                </>
-            }
-        />
-        <Ds.api
-            props={{
-                data: {
-                    description: "Value to check.",
-                    type: "any",
-                    required: true,
-                    defaultValue: "undefined",
-                },
-                return: {
-                    description: "True for finite numeric-like values.",
-                    type: "boolean",
-                    required: true,
-                    defaultValue: "false",
-                },
-            }}
-        />
-    </Ds.page>
-);
+    return (
+        <Ds.page title="isNumber()" releasedOn="1.0.0" description="Checks finite numeric values.">
+            <Ds.block
+                title="Basic usage"
+                code={`import { isNumber } from "${SYS.basePath}";
+
+isNumber(12);
+
+isNumber("12.4");
+
+isNumber("abc");`}
+                example={
+                    <Flex.column xAlign="start" gap={10} padding={10}>
+                        <Button.string
+                            label="Run isNumber(12)"
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = JSON.stringify(isNumber(12));
+                                })
+                            }
+                        />
+                        <Button.string
+                            label='Run isNumber("12.4")'
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = JSON.stringify(isNumber("12.4"));
+                                })
+                            }
+                        />
+                        <Button.string
+                            label='Run isNumber("abc")'
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = JSON.stringify(isNumber("abc"));
+                                })
+                            }
+                        />
+                        <Space size="l" />
+                        {output != null && (
+                            <>
+                                <Typo.span balance>Output</Typo.span>
+                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                            </>
+                        )}
+                    </Flex.column>
+                }
+            />
+            <Ds.api
+                args="isNumber(data);"
+                returns="True for finite numeric-like values."
+                props={{
+                    data: {
+                        description: "Value to check.",
+                        type: "any",
+                        required: true,
+                    },
+                }}
+            />
+        </Ds.page>
+    );
+};
 
 export default X;

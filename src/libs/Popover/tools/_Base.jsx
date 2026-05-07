@@ -14,7 +14,20 @@ export const Base = ({ children, ...p }) => {
         scrollBoxProps,
     } = useVars(p);
 
-    const content = <ScrollFlex {...scrollBoxProps}>{children}</ScrollFlex>;
+    const { flexProps: scrollBoxFlexProps, ...scrollBoxRest } = scrollBoxProps || {};
+    const content = (
+        <ScrollFlex
+            {...scrollBoxRest}
+            flexProps={{
+                width: "100%",
+                ...(scrollBoxFlexProps && typeof scrollBoxFlexProps === "object"
+                    ? scrollBoxFlexProps
+                    : {}),
+            }}
+        >
+            {children}
+        </ScrollFlex>
+    );
 
     /* RETURN */
     return (

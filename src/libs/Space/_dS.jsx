@@ -22,11 +22,11 @@ const X = () => (
             }
         />
         <Ds.api
+            args="<Space />"
             props={{
                 size: {
                     description: "Spacer size token or css size value.",
                     type: `"xs" | "s" | "m" | "l" | "xl" | "xxl" | "xxxl" | "xxxxl" | string | number`,
-                    required: false,
                     defaultValue: '"m"',
                 },
             }}

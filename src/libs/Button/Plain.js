@@ -11,28 +11,7 @@ import styled, { css } from "styled-components";
 // `;
 
 export const S = styled.div`
-    ${({
-        // theme,
-        // $isHovered,
-        // $disabled,
-        $isJustIcon,
-        // $isActivated,
-        // $isPending,
-        // $bgColor,
-        // $hoverBgColor,
-        // $activeBgColor,
-        // $color,
-        // $prefixBgColor,
-        // $prefixColor,
-        // $suffixBgColor,
-        // $suffixColor,
-        // $minHeight,
-        // $minWidth,
-        // $minLabelWidth,
-        // $inverseColor1,
-        // $inverseColor2,
-        // $size,
-    }) => css`
+    ${({ $isJustIcon }) => css`
         all: unset;
         display: flex;
         transition: all 0.2s;
@@ -49,10 +28,7 @@ export const S = styled.div`
             justify-content: center;
             align-items: center;
             padding: 6rem 20rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5rem;
-            font-weight: 600;
-            font-size: 12rem;
+            font-size: 14rem;
         }
     `}
 `;

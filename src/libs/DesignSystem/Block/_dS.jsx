@@ -5,51 +5,48 @@ const X = () => (
     <Ds.page
         title="DSBlock"
         releasedOn="1.0.0"
-        description="DSBlock renders a block with a title, description, code, and example. Desing System uses this component to render the blocks in the page."
+        description="DSBlock renders a block with a title, description, code, and example. Design System uses this component to render the blocks in the page."
     >
         <Ds.block
             title="Usage"
             code={`import { Ds } from "${SYS.basePath}";
 
-                    <Ds.block
-                        title="Usage"
-                        description="This is a description"
-                        code={\`import { Ds } from "${SYS.basePath}";\`}
-                        example={<div>This is an example</div>}
-                    />`}
+                <Ds.block
+                    title="Usage"
+                    description="This is a description"
+                    code={\`import { Ds } from "${SYS.basePath}";\`}
+                    example={<div>This is an example</div>}
+                />`}
         />
         <Ds.api
+            args='<Ds.block title="" />'
             props={{
                 title: {
                     description: "Block's title",
                     type: "string",
                     required: true,
-                    defaultValue: "null",
+                    defaultValue: null,
                 },
                 description: {
                     description: "Block's description",
                     type: "string",
-                    required: false,
-                    defaultValue: "null",
+                    defaultValue: null,
                 },
                 code: {
                     description: "Block's code",
                     type: "template literal",
-                    required: false,
-                    defaultValue: "null",
+                    defaultValue: null,
                 },
                 example: {
                     description: "Block's example",
-                    type: "string",
-                    required: false,
-                    defaultValue: "null",
+                    type: "ReactNode",
+                    defaultValue: null,
                 },
                 lastBlock: {
                     description:
                         "Whether the block is the last block in the page. ApiViewer uses this automatically to add a circle to the end of the visual.",
                     type: "boolean",
-                    required: false,
-                    defaultValue: "false",
+                    defaultValue: false,
                 },
             }}
         />

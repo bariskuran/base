@@ -23,7 +23,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useDebouncedValue>"
+        title="useDebouncedValue()"
         releasedOn="1.0.0"
         description="State value with debounce/throttle behavior."
     >
@@ -35,43 +35,33 @@ const [debouncedValue, setValue, state] = useDebouncedValue("", { delay: 500 });
             example={<Demo />}
         />
         <Ds.api
+            args="useDebouncedValue(initialValue, settings);"
+            returns="Tuple: debounced value, setValue, and state helpers."
             props={{
                 initialValue: {
                     description: "Initial state value.",
                     type: "any",
                     required: true,
-                    defaultValue: "undefined",
                 },
                 settings: {
                     description: "Debounce behavior options.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "settings.delay": {
                     description: "Delay in milliseconds.",
                     type: "number",
-                    required: false,
                     defaultValue: "500",
                 },
                 "settings.isThrottle": {
                     description: "Throttle mode.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.enabled": {
                     description: "Enables debounce/throttle behavior.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "true",
-                },
-                return: {
-                    description:
-                        "[debouncedValue, setValue, { value, setDebouncedValue, reset, isWaiting }]",
-                    type: "array",
-                    required: true,
-                    defaultValue: "computed",
                 },
             }}
         />

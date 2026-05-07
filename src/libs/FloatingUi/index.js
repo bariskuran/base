@@ -1,13 +1,13 @@
 import { Base } from "./tools/_Base";
 import { componentCreator } from "../componentCreator/index.jsx";
 import { DefaultVariant } from "./DefaultVariant";
-import { CleanVariant } from "./CleanVariant.js";
+import { PlainVariant } from "./PlainVariant.js";
 
 export const FloatingUi = componentCreator({
     name: "FloatingUi",
     BaseComp: Base,
     DefaultVariant,
-    CleanVariant,
+    PlainVariant,
     variants: {
         // opposite: opposite,
         // threeD: threeD,

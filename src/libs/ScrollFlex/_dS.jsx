@@ -160,47 +160,50 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Relative Height & Width"
+                title="Relative Height & Width by Ref"
                 description={`You can set the height of ScrollFlex by referencing another DOM element that is not in the same region. You can use a React ref to point to this element. The "height" or "flexProps.height" props take precedence over the "heightByRef" and "heightById" props.
 
                     The same feature can be used for width via the "widthByRef" or "widthById" props.`}
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
-                    /* Height source can be anywhere in the DOM; it does not need to share the same parent/root. */
-                    <Flex height={150} ref={flexRef1}>
-                       Source heightByRef
-                    </Flex>
-
-                    /* ScrollFlex */
+                    <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>Source 150x150</Flex>
                     <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>`}
                 example={
-                    <>
-                        <Flex height={150} ref={flexRef1}>
-                            Source heightByRef
+                    <Flex gap={10} align="stretch">
+                        <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>
+                            Source 150x150
                         </Flex>
                         <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>
-                    </>
+                    </Flex>
                 }
             />
             <Ds.block
-                title="Relative Height by DOM id"
+                title="Relative Width & Height by DOM id"
                 description="Same as heightByRef, but the source element is resolved with document.getElementById. Use a stable, page-unique id on the element whose height you want to mirror. Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
 
-                    /* Height source can be anywhere in the DOM; it does not need to share the same parent/root. */
-                    <Flex height={150} id="unique-id">
-                       Source heightByRef
+                    <Flex id={HEIGHT_BY_ID_DEMO_SOURCE} height={150} width={150} bgColor="aliceblue">
+                            Source 150x150
                     </Flex>
-
-                    /* ScrollFlex */
-                    <ScrollFlex heightById="unique-id">{longText}</ScrollFlex>`}
+                    <ScrollFlex widthById={HEIGHT_BY_ID_DEMO_SOURCE} heightById={HEIGHT_BY_ID_DEMO_SOURCE}>{longText}</ScrollFlex>
+                    </Flex>`}
                 example={
-                    <>
-                        <Flex id={HEIGHT_BY_ID_DEMO_SOURCE} height={150}>
-                            Source heightById
+                    <Flex gap={10} align="stretch">
+                        <Flex
+                            id={HEIGHT_BY_ID_DEMO_SOURCE}
+                            height={150}
+                            width={150}
+                            bgColor="aliceblue"
+                        >
+                            Source 150x150
                         </Flex>
-                        <ScrollFlex heightById={HEIGHT_BY_ID_DEMO_SOURCE}>{longText}</ScrollFlex>
-                    </>
+                        <ScrollFlex
+                            widthById={HEIGHT_BY_ID_DEMO_SOURCE}
+                            heightById={HEIGHT_BY_ID_DEMO_SOURCE}
+                        >
+                            {longText}
+                        </ScrollFlex>
+                    </Flex>
                 }
             />
             <Ds.block
@@ -216,17 +219,21 @@ const X = () => {
                     <Ds.variant
                         variants={[
                             [
-                                "border",
+                                "default or border",
                                 <Flex width={150} height={100} key="border">
                                     <ScrollFlex height={100}>{longText}</ScrollFlex>
                                 </Flex>,
                             ],
                             [
+                                "plain",
+                                <Flex width={150} height={100} key="border">
+                                    <ScrollFlex.plain height={100}>{longText}</ScrollFlex.plain>
+                                </Flex>,
+                            ],
+                            [
                                 "shadow",
                                 <Flex width={150} height={100} key="shadow">
-                                    <ScrollFlex.shadow height={100} key="shadow">
-                                        {longText}
-                                    </ScrollFlex.shadow>
+                                    <ScrollFlex.shadow height={100}>{longText}</ScrollFlex.shadow>
                                 </Flex>,
                             ],
                             [
@@ -242,6 +249,7 @@ const X = () => {
                 }
             />
             <Ds.api
+                args="<ScrollFlex />"
                 props={{
                     width: {
                         description: "ScrollBox width. Uses parent width when omitted.",
@@ -252,7 +260,6 @@ const X = () => {
                         description:
                             "ScrollFlex height. Explicit height takes precedence over reference-based height.",
                         type: "number | string",
-                        defaultValue: "undefined",
                     },
                     heightByRef: {
                         description:

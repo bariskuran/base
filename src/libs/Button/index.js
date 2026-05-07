@@ -8,6 +8,7 @@ import AnimatedBg from "./AnimatedBg.js";
 import String from "./String.js";
 import Plain from "./Plain.js";
 import SquareOnRight from "./SquareOnRight.js";
+import WithCopyIcon from "./WithCopyIcon.js";
 
 export const Button = componentCreator({
     name: "Button",
@@ -35,6 +36,21 @@ export const Button = componentCreator({
             icon: {
                 icon: "close",
                 width: 12,
+            },
+        },
+        withCopyIcon: {
+            ...WithCopyIcon,
+            bgColor: "transparent",
+            hoverBgColor: "transparent",
+            activeBgColor: "transparent",
+            color: "foreground",
+            prefix: {
+                icon: "copy",
+                width: 10,
+                color: "foreground",
+                hoverColor: "primary",
+                activeColor: "success",
+                flat: true,
             },
         },
     },

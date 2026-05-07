@@ -3,8 +3,8 @@ import { colorContrastRatio } from "../colorContrastRatio";
 
 /**
  *  * @example
- * import { colorContrast } from "@bariskuran/base";
- * const { color, colorFormats, finalRatio lightness } = colorContrast(background, expectedTone, expectedRatio, {tolerance, step});
+ * import { colorWcagMatch } from "@bariskuran/base";
+ * const { color, colorFormats, finalRatio, lightness } = colorWcagMatch(background, targetColor, wcagRatio, { tolerance, step });
  */
 
 /**
@@ -15,8 +15,8 @@ import { colorContrastRatio } from "../colorContrastRatio";
  * within a small tolerance; if it can't, it returns the closest match.
  *
  * @param {string} background - Background color in hex6 format (e.g. "#112233" or "112233", depending on colorConverter).
- * @param {string} expectedTone - Base tone color in hex6 format; Hue & Saturation will be preserved.
- * @param {number} expectedRatio - Target contrast ratio (e.g. 4.5).
+ * @param {string} targetColor - Base tone color in hex6 format; Hue & Saturation will be preserved.
+ * @param {number} wcagRatio - Target contrast ratio (e.g. 4.5).
  * @param {object} [opts]
  * @param {number} [opts.tolerance=0.05] - Accepted ratio band: expectedRatio ± tolerance.
  * @param {number} [opts.step=1] - Lightness scan step (1 = 101 tests). Use 2/5/10 for faster, rougher results.
@@ -27,27 +27,27 @@ import { colorContrastRatio } from "../colorContrastRatio";
  *   lightness: number
  * }}
  */
-export const colorContrast = (background, expectedTone, expectedRatio, opts = {}) => {
+export const colorWcagMatch = (background, targetColor, wcagRatio = 4.5, opts = {}) => {
     const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0.05;
     const step = typeof opts.step === "number" && opts.step > 0 ? opts.step : 1;
 
-    const target = Number(Number(expectedRatio).toFixed(1));
+    const target = Number(Number(wcagRatio).toFixed(1));
     const minTarget = target - tolerance;
     const maxTarget = target + tolerance;
 
     const bg = colorConverter({ hex6: background });
     const l1 = bg?.luminance;
 
-    const tone = colorConverter({ hex6: expectedTone });
+    const tone = colorConverter({ hex6: targetColor });
     const [hue, sat] = tone?.hslArray || [];
 
     if (typeof l1 !== "number") {
         throw new Error(
-            "colorContrast: invalid background color (luminance could not be computed).",
+            "colorWcagMatch: invalid background color (luminance could not be computed).",
         );
     }
     if (typeof hue !== "number" || typeof sat !== "number") {
-        throw new Error("colorContrast: invalid expectedTone color (HSL could not be computed).");
+        throw new Error("colorWcagMatch: invalid targetColor (HSL could not be computed).");
     }
 
     let best = {
@@ -56,6 +56,8 @@ export const colorContrast = (background, expectedTone, expectedRatio, opts = {}
         lightness: null,
         formats: null,
     };
+    const getRatioFromLuminance = (lumA, lumB) =>
+        Number(((Math.max(lumA, lumB) + 0.05) / (Math.min(lumA, lumB) + 0.05)).toFixed(4));
 
     for (let lig = 0; lig <= 100; lig += step) {
         const formats = colorConverter({ hslArray: [hue, sat, lig] });
@@ -63,7 +65,7 @@ export const colorContrast = (background, expectedTone, expectedRatio, opts = {}
 
         if (typeof l2 !== "number") continue;
 
-        const ratio = colorContrastRatio(l1, l2);
+        const ratio = getRatioFromLuminance(l1, l2);
         const diff = Math.abs(ratio - target);
 
         if (ratio >= minTarget && ratio <= maxTarget) {
@@ -81,7 +83,11 @@ export const colorContrast = (background, expectedTone, expectedRatio, opts = {}
     }
 
     const finalFormats = best.formats || tone;
-    const finalRatio = best.ratio ?? colorContrastRatio(l1, finalFormats.luminance);
+    const finalRatio =
+        best.ratio ??
+        (typeof finalFormats?.luminance === "number"
+            ? getRatioFromLuminance(l1, finalFormats.luminance)
+            : colorContrastRatio(background, finalFormats.hex6));
 
     return {
         color: finalFormats.hex6,

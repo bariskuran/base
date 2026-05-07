@@ -1,58 +1,100 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isEqual, useIsEqual } from ".";
+import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 import { Button } from "../Button";
+import { Space } from "../Space";
 
 const X = () => {
-    const { value, setLocal } = baseStore.useLocal({ value: { a: 1, b: { c: 2 } } });
+    const { value, output, setLocal } = baseStore.useLocal({
+        value: { a: 1, b: { c: 2 } },
+        output: null,
+    });
     const stable = useIsEqual(value);
-    const eq = isEqual({ a: 1, b: { c: 2 } }, { a: 1, b: { c: 2 } });
 
     return (
-        <Ds.page title="<isEqual>" releasedOn="1.0.0" description="Deep equality checker utility.">
+        <Ds.page title="isEqual()" releasedOn="1.0.0" description="Deep equality checker utility.">
             <Ds.block
-                title="Basic Usage"
+                title="Basic usage"
                 code={`import { isEqual } from "${SYS.basePath}";
 
-isEqual({ a: 1 }, { a: 1 }); // true
-isEqual([1,2], [2,1]); // false`}
-                example={<Typo.span children={`isEqual sample => ${String(eq)}`} />}
+isEqual({ a: 1 }, { a: 1 });
+
+isEqual([1, 2], [2, 1]);`}
+                example={
+                    <Flex.column xAlign="start" gap={10} padding={10}>
+                        <Button.string
+                            label="Run isEqual({ a: 1 }, { a: 1 })"
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = JSON.stringify(isEqual({ a: 1 }, { a: 1 }));
+                                })
+                            }
+                        />
+                        <Button.string
+                            label="Run isEqual([1, 2], [2, 1])"
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = JSON.stringify(isEqual([1, 2], [2, 1]));
+                                })
+                            }
+                        />
+                        <Space size="l" />
+                        {output != null && (
+                            <>
+                                <Typo.span balance>Output</Typo.span>
+                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                            </>
+                        )}
+                    </Flex.column>
+                }
             />
             <Ds.block
-                title="useIsEqual Hook"
-                code={`const stableValue = useIsEqual(value);`}
+                title="useIsEqual hook"
+                code={`import { useIsEqual } from "${SYS.basePath}";
+
+const stableValue = useIsEqual(value);`}
                 example={
-                    <>
+                    <Flex.column xAlign="start" gap={10} padding={10}>
                         <Button
-                            label="Update same value"
+                            label="Set same deep value"
                             onClick={() =>
                                 setLocal((s) => {
                                     s.value = { a: 1, b: { c: 2 } };
                                 })
                             }
                         />
-                        <Typo.span children={`stable: ${JSON.stringify(stable)}`} />
-                    </>
+                        <Typo.span balance>Stable reference (JSON for display):</Typo.span>
+                        <Typo.pre whiteSpace="pre-wrap">{JSON.stringify(stable)}</Typo.pre>
+                    </Flex.column>
                 }
             />
             <Ds.api
+                args={["isEqual(a, b, settings);", "useIsEqual(value);"]}
+                returns="isEqual: boolean; useIsEqual: stable reference when deep-equal."
                 props={{
-                    "isEqual(a,b,settings)": {
-                        description:
-                            "Deep compare with options: treatFalsiesAsEqual, maxKeys, maxDepth, useHashShortcut.",
-                        type: "(any, any, object?) => boolean",
+                    a: {
+                        description: "First value (isEqual).",
+                        type: "any",
                         required: true,
-                        defaultValue:
-                            "{ treatFalsiesAsEqual:false, maxKeys:500, maxDepth:10, useHashShortcut:true }",
                     },
-                    "useIsEqual(value)": {
-                        description:
-                            "Hook that only updates stored value when deep-equal check fails.",
-                        type: "(any) => any",
+                    b: {
+                        description: "Second value (isEqual).",
+                        type: "any",
                         required: true,
-                        defaultValue: "hook",
+                    },
+                    settings: {
+                        description:
+                            "Deep compare options: treatFalsiesAsEqual, maxKeys, maxDepth, useHashShortcut.",
+                        type: "object",
+                        defaultValue:
+                            "{ treatFalsiesAsEqual: false, maxKeys: 500, maxDepth: 10, useHashShortcut: true }",
+                    },
+                    value: {
+                        description: "Tracked value (useIsEqual).",
+                        type: "any",
                     },
                 }}
             />

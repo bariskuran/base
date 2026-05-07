@@ -374,160 +374,130 @@ const X = () => {
                     </AppLevelContainer>`}
             />
             <Ds.api
+                args="<ScrollBar />"
                 props={{
                     body: {
                         description:
                             "Uses the page/window scroll instead of the parent container scroll. Recommended for page-level custom scrollbar usage.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     sourceByRef: {
                         description: "Controls an external scroll element via ref.",
                         type: "React ref | HTMLElement",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     sourceById: {
                         description: "Controls an external scroll element via DOM id.",
                         type: "string",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     positionSourceByRef: {
                         description:
                             "Controls which element is used for scrollbar positioning via ref. When omitted, source element is used.",
                         type: "React ref | HTMLElement",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     variant: {
                         description: "Visual variant component used to render the scrollbar track.",
                         type: "React component",
-                        required: false,
                         defaultValue: "DefaultVariant",
                     },
                     disableX: {
                         description:
                             "Disables the horizontal scrollbar and prevents horizontal scrolling.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     disableY: {
                         description:
                             "Disables the vertical scrollbar and prevents vertical scrolling. If horizontal overflow exists, vertical wheel movement can still drive horizontal scroll.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     opposite: {
                         description:
                             "Swaps the visual orientation of the scrollbar. Y axis is shown as horizontal, X axis is shown as vertical.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     mirror: {
                         description:
                             "Mirrors scrollbar placement. Vertical bars move from right to left, horizontal bars move from bottom to top.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     truckColor: {
                         description: "Color of the scrollbar track.",
                         type: "string",
-                        required: false,
                         defaultValue: "theme.foreground",
                     },
                     thumbColor: {
                         description: "Color of the scrollbar thumb.",
                         type: "string",
-                        required: false,
                         defaultValue: "truckColor",
                     },
                     thickness: {
                         description: "Scrollbar thickness in rem.",
                         type: "number",
-                        required: false,
                         defaultValue: "4",
                     },
                     maxLength: {
                         description:
                             "Maximum track length as a percentage of the scroll host. When provided, the track is centered on its main axis.",
                         type: "number",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     trackMargin: {
                         description:
                             "Spacing at both ends of the track, along the track direction. Formerly marginToSide.",
                         type: "number",
-                        required: false,
                         defaultValue: "5",
                     },
                     edgeMargin: {
                         description:
                             "Distance between the scrollbar and the nearest container/page edge. Formerly marginToBorder.",
                         type: "number",
-                        required: false,
                         defaultValue: "5",
                     },
                     edgeMarginX: {
                         description:
                             "Edge margin for scrollbars rendered in horizontal position. Overrides edgeMargin for horizontal bars.",
                         type: "number",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     edgeMarginY: {
                         description:
                             "Edge margin for scrollbars rendered in vertical position. Overrides edgeMargin for vertical bars.",
                         type: "number",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     minThumbLength: {
                         description:
                             "Minimum thumb length in pixels when the thumb size is calculated automatically.",
                         type: "number",
-                        required: false,
                         defaultValue: "24",
                     },
                     exactThumbSize: {
                         description:
                             "Forces the thumb length to a fixed pixel value. Ignored when fillMode is enabled.",
                         type: "number",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     fillMode: {
                         description:
                             "Renders the thumb as a progress fill from the start of the track. Dragging is disabled, but clicking the track still scrolls.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     exportData: {
                         description:
                             "Exports internal ScrollBar state and handlers for advanced integrations.",
                         type: "string | object",
-                        required: false,
-                        defaultValue: "undefined",
                     },
                     enableThumbScale: {
                         description:
                             "Enables the thumb scale effect. This prop might be ignored if a variant uses inner scale effect.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     disableOpacityEffect: {
                         description:
                             "Disables the inactive opacity effect for variants that support it. This behavior is variant-based and custom variants may ignore it.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                 }}

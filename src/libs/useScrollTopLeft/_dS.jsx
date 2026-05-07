@@ -16,7 +16,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useScrollTopLeft>"
+        title="useScrollTopLeft()"
         releasedOn="1.0.0"
         description="Tracks scroll top/left and directions."
     >
@@ -31,30 +31,23 @@ const { scrollTop, scrollLeft, directionX, directionY, calc } = useScrollTopLeft
             example={<Demo />}
         />
         <Ds.api
+            args="useScrollTopLeft(options);"
+            returns="scrollTop, scrollLeft, direction axes, and calc helper."
             props={{
                 options: {
                     description: "Configuration object.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "options.source": {
                     description: "Window or scrollable element source.",
                     type: "Window | HTMLElement",
-                    required: false,
                     defaultValue: "window",
                 },
                 "options.delay": {
                     description: "Throttle delay in milliseconds.",
                     type: "number",
-                    required: false,
                     defaultValue: "0",
-                },
-                return: {
-                    description: "{ scrollTop, scrollLeft, directionX, directionY, calc }",
-                    type: "object",
-                    required: true,
-                    defaultValue: "computed",
                 },
             }}
         />

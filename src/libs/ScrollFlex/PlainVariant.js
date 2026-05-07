@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
 
-export const CleanVariant = styled.div`
+export const PlainVariant = styled.div`
     ${() => css``}
 `;

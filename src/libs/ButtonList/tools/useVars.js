@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { deepMerge } from "../../deepMerge";
 import { useExportData } from "../../useExportedData";
 
@@ -10,28 +10,21 @@ const useVars = (p = {}) => {
         commonButtonProps = {},
         flexProps = {},
         scrollBarProps = {},
+        scrollFlexVariant,
         exportData,
     } = p;
-
-    const flexScrollRef = useRef(null);
 
     const preparedItems = useMemo(
         () => buttons.map((item) => deepMerge(commonButtonProps, item)),
         [buttons, commonButtonProps],
     );
 
-    const resolvedFlexProps = useMemo(() => {
-        const fp = flexProps || {};
-        const out = { ...fp };
-        if (out.width == null) out.width = "100%";
-        return out;
-    }, [flexProps]);
+    const resolvedFlexProps = useMemo(() => ({ ...(flexProps || {}) }), [flexProps]);
 
     const mergedScrollBarProps = useMemo(
         () => ({
             ...scrollBarProps,
             edgeMargin: scrollBarProps?.edgeMargin ?? -5,
-            sourceByRef: scrollBarProps?.sourceByRef ?? flexScrollRef,
         }),
         [scrollBarProps],
     );
@@ -41,9 +34,9 @@ const useVars = (p = {}) => {
             exportData,
             Variant,
             forwardedRef,
-            flexScrollRef,
             resolvedFlexProps,
             mergedScrollBarProps,
+            scrollFlexVariant,
             buttons,
             commonButtonProps,
         },

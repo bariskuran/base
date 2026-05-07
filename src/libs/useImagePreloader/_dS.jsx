@@ -14,7 +14,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useImagePreloader>"
+        title="useImagePreloader()"
         releasedOn="1.0.0"
         description="Preloads image URLs and returns readiness state."
     >
@@ -26,30 +26,23 @@ const isLoaded = useImagePreloader(["/a.png", "/b.png"], { delayAfterLoad: 150 }
             example={<Demo />}
         />
         <Ds.api
+            args="useImagePreloader(images, options);"
+            returns="Boolean: all listed images finished loading."
             props={{
                 images: {
                     description: "List of image URLs.",
                     type: "string[]",
-                    required: false,
                     defaultValue: "[]",
                 },
                 options: {
                     description: "Preloader options.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "options.delayAfterLoad": {
                     description: "Extra delay after load completes.",
                     type: "number",
-                    required: false,
                     defaultValue: "0",
-                },
-                return: {
-                    description: "All image load process completed.",
-                    type: "boolean",
-                    required: true,
-                    defaultValue: "false",
                 },
             }}
         />

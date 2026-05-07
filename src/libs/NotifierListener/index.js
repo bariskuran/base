@@ -1,13 +1,13 @@
 import { componentCreator } from "../componentCreator/index.jsx";
 import { Base } from "./tools/Base";
 import { DefaultVariant } from "./DefaultVariant";
-import { CleanVariant } from "./CleanVariant.js";
+import { PlainVariant } from "./PlainVariant.js";
 
 export const NotifierListener = componentCreator({
     name: "NotifierListener",
     BaseComp: Base,
     DefaultVariant,
-    CleanVariant,
+    PlainVariant,
     variants: {
         // opposite: opposite,
     },

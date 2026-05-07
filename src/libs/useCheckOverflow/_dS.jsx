@@ -23,7 +23,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useCheckOverflow>"
+        title="useCheckOverflow()"
         releasedOn="1.0.0"
         description="Detects overflow on element/window."
     >
@@ -36,24 +36,16 @@ const { isOverflowing } = useCheckOverflow({ ref });`}
             example={<Demo />}
         />
         <Ds.api
+            args="useCheckOverflow({ ref, target });"
+            returns="Object with isOverflowing, isOverflowingX, isOverflowingY."
             props={{
                 ref: {
                     description: "Target ref object.",
                     type: "RefObject<Element>",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 target: {
                     description: "Direct target element/window override.",
                     type: "Element | Window",
-                    required: false,
-                    defaultValue: "undefined",
-                },
-                return: {
-                    description: "Overflow flags: isOverflowing, isOverflowingX, isOverflowingY.",
-                    type: "object",
-                    required: true,
-                    defaultValue: "{ false, false, false }",
                 },
             }}
         />

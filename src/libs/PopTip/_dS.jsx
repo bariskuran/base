@@ -145,29 +145,26 @@ const X = () => {
                 }
             />
             <Ds.api
+                args='<PopTip content="">{null}</PopTip>'
                 props={{
                     variant: {
                         description: "Variant name or custom styled variant.",
                         type: "string | component",
-                        required: false,
                         defaultValue: '"default"',
                     },
                     content: {
                         description: "Floating content rendered inside PopTip.",
                         type: "ReactNode",
                         required: true,
-                        defaultValue: "null",
                     },
                     children: {
                         description: "Trigger element.",
                         type: "ReactNode",
                         required: true,
-                        defaultValue: "null",
                     },
                     exportData: {
                         description: "Debug/export callback passthrough.",
                         type: "boolean | function | object",
-                        required: false,
                         defaultValue: "false",
                     },
                 }}

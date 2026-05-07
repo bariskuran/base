@@ -22,4 +22,18 @@ export const S = {
         min-height: 100dvh;
         max-height: 100dvh;
     `,
+    logoArea: styled.div`
+        position: sticky;
+        top: 25rem;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-top: 25rem;
+    `,
+    logoArea2: styled.div`
+        transform: rotate(-90deg);
+        transform-origin: center bottom;
+    `,
 };

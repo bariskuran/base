@@ -56,10 +56,10 @@ const Block = ({ title, description, code, example, lastBlock }) => {
             <Flex.column justify="start" full>
                 {(example || description) && ajax === 0 && (
                     <S.contentArea area-title="Block Content">
-                        <Flex.row justify="start">{example}</Flex.row>
                         <Typo.span whiteSpace="pre-line" balance>
                             {description}
                         </Typo.span>
+                        <Flex.row justify="start">{example}</Flex.row>
                     </S.contentArea>
                 )}
                 {((code && ajax === 1) || (!example && !description && code)) && (

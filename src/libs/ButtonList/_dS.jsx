@@ -29,6 +29,8 @@ const buttons = [
     { label: "test2", onClick: () => console.log("click2") },
     { label: "test2", onClick: () => console.log("click2") },
     { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
 ];
 
 const commonButtonProps = {
@@ -41,61 +43,119 @@ const commonButtonProps = {
 
 const X = () => {
     return (
-        <Ds.page title="<ButtonList>" releasedOn="1.0.0" description="Renders a list of buttons.">
+        <Ds.page
+            title="<ButtonList>"
+            releasedOn="1.0.0"
+            description="Renders a list of buttons merged with commonButtonProps. Shows ScrollBar when needed."
+        >
             <Ds.block
-                title="Basic Usage"
+                title="Vertical Usage"
                 code={`import { ButtonList } from "${SYS.basePath}";
 
-                    <ButtonList
-                        buttons={[{ label: "Edit" }, { label: "Delete" }]}
-                        flexProps={{ direction: "column", gap: 5 }}
+                    const buttons = [
+                        { 
+                            variant: "error",
+                            label: "test",
+                            hoverLabel: "test hover",
+                            prefix: { 
+                                icon: "bullet"
+                            },
+                            onClick: () => console.log("click"),
+                        },
+                        { 
+                            label: "test2",
+                            onClick: () => console.log("click2")
+                        },
+                    ];
+
+                    const commonButtonProps = {
+                        variant: "success",
+                        prefix: { icon: "user" },
+                        size: 100,
+                    };
+
+                    <ButtonList.column 
+                        buttons={buttons}
+                        commonButtonProps={commonButtonProps}
+                        flexProps={{ gap: 5, height: 280 }}
+                        scrollBarProps={{ trackMargin: 0 }}
                     />`}
                 example={
                     <ButtonList.column
                         buttons={buttons}
                         commonButtonProps={commonButtonProps}
-                        flexProps={{ gap: 5, maxHeight: 280, overflowY: "auto" }}
+                        flexProps={{ gap: 5, height: 280 }}
+                        scrollBarProps={{ trackMargin: 0 }}
+                    />
+                }
+            />
+            <Ds.block
+                title="Horizontal Usage"
+                code={`import { ButtonList } from "${SYS.basePath}";
+
+                    <ButtonList 
+                        buttons={buttons}
+                        commonButtonProps={commonButtonProps}
+                        variant="plain"
+                        flexProps={{ 
+                            direction: "row",
+                            wrap: false,
+                            gap: 8,
+                            width: "100%",
+                            xAlign: "start",
+                            paddingTop: 10,
+                            padding: 0
+                        }} 
+                        scrollBarProps={{ trackMargin: 0 }}
+                    />`}
+                example={
+                    <ButtonList
+                        buttons={buttons}
+                        commonButtonProps={commonButtonProps}
+                        variant="plain"
+                        flexProps={{
+                            direction: "row",
+                            wrap: false,
+                            gap: 8,
+                            width: "100%",
+                            xAlign: "start",
+                            paddingTop: 10,
+                            padding: 0,
+                        }}
+                        scrollBarProps={{ trackMargin: 0 }}
                     />
                 }
             />
             <Ds.api
+                args="<ButtonList buttons={[]} />"
                 props={{
                     buttons: {
-                        description: "Her biri Button’a giden prop nesneleri.",
+                        description: "Array of prop objects; each entry is spread onto a Button.",
                         type: "array",
                         required: true,
-                        defaultValue: "[]",
                     },
                     commonButtonProps: {
-                        description: "Her butonla deepMerge edilir; öğe alanları bunun üzerine yazar.",
+                        description:
+                            "Deep-merged into every item; per-item keys override these defaults.",
                         type: "object",
-                        required: false,
-                        defaultValue: "{}",
                     },
                     flexProps: {
                         description:
-                            "İç Flex’e iletilir. width verilmezse varsayılan width: 100% uygulanır; direction/gap Flex sysDefaults (row, gap 0) veya bu nesne ile gelir. Dikey liste için ButtonList.column veya flexProps.direction: \"column\" kullanın.",
+                            'Forwarded to the Flex content inside ScrollFlex. Without width/height, sizing follows content; the ScrollFlex shell limits overflow (e.g. max-width: 100%). ButtonList.column merges direction: "column" into flexProps.',
                         type: "object",
-                        required: false,
-                        defaultValue: "{}",
                     },
                     scrollBarProps: {
-                        description: "ScrollBar’a iletilir; sourceByRef yoksa kaydırma alanı olarak iç Flex kullanılır.",
+                        description: "Forwarded to ScrollBar inside ScrollFlex.",
                         type: "object",
-                        required: false,
-                        defaultValue: "{}",
                     },
                     variant: {
-                        description: "Variant adı veya özel styled variant.",
+                        description:
+                            "When variant matches a ScrollFlex preset string (`plain`, `border`, `shadow`, `hoverShadow`; aliases include `WithShadow`, `WithHoverShadow`), it is applied only to the inner ScrollFlex—the outer ButtonList wrapper still follows componentCreator rules (DefaultVariant or PlainVariant when nested). Any other string or component selects the outer wrapper Variant.",
                         type: "string | component",
-                        required: false,
-                        defaultValue: '"default"',
                     },
                     exportData: {
-                        description: "Debug/export passthrough.",
+                        description: "Debug / export-data passthrough for underlying hooks.",
                         type: "boolean | function | object",
-                        required: false,
-                        defaultValue: "false",
                     },
                 }}
             />

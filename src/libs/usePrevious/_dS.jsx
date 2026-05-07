@@ -18,7 +18,7 @@ const Demo = () => {
 };
 
 const X = () => (
-    <Ds.page title="<usePrevious>" releasedOn="1.0.0" description="Keeps previous render value.">
+    <Ds.page title="usePrevious()" releasedOn="1.0.0" description="Keeps previous render value.">
         <Ds.block
             title="Previous Value Tracking"
             code={`import { usePrevious } from "${SYS.basePath}";
@@ -27,18 +27,13 @@ const [prev, setPrev] = usePrevious(value);`}
             example={<Demo />}
         />
         <Ds.api
+            args="usePrevious(value);"
+            returns="Tuple [previousValue, setPreviousValue]."
             props={{
                 value: {
                     description: "Current value to track.",
                     type: "any",
                     required: true,
-                    defaultValue: "undefined",
-                },
-                return: {
-                    description: "[previousValue, setPreviousValue]",
-                    type: "[any, (value:any) => void]",
-                    required: true,
-                    defaultValue: "[null, fn]",
                 },
             }}
         />

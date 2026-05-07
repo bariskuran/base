@@ -24,7 +24,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useManageSearchParams>"
+        title="useManageSearchParams()"
         releasedOn="1.0.0"
         description="Typed URL search-params state hook."
     >
@@ -38,48 +38,36 @@ const { page, set, clear, raw } = useManageSearchParams({
             example={<Demo />}
         />
         <Ds.api
+            args="useManageSearchParams(options);"
+            returns="Decoded param fields plus set, clear, and raw query helpers."
             props={{
                 options: {
                     description: "Hook options.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "options.pick": {
                     description: "Keeps only selected keys.",
                     type: "string[]",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 "options.defaults": {
                     description: "Default values for missing params.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "options.bind": {
                     description: "Auto-sync object to URL.",
                     type: "object",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 "options.replace": {
                     description: "History replace mode.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "true",
                 },
                 "options.maxLength": {
                     description: "Max allowed query payload length.",
                     type: "number",
-                    required: false,
                     defaultValue: "0",
-                },
-                return: {
-                    description: "Decoded params + helpers: set, clear, raw.",
-                    type: "object",
-                    required: true,
-                    defaultValue: "computed",
                 },
             }}
         />

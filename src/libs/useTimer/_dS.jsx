@@ -30,7 +30,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useTimer>"
+        title="useTimer()"
         releasedOn="1.0.0"
         description="Controllable timer hook with loop and registry support."
     >
@@ -45,84 +45,41 @@ const { start, stop, isRunning } = useTimer({
             example={<Demo />}
         />
         <Ds.api
+            args="useTimer(settings);"
+            returns="Timer controls: start, stop, isRunning, timerId, timerName, refreshTime (plus module helpers getTimersSnapshot, subscribeTimers, getTimer)."
             props={{
                 settings: {
                     description: "Timer options.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "settings.onStart": {
                     description: "Called when timer starts.",
                     type: "function",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 "settings.onEnd": {
                     description: "Called when timer cycle ends.",
                     type: "function",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 "settings.refreshTime": {
                     description: "Timer duration in ms.",
                     type: "number",
-                    required: false,
                     defaultValue: "1000",
                 },
                 "settings.loop": {
                     description: "Restarts automatically.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "true",
                 },
                 "settings.startOnLoad": {
                     description: "Starts on mount.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.timerName": {
                     description: "Optional stable timer id/name.",
                     type: "string",
-                    required: false,
                     defaultValue: "generated",
-                },
-                return: {
-                    description: "{ start, stop, isRunning, timerId, timerName, refreshTime }",
-                    type: "object",
-                    required: true,
-                    defaultValue: "computed",
-                },
-                "start(overrides)": {
-                    description: "Starts timer with optional overrides.",
-                    type: "({refreshTime?:number, loop?:boolean}) => void",
-                    required: true,
-                    defaultValue: "function",
-                },
-                stop: {
-                    description: "Stops timer.",
-                    type: "() => void",
-                    required: true,
-                    defaultValue: "function",
-                },
-                subscribeTimers: {
-                    description: "Subscribes registry snapshot updates.",
-                    type: "(listener)=>unsubscribe",
-                    required: false,
-                    defaultValue: "exported helper",
-                },
-                getTimersSnapshot: {
-                    description: "Returns timer registry snapshot array.",
-                    type: "() => object[]",
-                    required: false,
-                    defaultValue: "exported helper",
-                },
-                getTimer: {
-                    description: "Gets timer meta by id or name.",
-                    type: "(idOrName)=>object|null",
-                    required: false,
-                    defaultValue: "exported helper",
                 },
             }}
         />

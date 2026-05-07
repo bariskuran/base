@@ -1,60 +1,81 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { stringCaseConverter } from ".";
+import { Flex } from "../Flex";
 import { Typo } from "../Typo";
+import { Button } from "../Button";
+import { Space } from "../Space";
+import { baseStore } from "../@baseStore";
 
-const kebab = stringCaseConverter("helloWorld", "kebab");
-const constant = stringCaseConverter("hello world", "constant", "lower");
+const X = () => {
+    const { output, setLocal } = baseStore.useLocal({ output: null });
 
-const X = () => (
-    <Ds.page
-        title="<stringCaseConverter>"
-        releasedOn="1.0.0"
-        description="Converts strings across case formats."
-    >
-        <Ds.block
-            title="Case Conversion"
-            code={`import { stringCaseConverter } from "${SYS.basePath}";
+    return (
+        <Ds.page
+            title="stringCaseConverter()"
+            releasedOn="1.0.0"
+            description="Converts strings across case formats."
+        >
+            <Ds.block
+                title="Case conversion"
+                code={`import { stringCaseConverter } from "${SYS.basePath}";
 
 stringCaseConverter("helloWorld", "kebab");
+
 stringCaseConverter("hello world", "constant", "lower");`}
-            example={
-                <>
-                    <Typo.span children={`kebab: ${kebab}`} />
-                    <Typo.span children={`constant: ${constant}`} />
-                </>
-            }
-        />
-        <Ds.api
-            props={{
-                string: {
-                    description: "Input text.",
-                    type: "string",
-                    required: true,
-                    defaultValue: '""',
-                },
-                output: {
-                    description:
-                        "Target format (camel, pascal, kebab, snake, constant, dot, path, lower, sentence, title, spaced).",
-                    type: "string",
-                    required: false,
-                    defaultValue: '"camel"',
-                },
-                input: {
-                    description: "Input format, or auto detection.",
-                    type: "string",
-                    required: false,
-                    defaultValue: '"auto"',
-                },
-                return: {
-                    description: "Converted string.",
-                    type: "string",
-                    required: true,
-                    defaultValue: '""',
-                },
-            }}
-        />
-    </Ds.page>
-);
+                example={
+                    <Flex.column xAlign="start" gap={10} padding={10}>
+                        <Button.string
+                            label='Run stringCaseConverter("helloWorld", "kebab")'
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = stringCaseConverter("helloWorld", "kebab");
+                                })
+                            }
+                        />
+                        <Button.string
+                            label='Run stringCaseConverter("hello world", "constant", "lower")'
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = stringCaseConverter("hello world", "constant", "lower");
+                                })
+                            }
+                        />
+                        <Space size="l" />
+                        {output != null && (
+                            <>
+                                <Typo.span balance>Output</Typo.span>
+                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                            </>
+                        )}
+                    </Flex.column>
+                }
+            />
+            <Ds.api
+                args="stringCaseConverter(string, output, input);"
+                returns="Converted string."
+                props={{
+                    string: {
+                        description: "Input text.",
+                        type: "string",
+                        required: true,
+                        defaultValue: '""',
+                    },
+                    output: {
+                        description:
+                            "Target format (camel, pascal, kebab, snake, constant, dot, path, lower, sentence, title, spaced).",
+                        type: "string",
+                        defaultValue: '"camel"',
+                    },
+                    input: {
+                        description: "Input format, or auto detection.",
+                        type: "string",
+                        defaultValue: '"auto"',
+                    },
+                }}
+            />
+        </Ds.page>
+    );
+};
 
 export default X;

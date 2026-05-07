@@ -73,6 +73,24 @@ const X = () => {
                 }
             />
             <Ds.block
+                title="flat"
+                description="Instead of the default square box, the icon will use a box sized proportionally to its viewBox: width comes from width/size (rem), and height is determined by the viewBox ratio."
+                code={`import { Icon } from "${SYS.basePath}";
+                
+                        <Icon icon="baseLogo" width={80} />
+                        <Icon icon="baseLogo" width={80} flat />`}
+                example={
+                    <Flex gap={24} yAlign="start">
+                        <Flex bgColor="greys.shade40">
+                            <Icon icon="baseLogo" width={80} />
+                        </Flex>
+                        <Flex bgColor="greys.shade40">
+                            <Icon icon="baseLogo" width={80} flat />
+                        </Flex>
+                    </Flex>
+                }
+            />
+            <Ds.block
                 title="Width and color"
                 description={`Width controls the icon size. Color supports both raw values and theme path values. 'size' && 'w' prop also work for width as well.
                 
@@ -244,6 +262,7 @@ const X = () => {
                 }
             />
             <Ds.api
+                args='<Icon icon="" />'
                 props={{
                     icon: {
                         description:
@@ -255,114 +274,92 @@ const X = () => {
                     color: {
                         description: "Default icon color.",
                         type: "string",
-                        required: false,
                         defaultValue: "foreground || black",
                     },
                     width: {
                         description: "Base icon size. Shorthands: 'size' && 'w'",
                         type: "number",
-                        required: false,
                         defaultValue: "10",
                     },
                     hoverIcon: {
                         description: "Icon shown on hover state.",
                         type: "string | array",
-                        required: false,
-                        defaultValue: "null",
                     },
                     hoverColor: {
                         description: "Color shown on hover state.",
                         type: "string",
-                        required: false,
-                        defaultValue: "null",
                     },
                     hoverWidth: {
                         description:
                             "Size shown on hover state. Shorthands: 'hoverSize' && 'hoverW'",
                         type: "number",
-                        required: false,
-                        defaultValue: "null",
                     },
                     hoverManually: {
                         description: "Triggers hover visuals manually.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     activeIcon: {
                         description: "Icon shown on active state.",
                         type: "string | array",
-                        required: false,
-                        defaultValue: "null",
                     },
                     activeColor: {
                         description: "Color shown on active state.",
                         type: "string",
-                        required: false,
-                        defaultValue: "null",
                     },
                     activeWidth: {
                         description:
                             "Size shown on active state. Shorthands: 'activeSize' && 'activeW'",
                         type: "number",
-                        required: false,
-                        defaultValue: "null",
                     },
                     activeManually: {
                         description: "Triggers active visuals manually.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     pendingIcon: {
                         description:
                             "Icon shown while pending (e.g. navigation loading). Takes precedence over hover/active when pending.",
                         type: "string | array",
-                        required: false,
-                        defaultValue: "null",
                     },
                     pendingColor: {
                         description: "Color while pending.",
                         type: "string",
-                        required: false,
-                        defaultValue: "null",
                     },
                     pendingWidth: {
                         description: "Size while pending. Shorthands: 'pendingSize' && 'pendingW'",
                         type: "number",
-                        required: false,
-                        defaultValue: "null",
                     },
                     pendingScale: {
                         description: "Visual scale override while pending.",
                         type: "number",
-                        required: false,
-                        defaultValue: "null",
                     },
                     pendingManually: {
                         description:
                             "Triggers pending visuals manually (e.g. alongside Router loading state).",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                     popTipProps: {
                         description:
                             "Enables popTip integration. Props passed to PopTip when enablePopTip is true.",
                         type: "object",
-                        required: false,
                         defaultValue: "{}",
                     },
                     disableScaleEffect: {
                         description: "Disables hover scale effect.",
                         type: "boolean",
-                        required: false,
+                        defaultValue: "false",
+                    },
+                    flat: {
+                        description:
+                            "If true, the icon is sized according to its viewBox aspect ratio, not forced into a square. Width/size sets the width in rem; height is calculated from the viewBox proportions.",
+                        type: "boolean",
                         defaultValue: "false",
                     },
                     disablePulse: {
                         description: "Disables active pulse effect.",
                         type: "boolean",
-                        required: false,
                         defaultValue: "false",
                     },
                 }}

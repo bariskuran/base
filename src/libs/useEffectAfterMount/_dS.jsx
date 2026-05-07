@@ -24,7 +24,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useEffectAfterMount>"
+        title="useEffectAfterMount()"
         releasedOn="1.0.0"
         description="Runs effect only after first mount render."
     >
@@ -38,17 +38,17 @@ useEffectAfterMount(() => {
             example={<Demo />}
         />
         <Ds.api
+            args="useEffectAfterMount(effect, deps);"
+            returns="void."
             props={{
                 effect: {
                     description: "Effect callback.",
                     type: "function",
                     required: true,
-                    defaultValue: "undefined",
                 },
                 deps: {
                     description: "Dependency array.",
                     type: "any[]",
-                    required: false,
                     defaultValue: "[]",
                 },
             }}

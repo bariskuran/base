@@ -19,7 +19,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useObserver>"
+        title="useObserver()"
         releasedOn="1.0.0"
         description="IntersectionObserver wrapper hook."
     >
@@ -31,54 +31,40 @@ const { ref, inViewport } = useObserver({ threshold: 0.2 });`}
             example={<Demo />}
         />
         <Ds.api
+            args="useObserver(options);"
+            returns="Object with ref callback and inViewport flag."
             props={{
                 options: {
                     description: "Observer options object.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "options.onEnter": {
                     description: "Called when element enters viewport.",
                     type: "function",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 "options.onExit": {
                     description: "Called when element exits viewport.",
                     type: "function",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 "options.threshold": {
                     description: "Intersection threshold value(s).",
                     type: "number | number[]",
-                    required: false,
                     defaultValue: "0.1",
                 },
                 "options.rootMargin": {
                     description: "Observer root margin.",
                     type: "number | string",
-                    required: false,
                     defaultValue: "0",
                 },
                 "options.root": {
                     description: "Custom root element.",
                     type: "Element | null",
-                    required: false,
-                    defaultValue: "null",
                 },
                 "options.disable": {
                     description: "Disables observer setup.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
-                },
-                return: {
-                    description: "Observer helpers { ref, inViewport }.",
-                    type: "object",
-                    required: true,
-                    defaultValue: "{ ref, false }",
                 },
             }}
         />

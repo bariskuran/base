@@ -4,6 +4,7 @@ import { icons } from "./icons";
 import { baseStore } from "../@baseStore";
 import { PopTip } from "../PopTip";
 import { byPath } from "../byPath";
+import { colorGet } from "../colorGet";
 
 const spin360 = keyframes`
     from {
@@ -33,18 +34,33 @@ const pulseTwice = keyframes`
 `;
 
 const Root = styled.span`
-    ${({ $size }) => css`
-        position: relative;
-        display: inline-grid;
-        place-items: center;
-        width: ${$size}rem;
-        height: ${$size}rem;
-        min-width: ${$size}rem;
-        min-height: ${$size}rem;
-        flex: 0 0 ${$size}rem;
-        line-height: 0;
-        user-select: none;
-    `}
+    ${({ $size, $flat, $aspectW, $aspectH }) =>
+        $flat
+            ? css`
+                  position: relative;
+                  display: inline-grid;
+                  place-items: center;
+                  width: ${$size}rem;
+                  aspect-ratio: ${$aspectW} / ${$aspectH};
+                  height: auto;
+                  min-width: 0;
+                  min-height: 0;
+                  flex: 0 0 auto;
+                  line-height: 0;
+                  user-select: none;
+              `
+            : css`
+                  position: relative;
+                  display: inline-grid;
+                  place-items: center;
+                  width: ${$size}rem;
+                  height: ${$size}rem;
+                  min-width: ${$size}rem;
+                  min-height: ${$size}rem;
+                  flex: 0 0 ${$size}rem;
+                  line-height: 0;
+                  user-select: none;
+              `}
 `;
 
 const LayerBox = styled.span`
@@ -138,6 +154,11 @@ const isValidIconArray = (value) => {
 
 const resolveThemeColor = (theme, value) => {
     if (!value) return value;
+    if (typeof value !== "string") return value;
+
+    const fromColorGet = colorGet(value)?.color;
+    if (typeof fromColorGet === "string") return fromColorGet;
+
     return byPath.get(theme, value) ?? theme?.[value] ?? value;
 };
 
@@ -258,23 +279,27 @@ const PopTipWrapper = ({ popTipProps, children }) => {
 export const Icon = ({
     icon,
     color,
+    bgColor,
     width = 14,
     size,
     w,
     hoverIcon: hoverIconProp,
     hoverColor,
+    hoverBgColor,
     hoverScale,
     hoverWidth,
     hoverW,
     hoverSize,
     activeIcon: activeIconProp,
     activeColor,
+    activeBgColor,
     activeScale,
     activeWidth,
     activeW,
     activeSize,
     pendingIcon: pendingIconProp,
     pendingColor,
+    pendingBgColor,
     pendingScale,
     pendingWidth,
     pendingW,
@@ -285,6 +310,7 @@ export const Icon = ({
     pendingManually = false,
     disableScaleEffect = false,
     disablePulseEffect = false,
+    flat = false,
 }) => {
     const [iconsLibraryRaw, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
 
@@ -322,8 +348,16 @@ export const Icon = ({
           : hoverState
             ? hoverColor || color
             : color;
+    const finalBgRaw = pendingState
+        ? pendingBgColor || activeBgColor || hoverBgColor || bgColor
+        : activeState
+          ? activeBgColor || hoverBgColor || bgColor
+          : hoverState
+            ? hoverBgColor || bgColor
+            : bgColor;
 
     const finalColor = resolveThemeColor(theme, finalColorRaw);
+    const finalBg = resolveThemeColor(theme, finalBgRaw);
     const baseSize = resolveSize(size, w, width);
 
     const hoverScaleValue = resolveVisualScale({
@@ -383,6 +417,9 @@ export const Icon = ({
         <PopTipWrapper popTipProps={popTipProps}>
             <Root
                 $size={baseSize}
+                $flat={flat}
+                $aspectW={flat ? baseMeta.viewW : 1}
+                $aspectH={flat ? baseMeta.viewH : 1}
                 onMouseEnter={() =>
                     setLocal((s) => {
                         s.isSelfHover = true;
@@ -393,6 +430,11 @@ export const Icon = ({
                         s.isSelfHover = false;
                     })
                 }
+                style={{
+                    background: finalBg || "transparent",
+                    borderRadius: "999px",
+                    transition: "background 0.2s ease",
+                }}
             >
                 <IconLayer
                     meta={baseMeta}

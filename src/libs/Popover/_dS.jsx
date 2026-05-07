@@ -47,19 +47,20 @@ const X = () => (
             }
         />
         <Ds.api
+            args="<Popover>{null}</Popover>"
             props={{
                 children: { description: "Popover panel content.", type: "ReactNode", required: true, defaultValue: "null" },
-                buttonProps: { description: "Props forwarded to internal trigger Button.", type: "object", required: false, defaultValue: "{}" },
-                scrollBoxProps: { description: "Props forwarded to internal ScrollFlex panel.", type: "object", required: false, defaultValue: "{}" },
-                variant: { description: "Popover/FloatingUi variant.", type: "string | component", required: false, defaultValue: '"default"' },
-                alignX: { description: "Horizontal alignment.", type: "string", required: false, defaultValue: '"center"' },
-                alignY: { description: "Vertical alignment (internally forced top by default).", type: "string", required: false, defaultValue: '"top"' },
-                bgColor: { description: "Panel background color.", type: "string", required: false, defaultValue: "theme.background" },
-                color: { description: "Panel text color override.", type: "string", required: false, defaultValue: "auto" },
-                disableArrow: { description: "Hides arrow.", type: "boolean", required: false, defaultValue: "false" },
-                primary: { description: "Theme primary style.", type: "boolean", required: false, defaultValue: "false" },
-                secondary: { description: "Theme secondary style.", type: "boolean", required: false, defaultValue: "false" },
-                exportData: { description: "Debug/export passthrough.", type: "boolean | function | object", required: false, defaultValue: "false" },
+                buttonProps: { description: "Props forwarded to internal trigger Button.", type: "object", defaultValue: "{}" },
+                scrollBoxProps: { description: "Props forwarded to internal ScrollFlex panel.", type: "object", defaultValue: "{}" },
+                variant: { description: "Popover/FloatingUi variant.", type: "string | component", defaultValue: '"default"' },
+                alignX: { description: "Horizontal alignment.", type: "string", defaultValue: '"center"' },
+                alignY: { description: "Vertical alignment (internally forced top by default).", type: "string", defaultValue: '"top"' },
+                bgColor: { description: "Panel background color.", type: "string", defaultValue: "theme.background" },
+                color: { description: "Panel text color override.", type: "string", defaultValue: "auto" },
+                disableArrow: { description: "Hides arrow.", type: "boolean", defaultValue: "false" },
+                primary: { description: "Theme primary style.", type: "boolean", defaultValue: "false" },
+                secondary: { description: "Theme secondary style.", type: "boolean", defaultValue: "false" },
+                exportData: { description: "Debug/export passthrough.", type: "boolean | function | object", defaultValue: "false" },
             }}
         />
     </Ds.page>

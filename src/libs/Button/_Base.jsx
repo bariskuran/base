@@ -6,6 +6,7 @@ import { ScaleWrapper } from "./tools/ScaleWrapper.jsx";
 import { PopTip } from "../PopTip";
 
 export const Base = (props = {}) => {
+    const { forwardedRef, ...propsRest } = props;
     const {
         size,
         isMatch, // pointer-events: none;
@@ -31,13 +32,13 @@ export const Base = (props = {}) => {
         iconPalette,
         isPending,
         disabled,
-    } = useVars(props);
+    } = useVars(propsRest);
 
     /* RETURN */
     return (
         <PopTipWrapper popTip={popTip}>
             <ScaleWrapper size={size} isMatch={isMatch} fullWidth={fullWidth} disabled={disabled}>
-                <Variant {...variantProps}>
+                <Variant ref={forwardedRef} {...variantProps}>
                     <IconArea
                         areaName="prefix"
                         obj={prefix}

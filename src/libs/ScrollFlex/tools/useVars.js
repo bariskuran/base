@@ -250,7 +250,15 @@ const useVars = (p) => {
             flexProps,
             restProps,
         });
-        const shouldRender = explicitHeight != null || measuredHeight != null || !hasMeasuredHeight;
+        const resolvedHeight = explicitHeight ?? measuredHeight;
+        const resolvedWidth = explicitWidth ?? measuredWidth;
+
+        const shouldRender =
+            explicitHeight != null ||
+            measuredHeight != null ||
+            !hasMeasuredHeight ||
+            (hasMeasuredHeight && explicitHeight == null && measuredHeight == null);
+
         const style = {
             ...(restProps.style || {}),
             ...(flexProps.style || {}),
@@ -264,8 +272,12 @@ const useVars = (p) => {
         const mergedFlexProps = {
             ...restProps,
             ...flexProps,
-            width: explicitWidth ?? measuredWidth ?? "100%",
-            ...(shouldRender ? { height: explicitHeight ?? measuredHeight } : {}),
+            ...(resolvedWidth != null && resolvedWidth !== ""
+                ? { width: resolvedWidth }
+                : {}),
+            ...(shouldRender && resolvedHeight != null && resolvedHeight !== ""
+                ? { height: resolvedHeight }
+                : {}),
             style,
         };
 

@@ -50,48 +50,42 @@ const X = () => (
             }
         />
         <Ds.api
+            args="<Flag />"
             props={{
                 flag: {
                     description:
                         "Flag key from internal flag library (typically ISO-like lowercase code).",
                     type: "string",
-                    required: false,
                     defaultValue: '"global"',
                 },
                 width: {
                     description: "Rendered flag size (Icon width/size rules apply).",
                     type: "number | string",
-                    required: false,
                     defaultValue: "10",
                 },
                 color: {
                     description: "Optional color override passed to Icon.",
                     type: "string",
-                    required: false,
                     defaultValue: "library default",
                 },
                 hoverManually: {
                     description: "Manual hover state forwarding to Icon.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 activeManually: {
                     description: "Manual active state forwarding to Icon.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 pendingManually: {
                     description: "Manual pending state forwarding to Icon.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 popTipProps: {
                     description: "Optional PopTip configuration forwarded to Icon.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
             }}

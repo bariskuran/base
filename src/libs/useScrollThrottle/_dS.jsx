@@ -12,7 +12,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useScrollThrottle>"
+        title="useScrollThrottle()"
         releasedOn="1.0.0"
         description="Throttles callback on window scroll."
     >
@@ -26,17 +26,17 @@ useScrollThrottle(() => {
             example={<Demo />}
         />
         <Ds.api
+            args="useScrollThrottle(callback, delay);"
+            returns="void."
             props={{
                 callback: {
                     description: "Function called on throttled scroll.",
                     type: "function",
                     required: true,
-                    defaultValue: "undefined",
                 },
                 delay: {
                     description: "Minimum interval in milliseconds.",
                     type: "number",
-                    required: false,
                     defaultValue: "100",
                 },
             }}

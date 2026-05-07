@@ -6,7 +6,7 @@ export const componentCreator = ({
     name,
     BaseComp,
     DefaultVariant,
-    CleanVariant,
+    PlainVariant,
     variants = {},
 }) => {
     const Main = forwardRef(function Main(props, forwardedRef) {
@@ -22,12 +22,12 @@ export const componentCreator = ({
         const globalData = baseStore.globalData?.get?.() || {};
         const globalDefaultVariant = globalData?.defaultVariants?.[name];
 
-        const canUseCleanVariant =
-            !variantFromProps && __hasParentUiComponent && CleanVariant != null;
+        const canUsePlainVariant =
+            !variantFromProps && __hasParentUiComponent && PlainVariant != null;
 
         const incomingVariant =
             variantFromProps ??
-            (canUseCleanVariant ? CleanVariant : undefined) ??
+            (canUsePlainVariant ? PlainVariant : undefined) ??
             globalDefaultVariant ??
             DefaultVariant;
 

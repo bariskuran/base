@@ -1,22 +1,6 @@
 import useVars from "./useVars";
 import { Button } from "../../Button";
-import { ScrollBar } from "../../ScrollBar";
-import { Flex } from "../../Flex";
-
-const assignRef = (ref, value) => {
-    if (!ref) return;
-    if (typeof ref === "function") {
-        ref(value);
-        return;
-    }
-    ref.current = value;
-};
-
-const mergeRefs =
-    (...refs) =>
-    (value) => {
-        refs.forEach((ref) => assignRef(ref, value));
-    };
+import { ScrollFlex } from "../../ScrollFlex";
 
 export const Base = (p = {}) => {
     const {
@@ -24,20 +8,21 @@ export const Base = (p = {}) => {
         forwardedRef,
         resolvedFlexProps,
         mergedScrollBarProps,
-        flexScrollRef,
+        scrollFlexVariant,
         preparedItems,
     } = useVars(p);
 
-    const { ref: userFlexRef, ...flexRest } = resolvedFlexProps;
-
     return (
         <Variant ref={forwardedRef}>
-            <Flex ref={mergeRefs(userFlexRef, flexScrollRef)} {...flexRest}>
+            <ScrollFlex
+                {...(scrollFlexVariant != null ? { variant: scrollFlexVariant } : {})}
+                flexProps={resolvedFlexProps}
+                scrollBarProps={mergedScrollBarProps}
+            >
                 {preparedItems.map((item, i) => (
                     <Button key={i} {...item} />
                 ))}
-            </Flex>
-            <ScrollBar {...{ ...mergedScrollBarProps, edgeMargin: -50 }} />
+            </ScrollFlex>
         </Variant>
     );
 };

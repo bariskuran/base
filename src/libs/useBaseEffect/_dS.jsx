@@ -28,7 +28,7 @@ const Demo = () => {
 
 const X = () => (
     <Ds.page
-        title="<useBaseEffect>"
+        title="useBaseEffect()"
         releasedOn="1.0.0"
         description="Deep-aware effect helper hook."
     >
@@ -42,59 +42,51 @@ useBaseEffect(() => {
             example={<Demo />}
         />
         <Ds.api
+            args="useBaseEffect(fn, deps, settings);"
+            returns="void; effect may return a cleanup from fn."
             props={{
                 fn: {
                     description: "Effect callback.",
                     type: "function",
                     required: true,
-                    defaultValue: "undefined",
                 },
                 deps: {
                     description: "Dependency list.",
                     type: "any[]",
-                    required: false,
                     defaultValue: "[]",
                 },
                 settings: {
                     description: "Behavior options.",
                     type: "object",
-                    required: false,
                     defaultValue: "{}",
                 },
                 "settings.skipEffect": {
                     description: "Skips effect execution.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.useEffectAfterMount": {
                     description: "Skips first render run.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.return": {
                     description: "Cleanup function.",
                     type: "function",
-                    required: false,
-                    defaultValue: "undefined",
                 },
                 "settings.useFalsyDeps": {
                     description: "Runs with no fixed deps array.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.executeOnDev": {
                     description: "Runs only in dev mode.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
                 "settings.findDifferences": {
                     description: "Passes dependency differences to callback.",
                     type: "boolean",
-                    required: false,
                     defaultValue: "false",
                 },
             }}

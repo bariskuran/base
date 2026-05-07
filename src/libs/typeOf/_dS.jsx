@@ -1,43 +1,65 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { typeOf } from ".";
+import { Flex } from "../Flex";
 import { Typo } from "../Typo";
+import { Button } from "../Button";
+import { Space } from "../Space";
+import { baseStore } from "../@baseStore";
 
-const multi = typeOf(1, "x", null, [], new Date(0));
+const X = () => {
+    const { output, setLocal } = baseStore.useLocal({ output: null });
 
-const X = () => (
-    <Ds.page title="<typeOf>" releasedOn="1.0.0" description="Extended type detector helper.">
-        <Ds.block
-            title="Single and Multi Input"
-            code={`import { typeOf } from "${SYS.basePath}";
+    return (
+        <Ds.page title="typeOf()" releasedOn="1.0.0" description="Extended type detector helper.">
+            <Ds.block
+                title="Single and multi input"
+                code={`import { typeOf } from "${SYS.basePath}";
 
-typeOf(null); // "null"
-typeOf(1, "x", []); // ["number","string","array"]`}
-            example={
-                <>
-                    <Typo.span children={`typeOf(null): ${typeOf(null)}`} />
-                    <Typo.span children={`typeOf(...): ${JSON.stringify(multi)}`} />
-                </>
-            }
-        />
-        <Ds.api
-            props={{
-                "...args": {
-                    description: "One or more values to inspect.",
-                    type: "any[]",
-                    required: false,
-                    defaultValue: "[]",
-                },
-                return: {
-                    description:
-                        "undefined with no args, string with one arg, array with multiple args.",
-                    type: "undefined | string | string[]",
-                    required: true,
-                    defaultValue: "undefined",
-                },
-            }}
-        />
-    </Ds.page>
-);
+typeOf(null);
+
+typeOf(1, "x", []);`}
+                example={
+                    <Flex.column xAlign="start" gap={10} padding={10}>
+                        <Button.string
+                            label='Run typeOf(null)'
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = JSON.stringify(typeOf(null));
+                                })
+                            }
+                        />
+                        <Button.string
+                            label='Run typeOf(1, "x", [])'
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.output = JSON.stringify(typeOf(1, "x", []));
+                                })
+                            }
+                        />
+                        <Space size="l" />
+                        {output != null && (
+                            <>
+                                <Typo.span balance>Output</Typo.span>
+                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                            </>
+                        )}
+                    </Flex.column>
+                }
+            />
+            <Ds.api
+                args="typeOf(...args);"
+                returns="undefined with no args; string for one arg; string[] for multiple."
+                props={{
+                    "...args": {
+                        description: "One or more values to inspect.",
+                        type: "any[]",
+                        defaultValue: "[]",
+                    },
+                }}
+            />
+        </Ds.page>
+    );
+};
 
 export default X;

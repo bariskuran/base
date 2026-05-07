@@ -3,15 +3,16 @@ import { componentCreator } from "../componentCreator/index.jsx";
 import { DefaultVariant } from "./DefaultVariant";
 import shadow from "./WithShadow";
 import hoverShadow from "./WithHoverShadow";
-import { CleanVariant } from "./CleanVariant.js";
+import { PlainVariant } from "./PlainVariant.js";
 
 export const ScrollFlex = componentCreator({
     name: "ScrollFlex",
     BaseComp: Base,
     DefaultVariant,
-    CleanVariant,
+    PlainVariant,
     variants: {
-        clean: CleanVariant,
+        /** Nesne şart: styled bileşenler `function` olduğu için creator bunları fabrika sanmasın. */
+        plain: { variant: PlainVariant },
         border: { variant: DefaultVariant },
         shadow,
         hoverShadow,
