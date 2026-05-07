@@ -32,7 +32,7 @@ const X = () => {
                 byPath.delete(data, 'user.profile.name');`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Typo.pre>data = {JSON.stringify(data)}</Typo.pre>
+                        <Typo.code>data = {JSON.stringify(data)}</Typo.code>
                         <Button.string
                             label="byPath.get(data, 'user.profile.name')"
                             onClick={() =>

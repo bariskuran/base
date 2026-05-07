@@ -45,7 +45,7 @@ isEqual([1, 2], [2, 1]);`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>
@@ -67,7 +67,7 @@ const stableValue = useIsEqual(value);`}
                             }
                         />
                         <Typo.span balance>Stable reference (JSON for display):</Typo.span>
-                        <Typo.pre whiteSpace="pre-wrap">{JSON.stringify(stable)}</Typo.pre>
+                        <Typo.code>{JSON.stringify(stable)}</Typo.code>
                     </Flex.column>
                 }
             />

@@ -9,6 +9,7 @@ import { colorTinter } from "../../colorTinter";
 import { colorShader } from "../../colorShader";
 import { colorConverter } from "../../colorConverter";
 import { colorWcagMatch } from "../../colorWcagMatch";
+import { colorWcagValue } from "../../colorWcagValue";
 import { colorGet } from "../../colorGet";
 import { colorFind } from "../../colorFind";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
@@ -117,6 +118,7 @@ export const generateMediaFunctions = ({
     mediaFunctions.colorShader = colorShader;
     mediaFunctions.colorConverter = colorConverter;
     mediaFunctions.colorWcagMatch = colorWcagMatch;
+    mediaFunctions.colorWcagValue = colorWcagValue;
     mediaFunctions.colorGet = colorGet;
     mediaFunctions.colorFind = colorFind;
     mediaFunctions.get3DShadow = get3DShadow;

@@ -3,45 +3,104 @@ import { SYS } from "../../constants/SYS";
 import { colorPickHigherContrast } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { Button } from "../Button";
-import { Space } from "../Space";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { output, setLocal } = baseStore.useLocal({ output: null });
+    const { optionA, optionB, background, setLocal } = baseStore.useLocal({
+        optionA: "#ffffff",
+        optionB: "#111111",
+        background: "#3b82f6",
+    });
+    const output = colorPickHigherContrast(optionA, optionB, background);
 
     return (
         <Ds.page
             title="colorPickHigherContrast()"
             releasedOn="1.0.0"
-            description="Picks the better contrast candidate color."
+            description={`Compares two candidates against a background and returns the better WCAG contrast winner.
+
+You can use colorPickHigherContrast via direct import from base, or via the theme helper in styled usage (theme.colorPickHigherContrast).`}
         >
             <Ds.block
-                title="Basic usage"
+                title="Interactive comparison"
                 code={`import { colorPickHigherContrast } from "${SYS.basePath}";
 
 colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button.string
-                            label="Run sample pick"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(
-                                        colorPickHigherContrast("#ffffff", "#111111", "#3b82f6"),
-                                        null,
-                                        2,
-                                    );
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {output != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
-                            </>
-                        )}
+                    <Flex.column gap={10}>
+                        <Flex gap={10}>
+                            <Flex.column gap={4}>
+                                <Typo.span>Background</Typo.span>
+                                <input
+                                    type="color"
+                                    value={background}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.background = e.target.value;
+                                        })
+                                    }
+                                />
+                            </Flex.column>
+                            <Flex.column gap={4}>
+                                <Typo.span>Option A</Typo.span>
+                                <input
+                                    type="color"
+                                    value={optionA}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.optionA = e.target.value;
+                                        })
+                                    }
+                                />
+                            </Flex.column>
+                            <Flex.column gap={4}>
+                                <Typo.span>Option B</Typo.span>
+                                <input
+                                    type="color"
+                                    value={optionB}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.optionB = e.target.value;
+                                        })
+                                    }
+                                />
+                            </Flex.column>
+                        </Flex>
+                        <Flex
+                            gap={10}
+                            style={{
+                                background,
+                                padding: 10,
+                                borderRadius: 8,
+                                width: "fit-content",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    width: 56,
+                                    height: 28,
+                                    borderRadius: 6,
+                                    background: optionA,
+                                }}
+                            />
+                            <div
+                                style={{
+                                    width: 56,
+                                    height: 28,
+                                    borderRadius: 6,
+                                    background: optionB,
+                                }}
+                            />
+                            <div
+                                style={{
+                                    width: 56,
+                                    height: 28,
+                                    borderRadius: 6,
+                                    background: output?.winner,
+                                }}
+                            />
+                        </Flex>
+                        <Typo.code>{JSON.stringify(output, null, 2)}</Typo.code>
                     </Flex.column>
                 }
             />

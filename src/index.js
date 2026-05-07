@@ -74,7 +74,7 @@ export { byPath } from "./libs/byPath";
 export { colorAlpha } from "./libs/colorAlpha";
 export { colorFind } from "./libs/colorFind";
 export { colorWcagMatch } from "./libs/colorWcagMatch";
-export { colorContrastRatio } from "./libs/colorContrastRatio";
+export { colorWcagValue } from "./libs/colorWcagValue";
 export { colorConverter } from "./libs/colorConverter";
 export { colorPickHigherContrast } from "./libs/colorPickHigherContrast";
 export { copyToClipboard } from "./libs/copyToClipboard";

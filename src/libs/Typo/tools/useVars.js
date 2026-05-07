@@ -5,6 +5,7 @@ import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { baseStore } from "../../@baseStore";
 import { getTruncatedHtml } from "./getTruncatedHtml";
 import { cssSpacingResolver } from "../../cssSpacingResolver";
+import { dedent, formatJsxPropsForViewer } from "../../DesignSystem/CodeViewer/tools/codeFormatters.jsx";
 
 const sysDefaults = {
     as: "span",
@@ -62,7 +63,19 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         [setLocal],
     );
 
-    const finalVisibleContent = children ?? content;
+    const rawFinalVisibleContent = children ?? content;
+    const finalVisibleContent = useMemo(() => {
+        if (!controlledProps.codeFormat || typeof rawFinalVisibleContent !== "string") {
+            return rawFinalVisibleContent;
+        }
+
+        const base = dedent(rawFinalVisibleContent);
+        return controlledProps.codeFormatJsxProps === false ? base : formatJsxPropsForViewer(base);
+    }, [
+        rawFinalVisibleContent,
+        controlledProps.codeFormat,
+        controlledProps.codeFormatJsxProps,
+    ]);
     const margin = cssSpacingResolver(p, "margin");
     const padding = cssSpacingResolver(p, "padding");
     const isEllipsisBaseFinal = controlledProps.ellipsis === "base";

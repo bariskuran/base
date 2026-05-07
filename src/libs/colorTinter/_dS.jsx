@@ -3,64 +3,90 @@ import { SYS } from "../../constants/SYS";
 import { colorTinter } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { Button } from "../Button";
-import { Space } from "../Space";
 import { baseStore } from "../@baseStore";
 
-const b = "#4f46e5";
-
 const X = () => {
-    const { output, setLocal } = baseStore.useLocal({ output: null });
-    const t20 = colorTinter(b, 20);
-    const t50 = colorTinter(b, 50);
+    const { color, percent, setLocal } = baseStore.useLocal({
+        color: "#4f46e5",
+        percent: 20,
+    });
+    const tinted = colorTinter(color, percent);
 
     return (
-        <Ds.page title="colorTinter()" releasedOn="1.0.0" description="Tints color toward white.">
+        <Ds.page
+            title="colorTinter()"
+            releasedOn="1.0.0"
+            description={`Tints a color toward white by percent, or increases alpha when the input is transparent hex8.
+
+You can use colorTinter via direct import from base, or via the theme helper in styled usage (theme.colorTinter).`}
+        >
             <Ds.block
-                title="Basic usage"
+                title="Interactive tint"
                 code={`import { colorTinter } from "${SYS.basePath}";
 
-colorTinter("#4f46e5", 20);
-
-colorTinter("#4f46e5", 50);`}
+colorTinter("#4f46e5", 20);`}
                 example={
-                    <Flex.column xAlign="start" gap={12} padding={10}>
-                        <Flex xAlign="start" gap={12}>
-                            <div style={{ width: 70, height: 24, background: b }} />
-                            <div style={{ width: 70, height: 24, background: t20 }} />
-                            <div style={{ width: 70, height: 24, background: t50 }} />
+                    <Flex.column gap={12}>
+                        <Flex gap={10}>
+                            <Flex.column gap={4}>
+                                <Typo.span>Color input:</Typo.span>
+                                <input
+                                    type="text"
+                                    value={color}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.color = e.target.value;
+                                        })
+                                    }
+                                    style={{ width: 180 }}
+                                />
+                            </Flex.column>
+                            <Flex.column gap={4}>
+                                <Typo.span>Percent: {percent}</Typo.span>
+                                <input
+                                    type="range"
+                                    min={0}
+                                    max={100}
+                                    value={percent}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.percent = Number(e.target.value);
+                                        })
+                                    }
+                                />
+                            </Flex.column>
                         </Flex>
-                        <Typo.span balance>{`base: ${b} / tint20: ${t20} / tint50: ${t50}`}</Typo.span>
-                        <Button.string
-                            label="Dump hex values as JSON"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(
-                                        { base: b, tint20: t20, tint50: t50 },
-                                        null,
-                                        2,
-                                    );
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {output != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
-                            </>
-                        )}
+                        <Flex gap={8}>
+                            <div
+                                style={{
+                                    width: 60,
+                                    height: 24,
+                                    borderRadius: 6,
+                                    background: color,
+                                }}
+                            />
+                            <div
+                                style={{
+                                    width: 60,
+                                    height: 24,
+                                    borderRadius: 6,
+                                    background: tinted,
+                                }}
+                            />
+                        </Flex>
+                        <Typo.code>
+                            {JSON.stringify({ color, percent, result: tinted }, null, 2)}
+                        </Typo.code>
                     </Flex.column>
                 }
             />
             <Ds.api
-                args="colorTinter(hex, percent);"
-                returns="Tinted hex color string."
+                args="colorTinter(color, percent);"
+                returns="Tinted color string (hex6 or hex8 depending on source)."
                 props={{
-                    hex: {
-                        description: "Input color.",
-                        type: "string",
-                        defaultValue: '"#f00"',
+                    color: {
+                        description: "Input color (hex/rgb/css name/theme token/path).",
+                        type: "string | object",
                     },
                     percent: {
                         description: "Tint amount (0..100).",

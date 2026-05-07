@@ -1,17 +1,6 @@
-// box-shadow: ${get3DShadow(5)};
-
-// export const get3DShadow = (depth = 10) => {
-//     const d = depth * 4;
-
-//     return `
-//     0 ${d}px ${d * 2}px rgba(0,0,0,0.15),
-//     0 ${d * 2}px ${d * 4}px rgba(0,0,0,0.2)
-//   `;
-// };
-
 import { css } from "styled-components";
 import { baseStore } from "../@baseStore";
-import { colorConverter } from "../colorConverter"; // varsa bunu kullan, yoksa aşağıda fallback vereceğim
+import { colorConverter } from "../colorConverter";
 
 const getRgbString = (color) => {
     try {

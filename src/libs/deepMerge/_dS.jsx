@@ -44,7 +44,7 @@ const merged = deepMerge(
                         {outBasic != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{outBasic}</Typo.pre>
+                                <Typo.code>{outBasic}</Typo.code>
                             </>
                         )}
                     </Flex.column>
@@ -57,14 +57,18 @@ const merged = deepMerge(
 deepMerge({ list: [1, 2, 3] }, { list: [4] });`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Typo.pre whiteSpace="pre-wrap">
+                        <Typo.code>
                             {`before: ${JSON.stringify(before)}\nincoming: ${JSON.stringify(incoming)}`}
-                        </Typo.pre>
+                        </Typo.code>
                         <Button.string
                             label="Run deepMerge(before, incoming)"
                             onClick={() =>
                                 setLocal((s) => {
-                                    s.outArray = JSON.stringify(deepMerge(before, incoming), null, 2);
+                                    s.outArray = JSON.stringify(
+                                        deepMerge(before, incoming),
+                                        null,
+                                        2,
+                                    );
                                 })
                             }
                         />
@@ -72,7 +76,7 @@ deepMerge({ list: [1, 2, 3] }, { list: [4] });`}
                         {outArray != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{outArray}</Typo.pre>
+                                <Typo.code>{outArray}</Typo.code>
                             </>
                         )}
                     </Flex.column>

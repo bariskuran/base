@@ -16,7 +16,11 @@ const X = () => {
     const { output, setLocal } = baseStore.useLocal({ output: null });
 
     return (
-        <Ds.page title="getText()" releasedOn="1.0.0" description="Resolves localized text entries.">
+        <Ds.page
+            title="getText()"
+            releasedOn="1.0.0"
+            description="Resolves localized text entries."
+        >
             <Ds.block
                 title="Basic usage"
                 code={`import { getText } from "${SYS.basePath}";
@@ -46,7 +50,7 @@ getText({ tr: "Merhaba", en: "Hello" });`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

@@ -11,7 +11,11 @@ const X = () => {
     const { output, setLocal } = baseStore.useLocal({ output: null });
 
     return (
-        <Ds.page title="sortBy" releasedOn="1.0.0" description="Natural asc/desc comparator helpers.">
+        <Ds.page
+            title="sortBy"
+            releasedOn="1.0.0"
+            description="Natural asc/desc comparator helpers."
+        >
             <Ds.block
                 title="Natural sorting"
                 code={`import { sortBy } from "${SYS.basePath}";
@@ -25,7 +29,9 @@ const X = () => {
                             label="Run sort with sortBy.asc"
                             onClick={() =>
                                 setLocal((s) => {
-                                    s.output = JSON.stringify(["10px", "2px", "1px"].sort(sortBy.asc));
+                                    s.output = JSON.stringify(
+                                        ["10px", "2px", "1px"].sort(sortBy.asc),
+                                    );
                                 })
                             }
                         />
@@ -41,7 +47,7 @@ const X = () => {
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

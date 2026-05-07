@@ -33,9 +33,7 @@ const X = () => {
                     const cleaned = clearUndefinedDeep(sample);`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Typo.pre whiteSpace="pre-wrap">
-                            sample = {stringifyForPreview(sample)}
-                        </Typo.pre>
+                        <Typo.code>sample = {stringifyForPreview(sample)}</Typo.code>
                         <Button.plain
                             label="clearUndefinedDeep(sample)"
                             onClick={() =>
@@ -48,7 +46,7 @@ const X = () => {
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

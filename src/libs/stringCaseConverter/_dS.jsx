@@ -37,7 +37,11 @@ stringCaseConverter("hello world", "constant", "lower");`}
                             label='Run stringCaseConverter("hello world", "constant", "lower")'
                             onClick={() =>
                                 setLocal((s) => {
-                                    s.output = stringCaseConverter("hello world", "constant", "lower");
+                                    s.output = stringCaseConverter(
+                                        "hello world",
+                                        "constant",
+                                        "lower",
+                                    );
                                 })
                             }
                         />
@@ -45,7 +49,7 @@ stringCaseConverter("hello world", "constant", "lower");`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

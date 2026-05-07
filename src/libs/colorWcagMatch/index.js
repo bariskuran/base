@@ -1,5 +1,5 @@
 import { colorConverter } from "../colorConverter";
-import { colorContrastRatio } from "../colorContrastRatio";
+import { colorWcagValue } from "../colorWcagValue";
 import { colorFind } from "../colorFind";
 
 /**
@@ -91,7 +91,7 @@ export const colorWcagMatch = (background, targetColor, wcagRatio = 4.5, opts = 
         best.ratio ??
         (typeof finalFormats?.luminance === "number"
             ? getRatioFromLuminance(l1, finalFormats.luminance)
-            : colorContrastRatio(resolvedBackground, finalFormats.hex6));
+            : colorWcagValue(resolvedBackground, finalFormats.hex6));
 
     return {
         color: finalFormats.hex6,

@@ -27,9 +27,7 @@ const qs = queryConverter.export({ page: 2, filter: { q: "test" } });
 const obj = queryConverter.import(qs);`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Typo.pre whiteSpace="pre-wrap">
-                            sample = {JSON.stringify(obj, null, 2)}
-                        </Typo.pre>
+                        <Typo.code>sample = {JSON.stringify(obj, null, 2)}</Typo.code>
                         <Button.string
                             label="Run export then import (round-trip)"
                             onClick={() =>
@@ -44,7 +42,7 @@ const obj = queryConverter.import(qs);`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

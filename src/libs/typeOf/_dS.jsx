@@ -22,7 +22,7 @@ typeOf(1, "x", []);`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
                         <Button.string
-                            label='Run typeOf(null)'
+                            label="Run typeOf(null)"
                             onClick={() =>
                                 setLocal((s) => {
                                     s.output = JSON.stringify(typeOf(null));
@@ -41,7 +41,7 @@ typeOf(1, "x", []);`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

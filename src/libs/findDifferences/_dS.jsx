@@ -26,14 +26,18 @@ const X = () => {
 const { changedPaths, differences } = findDifferences(oldData, newData);`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Typo.pre whiteSpace="pre-wrap">
+                        <Typo.code>
                             {`oldData = ${JSON.stringify(oldData, null, 2)}\nnewData = ${JSON.stringify(newData, null, 2)}`}
-                        </Typo.pre>
+                        </Typo.code>
                         <Button.string
                             label="Run findDifferences(oldData, newData)"
                             onClick={() =>
                                 setLocal((s) => {
-                                    s.output = JSON.stringify(findDifferences(oldData, newData), null, 2);
+                                    s.output = JSON.stringify(
+                                        findDifferences(oldData, newData),
+                                        null,
+                                        2,
+                                    );
                                 })
                             }
                         />
@@ -41,7 +45,7 @@ const { changedPaths, differences } = findDifferences(oldData, newData);`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

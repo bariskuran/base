@@ -35,7 +35,7 @@ const [sorted, index, lower, upper] = pushAsSorted([5, 1, 3], 4);`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

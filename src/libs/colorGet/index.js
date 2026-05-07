@@ -73,6 +73,8 @@ const buildColorApi = (resolvedColor) => {
         hslaArray,
         hslaString,
         luminance,
+        isLight,
+        isDark,
         linearRgbaArray,
     } = converted;
 
@@ -95,9 +97,8 @@ const buildColorApi = (resolvedColor) => {
         hslaString,
         luminance,
         linearRgbaArray,
-
-        isLight: luminance >= 0.5,
-        isDark: luminance < 0.5,
+        isLight,
+        isDark,
 
         shade(amount = 0) {
             return colorShader(hex8, clamp(amount));

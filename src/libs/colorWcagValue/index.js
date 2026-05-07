@@ -2,7 +2,7 @@ import { colorConverter } from "../colorConverter";
 
 /*
 
-colorContrastRatio("#fff", "#111")
+colorWcagValue("#fff", "#111")
 
 */
 
@@ -13,19 +13,11 @@ colorContrastRatio("#fff", "#111")
  * - String: "#fff", "#ffffff", "rgb(...)", "rgba(...)", "hsl(...)", etc.
  * - Object: any format supported by `colorConverter`
  *
- * The function internally converts colors to relative luminance
- * and returns a WCAG contrast ratio.
- *
- * WCAG reference:
- * - 4.5:1 → normal text (AA)
- * - 3:1   → large text (AA)
- * - 7:1   → normal text (AAA)
- *
  * @param {string|Object} colorA - First color
  * @param {string|Object} colorB - Second color
  * @returns {number} Contrast ratio rounded to 4 decimals
  */
-export const colorContrastRatio = (colorA, colorB) => {
+export const colorWcagValue = (colorA, colorB) => {
     if (!colorA || !colorB) return 0;
 
     const c1 = colorConverter(colorA);

@@ -1,3 +1,6 @@
+import { baseStore } from "../@baseStore";
+import { byPath } from "../byPath";
+
 /*
 
 colorConverter("#f00") => {
@@ -23,6 +26,36 @@ colorConverter("#f00") => {
 
 */
 
+const getThemeSafe = () => {
+    try {
+        return baseStore?.globalData?.get?.()?.theme || {};
+    } catch {
+        return {};
+    }
+};
+
+const resolveThemeToken = (input, depth = 0) => {
+    if (typeof input !== "string") return input;
+    if (depth > 5) return input;
+
+    const key = input.trim();
+    if (!key) return input;
+
+    const theme = getThemeSafe();
+    if (!theme || typeof theme !== "object") return input;
+
+    const pathMatch = byPath.get(theme, key);
+    const directMatch = theme?.[key];
+    const resolved = pathMatch ?? directMatch;
+
+    if (resolved == null) return input;
+    if (typeof resolved === "string" && resolved !== key) {
+        return resolveThemeToken(resolved, depth + 1);
+    }
+
+    return resolved;
+};
+
 /**
  * Converts a color input to multiple formats (hex/rgb/rgba/hsl/hsla/hsb/hsba),
  * and computes relative luminance (WCAG).
@@ -46,6 +79,8 @@ colorConverter("#f00") => {
  * @returns {Object} Converted formats (or {} if input cannot be parsed)
  */
 export const colorConverter = (colorInput) => {
+    colorInput = resolveThemeToken(colorInput);
+
     // ---------- helpers (internal) ----------
     const hexToHexA = (color) => {
         if (typeof color !== "string") return "#00000000";
@@ -298,14 +333,32 @@ export const colorConverter = (colorInput) => {
 
     // ---------- normalize input ----------
     if (typeof colorInput === "string") {
-        const normalized = cssColorToNormalized(colorInput);
+        const value = colorInput.trim();
+        if (!value) return {};
+
+        const normalized = cssColorToNormalized(value);
+        const lower = value.toLowerCase();
+        const isHexLike = /^#?[0-9a-f]{3,8}$/i.test(value);
         if (normalized) {
             // "#rrggbb" OR "rgba(...)"
             if (normalized.startsWith("#")) colorInput = { hex8: hexToHexA(normalized) };
             else colorInput = { rgbaString: normalized };
+        } else if (lower.startsWith("rgba(")) {
+            colorInput = { rgbaString: value };
+        } else if (lower.startsWith("rgb(")) {
+            colorInput = { rgbString: value };
+        } else if (lower.startsWith("hsla(")) {
+            colorInput = { hslaString: value };
+        } else if (lower.startsWith("hsl(")) {
+            colorInput = { hslString: value };
+        } else if (lower.startsWith("hsba(")) {
+            colorInput = { hsbaString: value };
+        } else if (lower.startsWith("hsb(")) {
+            colorInput = { hsbString: value };
+        } else if (isHexLike) {
+            colorInput = { hex8: hexToHexA(value) };
         } else {
-            // keep old behavior for actual hex input; otherwise parsing will safely fail and return {}
-            colorInput = { hex8: hexToHexA(colorInput) };
+            return {};
         }
     }
 
@@ -414,6 +467,7 @@ export const colorConverter = (colorInput) => {
         Math.round(Math.min(255, Math.max(0, rgba[2]))),
         clamp01(rgba[3]),
     ];
+    if (![rgba[0], rgba[1], rgba[2], rgba[3]].every(Number.isFinite)) return {};
 
     const hex6 =
         "#" +
@@ -452,6 +506,12 @@ export const colorConverter = (colorInput) => {
         sRGBtoLinearRGB(rgba[2] / 255),
         rgba[3],
     ];
+    const linearRgbaArrayRounded = [
+        Number(linearRgbaArray[0].toFixed(2)),
+        Number(linearRgbaArray[1].toFixed(2)),
+        Number(linearRgbaArray[2].toFixed(2)),
+        Number(linearRgbaArray[3].toFixed(2)),
+    ];
 
     const luminance = Number(
         (
@@ -477,6 +537,8 @@ export const colorConverter = (colorInput) => {
         hslaArray,
         hslaString,
         luminance,
-        linearRgbaArray,
+        isLight: luminance >= 0.5,
+        isDark: luminance < 0.5,
+        linearRgbaArray: linearRgbaArrayRounded,
     };
 };

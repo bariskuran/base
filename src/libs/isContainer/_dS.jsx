@@ -11,7 +11,11 @@ const X = () => {
     const { output, setLocal } = baseStore.useLocal({ output: null });
 
     return (
-        <Ds.page title="isContainer()" releasedOn="1.0.0" description="Checks array or plain object.">
+        <Ds.page
+            title="isContainer()"
+            releasedOn="1.0.0"
+            description="Checks array or plain object."
+        >
             <Ds.block
                 title="Basic usage"
                 code={`import { isContainer } from "${SYS.basePath}";
@@ -51,7 +55,7 @@ isContainer(new Date());`}
                         {output != null && (
                             <>
                                 <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{output}</Typo.pre>
+                                <Typo.code>{output}</Typo.code>
                             </>
                         )}
                     </Flex.column>

@@ -4,8 +4,6 @@ import { get3DShadow } from ".";
 import styled from "styled-components";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { Button } from "../Button";
-import { Space } from "../Space";
 import { baseStore } from "../@baseStore";
 
 const Card = styled.div`
@@ -17,50 +15,119 @@ const Card = styled.div`
     place-items: center;
 `;
 
-const Depth1 = styled(Card)`
-    ${get3DShadow({ depth: 1 })}
-`;
-
-const Depth3 = styled(Card)`
-    ${get3DShadow({ depth: 3 })}
+const PreviewCard = styled(Card)`
+    ${({ $depth, $hoverDepth, $transition, $color }) =>
+        get3DShadow({
+            depth: $depth,
+            hoverDepth: $hoverDepth,
+            transition: $transition,
+            color: $color,
+        })}
 `;
 
 const X = () => {
-    const { note, setLocal } = baseStore.useLocal({
-        note: null,
+    const { depth, hoverDepth, transition, color, setLocal } = baseStore.useLocal({
+        depth: 1,
+        hoverDepth: 3,
+        transition: true,
+        color: "#0f172a",
     });
 
     return (
         <Ds.page
             title="get3DShadow()"
             releasedOn="1.0.0"
-            description="Generates reusable 3D box-shadow CSS."
+            description={`Generates reusable 3D box-shadow CSS fragment for styled-components.
+
+                    You can use get3DShadow via direct import from base, or via the theme helper in styled usage (theme.get3DShadow if attached in your setup).`}
         >
             <Ds.block
-                title="Basic usage"
+                title="Interactive preview"
                 code={`import { get3DShadow } from "${SYS.basePath}";
-import styled from "styled-components";
 
-const Box = styled.div\`
-  \${get3DShadow({ depth: 1 })}
-\`;`}
+                        const Box = styled.div\`
+                          \${get3DShadow({ depth: 1 })}
+                        \`;
+                        
+                        const Box = styled.div\`
+                          \${get3DShadow({ depth: 1, hoverDepth: 3 })}
+                        \`;
+                        `}
                 example={
-                    <Flex.column xAlign="start" gap={12} padding={10}>
-                        <Flex xAlign="start" gap={12}>
-                            <Depth1 children="depth 1" />
-                            <Depth3 children="depth 3" />
+                    <Flex.column gap={12}>
+                        <Flex gap={10}>
+                            <Flex.column gap={4}>
+                                <Typo.span>depth: {depth}</Typo.span>
+                                <input
+                                    type="range"
+                                    min={1}
+                                    max={10}
+                                    value={depth}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.depth = Number(e.target.value);
+                                        })
+                                    }
+                                />
+                            </Flex.column>
+                            <Flex.column gap={4}>
+                                <Typo.span>hoverDepth: {hoverDepth}</Typo.span>
+                                <input
+                                    type="range"
+                                    min={1}
+                                    max={15}
+                                    value={hoverDepth}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.hoverDepth = Number(e.target.value);
+                                        })
+                                    }
+                                />
+                            </Flex.column>
+                            <Flex.column gap={4}>
+                                <Typo.span>shadow color:</Typo.span>
+                                <input
+                                    type="color"
+                                    value={color}
+                                    onChange={(e) =>
+                                        setLocal((s) => {
+                                            s.color = e.target.value;
+                                        })
+                                    }
+                                />
+                            </Flex.column>
                         </Flex>
-                        <Button.string
-                            label="Note: return value is a styled-components css fragment"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.note =
-                                        "get3DShadow returns interpolated CSS (see cards). Use inside styled.div template.";
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {note != null && <Typo.span balance>{note}</Typo.span>}
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={transition}
+                                onChange={(e) =>
+                                    setLocal((s) => {
+                                        s.transition = e.target.checked;
+                                    })
+                                }
+                            />{" "}
+                            transition
+                        </label>
+                        <Flex gap={12}>
+                            <PreviewCard
+                                children="preview"
+                                $depth={depth}
+                                $hoverDepth={hoverDepth}
+                                $transition={transition}
+                                $color={color}
+                            />
+                            <PreviewCard
+                                children="static"
+                                $depth={depth}
+                                $hoverDepth={null}
+                                $transition={transition}
+                                $color={color}
+                            />
+                        </Flex>
+                        <Typo.code>
+                            {JSON.stringify({ depth, hoverDepth, transition, color }, null, 2)}
+                        </Typo.code>
                     </Flex.column>
                 }
             />

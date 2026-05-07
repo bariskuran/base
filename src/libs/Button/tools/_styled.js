@@ -51,8 +51,10 @@ export const S = {
     `,
     ScaleDiv: styled.div`
         position: relative;
-        display: inline-block;
+        display: inline-flex;
         vertical-align: middle;
+        width: fit-content;
+        max-width: 100%;
         cursor: ${({ $disabled }) => ($disabled ? "default" : "pointer")};
 
         ${({ $size }) =>

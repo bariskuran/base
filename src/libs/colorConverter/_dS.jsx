@@ -3,76 +3,71 @@ import { SYS } from "../../constants/SYS";
 import { colorConverter } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { Button } from "../Button";
-import { Space } from "../Space";
 import { baseStore } from "../@baseStore";
 
+const stringifyInlineArrays = (value) =>
+    JSON.stringify(value, null, 2).replace(/\[\n([\s\S]*?)\n(\s*)\]/g, (match, inner) => {
+        if (inner.includes("{") || inner.includes("[")) return match;
+        const parts = inner
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean);
+        return `[ ${parts.join(" ")} ]`;
+    });
+
 const X = () => {
-    const { outStr, outObj, setLocal } = baseStore.useLocal({ outStr: null, outObj: null });
+    const { colorInput, setLocal } = baseStore.useLocal({ colorInput: "#3498db" });
+    const outStr = colorConverter(colorInput);
+    const outStrText =
+        outStr && Object.keys(outStr).length > 0
+            ? stringifyInlineArrays(outStr)
+            : "Invalid color input. colorConverter returned {}.";
 
     return (
         <Ds.page
             title="colorConverter()"
             releasedOn="1.0.0"
-            description="Converts a color into multiple color spaces and formats."
+            description={`Converts a color into normalized outputs (hex/rgb/hsl/hsb) and luminance.
+
+                You can use colorConverter via direct import from base, or via the theme helper in styled usage (theme.colorConverter).`}
         >
             <Ds.block
                 title="String input"
                 code={`import { colorConverter } from "${SYS.basePath}";
 
-colorConverter("#3498db");`}
+                    colorConverter("#3498db");
+                    colorConverter("rgba(0,0,0,0.5)");
+                    colorConverter("red");
+                    colorConverter("primary");
+                    colorConverter("greys.shade20");
+                    `}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button.string
-                            label='Run colorConverter("#3498db")'
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.outStr = JSON.stringify(colorConverter("#3498db"), null, 2);
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {outStr != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{outStr}</Typo.pre>
-                            </>
-                        )}
-                    </Flex.column>
-                }
-            />
-            <Ds.block
-                title="Object input"
-                code={`import { colorConverter } from "${SYS.basePath}";
-
-colorConverter({ hslArray: [200, 70, 45] });`}
-                example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button.string
-                            label="Run colorConverter({ hslArray: [...] })"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.outObj = JSON.stringify(
-                                        colorConverter({ hslArray: [200, 70, 45] }),
-                                        null,
-                                        2,
-                                    );
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {outObj != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.pre whiteSpace="pre-wrap">{outObj}</Typo.pre>
-                            </>
-                        )}
+                    <Flex.column gap={10}>
+                        <Typo.span>Color string input:</Typo.span>
+                        <Flex gap={10}>
+                            <input
+                                type="text"
+                                value={colorInput}
+                                onChange={(e) =>
+                                    setLocal((state) => {
+                                        state.colorInput = e.target.value;
+                                    })
+                                }
+                                style={{ width: 220 }}
+                            />
+                            {outStr?.hex8 && (
+                                <div
+                                    style={{ backgroundColor: outStr?.hex8, width: 29, height: 29 }}
+                                />
+                            )}
+                        </Flex>
+                        <Typo.code>{outStrText}</Typo.code>
                     </Flex.column>
                 }
             />
             <Ds.api
                 args="colorConverter(colorInput);"
-                returns="Object with hex/rgb/hsl/hsb variants, luminance, and linearRgbaArray."
+                returns="Object with hex/rgb/hsl/hsb variants, luminance, and linearRgbaArray ({} for invalid input)."
                 props={{
                     colorInput: {
                         description: "Color input string or supported object payload.",

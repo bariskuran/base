@@ -52,7 +52,9 @@ export const Base = (props) => {
         <Button.plain
             exportData={exportData}
             onClick={() => {
-                copyToClipboard(content || children, { addToNotifier: true });
+                copyToClipboard(vars.finalVisibleContent ?? content ?? children, {
+                    addToNotifier: true,
+                });
             }}
             outlined
             bgColor={colorAlpha(vars.color, 0.3)}

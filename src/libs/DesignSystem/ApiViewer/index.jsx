@@ -19,9 +19,9 @@ const ApiViewer = ({ props, args, returns }) => {
             lastBlock
             title="Api"
             example={
-                <Flex.column gap={10}>
+                <Flex.column gap={10} marginTop={5}>
                     {args && (
-                        <Flex.column gap={10} marginBottom={40}>
+                        <Flex.column gap={10} marginBottom={40} aria-label="Arguments">
                             {typeof args === "string" ? (
                                 <Com arg={args} />
                             ) : Array.isArray(args) ? (
