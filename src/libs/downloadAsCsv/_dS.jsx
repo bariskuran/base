@@ -14,18 +14,31 @@ const sample = [
 ];
 
 const X = () => {
-    const { lastBasic, lastOpts, setLocal } = baseStore.useLocal({ lastBasic: null, lastOpts: null });
+    const { lastBasic, lastOpts, setLocal } = baseStore.useLocal({
+        lastBasic: null,
+        lastOpts: null,
+    });
 
     return (
-        <Ds.page title="downloadAsCsv()" releasedOn="1.0.0" description="Downloads table data as CSV.">
+        <Ds.page
+            title="downloadAsCsv()"
+            releasedOn="1.0.0"
+            description="Downloads table data as CSV."
+        >
+            <Ds.block
+                title="Data structure"
+                description="The data parameter must be a 2D array of rows and columns. Check out code section for an example"
+                code={`const data = [
+                            ["id", "name", "score"],
+                            [1, "Ada", 95],
+                            [2, "Linus", 88],
+                        ];`}
+            />
             <Ds.block
                 title="Basic usage"
                 code={`import { downloadAsCsv } from "${SYS.basePath}";
 
-downloadAsCsv(
-  [["id", "name"], [1, "Ada"]],
-  "users"
-);`}
+                    downloadAsCsv(data, "users");`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
                         <Button
@@ -45,13 +58,13 @@ downloadAsCsv(
                 title="With options"
                 code={`import { downloadAsCsv } from "${SYS.basePath}";
 
-downloadAsCsv(data, "users", {
-  separator: ";",
-  includeBom: true,
-  preventExcelInjection: true,
-  onSuccess: () => {},
-  onError: (e) => {},
-});`}
+                        downloadAsCsv(data, "users", {
+                          separator: ";",
+                          includeBom: true,
+                          preventExcelInjection: true,
+                          onSuccess: () => {},
+                          onError: (e) => {},
+                        });`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
                         <Button
@@ -69,7 +82,7 @@ downloadAsCsv(data, "users", {
                 }
             />
             <Ds.api
-                args="downloadAsCsv(data, fileName, options);"
+                args="downloadAsCsv(data, fileName, { onSuccess, onError, separator, includeBom, preventExcelInjection });"
                 returns="Boolean indicating whether the download was triggered successfully."
                 props={{
                     data: {
@@ -82,12 +95,28 @@ downloadAsCsv(data, "users", {
                         type: "string",
                         defaultValue: '"data"',
                     },
-                    options: {
-                        description:
-                            "{ onSuccess, onError, separator, includeBom, preventExcelInjection }",
-                        type: "object",
-                        defaultValue:
-                            '{ separator: ",", includeBom: true, preventExcelInjection: true }',
+                    onSuccess: {
+                        description: "Called when the download is successful.",
+                        type: "function",
+                    },
+                    onError: {
+                        description: "Called when the download fails.",
+                        type: "function",
+                    },
+                    separator: {
+                        description: "CSV separator.",
+                        type: "string",
+                        defaultValue: ",",
+                    },
+                    includeBom: {
+                        description: "Adds UTF-8 BOM for Excel compatibility.",
+                        type: "boolean",
+                        defaultValue: true,
+                    },
+                    preventExcelInjection: {
+                        description: "Prevents Excel injection.",
+                        type: "boolean",
+                        defaultValue: true,
                     },
                 }}
             />

@@ -50,41 +50,41 @@ const obj = queryConverter.import(qs);`}
             />
             <Ds.api
                 args={[
-                    "queryConverter.export(obj, settings);",
-                    "queryConverter.import(str, settings);",
+                    "queryConverter.export(obj, { preserveEmpty, prefix, ignoreEncode });",
+                    "queryConverter.import(str, { preserveBooleans, preserveNumbers });",
                 ]}
                 returns="export: query string; import: nested object."
                 props={{
                     export: {
                         description: "Nested object → query string.",
-                        type: "(obj, settings?) => string",
+                        type: "(obj, options?) => string",
                         required: true,
                     },
-                    "settings.preserveEmpty": {
+                    preserveEmpty: {
                         description: "Keeps null/undefined/empty values.",
                         type: "boolean",
                         defaultValue: "false",
                     },
-                    "settings.prefix": {
+                    prefix: {
                         description: "Prefix root key.",
                         type: "string",
                     },
-                    "settings.ignoreEncode": {
+                    ignoreEncode: {
                         description: "Skips encodeURIComponent.",
                         type: "boolean",
                         defaultValue: "false",
                     },
                     import: {
                         description: "Query string → nested object.",
-                        type: "(str, settings?) => object",
+                        type: "(str, options?) => object",
                         required: true,
                     },
-                    "settings.preserveBooleans": {
+                    preserveBooleans: {
                         description: "Keeps boolean-like values as strings.",
                         type: "boolean",
                         defaultValue: "false",
                     },
-                    "settings.preserveNumbers": {
+                    preserveNumbers: {
                         description: "Keeps number-like values as strings.",
                         type: "boolean",
                         defaultValue: "false",

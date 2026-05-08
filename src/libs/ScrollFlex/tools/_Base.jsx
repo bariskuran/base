@@ -1,10 +1,7 @@
-import { createContext } from "react";
 import useVars from "./useVars";
 import { ScrollBar } from "../../ScrollBar";
-import ContextProvider from "../../ContextProviderForUiComponents";
+import NestedBaseUi from "../../NestedBaseUi";
 import { S } from "./_styled.js";
-
-const Context = createContext(null);
 
 export const Base = ({ children, ...p }) => {
     const {
@@ -23,7 +20,7 @@ export const Base = ({ children, ...p }) => {
     const { gutterTop, gutterRight, gutterBottom, gutterLeft } = shellGutters;
 
     return (
-        <ContextProvider Context={Context}>
+        <NestedBaseUi>
             <Variant ref={containerRef} $borderColor={borderColor} aria-label="ScrollFlex">
                 <S.shell
                     $gutterTop={gutterTop}
@@ -44,6 +41,6 @@ export const Base = ({ children, ...p }) => {
                     <ScrollBar {...scrollBarProps} />
                 </S.shell>
             </Variant>
-        </ContextProvider>
+        </NestedBaseUi>
     );
 };

@@ -14,6 +14,16 @@ import { generateRandom } from "../generateRandom";
  */
 const ref = {};
 let cleanupIntervalId = null;
+const autoFunctionNameRef = new WeakMap();
+
+const getAutoFunctionName = (fn) => {
+    if (typeof fn !== "function") return generateRandom.text(16);
+    const current = autoFunctionNameRef.get(fn);
+    if (current) return current;
+    const next = generateRandom.text(16);
+    autoFunctionNameRef.set(fn, next);
+    return next;
+};
 
 const cleanupUnusedEntries = () => {
     const now = Date.now();
@@ -33,8 +43,8 @@ if (typeof window !== "undefined" && !cleanupIntervalId) {
  * @typedef {Object} DebounceSettings
  * @property {number} [delay] - Delay (ms)
  * @property {boolean} [isThrottle] - Throttle mode
- * @property {boolean} [getFirst] - Run the first call immediately
- * @property {string} [functionName] - Function name
+ * @property {boolean} [getFirst] - Run the first call immediately (debounce mode only)
+ * @property {string} [functionName] - Shared state key (auto-generated per fn when omitted)
  */
 
 /**
@@ -48,16 +58,18 @@ export const debouncedFunction = (
         delay = 500,
         isThrottle = false,
         getFirst = false,
-        functionName = generateRandom.text(16),
+        functionName,
         onStart,
         onEnd,
     } = {},
 ) => {
     if (!delay || delay < 100) return fn;
+    const scopedFunctionName = functionName || getAutoFunctionName(fn);
+    const shouldRunFirst = !isThrottle && getFirst;
 
     const entry =
-        ref[functionName] ||
-        (ref[functionName] = {
+        ref[scopedFunctionName] ||
+        (ref[scopedFunctionName] = {
             timeout: null,
             lastUsed: 0,
             lastArgs: null,
@@ -75,7 +87,7 @@ export const debouncedFunction = (
                 onStart?.(...args);
             }
 
-            if (getFirst && isFirstCallInWindow) {
+            if (shouldRunFirst && isFirstCallInWindow) {
                 fn(...args);
                 entry.calledDuringWait = false;
             } else if (entry.timeout != null) {
@@ -87,7 +99,7 @@ export const debouncedFunction = (
             if (entry.timeout) clearTimeout(entry.timeout);
 
             entry.timeout = setTimeout(() => {
-                if (!getFirst || entry.calledDuringWait) {
+                if (!shouldRunFirst || entry.calledDuringWait) {
                     fn(...entry.lastArgs);
                 }
 
@@ -109,12 +121,7 @@ export const debouncedFunction = (
 
             onStart?.(...args);
 
-            if (getFirst) {
-                fn(...args);
-                entry.calledDuringWait = false;
-            } else {
-                entry.calledDuringWait = true;
-            }
+            entry.calledDuringWait = true;
 
             entry.timeout = setTimeout(() => {
                 entry.isWaiting = false;

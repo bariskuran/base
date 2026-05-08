@@ -3,91 +3,168 @@ import { SYS } from "../../constants/SYS";
 import { generateRandom } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { Button } from "../Button";
-import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { output, setLocal } = baseStore.useLocal({ output: null });
-
     return (
         <Ds.page
-            title="generateRandom"
+            title="generateRandom()"
             releasedOn="1.0.0"
             description="Random number, text and lorem generators."
         >
             <Ds.block
-                title="Number / text / lorem"
+                title=".number"
                 code={`import { generateRandom } from "${SYS.basePath}";
 
-generateRandom.number(10, 99);
-
-generateRandom.text(12, { useUpperCase: true, useNumbers: true });
-
-generateRandom.loremIpsum(15);`}
+                        generateRandom.number(10, 99);
+                        generateRandom.number(0, 100, 2);
+                        generateRandom.number(0, 10, 4, true);
+                    `}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button.string
-                            label="Run generateRandom.number(10, 99)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = String(generateRandom.number(10, 99));
-                                })
-                            }
-                        />
-                        <Button.string
-                            label="Run generateRandom.text(12, …)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = generateRandom.text(12, {
-                                        useUpperCase: true,
-                                        useNumbers: true,
-                                    });
-                                })
-                            }
-                        />
-                        <Button.string
-                            label="Run generateRandom.loremIpsum(40)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = generateRandom.loremIpsum(40);
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {output != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.code>{output}</Typo.code>
-                            </>
-                        )}
+                    <Flex gap={20} padding={5}>
+                        <Typo.code>{generateRandom.number(10, 99)}</Typo.code>
+                        <Typo.code>{generateRandom.number(0, 100, 2)}</Typo.code>
+                        <Typo.code>{generateRandom.number(0, 10, 4, true)}</Typo.code>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title=".text"
+                code={`import { generateRandom } from "${SYS.basePath}";
+                
+                        generateRandom.text(8);
+                        generateRandom.text(32, { useLowerCase: false });
+                        generateRandom.text(12, { useNumbers: true });
+                        generateRandom.text(40, { useNumbers: true, useUpperCase: true, useSymbols: true, });
+                    `}
+                example={
+                    <Flex.column padding={5}>
+                        <Typo.code>{generateRandom.text(8)}</Typo.code>
+                        <Typo.code>{generateRandom.text(32, { useLowerCase: false })}</Typo.code>
+                        <Typo.code>
+                            {generateRandom.text(8, { useLowerCase: false, useUpperCase: true })}
+                        </Typo.code>
+                        <Typo.code>{generateRandom.text(12, { useNumbers: true })}</Typo.code>
+                        <Typo.code>
+                            {generateRandom.text(40, {
+                                useNumbers: true,
+                                useUpperCase: true,
+                                useSymbols: true,
+                            })}
+                        </Typo.code>
+                    </Flex.column>
+                }
+            />
+            <Ds.block
+                title=".loremIpsum"
+                code={`import { generateRandom } from "${SYS.basePath}";
+
+                        <Typo.code>
+                            {generateRandom.loremIpsum(50)}
+                        </Typo.code>
+                        <Typo.code>
+                            {generateRandom.loremIpsum(100, { disableDot: true })}
+                        </Typo.code>
+                        {generateRandom.loremIpsum(100, {
+                            paragraphLength: 20,
+                            enableParagraph: true,
+                            paragraphComponent: Typo.code, // Typo.p is suggested.
+                        })}
+                    `}
+                example={
+                    <Flex.column padding={5}>
+                        <Typo.bold>50</Typo.bold>
+                        <Typo.code>{generateRandom.loremIpsum(50)}</Typo.code>
+                        <Typo.bold>200 withoutDot</Typo.bold>
+                        <Typo.code>
+                            {generateRandom.loremIpsum(100, { disableDot: true })}
+                        </Typo.code>
+                        <Typo.bold>200 with random paragraphs as components</Typo.bold>
+                        {generateRandom.loremIpsum(100, {
+                            paragraphLength: 20,
+                            enableParagraph: true,
+                            paragraphComponent: Typo.code,
+                        })}
                     </Flex.column>
                 }
             />
             <Ds.api
                 args={[
-                    "generateRandom.number(min, max, decimal, toLocaleString);",
-                    "generateRandom.text(length, settings);",
-                    "generateRandom.loremIpsum(count, disableDot);",
+                    "generateRandom.number(min, max, decimal, disableLocaleString);",
+                    "generateRandom.text(length, { useLowerCase, useUpperCase, useNumbers, useSymbols});",
+                    "generateRandom.loremIpsum(length, { disableDot, paragraphLength, enableParagraph, paragraphComponent });",
                 ]}
-                returns="Random number, text, or lorem string depending on method."
                 props={{
-                    number: {
-                        description: "Random number helper.",
-                        type: "function",
-                        required: true,
+                    length: {
+                        description:
+                            "Length value. Used by text() and loremIpsum() (number() uses min/max).",
+                        type: "number",
+                        defaultValue: "16/50",
                     },
-                    text: {
-                        description: "Random alphanumeric text helper.",
-                        type: "function",
-                        required: true,
+                    min: {
+                        description: "Minimum number (number() only).",
+                        type: "number",
+                        defaultValue: 0,
                     },
-                    loremIpsum: {
-                        description: "Lorem ipsum paragraph helper.",
-                        type: "function",
-                        required: true,
+                    max: {
+                        description: "Maximum number (number() only).",
+                        type: "number",
+                        defaultValue: 100,
+                    },
+                    decimal: {
+                        description: "Number of decimal places (number() only).",
+                        type: "number",
+                        defaultValue: 0,
+                    },
+                    disableLocaleString: {
+                        description: "Disables locale string formatting (number() only).",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    useLowerCase: {
+                        description: "Uses lower case letters (text() only).",
+                        type: "boolean",
+                        defaultValue: true,
+                    },
+                    useUpperCase: {
+                        description: "Uses upper case letters (text() only).",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    useNumbers: {
+                        description: "Uses numbers (text() only).",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    useSymbols: {
+                        description: "Uses symbols (text() only).",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    disableDot: {
+                        description: "Disables dot at sentence end (loremIpsum() only).",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    paragraphLength: {
+                        description:
+                            "Average words per paragraph (loremIpsum() only). Used only when enableParagraph is true; ignored for plain string output.",
+                        type: "number",
+                        defaultValue: 0,
+                    },
+                    enableParagraph: {
+                        description:
+                            "If true, loremIpsum() returns paragraphComponent elements split by paragraphLength. If false, returns a single plain string with no <p> wrapping.",
+                        type: "boolean",
+                        defaultValue: false,
+                    },
+                    paragraphComponent: {
+                        description:
+                            "Paragraph wrapper for loremIpsum() component mode. Default is 'p' (for example Typo.p).",
+                        type: "component",
+                        defaultValue: "'p'",
                     },
                 }}
+                returns="number(), text(): string — loremIpsum(): plain string if enableParagraph is false; array of paragraph elements if true."
             />
         </Ds.page>
     );

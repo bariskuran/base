@@ -1,6 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorTinter } from ".";
+import { colorFind } from "../colorFind";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
@@ -10,6 +11,7 @@ const X = () => {
         color: "#4f46e5",
         percent: 20,
     });
+    const basePreview = colorFind(color, { output: "hex8" }) || color;
     const tinted = colorTinter(color, percent);
 
     return (
@@ -62,7 +64,7 @@ colorTinter("#4f46e5", 20);`}
                                     width: 60,
                                     height: 24,
                                     borderRadius: 6,
-                                    background: color,
+                                    background: basePreview,
                                 }}
                             />
                             <div
@@ -89,7 +91,7 @@ colorTinter("#4f46e5", 20);`}
                         type: "string | object",
                     },
                     percent: {
-                        description: "Tint amount (0..100).",
+                        description: "Tint amount (0..100). 100 is equal to white.",
                         type: "number",
                         defaultValue: "0",
                     },

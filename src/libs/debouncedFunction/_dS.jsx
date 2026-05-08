@@ -5,16 +5,24 @@ import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
+import { notifier } from "../notifier";
 
 const X = () => {
-    const { count, throttleCount, setLocal } = baseStore.useLocal({ count: 0, throttleCount: 0 });
+    const { count, throttleCount, setLocal, ex2, ex3, ex4, ex5 } = baseStore.useLocal({
+        count: 0,
+        throttleCount: 0,
+        ex2: 0,
+        ex3: 0,
+        ex4: 0,
+        ex5: 0,
+    });
 
     const runDebounced = debouncedFunction(
         () =>
             setLocal((s) => {
                 s.count += 1;
             }),
-        { delay: 600, functionName: "ds-debounce-example" },
+        { delay: 1000 },
     );
 
     const runThrottle = debouncedFunction(
@@ -23,10 +31,49 @@ const X = () => {
                 s.throttleCount += 1;
             }),
         {
-            delay: 500,
+            delay: 1000,
             isThrottle: true,
-            getFirst: true,
-            functionName: "ds-throttle-example",
+        },
+    );
+
+    const runEx2 = debouncedFunction(
+        () =>
+            setLocal((s) => {
+                s.ex2 += 1;
+            }),
+        { delay: 1000, getFirst: true, functionName: "example2" },
+    );
+
+    const runEx3 = debouncedFunction(
+        () =>
+            setLocal((s) => {
+                s.ex3 += 1;
+            }),
+        { delay: 1000, getFirst: true, functionName: "example3", isThrottle: true },
+    );
+
+    const runEx4 = debouncedFunction(
+        () =>
+            setLocal((s) => {
+                s.ex4 += 1;
+            }),
+        {
+            delay: 2000,
+            onStart: () => notifier.add("Debounced onStart called."),
+            onEnd: () => notifier.add("Debounced onEnd called."),
+        },
+    );
+
+    const runEx5 = debouncedFunction(
+        () =>
+            setLocal((s) => {
+                s.ex5 += 1;
+            }),
+        {
+            delay: 2000,
+            isThrottle: true,
+            onStart: () => notifier.add("Throttled onStart called."),
+            onEnd: () => notifier.add("Throttled onEnd called."),
         },
     );
 
@@ -34,41 +81,153 @@ const X = () => {
         <Ds.page
             title="debouncedFunction()"
             releasedOn="1.0.0"
-            description="Creates debounced or throttled function wrappers."
+            description={
+                <>
+                    Creates debounced or throttled function wrappers.
+                    <br />
+                    <br />
+                    Check out{" "}
+                    <Button.string
+                        to="/design-system/useDebouncedFunction"
+                        label="useDebouncedFunction"
+                    />{" "}
+                    to see hook usage.
+                </>
+            }
         >
             <Ds.block
-                title="Basic Debounce"
+                title="Basic Debounce & Throttle"
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
-const fn = debouncedFunction(callback, { delay: 500 });
-fn();`}
+                        const debounced = debouncedFunction(callback, { 
+                            delay: 1000
+                        });
+                        debounced();
+
+                        const throttled = debouncedFunction(callback, {
+                          delay: 1000,
+                          isThrottle: true,
+                        });                        
+                        throttled();`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button label="Spam click (debounced)" onClick={runDebounced} />
-                        <Typo.span children={`Debounced count: ${count}`} />
-                    </Flex.column>
+                    <Flex gap={10}>
+                        <Flex.column gap={10}>
+                            <Button
+                                label="Debounced"
+                                onClick={runDebounced}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Typo.span children={`Count: ${count}`} />
+                        </Flex.column>
+                        <Flex.column gap={10}>
+                            <Button
+                                label="Throttled"
+                                onClick={runThrottle}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Typo.span children={`Count: ${throttleCount}`} />
+                        </Flex.column>
+                    </Flex>
                 }
             />
             <Ds.block
-                title="Throttle Mode"
+                title="getFirst & functionName"
+                description={`getFirst: Triggers immediately on first call window. Works in debounce mode only.
+                    
+                    functionName: Shared key for the internal debounce state. In some cases, you may want multiple instances of the same function to share the same debounce/throttle lock. By default, the function reference is used to generate the functionName automatically, but you can provide a unique key if needed in certain scenarios.`}
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
-const fn = debouncedFunction(callback, {
-  delay: 500,
-  isThrottle: true,
-  getFirst: true,
-});
+                        const example2 = debouncedFunction(callback, { 
+                            delay: 1000,
+                            getFirst: true,
+                            functionName: "example2"
+                        });
 
-fn();`}
+                        example2();`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button label="Spam click (throttled)" onClick={runThrottle} />
-                        <Typo.span children={`Throttled count: ${throttleCount}`} />
-                    </Flex.column>
+                    <Flex gap={10}>
+                        <Flex.column gap={10}>
+                            <Button
+                                label="getFirst"
+                                onClick={runEx2}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Typo.span children={`Count: ${ex2}`} />
+                        </Flex.column>
+                        <Flex.column gap={10}>
+                            <Button
+                                label="functionName"
+                                onClick={runEx3}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Typo.span children={`Count: ${ex3}`} />
+                        </Flex.column>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="onStart & onEnd"
+                description={`onStart: Called when wait window starts.
+                    
+                    onEnd: Called when wait window ends.`}
+                code={`import { debouncedFunction } from "${SYS.basePath}";
+
+                        const example4 = debouncedFunction(
+                             () =>
+                                 setLocal((s) => {
+                                     s.ex4 += 1;
+                                 }),
+                             {
+                                 delay: 2000,
+                                 onStart: () => notifier.add("Debounced onStart called."),
+                                 onEnd: () => notifier.add("Debounced onEnd called."),
+                             },
+                         );
+
+                         const example5 = debouncedFunction(
+                             () =>
+                                 setLocal((s) => {
+                                     s.ex5 += 1;
+                                 }),
+                             {
+                                 delay: 2000,
+                                 isThrottle: true,
+                                 onStart: () => notifier.add("Throttled onStart called."),
+                                 onEnd: () => notifier.add("Throttled onEnd called."),
+                             },
+                         );
+
+                        example4();
+                        example5();`}
+                example={
+                    <Flex gap={10}>
+                        <Flex.column gap={10}>
+                            <Button
+                                label="Debounced onStart & onEnd"
+                                onClick={runEx4}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Typo.span children={`Count: ${ex4}`} />
+                        </Flex.column>
+                        <Flex.column gap={10}>
+                            <Button
+                                label="Throttled onStart & onEnd"
+                                onClick={runEx5}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Typo.span children={`Count: ${ex5}`} />
+                        </Flex.column>
+                    </Flex>
                 }
             />
             <Ds.api
-                args="debouncedFunction(fn, settings);"
+                args="debouncedFunction(fn, { delay, isThrottle, getFirst, functionName, onStart, onEnd });"
                 returns="Debounced or throttled wrapper function."
                 props={{
                     fn: {
@@ -76,38 +235,32 @@ fn();`}
                         type: "function",
                         required: true,
                     },
-                    settings: {
-                        description:
-                            "{ delay, isThrottle, getFirst, functionName, onStart, onEnd }",
-                        type: "object",
-                        defaultValue:
-                            "{ delay: 500, isThrottle: false, getFirst: false, functionName: random }",
-                    },
-                    "settings.delay": {
+                    delay: {
                         description: "Wait duration in milliseconds.",
                         type: "number",
                         defaultValue: "500",
                     },
-                    "settings.isThrottle": {
+                    isThrottle: {
                         description: "Switches to throttle behavior.",
                         type: "boolean",
                         defaultValue: "false",
                     },
-                    "settings.getFirst": {
-                        description: "Triggers immediately on first call window.",
+                    getFirst: {
+                        description:
+                            "Triggers immediately on first call window (ignored in throttle mode).",
                         type: "boolean",
                         defaultValue: "false",
                     },
-                    "settings.functionName": {
+                    functionName: {
                         description: "Shared key for internal debounce state.",
                         type: "string",
-                        defaultValue: "random",
+                        defaultValue: "auto-generated per function reference",
                     },
-                    "settings.onStart": {
+                    onStart: {
                         description: "Called when wait window starts.",
                         type: "function",
                     },
-                    "settings.onEnd": {
+                    onEnd: {
                         description: "Called when wait window ends.",
                         type: "function",
                     },

@@ -42,7 +42,7 @@ useBaseEffect(() => {
             example={<Demo />}
         />
         <Ds.api
-            args="useBaseEffect(fn, deps, settings);"
+            args="useBaseEffect(fn, deps, { skipEffect, useEffectAfterMount, return: cleanup, useFalsyDeps, executeOnDev, findDifferences });"
             returns="void; effect may return a cleanup from fn."
             props={{
                 fn: {
@@ -55,36 +55,31 @@ useBaseEffect(() => {
                     type: "any[]",
                     defaultValue: "[]",
                 },
-                settings: {
-                    description: "Behavior options.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "settings.skipEffect": {
+                skipEffect: {
                     description: "Skips effect execution.",
                     type: "boolean",
                     defaultValue: "false",
                 },
-                "settings.useEffectAfterMount": {
+                useEffectAfterMount: {
                     description: "Skips first render run.",
                     type: "boolean",
                     defaultValue: "false",
                 },
-                "settings.return": {
+                return: {
                     description: "Cleanup function.",
                     type: "function",
                 },
-                "settings.useFalsyDeps": {
+                useFalsyDeps: {
                     description: "Runs with no fixed deps array.",
                     type: "boolean",
                     defaultValue: "false",
                 },
-                "settings.executeOnDev": {
+                executeOnDev: {
                     description: "Runs only in dev mode.",
                     type: "boolean",
                     defaultValue: "false",
                 },
-                "settings.findDifferences": {
+                findDifferences: {
                     description: "Passes dependency differences to callback.",
                     type: "boolean",
                     defaultValue: "false",

@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { S } from "./_styled";
-import { sitemap } from "../index";
+import { formatDsNavLabel, getSitemap } from "../index";
+import { baseStore } from "../../@baseStore";
 import { Button } from "../../Button";
 import useVars from "./useVars";
 import { sortBy } from "../../sortBy";
@@ -12,11 +13,12 @@ import { useLinkIntoView } from "../../useLinkIntoView";
 const Layout = () => {
     const vars = useVars();
     const location = useLocation();
+    const showInternalDs = baseStore.useGlobal((s) => !!s._adminSettings?.showInternalDs);
 
     const sorted = useMemo(() => {
-        const [first, ...rest] = sitemap || [];
+        const [first, ...rest] = getSitemap() || [];
         return first ? [first, ...rest.sort((a, b) => sortBy.asc(a[0], b[0]))] : [];
-    }, [sitemap]);
+    }, [showInternalDs]);
 
     const [isActive, activeNavItemRef] = useLinkIntoView({
         pathname: location.pathname,
@@ -55,7 +57,7 @@ const Layout = () => {
                                 key={path ?? `nav-${i}`}
                                 ref={isActive(entry) ? activeNavItemRef : undefined}
                                 to={path || "/design-system"}
-                                label={name}
+                                label={formatDsNavLabel(name)}
                                 bgColor="transparent"
                                 color="foreground"
                                 fullWidth="right"

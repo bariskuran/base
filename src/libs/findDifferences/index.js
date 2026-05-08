@@ -83,18 +83,26 @@ const diffTree = (a, b, isEqualSettings, level = 0, maxDepth = 50) => {
 
     if (ta === "array") {
         const len = Math.max(a.length || 0, b.length || 0);
-        const out = [];
-        let hasAny = false;
+        const changedByIndex = new Map();
+        let maxChangedIndex = -1;
 
         for (let i = 0; i < len; i++) {
             const sub = diffTree(a[i], b[i], isEqualSettings, level + 1, maxDepth);
             if (isDiffLeaf(sub) || (sub && typeof sub === "object" && Object.keys(sub).length)) {
-                out[i] = sub;
-                hasAny = true;
+                changedByIndex.set(i, sub);
+                if (i > maxChangedIndex) maxChangedIndex = i;
             }
         }
 
-        return hasAny ? out : {};
+        if (maxChangedIndex === -1) return {};
+
+        // Keep only up to last changed index; fill gaps with empty objects for readable JSON.
+        const out = Array.from({ length: maxChangedIndex + 1 }, () => ({}));
+        for (const [idx, value] of changedByIndex.entries()) {
+            out[idx] = value;
+        }
+
+        return out;
     }
 
     const keys = new Set([...Object.keys(a || {}), ...Object.keys(b || {})]);

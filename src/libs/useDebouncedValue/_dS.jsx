@@ -35,7 +35,7 @@ const [debouncedValue, setValue, state] = useDebouncedValue("", { delay: 500 });
             example={<Demo />}
         />
         <Ds.api
-            args="useDebouncedValue(initialValue, settings);"
+            args="useDebouncedValue(initialValue, { delay, isThrottle, enabled });"
             returns="Tuple: debounced value, setValue, and state helpers."
             props={{
                 initialValue: {
@@ -43,22 +43,17 @@ const [debouncedValue, setValue, state] = useDebouncedValue("", { delay: 500 });
                     type: "any",
                     required: true,
                 },
-                settings: {
-                    description: "Debounce behavior options.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "settings.delay": {
+                delay: {
                     description: "Delay in milliseconds.",
                     type: "number",
                     defaultValue: "500",
                 },
-                "settings.isThrottle": {
+                isThrottle: {
                     description: "Throttle mode.",
                     type: "boolean",
                     defaultValue: "false",
                 },
-                "settings.enabled": {
+                enabled: {
                     description: "Enables debounce/throttle behavior.",
                     type: "boolean",
                     defaultValue: "true",

@@ -38,7 +38,7 @@ useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
             example={<Demo />}
         />
         <Ds.api
-            args='useEventListener(event, handler, settings);'
+            args="useEventListener(event, handler, { enabled, delay, isThrottle, getFirst, source, capture, once, passive, onStart, onEnd });"
             returns="void."
             props={{
                 event: {
@@ -51,53 +51,48 @@ useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
                     type: "function",
                     required: true,
                 },
-                settings: {
-                    description: "Listener options.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "settings.enabled": {
+                enabled: {
                     description: "Enables listener.",
                     type: "boolean",
                     defaultValue: "true",
                 },
-                "settings.delay": {
+                delay: {
                     description: "Debounce/throttle delay.",
                     type: "number",
                     defaultValue: "500",
                 },
-                "settings.isThrottle": {
+                isThrottle: {
                     description: "Uses throttle mode.",
                     type: "boolean",
                     defaultValue: "true",
                 },
-                "settings.getFirst": {
+                getFirst: {
                     description: "Runs first call immediately.",
                     type: "boolean",
                     defaultValue: "false",
                 },
-                "settings.source": {
+                source: {
                     description: "Event source target.",
                     type: "EventTarget",
                     defaultValue: "window",
                 },
-                "settings.capture": {
+                capture: {
                     description: "Capture phase option.",
                     type: "boolean",
                 },
-                "settings.once": {
+                once: {
                     description: "Once option.",
                     type: "boolean",
                 },
-                "settings.passive": {
+                passive: {
                     description: "Passive option.",
                     type: "boolean",
                 },
-                "settings.onStart": {
+                onStart: {
                     description: "Debounce start callback.",
                     type: "function",
                 },
-                "settings.onEnd": {
+                onEnd: {
                     description: "Debounce end callback.",
                     type: "function",
                 },

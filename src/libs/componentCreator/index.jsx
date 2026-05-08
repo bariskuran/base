@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { baseStore } from "../@baseStore";
-import { useUiComponentsContext } from "../ContextProviderForUiComponents";
+import { useNestedBaseUiContext } from "../NestedBaseUi";
 
 export const componentCreator = ({
     name,
@@ -16,7 +16,7 @@ export const componentCreator = ({
             ...rest
         } = props || {};
 
-        const uiContext = useUiComponentsContext();
+        const uiContext = useNestedBaseUiContext();
         const __hasParentUiComponent = hasParentFromProps ?? uiContext.__hasParentUiComponent;
 
         const globalData = baseStore.globalData?.get?.() || {};

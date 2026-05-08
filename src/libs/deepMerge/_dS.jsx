@@ -3,103 +3,78 @@ import { SYS } from "../../constants/SYS";
 import { deepMerge } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { Button } from "../Button";
-import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
-
-const before = { a: 1, nested: { x: 10, y: 20 }, list: [1, 2, 3] };
-const incoming = { nested: { y: 99 }, list: [4], b: 2 };
-
-const X = () => {
-    const { outBasic, outArray, setLocal } = baseStore.useLocal({ outBasic: null, outArray: null });
-
-    return (
-        <Ds.page title="deepMerge()" releasedOn="1.0.0" description="Deep merges plain objects.">
-            <Ds.block
-                title="Basic usage"
-                code={`import { deepMerge } from "${SYS.basePath}";
-
-const merged = deepMerge(
-  { a: 1, nested: { x: 10, y: 20 } },
-  { nested: { y: 99 }, b: 2 }
-);`}
-                example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button.string
-                            label="Run deepMerge(base, patch)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.outBasic = JSON.stringify(
-                                        deepMerge(
-                                            { a: 1, nested: { x: 10, y: 20 } },
-                                            { nested: { y: 99 }, b: 2 },
-                                        ),
-                                        null,
-                                        2,
-                                    );
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {outBasic != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.code>{outBasic}</Typo.code>
-                            </>
-                        )}
-                    </Flex.column>
-                }
-            />
-            <Ds.block
-                title="Array merge rule"
-                code={`import { deepMerge } from "${SYS.basePath}";
-
-deepMerge({ list: [1, 2, 3] }, { list: [4] });`}
-                example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Typo.code>
-                            {`before: ${JSON.stringify(before)}\nincoming: ${JSON.stringify(incoming)}`}
-                        </Typo.code>
-                        <Button.string
-                            label="Run deepMerge(before, incoming)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.outArray = JSON.stringify(
-                                        deepMerge(before, incoming),
-                                        null,
-                                        2,
-                                    );
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {outArray != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.code>{outArray}</Typo.code>
-                            </>
-                        )}
-                    </Flex.column>
-                }
-            />
-            <Ds.api
-                args="deepMerge(oldData, newData);"
-                returns="Deep-merged plain object/array result."
-                props={{
-                    oldData: {
-                        description: "Existing/base value.",
-                        type: "any",
-                        required: true,
-                    },
-                    newData: {
-                        description: "Incoming value to merge.",
-                        type: "any",
-                        required: true,
-                    },
-                }}
-            />
-        </Ds.page>
-    );
+const oldData = {
+    user: {
+        profile: { firstName: "Baris", lastName: "Kuran" },
+        preferences: { theme: "dark", language: "en" },
+    },
+    stats: { login: { total: 12, lastDays: [1, 2, 3] } },
 };
+
+const newData = {
+    user: {
+        preferences: { language: "tr", timezone: "Europe/Istanbul" },
+    },
+    stats: { login: { total: 13, lastDays: [4] } },
+};
+
+const merged = deepMerge(oldData, newData);
+
+const X = () => (
+    <Ds.page
+        title="deepMerge()"
+        releasedOn="1.0.0"
+        description="Deep merges plain objects. When paths overlap, newData values override oldData."
+    >
+        <Ds.block
+            title="3-level merge example"
+            code={`import { deepMerge } from "${SYS.basePath}";
+
+                    const merged = deepMerge(oldData, newData);`}
+            example={
+                <Flex gap={30}>
+                    <Flex.column gap={10} padding={10} align="stretch">
+                        <Typo.bold balance>oldData</Typo.bold>
+                        <Typo.code>{JSON.stringify(oldData, null, 2)}</Typo.code>
+                    </Flex.column>
+                    <Flex alignItems="center">
+                        <Typo size={40} selfAlign="center">
+                            +
+                        </Typo>
+                    </Flex>
+                    <Flex.column gap={10} bgColor="backgrounds.shade2" padding={10}>
+                        <Typo.bold balance>newData (overrides)</Typo.bold>
+                        <Typo.code>{JSON.stringify(newData, null, 2)}</Typo.code>
+                    </Flex.column>
+                    <Flex alignItems="center">
+                        <Typo size={40} selfAlign="center">
+                            =
+                        </Typo>
+                    </Flex>
+                    <Flex.column gap={10} bgColor="backgrounds.shade4" padding={10}>
+                        <Typo.bold balance>merged result</Typo.bold>
+                        <Typo.code>{JSON.stringify(merged, null, 2)}</Typo.code>
+                    </Flex.column>
+                </Flex>
+            }
+        />
+        <Ds.api
+            args="deepMerge(oldData, newData);"
+            returns="Deep-merged plain object/array result."
+            props={{
+                oldData: {
+                    description: "Base value.",
+                    type: "any",
+                    required: true,
+                },
+                newData: {
+                    description: "Incoming value to merge.",
+                    type: "any",
+                    required: true,
+                },
+            }}
+        />
+    </Ds.page>
+);
 
 export default X;

@@ -1,1 +1,1 @@
-export const SYMBOLS = "!@#$%^&*()_+[]{}|;:',.<>?";
+export const SYMBOLS = "!@#$%^*()_+-=[]{}|;:,.?/";

@@ -3,6 +3,7 @@ import { UPPER_CASE_ALPHABET } from "../../constants/UPPER_CASE_ALPHABET";
 import { NUMBERS } from "../../constants/NUMBERS";
 import { SYMBOLS } from "../../constants/SYMBOLS";
 import { LOREM_VOCABULARY } from "../../constants/LOREM_VOCABULARY";
+import React from "react";
 
 /**
 
@@ -13,8 +14,11 @@ import { LOREM_VOCABULARY } from "../../constants/LOREM_VOCABULARY";
         useSymbols = false,
     });
 
-    generateRandom.loremIpsum(count,{
+    generateRandom.loremIpsum(length, {
         disableDot = false,
+        paragraphLength = 0,
+        enableParagraph = false,
+        paragraphComponent = "p",
     });
 
     generateRandom.number(min = 0, max = 100, decimal = 0, toLocaleString = false);
@@ -22,38 +26,28 @@ import { LOREM_VOCABULARY } from "../../constants/LOREM_VOCABULARY";
  */
 
 export const generateRandom = {
-    number: (min = 0, max = 100, decimal = 0, toLocaleString = false) => {
-        const scaleFactor = 10 ** decimal;
-        const randomFloat = Math.random() * (max - min) + min;
-        const scaledNumber = Math.round(randomFloat * scaleFactor) / scaleFactor;
-
-        if (toLocaleString)
-            return scaledNumber.toLocaleString(undefined, {
-                minimumFractionDigits: decimal,
-                maximumFractionDigits: decimal,
-            });
-        else return Number(scaledNumber.toFixed(decimal));
+    _getRandomNumber: (min, max) => Math.floor(Math.random() * (max - min + 1) + min),
+    _generateRandomArray: (len) => {
+        let [randomArray, currentSum, minNumber, maxNumber] = [[], 0, 1, 30];
+        while (currentSum < len) {
+            const remainingCount = len - currentSum;
+            let randomNumber =
+                remainingCount < maxNumber
+                    ? remainingCount
+                    : generateRandom._getRandomNumber(
+                          minNumber,
+                          Math.min(maxNumber, remainingCount),
+                      );
+            if (remainingCount < minNumber)
+                randomNumber = randomNumber + (minNumber - remainingCount);
+            currentSum += randomNumber;
+            randomArray.push(randomNumber);
+        }
+        return randomArray;
     },
-    loremIpsum: (count = 50, disableDot = false) => {
-        const generateRandomArray = (count) => {
-            const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
-            let [randomArray, currentSum, minNumber, maxNumber] = [[], 0, 1, 30];
-            while (currentSum < count) {
-                const remainingCount = count - currentSum;
-                let randomNumber =
-                    remainingCount < maxNumber
-                        ? remainingCount
-                        : getRandomNumber(minNumber, Math.min(maxNumber, remainingCount));
-                if (remainingCount < minNumber)
-                    randomNumber = randomNumber + (minNumber - remainingCount);
-                currentSum += randomNumber;
-                randomArray.push(randomNumber);
-            }
-            return randomArray;
-        };
-
+    _buildLoremText: (count, disableDot = false) => {
         let loremText = "";
-        const arr = generateRandomArray(count);
+        const arr = generateRandom._generateRandomArray(count);
         for (let i = 0; i < arr.length; i++) {
             let sentence = "";
             const sentLength = arr[i];
@@ -75,7 +69,66 @@ export const generateRandom = {
                     : (sentence.charAt(0).toUpperCase() + sentence.slice(1)).trim()) +
                 (disableDot ? " " : ". ");
         }
-        return loremText;
+        return loremText.trim();
+    },
+    _buildLoremParagraphs: (length, paragraphLength, disableDot = false) => {
+        if (!(paragraphLength > 0)) return [generateRandom._buildLoremText(length, disableDot)];
+
+        const avgParagraphLength = Math.max(1, Math.floor(paragraphLength));
+        const minParagraphLength = Math.max(1, Math.floor(avgParagraphLength * 0.5));
+        const maxParagraphLength = Math.max(
+            minParagraphLength,
+            Math.floor(avgParagraphLength * 1.5),
+        );
+
+        const paragraphSizes = [];
+        let remaining = Math.max(0, Math.floor(length));
+
+        while (remaining > 0) {
+            if (remaining <= maxParagraphLength) {
+                paragraphSizes.push(remaining);
+                break;
+            }
+            const size = generateRandom._getRandomNumber(minParagraphLength, maxParagraphLength);
+            paragraphSizes.push(size);
+            remaining -= size;
+        }
+
+        return paragraphSizes.map((size) => generateRandom._buildLoremText(size, disableDot));
+    },
+    number: (min = 0, max = 100, decimal = 0, disableLocaleString = false) => {
+        const scaleFactor = 10 ** decimal;
+        const randomFloat = Math.random() * (max - min) + min;
+        const scaledNumber = Math.round(randomFloat * scaleFactor) / scaleFactor;
+
+        if (!disableLocaleString)
+            return scaledNumber.toLocaleString(undefined, {
+                minimumFractionDigits: decimal,
+                maximumFractionDigits: decimal,
+            });
+        else return Number(scaledNumber.toFixed(decimal));
+    },
+    loremIpsum: (length = 50, options = {}) => {
+        const {
+            disableDot = false,
+            paragraphLength = 0,
+            enableParagraph = false,
+            paragraphComponent = "p",
+        } = options || {};
+
+        if (!enableParagraph) {
+            return generateRandom._buildLoremText(length, disableDot);
+        }
+
+        const paragraphs = generateRandom._buildLoremParagraphs(
+            length,
+            paragraphLength,
+            disableDot,
+        );
+
+        return paragraphs.map((paragraph, i) =>
+            React.createElement(paragraphComponent, { key: i }, paragraph),
+        );
     },
     text: (length = 16, settings = {}) => {
         const {

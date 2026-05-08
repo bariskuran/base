@@ -11,5 +11,5 @@ export const Flag = ({ flag, ...props }) => {
 
     if (!resolvedFlag) return null;
 
-    return <Icon {...props} icon={resolvedFlag} />;
+    return <Icon {...props} icon={resolvedFlag} isFlag />;
 };

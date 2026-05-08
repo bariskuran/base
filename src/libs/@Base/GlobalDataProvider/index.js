@@ -18,6 +18,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         iconsLibrary = {},
         idleManagerSettings = {},
         styledSettings = {},
+        adminSettings = {},
         textLibrary: usersTextLibrary = {},
         baseFetchSettings = {},
         baseFormSettings = {},
@@ -94,6 +95,13 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                 // iconsLibrary
                 _iconsLibrary: iconsLibrary,
 
+                // adminSettings
+                _adminSettings: {
+                    showDsOnline: false,
+                    showInternalDs: false,
+                    ...adminSettings,
+                },
+
                 // notifier
                 _notifier: {
                     killAfter: 5,
@@ -167,6 +175,10 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                 ...baseDateSettings,
             },
             _iconsLibrary: iconsLibrary,
+            _adminSettings: {
+                ...currentGlobalData._adminSettings,
+                ...adminSettings,
+            },
             _idleManager: {
                 ...currentGlobalData._idleManager,
                 ...idleManagerSettings,

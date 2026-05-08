@@ -92,6 +92,54 @@ const legacyCopyToClipboard = (text) => {
     return success;
 };
 
+const safeJsonStringify = (value) => {
+    try {
+        return JSON.stringify(value);
+    } catch {
+        return null;
+    }
+};
+
+const serializeClipboardValue = (value) => {
+    if (value === null) return "null";
+    if (value === undefined) return "undefined";
+
+    if (
+        typeof value === "string" ||
+        typeof value === "number" ||
+        typeof value === "bigint" ||
+        typeof value === "boolean" ||
+        typeof value === "symbol"
+    ) {
+        return String(value);
+    }
+
+    if (value instanceof Error) {
+        if (value.stack) return value.stack;
+        return `${value.name}: ${value.message}`;
+    }
+
+    if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? String(value) : value.toISOString();
+    }
+
+    if (typeof value === "function") {
+        return value.toString();
+    }
+
+    if (Array.isArray(value)) {
+        const str = safeJsonStringify(value);
+        return str != null ? str : value.map((item) => serializeClipboardValue(item)).join(", ");
+    }
+
+    if (typeof value === "object") {
+        const str = safeJsonStringify(value);
+        return str != null ? str : reactNodeToPlainText(value);
+    }
+
+    return reactNodeToPlainText(value);
+};
+
 export const copyToClipboard = async (
     value,
     {
@@ -99,21 +147,28 @@ export const copyToClipboard = async (
         onError,
         successMessage = "Copied to clipboard.",
         errorMessage = "Failed to copy text.",
+        disableNotifier = false,
+        notifierProps,
     } = {},
 ) => {
-    const text = reactNodeToPlainText(value);
+    const text = serializeClipboardValue(value);
     const { _notifier } = baseStore.globalData.get() || {};
 
     const executeSuccess = () => {
         onSuccess?.(text);
-        _notifier?.add?.(successMessage, { type: "success" });
+        !disableNotifier &&
+            _notifier?.add?.(successMessage, {
+                ...(notifierProps || {}),
+                type: "success",
+            });
         return true;
     };
 
     const executeError = (err) => {
         console.error(errorMessage, err);
         onError?.(err);
-        _notifier?.add?.(errorMessage, { type: "error" });
+        !disableNotifier &&
+            _notifier?.add?.(errorMessage, { ...(notifierProps || {}), type: "error" });
         return false;
     };
 

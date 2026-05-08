@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 import { useMemo } from "react";
-import { designSystemRoutes } from "../../DesignSystem";
+import { getDesignSystemRoutes } from "../../DesignSystem";
 import { baseStore } from "../../@baseStore";
 import { GlobalDataProvider } from "../GlobalDataProvider";
 import { IdleManager } from "../IdleManager";
@@ -30,9 +30,14 @@ export const CoreRRDLayout = ({ routes, projectSettings }) => {
 };
 
 export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
-    const [isDevMode, isGlobalReady, isThemeReady, enableDesignSystem] = baseStore.useGlobal(
-        (s) => [s.isDevMode, s.isGlobalReady, s.isThemeReady, s.enableDesignSystem],
-    );
+    const [isDevMode, isGlobalReady, isThemeReady, enableDesignSystem, showInternalDs] =
+        baseStore.useGlobal((s) => [
+            s.isDevMode,
+            s.isGlobalReady,
+            s.isThemeReady,
+            s.enableDesignSystem,
+            !!s._adminSettings?.showInternalDs,
+        ]);
     const isReady = isGlobalReady && isThemeReady;
 
     const router = useMemo(
@@ -43,13 +48,13 @@ export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
                     errorElement: <ErrorPage defaultCode={500} />,
                     children: [
                         ...(isReady ? routes : []),
-                        ...(isDevMode || enableDesignSystem ? designSystemRoutes : []),
+                        ...(isDevMode || enableDesignSystem ? getDesignSystemRoutes() : []),
                         { path: "*", element: <Navigate to="/error?code=404" replace /> },
                         { path: "/error", element: <ErrorPage defaultCode={500} /> },
                     ],
                 },
             ]),
-        [routes, isReady, isDevMode, projectSettings],
+        [routes, isReady, isDevMode, enableDesignSystem, showInternalDs, projectSettings],
     );
     if (!isThemeReady) return null;
     return <RouterProvider router={router} />;

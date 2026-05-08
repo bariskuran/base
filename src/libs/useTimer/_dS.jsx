@@ -45,38 +45,33 @@ const { start, stop, isRunning } = useTimer({
             example={<Demo />}
         />
         <Ds.api
-            args="useTimer(settings);"
+            args="useTimer({ onStart, onEnd, refreshTime, loop, startOnLoad, timerName });"
             returns="Timer controls: start, stop, isRunning, timerId, timerName, refreshTime (plus module helpers getTimersSnapshot, subscribeTimers, getTimer)."
             props={{
-                settings: {
-                    description: "Timer options.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "settings.onStart": {
+                onStart: {
                     description: "Called when timer starts.",
                     type: "function",
                 },
-                "settings.onEnd": {
+                onEnd: {
                     description: "Called when timer cycle ends.",
                     type: "function",
                 },
-                "settings.refreshTime": {
+                refreshTime: {
                     description: "Timer duration in ms.",
                     type: "number",
                     defaultValue: "1000",
                 },
-                "settings.loop": {
+                loop: {
                     description: "Restarts automatically.",
                     type: "boolean",
                     defaultValue: "true",
                 },
-                "settings.startOnLoad": {
+                startOnLoad: {
                     description: "Starts on mount.",
                     type: "boolean",
                     defaultValue: "false",
                 },
-                "settings.timerName": {
+                timerName: {
                     description: "Optional stable timer id/name.",
                     type: "string",
                     defaultValue: "generated",

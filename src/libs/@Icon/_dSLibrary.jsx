@@ -36,7 +36,7 @@ const X = () => (
                     }
                 `}
         />
-        <Ds.block title="Library" example={<Library />} />
+        <Ds.block title="Library" example={<Library />} lastBlock />
     </Ds.page>
 );
 

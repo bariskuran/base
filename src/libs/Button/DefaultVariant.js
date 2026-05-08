@@ -35,19 +35,21 @@ export const DefaultVariant = styled.div`
     }) => css`
         all: unset;
         display: flex;
-        transition: all 0.2s;
+        position: relative;
+        top: 0;
+        transition: top 0.2s, box-shadow 0.2s;
         border-radius: 5rem;
-        will-change: transform;
+        will-change: top, box-shadow;
 
         ${$isHovered &&
         css`
-            transform: translateY(-3rem);
+            top: -2rem;
             box-shadow: 0 4rem 12rem rgba(0, 0, 0, 0.18);
         `}
 
         ${$isActivated &&
         css`
-            transform: translateY(3rem);
+            top: 2rem;
             box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.12) inset;
         `}
 

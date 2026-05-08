@@ -51,12 +51,13 @@ export const delayedFunction = (fn, settings = {}) => {
         lastArgs = null;
     };
 
-    const runNow = () => {
+    const runNow = (...args) => {
+        const nextArgs = args.length ? args : lastArgs || [];
         if (timeout) {
             clear();
-            fn(...(lastArgs || []));
-            lastArgs = null;
         }
+        fn(...nextArgs);
+        lastArgs = null;
     };
 
     const isPending = () => timeout != null;

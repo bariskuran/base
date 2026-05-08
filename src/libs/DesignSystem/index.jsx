@@ -5,8 +5,33 @@ import api from "./ApiViewer";
 import page from "./Page";
 import block from "./Block";
 import variant from "./VariantViewer";
+import { baseStore } from "../@baseStore";
 
-export const sitemap = [
+const getShowInternalDs = () => {
+    try {
+        // This flag is expected to be set by the consumer app via projectSettings.adminSettings.
+        return !!baseStore.globalData.get?.()?._adminSettings?.showInternalDs;
+    } catch {
+        return false;
+    }
+};
+
+/**
+ * Sol menü / route `pageTitle`.
+ * - PascalCase bileşen: `<Button>`
+ * - SCREAMING_SNAKE / tamamı büyük harf sabit: `COUNTRY_INFORMATION` (<> yok)
+ * - Hook / fonksiyon: `useTimer`, `colorGet`
+ */
+export const formatDsNavLabel = (name) => {
+    if (name == null || name === "") return "";
+    const s = String(name);
+    if (/\s/.test(s)) return s;
+    if (/^[A-Z][A-Z0-9_]*$/.test(s)) return s;
+    if (/^[A-Z]/.test(s)) return `<${s}>`;
+    return s;
+};
+
+const publicSitemap = [
     ["How To Setup", undefined, l(() => import("./_dS")), { index: true }],
     ["Button", "button", l(() => import("../Button/_dS"))],
     ["ButtonList", "buttonList", l(() => import("../ButtonList/_dS"))],
@@ -16,6 +41,7 @@ export const sitemap = [
     ["colorWcagMatch", "colorWcagMatch", l(() => import("../colorWcagMatch/_dS"))],
     ["colorWcagValue", "colorWcagValue", l(() => import("../colorWcagValue/_dS"))],
     ["colorConverter", "colorConverter", l(() => import("../colorConverter/_dS"))],
+    ["colorFind", "colorFind", l(() => import("../colorFind/_dS"))],
     ["colorGet", "colorGet", l(() => import("../colorGet/_dS"))],
     ["colorGet3dShadow", "colorGet3dShadow", l(() => import("../colorGet3DShadow/_dS"))],
     [
@@ -87,19 +113,48 @@ export const sitemap = [
     ],
     ["useTimer", "useTimer", l(() => import("../useTimer/_dS"))],
     ["useLinkIntoView", "useLinkIntoView", l(() => import("../useLinkIntoView/_dS"))],
+    ["useDelayedFunction", "useDelayedFunction", l(() => import("../useDelayedFunction/_dS"))],
+    [
+        "COUNTRY_INFORMATION",
+        "countryInformation",
+        l(() => import("../../constants/COUNTRY_INFORMATION_dS")),
+    ],
+    ["LANGUAGES", "languages", l(() => import("../../constants/LANGUAGES_dS"))],
+    [
+        "LOWER_CASE_ALPHABET",
+        "lowerCaseAlphabet",
+        l(() => import("../../constants/LOWER_CASE_ALPHABET_dS")),
+    ],
+    ["NUMBERS", "numbers", l(() => import("../../constants/NUMBERS_dS"))],
+    ["SYMBOLS", "symbols", l(() => import("../../constants/SYMBOLS_dS"))],
+    [
+        "UPPER_CASE_ALPHABET",
+        "upperCaseAlphabet",
+        l(() => import("../../constants/UPPER_CASE_ALPHABET_dS")),
+    ],
 ];
 
-export const designSystemRoutes = [
+const internalSitemap = [
+    ["columnTypes", "columnTypes", l(() => import("../columnTypes/_dS"))],
+    ["cssNormalizeSize", "cssNormalizeSize", l(() => import("../cssNormalizeSize/_dS"))],
+    ["cssSpacingResolver", "cssSpacingResolver", l(() => import("../cssSpacingResolver/_dS"))],
+    ["NestedBaseUi", "nestedBaseUi", l(() => import("../NestedBaseUi/_dS"))],
+];
+
+/** Okuma anında `globalData._adminSettings` hazır olmalı — modül import’unda sabitleme yok */
+export const getSitemap = () => [...publicSitemap, ...(getShowInternalDs() ? internalSitemap : [])];
+
+export const getDesignSystemRoutes = () => [
     {
         path: "design-system",
         element: <Layout />,
         children: [
-            ...sitemap.map(([name, path, El, props]) => ({
+            ...getSitemap().map(([name, path, El, props]) => ({
                 path,
                 element: <El />,
                 ...props,
                 handle: {
-                    pageTitle: name,
+                    pageTitle: formatDsNavLabel(name),
                 },
             })),
         ],

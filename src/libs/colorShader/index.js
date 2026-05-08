@@ -3,6 +3,7 @@ import { colorFind } from "../colorFind";
 
 export const colorShader = (hex = "#f00", percent = 0) => {
     percent = Math.min(100, Math.max(0, percent));
+    if (typeof hex !== "string") return undefined;
     hex = colorFind(hex, { output: "hex8" }) || hex;
 
     const normalizedHex = hex.replace("#", "").toLowerCase();
@@ -23,7 +24,9 @@ export const colorShader = (hex = "#f00", percent = 0) => {
         }
         hex = `#${rgbPart}`;
     }
-    let [r, g, b] = colorConverter(hex).rgbArray;
+    const rgb = colorConverter(hex)?.rgbArray;
+    if (!Array.isArray(rgb) || rgb.length < 3) return undefined;
+    let [r, g, b] = rgb;
 
     const factor = 1 - percent / 100;
 

@@ -228,7 +228,16 @@ const resolveVisualScale = ({
     return fallback;
 };
 
-const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive, spinPending }) => {
+const IconLayer = ({
+    meta,
+    visible,
+    fill,
+    scale = 1,
+    enablePulse,
+    isActive,
+    spinPending,
+    isFlag = false,
+}) => {
     if (!meta) return null;
 
     const { Content, viewW, viewH, opticalScale, centerX, centerY } = meta;
@@ -254,7 +263,18 @@ const IconLayer = ({ meta, visible, fill, scale = 1, enablePulse, isActive, spin
                     >
                         <g transform={opticalTransform}>
                             {typeof Content === "string" ? (
-                                <path d={Content} />
+                                isFlag && Content.startsWith("data:image/") ? (
+                                    <image
+                                        href={Content}
+                                        xlinkHref={Content}
+                                        x="0"
+                                        y="0"
+                                        width={viewW}
+                                        height={viewH}
+                                    />
+                                ) : (
+                                    <path d={Content} />
+                                )
                             ) : Content ? (
                                 <Content />
                             ) : null}
@@ -306,6 +326,7 @@ export const Icon = ({
     disableScaleEffect = false,
     disablePulseEffect = false,
     flat = false,
+    isFlag = false,
 }) => {
     const [iconsLibraryRaw, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
 
@@ -437,6 +458,7 @@ export const Icon = ({
                     fill={finalColor}
                     scale={finalScale}
                     spinPending={pendingState && showBaseLayer}
+                    isFlag={isFlag}
                     enablePulse={
                         pulseEnabled &&
                         activeState &&
@@ -452,6 +474,7 @@ export const Icon = ({
                         visible={showHoverLayer}
                         fill={finalColor}
                         scale={finalScale}
+                        isFlag={isFlag}
                         enablePulse={false}
                         isActive={false}
                     />
@@ -463,6 +486,7 @@ export const Icon = ({
                         visible={showActiveLayer}
                         fill={finalColor}
                         scale={finalScale}
+                        isFlag={isFlag}
                         enablePulse={pulseEnabled && activeState}
                         isActive={activeState}
                     />
@@ -475,6 +499,7 @@ export const Icon = ({
                         fill={finalColor}
                         scale={finalScale}
                         spinPending={showPendingLayer}
+                        isFlag={isFlag}
                         enablePulse={false}
                         isActive={false}
                     />

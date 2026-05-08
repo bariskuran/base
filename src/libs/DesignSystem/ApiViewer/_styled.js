@@ -2,24 +2,33 @@ import styled, { css } from "styled-components";
 
 const S = {
     container: styled.div`
-        ${({ theme }) => css`
+        ${() => css`
             width: 100%;
-            display: grid;
-            grid-template-columns: 10px 1fr 1fr 4fr 1fr;
+            display: flex;
+            flex-direction: column;
+        `}
+    `,
 
-            & > div {
+    row: styled.div`
+        ${({ theme, $striped }) => css`
+            display: grid;
+            grid-template-columns: 10px 3fr 1fr 5fr 2fr;
+            width: 100%;
+            min-width: 0;
+            align-items: center;
+
+            ${$striped &&
+            css`
+                background: ${theme.colorAlpha(theme.foreground, 0.04)};
+            `}
+
+            & > * {
+                width: 100%;
+                min-width: 0;
                 padding: 5rem;
             }
 
-            & > *:nth-child(10n + 1),
-            & > *:nth-child(10n + 2),
-            & > *:nth-child(10n + 3),
-            & > *:nth-child(10n + 4),
-            & > *:nth-child(10n + 5) {
-                background: ${theme.colorAlpha(theme.foreground, 0.04)};
-            }
-
-            &>*: nth-child(5n + 2) {
+            & > *:nth-child(2) {
                 user-select: none;
                 cursor: pointer;
             }

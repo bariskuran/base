@@ -1,49 +1,84 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { delayedFunction } from ".";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
+import { useDelayedFunction } from "../useDelayedFunction";
 
 const X = () => {
     const { count, setLocal } = baseStore.useLocal({ count: 0 });
-
-    const delayed = delayedFunction(
-        () =>
+    const { run, cancel, runNow, isPending } = useDelayedFunction(
+        () => {
             setLocal((s) => {
                 s.count += 1;
-            }),
-        { delay: 800, autoCancel: true },
+            });
+        },
+        { delay: 1500, autoCancel: true },
     );
 
     return (
         <Ds.page
             title="delayedFunction()"
             releasedOn="1.0.0"
-            description="Creates delayed executable wrappers."
+            description={
+                <>
+                    Creates delayed executable wrappers.
+                    <br />
+                    <br />
+                    Check out{" "}
+                    <Button.string
+                        to="/design-system/useDelayedFunction"
+                        label="useDelayedFunction"
+                    />{" "}
+                    to see hook usage.
+                </>
+            }
         >
             <Ds.block
                 title="Basic Usage"
                 code={`import { delayedFunction } from "${SYS.basePath}";
 
-const delayed = delayedFunction(fn, { delay: 500 });
-delayed.run();
-delayed.cancel();
-delayed.runNow();
-delayed.isPending();`}
+                    const delayed = delayedFunction(fn, { delay: 500 });
+                    delayed.run();
+                    delayed.cancel();
+                    delayed.runNow();
+                    delayed.isPending();`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button label="Run delayed" onClick={() => delayed.run()} />
-                        <Button label="Run now" onClick={() => delayed.runNow()} />
-                        <Button label="Cancel" onClick={() => delayed.cancel()} />
-                        <Typo.span children={`count: ${count}`} />
-                        <Typo.span children={`pending: ${String(delayed.isPending())}`} />
+                        <Button
+                            label="Run delayed"
+                            onClick={() => {
+                                run();
+                            }}
+                            skipClickCooldown
+                            skipOnClickHold
+                        />
+                        <Button
+                            label="Run now"
+                            onClick={() => {
+                                runNow();
+                            }}
+                            skipClickCooldown
+                            skipOnClickHold
+                        />
+                        <Button
+                            label="Cancel"
+                            onClick={() => {
+                                cancel();
+                            }}
+                            skipClickCooldown
+                            skipOnClickHold
+                        />
+                        <Flex gap={20} marginTop={20}>
+                            <Typo.span children={`count: ${count}`} />
+                            <Typo.span children={`isPending: ${String(isPending)}`} />
+                        </Flex>
                     </Flex.column>
                 }
             />
             <Ds.api
-                args="delayedFunction(fn, settings);"
+                args="const { run, cancel, runNow, isPending } = delayedFunction(fn, { delay, autoCancel });"
                 returns="Object with run, cancel, runNow, and isPending."
                 props={{
                     fn: {
@@ -51,20 +86,34 @@ delayed.isPending();`}
                         type: "function",
                         required: true,
                     },
-                    settings: {
-                        description: "{ delay, autoCancel }",
-                        type: "object",
-                        defaultValue: "{ delay: 500, autoCancel: true }",
-                    },
-                    "settings.delay": {
+                    delay: {
                         description: "Delay in milliseconds.",
                         type: "number",
                         defaultValue: "500",
                     },
-                    "settings.autoCancel": {
+                    autoCancel: {
                         description: "Cancels previous pending run before scheduling new one.",
                         type: "boolean",
                         defaultValue: "true",
+                    },
+                }}
+                returnProps={{
+                    run: {
+                        description: "Runs the delayed function.",
+                        type: "function",
+                    },
+                    runNow: {
+                        description: "Runs the delayed function immediately.",
+                        type: "function",
+                    },
+                    cancel: {
+                        description: "Cancels the delayed function.",
+                        type: "function",
+                    },
+                    isPending: {
+                        description:
+                            "Returns true if the delayed function is pending. Works on hook side.",
+                        type: "boolean",
                     },
                 }}
             />

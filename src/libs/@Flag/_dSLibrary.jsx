@@ -20,12 +20,7 @@ const X = () => (
             </>
         }
     >
-        <Ds.block
-            title="Usage"
-            code={`<Flag flag="tr" width={20} />`}
-            description="Click a card below to copy Flag usage."
-        />
-        <Ds.block title="Library" example={<Library />} />
+        <Ds.block title="Library" example={<Library />} lastBlock />
     </Ds.page>
 );
 
@@ -73,6 +68,16 @@ const S = {
 
 const Library = () => {
     const { searchText, setLocal } = baseStore.useLocal({ searchText: "" });
+    const q = String(searchText || "")
+        .trim()
+        .toLowerCase();
+
+    const isMatch = (code, entry) => {
+        if (!q) return true;
+        const aliases = Array.isArray(entry?.[2]) ? entry[2] : [];
+        if (String(code).toLowerCase().includes(q)) return true;
+        return aliases.some((alias) => String(alias).toLowerCase().includes(q));
+    };
 
     return (
         <S.Container>
@@ -84,8 +89,7 @@ const Library = () => {
             />
             {Object.keys(flags)
                 .filter((name) => {
-                    if (!searchText) return true;
-                    return name.toLowerCase().includes(searchText.toLowerCase());
+                    return isMatch(name, flags[name]);
                 })
                 .sort((a, b) => sortBy.asc(a, b))
                 .map((name) => (
@@ -93,7 +97,7 @@ const Library = () => {
                         key={name}
                         onClick={() => copyToClipboard(`<Flag flag="${name}" width={20} />`)}
                     >
-                        <Flag flag={name} width={24} />
+                        <Flag flag={name} width={36} />
                         <S.Label>{name}</S.Label>
                     </S.Box>
                 ))}

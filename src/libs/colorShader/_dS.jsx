@@ -1,6 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { colorShader } from ".";
+import { colorFind } from "../colorFind";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
@@ -10,6 +11,7 @@ const X = () => {
         color: "#4f46e5",
         percent: 20,
     });
+    const basePreview = colorFind(color, { output: "hex8" }) || color;
     const shaded = colorShader(color, percent);
 
     return (
@@ -18,13 +20,16 @@ const X = () => {
             releasedOn="1.0.0"
             description={`Shades a color darker by percent, or increases alpha when the input is transparent hex8.
 
-You can use colorShader via direct import from base, or via the theme helper in styled usage (theme.colorShader).`}
+                You can use colorShader via direct import from base, or via the theme helper in styled usage (theme.colorShader).`}
         >
             <Ds.block
                 title="Interactive shade"
                 code={`import { colorShader } from "${SYS.basePath}";
 
-colorShader("#4f46e5", 20);`}
+                        colorShader("#4f46e5", 20);
+                        colorShader("primary", 20);
+                        colorShader("rgba(0,0,0,0.5)", 20);
+                        colorShader("red", 20);`}
                 example={
                     <Flex.column gap={12}>
                         <Flex gap={10}>
@@ -62,7 +67,7 @@ colorShader("#4f46e5", 20);`}
                                     width: 60,
                                     height: 24,
                                     borderRadius: 6,
-                                    background: color,
+                                    background: basePreview,
                                 }}
                             />
                             <div
@@ -89,7 +94,7 @@ colorShader("#4f46e5", 20);`}
                         type: "string | object",
                     },
                     percent: {
-                        description: "Shade amount (0..100).",
+                        description: "Shade amount (0..100). 100 is equal to black.",
                         type: "number",
                         defaultValue: "0",
                     },

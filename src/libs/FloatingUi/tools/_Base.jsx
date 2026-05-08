@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 import useVars from "./useVars.js";
-import ContextProvider from "../../ContextProviderForUiComponents";
+import NestedBaseUi from "../../NestedBaseUi";
 
 const S = {
     children: styled.div`
@@ -49,7 +49,7 @@ export const Base = ({ children, content, ...p }) => {
             </S.children>
             {status !== "closed" && isMounted
                 ? createPortal(
-                      <ContextProvider>
+                      <NestedBaseUi>
                           <Variant
                               ref={floatingRef}
                               $bgColor={bgColor}
@@ -70,7 +70,7 @@ export const Base = ({ children, content, ...p }) => {
                           >
                               {content}
                           </Variant>
-                      </ContextProvider>,
+                      </NestedBaseUi>,
                       document.body,
                   )
                 : null}

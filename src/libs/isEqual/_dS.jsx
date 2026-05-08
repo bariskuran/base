@@ -72,7 +72,10 @@ const stableValue = useIsEqual(value);`}
                 }
             />
             <Ds.api
-                args={["isEqual(a, b, settings);", "useIsEqual(value);"]}
+                args={[
+                    "isEqual(a, b, { treatFalsiesAsEqual, maxKeys, maxDepth, useHashShortcut });",
+                    "useIsEqual(value);",
+                ]}
                 returns="isEqual: boolean; useIsEqual: stable reference when deep-equal."
                 props={{
                     a: {
@@ -85,12 +88,25 @@ const stableValue = useIsEqual(value);`}
                         type: "any",
                         required: true,
                     },
-                    settings: {
-                        description:
-                            "Deep compare options: treatFalsiesAsEqual, maxKeys, maxDepth, useHashShortcut.",
-                        type: "object",
-                        defaultValue:
-                            "{ treatFalsiesAsEqual: false, maxKeys: 500, maxDepth: 10, useHashShortcut: true }",
+                    treatFalsiesAsEqual: {
+                        description: "Treats falsy values as equal in comparisons.",
+                        type: "boolean",
+                        defaultValue: "false",
+                    },
+                    maxKeys: {
+                        description: "Maximum key count guard for deep checks.",
+                        type: "number",
+                        defaultValue: "500",
+                    },
+                    maxDepth: {
+                        description: "Maximum recursion depth for deep checks.",
+                        type: "number",
+                        defaultValue: "10",
+                    },
+                    useHashShortcut: {
+                        description: "Uses hash shortcut before deep walk.",
+                        type: "boolean",
+                        defaultValue: "true",
                     },
                     value: {
                         description: "Tracked value (useIsEqual).",
