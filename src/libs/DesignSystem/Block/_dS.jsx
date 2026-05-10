@@ -28,8 +28,9 @@ const X = () => (
                     defaultValue: null,
                 },
                 description: {
-                    description: "Block's description",
-                    type: "string",
+                    description:
+                        "Plain string is wrapped in Typo as `pre` (multi-line friendly). JSX / ReactNode uses `div` so nested block content (e.g. Typo.p) stays valid HTML.",
+                    type: "string | ReactNode",
                     defaultValue: null,
                 },
                 code: {

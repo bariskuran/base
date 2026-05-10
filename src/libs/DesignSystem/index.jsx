@@ -63,7 +63,7 @@ const publicSitemap = [
     ["Flex", "flex", l(() => import("../Flex/_dS"))],
     ["generateRandom", "generateRandom", l(() => import("../generateRandom/_dS"))],
     ["getText", "getText", l(() => import("../getText/_dS"))],
-    ["getTimeDifference", "getTimeDifference", l(() => import("../getTimeDifference/_dS"))],
+    ["getTimeDiff", "getTimeDiff", l(() => import("../getTimeDiff/_dS"))],
     ["Icon", "icon", l(() => import("../@Icon/_dS"))],
     ["iconLibrary", "iconLibrary", l(() => import("../@Icon/_dSLibrary"))],
     ["isContainer", "isContainer", l(() => import("../isContainer/_dS"))],
@@ -132,6 +132,7 @@ const publicSitemap = [
         "upperCaseAlphabet",
         l(() => import("../../constants/UPPER_CASE_ALPHABET_dS")),
     ],
+    ["baseDate", "baseDate", l(() => import("../@baseDate/_dS"))],
 ];
 
 const internalSitemap = [

@@ -112,7 +112,7 @@ const X = () => {
                 example={
                     <Flex gap={10}>
                         <Flex.column gap={10}>
-                            <Button
+                            <Button.plain
                                 label="Debounced"
                                 onClick={runDebounced}
                                 skipClickCooldown
@@ -121,7 +121,7 @@ const X = () => {
                             <Typo.span children={`Count: ${count}`} />
                         </Flex.column>
                         <Flex.column gap={10}>
-                            <Button
+                            <Button.plain
                                 label="Throttled"
                                 onClick={runThrottle}
                                 skipClickCooldown
@@ -149,7 +149,7 @@ const X = () => {
                 example={
                     <Flex gap={10}>
                         <Flex.column gap={10}>
-                            <Button
+                            <Button.plain
                                 label="getFirst"
                                 onClick={runEx2}
                                 skipClickCooldown
@@ -158,7 +158,7 @@ const X = () => {
                             <Typo.span children={`Count: ${ex2}`} />
                         </Flex.column>
                         <Flex.column gap={10}>
-                            <Button
+                            <Button.plain
                                 label="functionName"
                                 onClick={runEx3}
                                 skipClickCooldown
@@ -206,7 +206,7 @@ const X = () => {
                 example={
                     <Flex gap={10}>
                         <Flex.column gap={10}>
-                            <Button
+                            <Button.plain
                                 label="Debounced onStart & onEnd"
                                 onClick={runEx4}
                                 skipClickCooldown
@@ -215,7 +215,7 @@ const X = () => {
                             <Typo.span children={`Count: ${ex4}`} />
                         </Flex.column>
                         <Flex.column gap={10}>
-                            <Button
+                            <Button.plain
                                 label="Throttled onStart & onEnd"
                                 onClick={runEx5}
                                 skipClickCooldown

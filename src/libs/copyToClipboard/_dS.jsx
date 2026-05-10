@@ -33,7 +33,7 @@ const X = () => {
                     copyToClipboard("Hello world");`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button
+                        <Button.plain
                             label="Copy text"
                             onClick={() => {
                                 const ok = copyToClipboard("Hello world");
@@ -62,7 +62,7 @@ const X = () => {
                         });`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button
+                        <Button.plain
                             label="Copy text"
                             onClick={() => {
                                 copyToClipboard("Hello world", {
@@ -91,49 +91,49 @@ const X = () => {
                 `}
                 example={
                     <Flex gap={10} padding={10}>
-                        <Button
+                        <Button.plain
                             label="Obj"
                             onClick={() => {
                                 copyToClipboard({ a: 1, b: 2, c: 3, d: { e: 4 } });
                             }}
                         />
-                        <Button
+                        <Button.plain
                             label="Arr"
                             onClick={() => {
                                 copyToClipboard([1, 2, 3, 4]);
                             }}
                         />
-                        <Button
+                        <Button.plain
                             label="Date"
                             onClick={() => {
                                 copyToClipboard(new Date());
                             }}
                         />
-                        <Button
+                        <Button.plain
                             label="Err"
                             onClick={() => {
                                 copyToClipboard(new Error("test"));
                             }}
                         />
-                        <Button
+                        <Button.plain
                             label="Null"
                             onClick={() => {
                                 copyToClipboard(null);
                             }}
                         />
-                        <Button
+                        <Button.plain
                             label="Undefined"
                             onClick={() => {
                                 copyToClipboard(undefined);
                             }}
                         />
-                        <Button
+                        <Button.plain
                             label="Sym"
                             onClick={() => {
                                 copyToClipboard(Symbol("test"));
                             }}
                         />
-                        <Button
+                        <Button.plain
                             label="Fn"
                             onClick={() => {
                                 copyToClipboard(function () {});

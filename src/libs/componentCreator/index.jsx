@@ -9,6 +9,16 @@ export const componentCreator = ({
     PlainVariant,
     variants = {},
 }) => {
+    /** Unknown string keys (e.g. theme "success") must not become DOM tags; known keys resolve to their component. */
+    const resolveVariant = (candidate) => {
+        if (candidate == null || candidate === false) return DefaultVariant;
+        if (typeof candidate === "string") {
+            const preset = variants[candidate];
+            return preset != null ? preset : DefaultVariant;
+        }
+        return candidate;
+    };
+
     const Main = forwardRef(function Main(props, forwardedRef) {
         const {
             variant: variantFromProps,
@@ -44,7 +54,7 @@ export const componentCreator = ({
                     {...rest}
                     __hasParentUiComponent={__hasParentUiComponent}
                     forwardedRef={forwardedRef}
-                    Variant={nestedVariant || DefaultVariant}
+                    Variant={resolveVariant(nestedVariant)}
                 />
             );
         }
@@ -54,7 +64,7 @@ export const componentCreator = ({
                 {...rest}
                 __hasParentUiComponent={__hasParentUiComponent}
                 forwardedRef={forwardedRef}
-                Variant={incomingVariant || DefaultVariant}
+                Variant={resolveVariant(incomingVariant)}
             />
         );
     });
@@ -80,7 +90,7 @@ export const componentCreator = ({
                     {...restProps}
                     __hasParentUiComponent={__hasParentUiComponent}
                     forwardedRef={forwardedRef}
-                    Variant={nestedVariant || DefaultVariant}
+                    Variant={resolveVariant(nestedVariant)}
                 />
             );
         });

@@ -4,7 +4,7 @@ import { ButtonList } from ".";
 
 const buttons = [
     {
-        variant: "error",
+        bgColor: "error",
         label: "test",
         hoverLabel: "test hover",
         prefix: { icon: "bullet" },
@@ -34,7 +34,7 @@ const buttons = [
 ];
 
 const commonButtonProps = {
-    variant: "success",
+    bgColor: "success",
     prefix: {
         icon: "user",
     },
@@ -54,7 +54,7 @@ const X = () => {
 
                     const buttons = [
                         { 
-                            variant: "error",
+                            bgColor: "error",
                             label: "test",
                             hoverLabel: "test hover",
                             prefix: { 
@@ -69,7 +69,7 @@ const X = () => {
                     ];
 
                     const commonButtonProps = {
-                        variant: "success",
+                        bgColor: "success",
                         prefix: { icon: "user" },
                         size: 100,
                     };

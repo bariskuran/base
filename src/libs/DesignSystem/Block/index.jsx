@@ -4,6 +4,7 @@ import { baseStore } from "../../@baseStore";
 import { Button } from "../../Button";
 import { Flex } from "../../Flex";
 import CodeViewer from "../CodeViewer";
+import { isJsxDescription } from "../isJsxDescription";
 
 const Block = ({ title, description, code, example, lastBlock }) => {
     const { ajax, setLocal } = baseStore.useLocal({
@@ -56,9 +57,12 @@ const Block = ({ title, description, code, example, lastBlock }) => {
             <Flex.column justify="start" full>
                 {(example || description) && ajax === 0 && (
                     <S.contentArea area-title="Block Content">
-                        <Typo.span whiteSpace="pre-line" balance>
+                        <Typo
+                            as={isJsxDescription(description) ? "div" : "pre"}
+                            balance
+                        >
                             {description}
-                        </Typo.span>
+                        </Typo>
                         <Flex.row justify="start">{example}</Flex.row>
                     </S.contentArea>
                 )}

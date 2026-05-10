@@ -15,14 +15,15 @@ import {
  * Supported `initial` inputs:
  * - `undefined | null | ""`  -> uses "now"
  * - `number`                 -> timestamp (ms)
- * - `string`                 -> "|DD|/|MM|/|YYYY|" or "|DD|/|MM|/|YYYY| |HH|:|NN|" or "|DD|/|MM|/|YYYY| |HH|:|NN|:|SS|"
- *                              Also accepts separators `/`, `.`, `-` (e.g. "28-03-1982")
+ * - `string`                 -> parsed with `initialFormat` (or `defaultFormat` if missing)
+ *                              Token mapping is same as output format (e.g. "|DD|/|MM|/|YYYY| |HH|:|NN|")
+ *                              If parse fails, falls back to `new Date(initial)`.
  * - `object`                 -> { year, month, day, hour, minute, second, millisecond }
  *                              Missing fields fall back to defaults.
  *
  * Output:
  * - returns formatted string by default
- * - if `returnTimeStamp: true` -> returns number (timestamp, ms)
+ * - if `format: "timestamp"` (case-insensitive) -> returns number (timestamp, ms)
  *
  * Format:
  * - If `format` is not provided, it tries `baseStore.globalData.get().baseDateSettings.defaultFormat`
@@ -41,8 +42,8 @@ import {
  *
  * @param {Object} [settings]
  * @param {undefined|null|string|number|Object} [settings.initial]
- * @param {boolean} [settings.returnTimeStamp=false]
  * @param {string} [settings.format]
+ * @param {string} [settings.initialFormat] - Input parser format; defaults to `defaultFormat`.
  * @param {string|number} [settings.timeZone]
  * @param {Object} [settings.calculate]
  *
@@ -97,8 +98,8 @@ import {
  * // "01 gününde 02 ayında 2026 yılında, saat 17:45"
  *
  * @example
- * // 9) Return timestamp (ignores format)
- * const stamp = baseDate({ initial: "28/03/1982 09:15", returnTimeStamp: true });
+ * // 9) Return timestamp
+ * const stamp = baseDate({ initial: "28/03/1982 09:15", format: "timestamp" });
  * // 386582100000  (example)
  *
  * @example
@@ -229,7 +230,7 @@ import {
 export const baseDate = (opts = {}) => {
     const { defaultFormat, timeZone: storeTz } = resolveDefaultsFromStore();
 
-    const { initial, returnTimeStamp = false, format, timeZone, calculate } = opts || {};
+    const { initial, format, initialFormat, timeZone, calculate } = opts || {};
 
     const tz =
         typeof timeZone === "number" && Number.isFinite(timeZone)
@@ -237,6 +238,10 @@ export const baseDate = (opts = {}) => {
             : typeof timeZone === "string" && timeZone.trim()
               ? timeZone.trim()
               : storeTz;
+    const initFmt =
+        typeof initialFormat === "string" && initialFormat.trim()
+            ? initialFormat.trim()
+            : defaultFormat;
 
     let dateObj = null;
 
@@ -247,13 +252,12 @@ export const baseDate = (opts = {}) => {
     } else if (typeof initial === "number" && Number.isFinite(initial)) {
         dateObj = new Date(initial);
     } else if (typeof initial === "string") {
-        const parsed = parseInitialString(initial);
-        if (parsed instanceof Date) {
-            dateObj = parsed;
-        } else if (parsed && typeof parsed === "object") {
+        const parsed = parseInitialString(initial, initFmt);
+        if (parsed && typeof parsed === "object") {
             dateObj = makeDateFromPartsInTz(parsed, tz);
         } else {
-            dateObj = new Date();
+            const dt = new Date(initial);
+            dateObj = Number.isNaN(dt.getTime()) ? new Date() : dt;
         }
     } else if (typeof initial === "object") {
         const parts = {
@@ -372,8 +376,9 @@ export const baseDate = (opts = {}) => {
         }
     }
 
-    if (returnTimeStamp) return dateObj.getTime();
-
     const fmt = typeof format === "string" && format ? format : defaultFormat;
+    if (typeof fmt === "string" && fmt.trim().toLowerCase() === "timestamp") {
+        return dateObj.getTime();
+    }
     return formatWithTokens(dateObj, fmt, tz);
 };

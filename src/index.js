@@ -86,7 +86,7 @@ export { findDifferences } from "./libs/findDifferences";
 export { generateRandom } from "./libs/generateRandom";
 export { getClientData } from "./libs/getClientData";
 export { getText, getText as t } from "./libs/getText";
-export { getTimeDifference } from "./libs/getTimeDifference";
+export { getTimeDiff } from "./libs/getTimeDiff";
 export { Icon } from "./libs/@Icon";
 export { isContainer } from "./libs/isContainer";
 export { isEqual } from "./libs/isEqual";

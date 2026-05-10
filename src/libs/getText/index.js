@@ -35,8 +35,12 @@ export const getText = (keyOrEntry, overrideLibrary) => {
     const { language, textLibrary } = resolveLang(overrideLibrary);
 
     if (typeof keyOrEntry === "object") {
-        console.log(keyOrEntry, language, keyOrEntry[language] ?? `unknown (${language})`);
-        return keyOrEntry[language] ?? `unknown (${language})`;
+        const v = keyOrEntry[language];
+        if (v != null && v !== "") return v;
+        const en = keyOrEntry.en;
+        if (en != null && en !== "") return en;
+        const first = Object.values(keyOrEntry).find((x) => typeof x === "string" && x !== "");
+        return first ?? "";
     }
 
     if (typeof keyOrEntry === "string") {
@@ -45,10 +49,10 @@ export const getText = (keyOrEntry, overrideLibrary) => {
         if (typeof entry === "string") return entry;
 
         if (entry && typeof entry === "object") {
-            return entry[language] ?? `unknown "${keyOrEntry}" (${language})`;
+            return entry[language] ?? keyOrEntry;
         }
 
-        return `unknown "${keyOrEntry}"`;
+        return keyOrEntry;
     }
 
     return "";

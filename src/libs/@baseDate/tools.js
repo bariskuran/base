@@ -109,33 +109,109 @@ export const makeDateFromPartsInTz = (parts, timeZone) => {
     return new Date(y, (m || 1) - 1, d || 1, hh, nn, ss, ms);
 };
 
-export const parseInitialString = (str) => {
+const escapeRegex = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const INITIAL_TOKEN_PATTERNS = {
+    YYYY: "\\d{4}",
+    YY: "\\d{2}",
+    MM: "\\d{2}",
+    mm: "\\d{1,2}",
+    DD: "\\d{2}",
+    dd: "\\d{1,2}",
+    HH: "\\d{2}",
+    hh: "\\d{1,2}",
+    ZZ: "\\d{2}",
+    zz: "\\d{1,2}",
+    NN: "\\d{2}",
+    nn: "\\d{1,2}",
+    SS: "\\d{2}",
+    ss: "\\d{1,2}",
+    LL: "\\d{3}",
+    ll: "\\d{1,3}",
+    AP: "AM|PM",
+    ap: "am|pm",
+    OO: ".+?",
+    oo: ".+?",
+    AA: ".+?",
+    aa: ".+?",
+};
+
+export const parseInitialString = (str, initialFormat) => {
     const s = String(str || "").trim();
-    if (!s) return null;
+    const fmt = String(initialFormat || "").trim();
+    if (!s || !fmt) return null;
 
-    /* eslint-disable no-useless-escape */
-    const m = s.match(
-        /^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})(?:\s+(\d{1,2})(?::(\d{1,2})(?::(\d{1,2}))?)?)?$/,
-    );
-    /* eslint-enable no-useless-escape */
+    const tokens = Object.keys(INITIAL_TOKEN_PATTERNS).sort((a, b) => b.length - a.length);
+    const groups = [];
 
-    if (m) {
-        let day = Number(m[1]);
-        let month = Number(m[2]);
-        let year = Number(m[3]);
-        if (String(m[3]).length === 2) year = 2000 + year;
+    let pattern = escapeRegex(fmt);
 
-        const hour = m[4] != null ? Number(m[4]) : 0;
-        const minute = m[5] != null ? Number(m[5]) : 0;
-        const second = m[6] != null ? Number(m[6]) : 0;
+    // Delimited mode: |DD|/|MM|/|YYYY|
+    pattern = pattern.replace(/\\\|([A-Za-z]{2,4})\\\|/g, (full, token) => {
+        if (!INITIAL_TOKEN_PATTERNS[token]) return full;
+        groups.push(token);
+        return `(${INITIAL_TOKEN_PATTERNS[token]})`;
+    });
 
-        return { year, month, day, hour, minute, second, millisecond: 0 };
+    // Plain token mode: DD/MM/YYYY HH:NN
+    for (const token of tokens) {
+        if (pattern.includes(token)) {
+            pattern = pattern.split(token).join(`(${INITIAL_TOKEN_PATTERNS[token]})`);
+            // push once per appearance
+            const count = (fmt.match(new RegExp(token, "g")) || []).length;
+            for (let i = 0; i < count; i++) groups.push(token);
+        }
     }
 
-    const dt = new Date(s);
-    if (!Number.isNaN(dt.getTime())) return dt;
+    const re = new RegExp(`^${pattern}$`);
+    const m = s.match(re);
+    if (!m) return null;
 
-    return null;
+    const picked = {};
+    for (let i = 0; i < groups.length; i++) {
+        const key = groups[i];
+        const value = m[i + 1];
+        if (value == null) continue;
+        // Keep first occurrence when token repeats unexpectedly.
+        if (picked[key] == null) picked[key] = value;
+    }
+
+    let year = picked.YYYY != null ? Number(picked.YYYY) : null;
+    if (year == null && picked.YY != null) year = 2000 + Number(picked.YY);
+
+    const month = picked.MM != null ? Number(picked.MM) : picked.mm != null ? Number(picked.mm) : null;
+    const day = picked.DD != null ? Number(picked.DD) : picked.dd != null ? Number(picked.dd) : null;
+
+    let hour = picked.HH != null ? Number(picked.HH) : picked.hh != null ? Number(picked.hh) : null;
+    if (hour == null && (picked.ZZ != null || picked.zz != null)) {
+        const h12 = picked.ZZ != null ? Number(picked.ZZ) : Number(picked.zz);
+        const ampm = picked.AP ?? picked.ap ?? "";
+        if (/pm/i.test(ampm)) hour = (h12 % 12) + 12;
+        else hour = h12 % 12;
+    }
+
+    const minute =
+        picked.NN != null ? Number(picked.NN) : picked.nn != null ? Number(picked.nn) : 0;
+    const second =
+        picked.SS != null ? Number(picked.SS) : picked.ss != null ? Number(picked.ss) : 0;
+    const millisecond =
+        picked.LL != null ? Number(picked.LL) : picked.ll != null ? Number(picked.ll) : 0;
+
+    if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return null;
+    if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+    if (hour != null && (hour < 0 || hour > 23)) return null;
+    if (minute < 0 || minute > 59 || second < 0 || second > 59) return null;
+    if (millisecond < 0 || millisecond > 999) return null;
+
+    return {
+        year,
+        month,
+        day,
+        hour: hour ?? 0,
+        minute,
+        second,
+        millisecond,
+    };
 };
 
 export const pad = (n, len = 2) => String(Math.trunc(n)).padStart(len, "0");

@@ -46,7 +46,7 @@ const X = () => {
                     delayed.isPending();`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button
+                        <Button.plain
                             label="Run delayed"
                             onClick={() => {
                                 run();
@@ -54,7 +54,7 @@ const X = () => {
                             skipClickCooldown
                             skipOnClickHold
                         />
-                        <Button
+                        <Button.plain
                             label="Run now"
                             onClick={() => {
                                 runNow();
@@ -62,7 +62,7 @@ const X = () => {
                             skipClickCooldown
                             skipOnClickHold
                         />
-                        <Button
+                        <Button.plain
                             label="Cancel"
                             onClick={() => {
                                 cancel();

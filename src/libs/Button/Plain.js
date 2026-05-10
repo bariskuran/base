@@ -28,7 +28,8 @@ export const S = styled.div`
             justify-content: center;
             align-items: center;
             padding: 6rem 20rem;
-            font-size: 14rem;
+            font-size: 15rem;
+            font-weight: 500;
         }
     `}
 `;

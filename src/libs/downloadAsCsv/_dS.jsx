@@ -41,7 +41,7 @@ const X = () => {
                     downloadAsCsv(data, "users");`}
                 example={
                     <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Button
+                        <Button.plain
                             label="Download CSV"
                             onClick={() => {
                                 const ok = downloadAsCsv(sample, "scores");

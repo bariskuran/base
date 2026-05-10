@@ -1,8 +1,10 @@
 import { Typo } from "../../Typo";
 import { Flex } from "../../Flex";
 import S from "./_styled";
+import { isJsxDescription } from "../isJsxDescription";
 
 const Page = ({ children, title, releasedOn, description }) => {
+    /* */
     return (
         <Flex.column>
             <Flex.row alignItems="stretch">
@@ -16,9 +18,9 @@ const Page = ({ children, title, releasedOn, description }) => {
                 <S.headerContent>
                     {releasedOn && <Typo.span balance>(Relased On: {releasedOn})</Typo.span>}
                     {description && (
-                        <Typo.pre whiteSpace="pre-line" balance>
+                        <Typo as={isJsxDescription(description) ? "div" : "pre"} balance>
                             {description}
-                        </Typo.pre>
+                        </Typo>
                     )}
                 </S.headerContent>
             </Flex.row>
