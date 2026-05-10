@@ -24,7 +24,7 @@ stringCaseConverter("helloWorld", "kebab");
 
 stringCaseConverter("hello world", "constant", "lower");`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label='Run stringCaseConverter("helloWorld", "kebab")'
                             onClick={() =>

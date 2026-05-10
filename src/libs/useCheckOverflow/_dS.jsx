@@ -11,7 +11,7 @@ const Demo = () => {
     const { isOverflowingX, isOverflowingY, isOverflowing } = useCheckOverflow({ ref });
 
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Card ref={ref} width={220} height={80} overflow="auto" padding={8}>
                 Very long very long very long very long very long content for overflow checks.
             </Card>

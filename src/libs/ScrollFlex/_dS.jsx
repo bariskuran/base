@@ -11,7 +11,7 @@ const shortText = generateRandom.loremIpsum(50);
 const HEIGHT_BY_ID_DEMO_SOURCE = "ds-scrollflex-height-by-id-demo";
 
 const Content = ({ width, height, short }) => (
-    <Flex width={width} height={height} yAlign="start" xAlign="start">
+    <Flex width={width} height={height} yAlign="start">
         {short ? shortText : longText}
     </Flex>
 );
@@ -90,7 +90,7 @@ const X = () => {
                             <Content />
                         </ScrollFlex>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ScrollFlex width={150} height={100}>
                             <Content width={1500} />
                         </ScrollFlex>

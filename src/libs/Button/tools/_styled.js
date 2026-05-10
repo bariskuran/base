@@ -1,16 +1,16 @@
 import styled, { css } from "styled-components";
 
 export const S = {
-    LabelStack: styled.div`
+    LabelStack: styled.span`
         position: relative;
-        display: grid;
+        display: inline-grid;
         place-items: center;
         width: unset;
         vertical-align: middle;
     `,
-    LabelLayer: styled.div`
+    LabelLayer: styled.span`
         grid-area: 1 / 1;
-        display: flex;
+        display: inline-flex;
         justify-content: center;
         align-items: center;
         white-space: nowrap;
@@ -24,7 +24,7 @@ export const S = {
                 min-width: 75rem;
             `} */
     `,
-    icon: styled.div`
+    icon: styled.span`
         ${({ $areaName }) => css`
             display: flex;
             justify-content: center;
@@ -49,7 +49,7 @@ export const S = {
             `}
         `}
     `,
-    ScaleDiv: styled.div`
+    ScaleDiv: styled.span`
         position: relative;
         display: inline-flex;
         vertical-align: middle;
@@ -66,7 +66,12 @@ export const S = {
         ${({ $fullWidth }) =>
             $fullWidth &&
             css`
+                display: flex !important;
+                box-sizing: border-box;
                 width: 100% !important;
+                max-width: 100%;
+                min-width: 0;
+                align-self: stretch;
             `}
 
         ${({ $isMatch }) =>

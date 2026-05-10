@@ -40,13 +40,13 @@ const X = () => {
                 description="The Icon component can render any icon from the icon library by passing the icon name."
                 code={`import { Icon } from "${SYS.basePath}";
 
-                    <Flex gap={16} xAlign="start">
+                    <Flex gap={16}>
                         <Icon icon="copy" />
                         <Icon icon="check" width={20} />
                         <Icon icon="close" width={24} />
                     </Flex>`}
                 example={
-                    <Flex gap={16} xAlign="start">
+                    <Flex gap={16}>
                         <Icon icon="copy" />
                         <Icon icon="check" width={20} />
                         <Icon icon="close" width={24} />
@@ -61,12 +61,12 @@ const X = () => {
                         const customIcon = [ "24 24", "M12 2L22 22H2Z" ];
                         const CustomTriangle = () => ( <><path d="M12 2L22 22H2Z" /></> );
 
-                        <Flex gap={20} xAlign="start">
+                        <Flex gap={20}>
                             <Icon icon={customIcon} width={18} color="tomato" />
                             <Icon icon={["24 24", CustomTriangle]} width={18} color="royalblue" />
                     </Flex>`}
                 example={
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon icon={["24 24", "M12 2L22 22H2Z"]} width={18} color="tomato" />
                         <Icon icon={["24 24", CustomTriangle]} width={18} color="royalblue" />
                     </Flex>
@@ -98,14 +98,14 @@ const X = () => {
                 `}
                 code={`import { Icon } from "${SYS.basePath}";
 
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon icon="copy" width={12} color="$ff0000" />
                         <Icon icon="copy" size={18} color="royalblue" />
                         <Icon icon="copy" size={18} color="primary" />
                         <Icon icon="copy" w={24} color="greys.shade40" />
                     </Flex>`}
                 example={
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon icon="copy" width={12} color="#ff0000" />
                         <Icon icon="copy" size={18} color="royalblue" />
                         <Icon icon="copy" size={18} color="primary" />
@@ -118,13 +118,13 @@ const X = () => {
                 description="You can change icon, color and width on hover. Hover behavior works automatically with mouse interaction or you can trigger it manually with hoverManually (boolean) prop."
                 code={`import { Icon } from "${SYS.basePath}";
 
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon icon="copy" hoverIcon="check" hoverColor="green" />
                         <Icon icon="download" width={14} hoverScale={1.4} hoverColor="dodgerblue" />
                         <Icon icon="search" width={14} hoverScale={4} disableScaleEffect hoverColor="dodgerblue" hoverManually={isHover} />
                     </Flex>`}
                 example={
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon
                             icon="copy"
                             hoverIcon="check"
@@ -162,13 +162,13 @@ const X = () => {
                     Technically, <Icon> component can not trigger active state itself. But, you can trigger it manually with activeManually (boolean) prop inside your component.`}
                 code={`import { Icon } from "${SYS.basePath}";
 
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon icon="copy" activeIcon="check" activeColor="green" activeManually={isActive} />
                         <Icon icon="copy" width={14} activeScale={1.4} activeColor="tomato" activeManually={isActive} />
                         <Icon icon="copy" width={14} activeScale={1.8} activeColor="primary" activeManually={isActive} disablePulseEffect />
                     </Flex>`}
                 example={
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon
                             icon="copy"
                             activeIcon="check"
@@ -211,7 +211,7 @@ const X = () => {
                     <Icon icon="copy" pendingIcon="loading" pendingColor="green" pendingManually={isPending} />
                     <Icon icon="download" width={14} pendingIcon="loading2" pendingColor="blue" pendingScale={1.8} pendingManually={isPending} />`}
                 example={
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon
                             icon="copy"
                             pendingIcon="loading"
@@ -250,12 +250,12 @@ const X = () => {
                 }
                 code={`import { Icon } from "${SYS.basePath}";
 
-                        <Flex gap={20} xAlign="start">
+                        <Flex gap={20}>
                             <Icon icon="copy" popTipProps={{ content: "Copy" }} />
                             <Icon icon="check" width={18} popTipProps={{ content: "Success" }} />
                         </Flex>`}
                 example={
-                    <Flex gap={20} xAlign="start">
+                    <Flex gap={20}>
                         <Icon icon="copy" popTipProps={{ content: "Copy" }} />
                         <Icon icon="check" width={18} popTipProps={{ content: "Success" }} />
                     </Flex>

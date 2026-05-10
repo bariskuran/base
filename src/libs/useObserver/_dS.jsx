@@ -8,7 +8,7 @@ import { Flex } from "../Flex";
 const Demo = () => {
     const { ref, inViewport } = useObserver({ threshold: 0.2 });
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Typo.span>{`inViewport: ${String(inViewport)}`}</Typo.span>
             <Card ref={ref} padding={10}>
                 Observed element

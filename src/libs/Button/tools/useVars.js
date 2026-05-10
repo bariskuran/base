@@ -5,6 +5,14 @@ import { useTimers } from "./useTimers.js";
 import { getButtonColorPalette } from "./generateColors.js";
 import { useExportData } from "../../useExportedData";
 
+/** Prop-level background intent (stable); avoids losing padding when resolved `bg` is transparent on hover. */
+const isNonTransparentBgProp = (value) => {
+    if (value == null) return false;
+    const s = String(value).trim().toLowerCase();
+    if (s === "" || s === "transparent") return false;
+    return true;
+};
+
 export const useVars = ({
     Variant,
     label,
@@ -28,6 +36,8 @@ export const useVars = ({
     minWidth,
     minLabelWidth,
     outlined,
+    /** When true (e.g. `string` preset), `outlined` still affects palette logic but no box border is applied — underline UX stays clean. */
+    suppressOutlinedBorder,
     size,
     disableUseMatch,
     //
@@ -198,6 +208,45 @@ export const useVars = ({
     const i1 = iconPalette.inverse1;
     const i2 = iconPalette.inverse2;
 
+    const hasPrefixIcon = !!(prefix?.icon);
+    const hasSuffixIcon = !!(suffix?.icon);
+
+    const bgAppearsFilled = (() => {
+        if (bg == null) return false;
+        const s = String(bg).trim().toLowerCase();
+        if (s === "" || s === "transparent") return false;
+        if (/^#[0-9a-f]{8}$/i.test(s) && s.slice(-2) === "00") return false;
+        return true;
+    })();
+
+    const anyBgColorPropNonTransparent =
+        isNonTransparentBgProp(bgColor) ||
+        isNonTransparentBgProp(hoverBgColor) ||
+        isNonTransparentBgProp(activeBgColor) ||
+        isNonTransparentBgProp(pendingBgColor);
+
+    /** Label-only horizontal inset: filled bg, outlined border, or any non-transparent bg-related prop. */
+    const labelNeedsFullHorizontalPad =
+        !!outlined || bgAppearsFilled || anyBgColorPropNonTransparent;
+
+    let labelPadStartRem = 0;
+    let labelPadEndRem = 0;
+
+    const hasTextLabel = label != null && label !== "" && !isJustIcon;
+
+    if (hasTextLabel) {
+        if (hasPrefixIcon && hasSuffixIcon) {
+            /* gap handles spacing; no extra label padding */
+        } else if (hasPrefixIcon && !hasSuffixIcon) {
+            labelPadEndRem = 12;
+        } else if (!hasPrefixIcon && hasSuffixIcon) {
+            labelPadStartRem = 12;
+        } else if (!hasPrefixIcon && !hasSuffixIcon && labelNeedsFullHorizontalPad) {
+            labelPadStartRem = 12;
+            labelPadEndRem = 12;
+        }
+    }
+
     const as = !url ? "button" : isExternalUrl ? "a" : Link;
 
     const blockedByClickCooldown = !skipClickCooldown && clickBlocker;
@@ -246,6 +295,8 @@ export const useVars = ({
         $suffixBgColor: suffix?.bgColor,
         $suffixColor: suffix?.color,
         $fullWidth: fullWidth,
+        $labelPadStartRem: labelPadStartRem,
+        $labelPadEndRem: labelPadEndRem,
 
         onPointerDown: () =>
             setLocal((s) => {
@@ -283,7 +334,7 @@ export const useVars = ({
             ...(fullWidth ? { width: "100%" } : {}),
             ...(fullWidth ? { justifyContent: fullWidthJustifyContent } : {}),
             ...(minHeight ? { minHeight: `${minHeight}rem` } : {}),
-            ...(outlined ? { border: `1px solid ${c}` } : {}),
+            ...(outlined && !suppressOutlinedBorder ? { border: `1px solid ${c}` } : {}),
             ...(disabled
                 ? {
                       opacity: 0.5,

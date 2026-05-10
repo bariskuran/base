@@ -22,7 +22,7 @@ const X = () => {
 
 const [sorted, index, lower, upper] = pushAsSorted([5, 1, 3], 4);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label="Run pushAsSorted([5, 1, 3], 4)"
                             onClick={() =>

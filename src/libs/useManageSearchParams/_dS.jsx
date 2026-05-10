@@ -8,7 +8,7 @@ import { Flex } from "../Flex";
 const Demo = () => {
     const { page, set, clear, raw } = useManageSearchParams({ defaults: { page: 1 } });
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Typo.span>{`page: ${page}`}</Typo.span>
             <Typo.span>{`raw: ${raw || "-"}`}</Typo.span>
             <Flex gap={8}>

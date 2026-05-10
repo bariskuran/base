@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-const S = styled.div`
+const S = styled.span`
     ${({ theme, $isHovered, $isActivated, $fullWidth }) => css`
         all: unset;
         display: flex;

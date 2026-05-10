@@ -24,7 +24,7 @@ const X = () => {
 
 ["a", "c", "b"].sort(sortBy.desc);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label="Run sort with sortBy.asc"
                             onClick={() =>

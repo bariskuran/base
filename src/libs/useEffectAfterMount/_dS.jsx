@@ -15,7 +15,7 @@ const Demo = () => {
     }, [count]);
 
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Button label={`count: ${count}`} onClick={() => setCount((v) => v + 1)} />
             <Typo.span>{`effect runs(after first render): ${effectCount}`}</Typo.span>
         </Flex.column>

@@ -17,7 +17,7 @@ const Demo = () => {
     );
 
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Typo.span>Click anywhere in page</Typo.span>
             <Typo.span>{`captured clicks: ${count}`}</Typo.span>
         </Flex.column>

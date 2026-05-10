@@ -48,7 +48,7 @@ export const Base = (props = {}) => {
                         pendingManually={isPending}
                     />
                     {label != null && (
-                        <div
+                        <span
                             data-slot="label"
                             style={{
                                 userSelect: "none",
@@ -78,7 +78,7 @@ export const Base = (props = {}) => {
                                     isJustIcon={isJustIcon}
                                 />
                             </S.LabelStack>
-                        </div>
+                        </span>
                     )}
                     {isJustIcon && (
                         <IconArea

@@ -13,11 +13,11 @@ const link = "/design-system";
 
 const Template = ({ row1, row2 }) => {
     return (
-        <Flex.column xAlign="start" gap={10}>
-            <Flex xAlign="start" gap={10}>
+        <Flex.column gap={10}>
+            <Flex gap={10}>
                 {row1}
             </Flex>
-            <Flex xAlign="start" gap={10}>
+            <Flex gap={10}>
                 {row2}
             </Flex>
         </Flex.column>
@@ -70,7 +70,7 @@ const X = () => {
             <Ds.block
                 description="Keep in mind that not all features work for all variants."
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <Dropdown
                             options={[
                                 ...Object.keys(buttonVariants).map((key) => ({
@@ -128,7 +128,7 @@ const X = () => {
                         <Button label="button" onClick={onClick} suffix={{ icon: "abstract2" }} />
                         <Button onClick={onClick} icon={{ icon: "abstract2" }} />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ButtonVariant
                             label="button"
                             onClick={onClick}
@@ -158,10 +158,10 @@ const X = () => {
                         <Button onClick={onClick} label="b" bgColor="transparent" hoverBgColor="transparent" activeBgColor="transparent" color="foreground" outlined />
                         <Button onClick={onClick} label="b" bgColor="error" />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ButtonVariant
                             onClick={onClick}
-                            icon={{ icon: "abstract2" }}
+                            icon={{ icon: "abstract1" }}
                             bgColor="ffba00"
                             hoverBgColor="ff8400"
                             activeBgColor="ff4d00"
@@ -173,6 +173,17 @@ const X = () => {
                             onClick={onClick}
                             icon={{ icon: "abstract2", hoverColor: "white" }}
                             bgColor="greys.shade20"
+                        />
+                        <ButtonVariant
+                            onClick={onClick}
+                            label="b"
+                            bgColor="ffba00"
+                            hoverBgColor="ff8400"
+                            activeBgColor="ff4d00"
+                            color="ff3c00"
+                            hoverColor="000000"
+                            activeColor="ffffff"
+                            prefix={{ icon: "abstract3", hoverColor: "white" }}
                         />
                         <ButtonVariant
                             onClick={onClick}
@@ -212,7 +223,7 @@ const X = () => {
                         <Button label="submit" hoverLabel="are you sure?" activeLabel="submitted" pendingLabel="processing" onClick={onClick} bgColor="success" hoverBgColor="error" activeBgColor="foreground" hoverManually={hoverManually} activeManually={activeManually} pendingManually={pendingManually} prefix={{ icon: "fullArrowRight", hoverIcon: "warning", activeIcon: "check", pendingIcon: "loading3", }} />
                         <Button label="match route" to="/design-system/button" />`}
                 example={
-                    <Flex.column xAlign="start" gap={10}>
+                    <Flex.column gap={10}>
                         <Flex gap={10}>
                             <ButtonVariant
                                 onClick={onClick}
@@ -323,7 +334,7 @@ const X = () => {
                         <Button onClick={triggerNotifier} label="onHold disabled" skipOnClickHold />
                         <Button onClick={triggerNotifier} label="both disabled" skipClickCooldown skipOnClickHold />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ButtonVariant onClick={triggerNotifier} label="both enabled" />
                         <ButtonVariant
                             onClick={triggerNotifier}
@@ -351,7 +362,7 @@ const X = () => {
                 
                         <Button onClick={triggerNotifier} label="disabled" disabled />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ButtonVariant onClick={triggerNotifier} label="disabled" disabled />
                     </Flex>
                 }
@@ -365,7 +376,7 @@ const X = () => {
                         <Button onClick={triggerNotifier} label="Smaller" size={80} />
                         <Button onClick={triggerNotifier} label="Larger" size={120} />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ButtonVariant onClick={triggerNotifier} label="Regular" size={100} />
                         <ButtonVariant onClick={triggerNotifier} label="Smaller" size={80} />
                         <ButtonVariant onClick={triggerNotifier} label="Larger" size={120} />
@@ -374,14 +385,14 @@ const X = () => {
             />
             <Ds.block
                 title="Outlined Button"
-                description="When 'outlined' prop is enabled, Button uses bgColor as border color."
+                description="When 'outlined' prop is enabled, Button uses bgColor as border color. Some variants may ignore this feature such as 'string'."
                 code={`import { Button } from "${SYS.basePath}";
                 
                         <ButtonVariant label="button" onClick={onClick} prefix={{ icon: "abstract2" }} outlined />
                         <ButtonVariant label="button" onClick={onClick} suffix={{ icon: "abstract2" }} outlined />
                         <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} outlined />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ButtonVariant
                             label="button"
                             onClick={onClick}
@@ -416,7 +427,7 @@ const X = () => {
                         <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} popTip="PopTip enabled" />
                         <Button onClick={onClick} icon={{ icon: "abstract2" }} popTip={{ content: "PopTip enabled", bgColor: "success" }} />`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <ButtonVariant
                             label="button"
                             onClick={onClick}
@@ -434,12 +445,14 @@ const X = () => {
             <Ds.block
                 title="Full Width"
                 description="When 'fullWidth' prop is enabled, Button takes the full width of its container. It can be boolean and for the text alignment, it can be 'left', 'center' or 'right'."
-                code={`import { Button } from "${SYS.basePath}";
+                code={`import { Button, Flex } from "${SYS.basePath}";
                 
-                        <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} fullWidth="right" />
-                        <Button onClick={onClick} icon={{ icon: "abstract2" }} fullWidth />`}
+                        <Flex.column full gap={10}>
+                            <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} fullWidth="right" />
+                            <Button onClick={onClick} icon={{ icon: "abstract2" }} fullWidth />
+                        </Flex.column>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex.column full gap={10}>
                         <ButtonVariant
                             label="button"
                             onClick={onClick}
@@ -447,7 +460,7 @@ const X = () => {
                             fullWidth="right"
                         />
                         <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} fullWidth />
-                    </Flex>
+                    </Flex.column>
                 }
             />
             <Ds.block

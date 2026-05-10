@@ -10,7 +10,7 @@ const Demo = () => {
     const [count, setCount] = useState(0);
     const [previous] = usePrevious(count);
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Button label={`count: ${count}`} onClick={() => setCount((v) => v + 1)} />
             <Typo.span>{`previous: ${String(previous)}`}</Typo.span>
         </Flex.column>

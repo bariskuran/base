@@ -82,7 +82,6 @@ const X = () => {
                             height={100}
                             bgColor="aliceblue"
                             yAlign="start"
-                            xAlign="start"
                             overflow="hidden"
                             padding={10}
                             childrenProps={childrenProps}
@@ -92,7 +91,7 @@ const X = () => {
                         </Flex>
                     );
 
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar />
                         </TwoAxisLargeContent>
@@ -104,7 +103,7 @@ const X = () => {
                         </TwoAxisLargeContent>
                     </Flex>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar />
                         </TwoAxisLargeContent>
@@ -124,7 +123,7 @@ const X = () => {
                 The ScrollBar automatically decides which axis should trigger scrolling. If the Y axis is not present or is disabled, the Y scroll trigger will also scroll the X axis.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableX />
                         </TwoAxisLargeContent>
@@ -133,7 +132,7 @@ const X = () => {
                         </TwoAxisLargeContent>
                     </Flex>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableX />
                         </TwoAxisLargeContent>
@@ -152,7 +151,7 @@ const X = () => {
                     Both props can be used together.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
                             <ScrollBar disableX />
                         </TwoAxisLargeContent>
@@ -161,7 +160,7 @@ const X = () => {
                         </TwoAxisLargeContent>
                     </Flex>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <TwoAxisLargeContent>
                             <ScrollBar mirror />
                         </TwoAxisLargeContent>
@@ -180,7 +179,7 @@ const X = () => {
                 `}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <Flex xAlign="start" gap={10} wrap>
+                    <Flex gap={10} wrap>
                         <TwoAxisLargeContent>
                             <ScrollBar thickness={10} />
                         </TwoAxisLargeContent>
@@ -207,7 +206,7 @@ const X = () => {
                         </TwoAxisLargeContent>
                     </Flex>`}
                 example={
-                    <Flex xAlign="start" gap={10} wrap>
+                    <Flex gap={10} wrap>
                         <TwoAxisLargeContent>
                             <ScrollBar thickness={10} />
                         </TwoAxisLargeContent>
@@ -276,7 +275,7 @@ const X = () => {
                             <ScrollBar fillMode />
                         </TwoAxisLargeContent>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <Flex {...flexProps} ref={flexRef1}>
                             {longText}
                         </Flex>
@@ -355,7 +354,7 @@ const X = () => {
                     </TwoAxisLargeContent>
 `}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <TwoAxisLargeContent>
                             <ScrollBar variant={CustomVariant} thickness={2} enableThumbScale />
                         </TwoAxisLargeContent>

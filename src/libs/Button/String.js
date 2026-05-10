@@ -1,14 +1,24 @@
 import styled, { css } from "styled-components";
 
-const S = styled.div`
-    ${({ theme, $isHovered, $isActivated }) => css`
+const S = styled.span`
+    ${({
+        theme,
+        $isHovered,
+        $isActivated,
+        $labelPadStartRem = 0,
+        $labelPadEndRem = 0,
+    }) => css`
         all: unset;
         width: max-content;
         display: inline-flex;
+        align-items: center;
+        gap: 8rem;
         cursor: pointer;
         transition: all 0.5s;
         position: relative;
         margin: 0 3rem;
+
+        border: none !important;
 
         &::before,
         &::after {
@@ -33,6 +43,12 @@ const S = styled.div`
             justify-content: center;
             align-items: center;
             transition: all 0.5s;
+
+            ${($labelPadStartRem > 0 || $labelPadEndRem > 0) &&
+            css`
+                padding-left: ${$labelPadStartRem}rem;
+                padding-right: ${$labelPadEndRem}rem;
+            `}
         }
 
         & > [data-slot="prefix"],
@@ -68,6 +84,7 @@ const S = styled.div`
 
 const X = {
     variant: S,
+    suppressOutlinedBorder: true,
     bgColor: "transparent",
     color: "foreground",
     hoverBgColor: "transparent",

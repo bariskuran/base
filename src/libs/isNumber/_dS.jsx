@@ -22,7 +22,7 @@ isNumber("12.4");
 
 isNumber("abc");`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label="Run isNumber(12)"
                             onClick={() =>

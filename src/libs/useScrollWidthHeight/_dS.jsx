@@ -7,7 +7,7 @@ import { Flex } from "../Flex";
 const Demo = () => {
     const [width, height] = useScrollWidthHeight();
     return (
-        <Flex.column xAlign="start" gap={6}>
+        <Flex.column gap={6}>
             <Typo.span>{`doc width: ${width}`}</Typo.span>
             <Typo.span>{`doc height: ${height}`}</Typo.span>
         </Flex.column>

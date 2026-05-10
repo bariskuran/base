@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-// export const DefaultVariant = styled.div`
+// export const DefaultVariant = styled.span`
 //     ${({ theme, $hoverManually, $disabled, $bgColor, $hoverBgColor, $activeBgColor, $color  }) => css`
 //         #prefix,
 //         #suffix {}
@@ -10,7 +10,7 @@ import styled, { css } from "styled-components";
 //     `}
 // `;
 
-export const DefaultVariant = styled.div`
+export const DefaultVariant = styled.span`
     ${({
         // theme,
         $isHovered,

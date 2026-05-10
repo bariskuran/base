@@ -20,7 +20,7 @@ const X = () => (
     />
 \`}</Typo.code>`}
             example={
-                <Flex.column xAlign="start" gap={8}>
+                <Flex.column gap={8}>
                     <Typo.h3>Heading</Typo.h3>
                     <Typo.p>Body text example</Typo.p>
                     <Typo.quote>Quoted text example</Typo.quote>

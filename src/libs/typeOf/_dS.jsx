@@ -20,7 +20,7 @@ typeOf(null);
 
 typeOf(1, "x", []);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label="Run typeOf(null)"
                             onClick={() =>

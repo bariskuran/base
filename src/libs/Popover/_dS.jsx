@@ -4,7 +4,7 @@ import { Popover } from ".";
 import { Flex } from "../Flex";
 
 const Panel = () => (
-    <Flex.column xAlign="start" gap={6}>
+    <Flex.column gap={6}>
         <div>Action A</div>
         <div>Action B</div>
     </Flex.column>
@@ -20,7 +20,7 @@ const X = () => (
   <div>Panel content</div>
 </Popover>`}
             example={
-                <Flex xAlign="start" gap={12}>
+                <Flex gap={12}>
                     <Popover>
                         <Panel />
                     </Popover>

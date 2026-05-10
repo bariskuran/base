@@ -40,7 +40,7 @@ const X = () => {
 
                     downloadAsCsv(data, "users");`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.plain
                             label="Download CSV"
                             onClick={() => {
@@ -66,7 +66,7 @@ const X = () => {
                           onError: (e) => {},
                         });`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button
                             label="Download ; separated"
                             onClick={() => {

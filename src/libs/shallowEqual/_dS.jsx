@@ -26,7 +26,7 @@ shallowEqual([1, 2], [1, 2]);
 
 shallowEqual({ a: { b: 1 } }, { a: { b: 1 } });`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label="Run shallowEqual({ a: 1 }, { a: 1 })"
                             onClick={() =>

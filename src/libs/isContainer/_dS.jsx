@@ -26,7 +26,7 @@ isContainer({});
 
 isContainer(new Date());`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label="Run isContainer([])"
                             onClick={() =>

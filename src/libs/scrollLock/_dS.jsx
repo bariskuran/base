@@ -20,8 +20,8 @@ scrollLock(true);
 
 scrollLock(false);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
-                        <Flex xAlign="start" gap={10}>
+                    <Flex.column gap={10} padding={10}>
+                        <Flex gap={10}>
                             <Button
                                 label="Lock scroll"
                                 onClick={() => {

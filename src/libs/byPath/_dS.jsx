@@ -31,7 +31,7 @@ const X = () => {
                 byPath.set(data, "user.profile.name", "Selin");
                 byPath.delete(data, 'user.profile.name');`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Typo.code>data = {JSON.stringify(data)}</Typo.code>
                         <Button.string
                             label="byPath.get(data, 'user.profile.name')"
@@ -86,7 +86,7 @@ const X = () => {
                       firstId: "items.0.id",
                     });`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Typo.pre>data = {JSON.stringify(dataReset2)}</Typo.pre>
                         <Button.plain
                             label="byPath.mapping(data, { username: 'user.profile.name', firstId: 'items.0.id' })"

@@ -17,7 +17,7 @@ const X = () => {
 
 await sleep(500);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button
                             label={label}
                             onClick={async () => {

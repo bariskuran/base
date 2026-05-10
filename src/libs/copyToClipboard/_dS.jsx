@@ -32,7 +32,7 @@ const X = () => {
 
                     copyToClipboard("Hello world");`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.plain
                             label="Copy text"
                             onClick={() => {
@@ -61,7 +61,7 @@ const X = () => {
                             onError: (err)=> console.error("error", err)
                         });`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.plain
                             label="Copy text"
                             onClick={() => {

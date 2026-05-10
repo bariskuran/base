@@ -16,7 +16,7 @@ const Demo = () => {
     });
 
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Flex gap={8}>
                 <Button label="Start" onClick={() => timer.start()} />
                 <Button label="Stop" onClick={() => timer.stop()} />

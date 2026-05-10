@@ -31,7 +31,7 @@ const X = () => (
                   <Flag flag="us" />
                   <Flag flag="de" />`}
             example={
-                <Flex gap={12} xAlign="start">
+                <Flex gap={12}>
                     <Flag flag="tr" />
                     <Flag flag="us" />
                     <Flag flag="de" />
@@ -46,7 +46,7 @@ const X = () => (
                   <Flag flag="gb" width={24} />
                   <Flag flag="gr" width={30} />`}
             example={
-                <Flex gap={12} xAlign="start">
+                <Flex gap={12}>
                     <Flag flag="gr" width={18} />
                     <Flag flag="gr" width={40} />
                     <Flag flag="gr" width={60} />
@@ -63,7 +63,7 @@ const X = () => (
                       <Flag flag="global" width={18} />
                     `}
             example={
-                <Flex gap={12} xAlign="start">
+                <Flex gap={12}>
                     <Flag flag="unknown-code" width={18} />
                     <Flag flag="global" width={18} />
                 </Flex>

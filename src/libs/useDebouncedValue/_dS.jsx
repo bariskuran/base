@@ -9,7 +9,7 @@ const Demo = () => {
     const [debouncedValue, setValue, state] = useDebouncedValue("", { delay: 500 });
 
     return (
-        <Flex.column xAlign="start" gap={8}>
+        <Flex.column gap={8}>
             <Input
                 value={state.value}
                 onChange={(e) => setValue(e.target.value)}

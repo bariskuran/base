@@ -10,7 +10,7 @@ import styled, { css } from "styled-components";
 //     `}
 // `;
 
-export const S = styled.div`
+export const S = styled.span`
     ${({ $isJustIcon }) => css`
         all: unset;
         display: flex;

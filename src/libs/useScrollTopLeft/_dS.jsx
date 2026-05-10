@@ -7,7 +7,7 @@ import { Flex } from "../Flex";
 const Demo = () => {
     const { scrollTop, scrollLeft, directionX, directionY } = useScrollTopLeft({ delay: 80 });
     return (
-        <Flex.column xAlign="start" gap={6}>
+        <Flex.column gap={6}>
             <Typo.span>{`top: ${Math.round(scrollTop)} left: ${Math.round(scrollLeft)}`}</Typo.span>
             <Typo.span>{`directionX: ${directionX} directionY: ${directionY}`}</Typo.span>
         </Flex.column>

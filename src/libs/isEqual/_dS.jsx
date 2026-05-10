@@ -24,7 +24,7 @@ isEqual({ a: 1 }, { a: 1 });
 
 isEqual([1, 2], [2, 1]);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button.string
                             label="Run isEqual({ a: 1 }, { a: 1 })"
                             onClick={() =>
@@ -57,7 +57,7 @@ isEqual([1, 2], [2, 1]);`}
 
 const stableValue = useIsEqual(value);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Button
                             label="Set same deep value"
                             onClick={() =>

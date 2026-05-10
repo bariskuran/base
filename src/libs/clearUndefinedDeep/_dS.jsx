@@ -32,7 +32,7 @@ const X = () => {
                 code={`import { clearUndefinedDeep } from "${SYS.basePath}";
                     const cleaned = clearUndefinedDeep(sample);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Typo.code>sample = {stringifyForPreview(sample)}</Typo.code>
                         <Button.plain
                             label="clearUndefinedDeep(sample)"

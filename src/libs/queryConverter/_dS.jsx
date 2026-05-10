@@ -26,7 +26,7 @@ const qs = queryConverter.export({ page: 2, filter: { q: "test" } });
 
 const obj = queryConverter.import(qs);`}
                 example={
-                    <Flex.column xAlign="start" gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10}>
                         <Typo.code>sample = {JSON.stringify(obj, null, 2)}</Typo.code>
                         <Button.string
                             label="Run export then import (round-trip)"

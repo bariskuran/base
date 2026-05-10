@@ -48,7 +48,7 @@ const X = () => {
                         getTimeDiff(new Date(1700000000000));
                     `}
                 example={
-                    <Flex.column gap={10} padding={10} xAlign="start">
+                    <Flex.column gap={10} padding={10}>
                         <Flex gap={10}>
                             <Button.plain
                                 label="ts"
@@ -95,7 +95,7 @@ const X = () => {
                         // Details for object props:
                         // → Design System → baseDate()`}
                 example={
-                    <Flex.column gap={10} padding={10} xAlign="start">
+                    <Flex.column gap={10} padding={10}>
                         <Flex gap={10}>
                             <Button.plain
                                 label="two numbers (~26h gap)"
@@ -124,7 +124,7 @@ const X = () => {
                         getTimeDiff(a, b);
                         getTimeDiff(new Date(a), new Date(b));`}
                 example={
-                    <Flex.column gap={10} padding={10} xAlign="start">
+                    <Flex.column gap={10} padding={10}>
                         <Flex gap={10}>
                             <Button.plain
                                 label="two numbers (~26h gap)"
@@ -158,7 +158,7 @@ const X = () => {
                         getTimeDiff(Date.now() - 3600000);
                         getTimeDiff({ initial: "01/01/2020" });`}
                 example={
-                    <Flex.column gap={10} padding={10} xAlign="start">
+                    <Flex.column gap={10} padding={10}>
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="single ms (1h before live now)"
@@ -201,7 +201,7 @@ const X = () => {
                             { initial: "20/03/2024" },
                         );`}
                 example={
-                    <Flex.column gap={10} padding={10} xAlign="start">
+                    <Flex.column gap={10} padding={10}>
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="two objects + display formats"
@@ -250,7 +250,7 @@ const X = () => {
                         const b = a + 36 * 60 * 60 * 1000;
                         getTimeDiff(a, b);`}
                 example={
-                    <Flex.column gap={10} padding={10} xAlign="start">
+                    <Flex.column gap={10} padding={10}>
                         <Button.plain
                             label="exactly 36h apart (fixed ms)"
                             onClick={() => put(getTimeDiff(fixedEpoch, fixedLater), "ex6")}
@@ -268,7 +268,7 @@ const X = () => {
                         getTimeDiff(2000, 1000);
                         getTimeDiff(42, 42);`}
                 example={
-                    <Flex.column gap={10} padding={10} xAlign="start">
+                    <Flex.column gap={10} padding={10}>
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="time1 before time2"

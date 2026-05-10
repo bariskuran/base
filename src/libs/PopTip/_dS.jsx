@@ -37,7 +37,7 @@ const X = () => {
 
                     <PopTip content="floating content">Content</PopTip>`}
                 example={
-                    <Flex xAlign="start" padding={10}>
+                    <Flex padding={10}>
                         <PopTip content="floating content">Content</PopTip>
                     </Flex>
                 }
@@ -66,7 +66,7 @@ const X = () => {
                             <Template>B/R</Template>
                         </PopTip>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <PopTip content="Top / Left" alignX="left" alignY="top">
                             <Template>T/L</Template>
                         </PopTip>
@@ -109,7 +109,7 @@ const X = () => {
                             <Template>disable arrow</Template>
                         </PopTip>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <PopTip content="theme" bgColor="success">
                             <Template>theme</Template>
                         </PopTip>
@@ -137,7 +137,7 @@ const X = () => {
                             <Template>enable escaping</Template>
                         </PopTip>`}
                 example={
-                    <Flex xAlign="start" gap={10}>
+                    <Flex gap={10}>
                         <PopTip content="enable escaping" enableEscaping>
                             <Template>enable escaping</Template>
                         </PopTip>
