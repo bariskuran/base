@@ -10,10 +10,10 @@ export const S = {
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         min-height: 0;
         min-width: 0;
-        width: auto;
+        width: 100%;
         max-width: 100%;
         height: 100%;
         flex: 1 1 auto;

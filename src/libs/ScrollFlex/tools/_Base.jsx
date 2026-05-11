@@ -13,6 +13,7 @@ export const Base = ({ children, ...p }) => {
         shouldRender,
         shellGutters,
         contentPaddingStyle,
+        variantOuterStyle,
     } = useVars(p);
 
     if (!shouldRender) return null;
@@ -21,7 +22,12 @@ export const Base = ({ children, ...p }) => {
 
     return (
         <NestedBaseUi>
-            <Variant ref={containerRef} $borderColor={borderColor} aria-label="ScrollFlex">
+            <Variant
+                ref={containerRef}
+                $borderColor={borderColor}
+                aria-label="ScrollFlex"
+                style={variantOuterStyle}
+            >
                 <S.shell
                     $gutterTop={gutterTop}
                     $gutterRight={gutterRight}
@@ -34,6 +40,8 @@ export const Base = ({ children, ...p }) => {
                         style={{
                             ...contentPaddingStyle,
                             ...(flexProps?.style || {}),
+                            minWidth: 0,
+                            maxWidth: "100%",
                         }}
                     >
                         {children}

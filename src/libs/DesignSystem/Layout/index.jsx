@@ -66,7 +66,7 @@ const Layout = () => {
                     })}
                 </Flex.column>
             </S.navigation>
-            <Flex.column full flex="1 1 auto" gap={10} padding="30rem">
+            <Flex.column full flex="1 1 0%" gap={10} padding="30rem" minWidth={0}>
                 <Outlet />
             </Flex.column>
         </S.container>

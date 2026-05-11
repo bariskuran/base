@@ -21,6 +21,18 @@ const useVars = (p = {}) => {
 
     const resolvedFlexProps = useMemo(() => ({ ...(flexProps || {}) }), [flexProps]);
 
+    const isRowLayout = useMemo(() => {
+        const d = resolvedFlexProps?.direction;
+        if (d == null) return true;
+        const s = String(d).toLowerCase();
+        return !(
+            s === "column" ||
+            s === "column-reverse" ||
+            s === "y" ||
+            s === "y-reverse"
+        );
+    }, [resolvedFlexProps]);
+
     const mergedScrollBarProps = useMemo(
         () => ({
             ...scrollBarProps,
@@ -42,6 +54,7 @@ const useVars = (p = {}) => {
         },
         {
             preparedItems,
+            isRowLayout,
         },
     );
 };

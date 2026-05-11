@@ -384,6 +384,23 @@ const useVars = (p) => {
             observer.disconnect();
         };
     }, [flexProps, restProps, setLocal, width, widthById, widthByRef]);
+
+    const variantOuterStyle = useMemo(() => {
+        const ew = getExplicitWidth({ width, flexProps, restProps });
+        const eh = getExplicitHeight({ height, flexProps });
+        const out = {};
+        if (ew != null && ew !== "") {
+            const w = getCssSize(ew);
+            out.width = w;
+            out.maxWidth = w;
+        }
+        if (eh != null && eh !== "") {
+            out.height = getCssSize(eh);
+        }
+        const merged = { ...out, ...(restProps.style || {}) };
+        return Object.keys(merged).length ? merged : undefined;
+    }, [width, height, flexProps, restProps]);
+
     /* Return */
     return useExportData(
         {
@@ -395,6 +412,7 @@ const useVars = (p) => {
             containerRef,
             shouldRender: organizedFlexProps.shouldRender,
             contentPaddingStyle: organizedFlexProps.contentPaddingStyle,
+            variantOuterStyle,
             ...restProps,
             shellGutters,
         },

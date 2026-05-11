@@ -50,6 +50,12 @@ const S = {
             `}
     `,
 
+    mainColumn: styled.div`
+        flex: 1 1 0%;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    `,
     ajaxArea: styled.div`
         display: flex;
         justify-content: flex-end;
@@ -58,10 +64,11 @@ const S = {
     `,
     contentArea: styled.div`
         width: 100%;
+        min-width: 0;
         background-color: ${({ theme }) => theme.backgrounds.tint30};
         border-radius: 0 20rem 20rem 0;
         padding: 20rem;
-        align-self: center;
+        align-self: stretch;
         display: flex;
         flex-direction: column;
         gap: 15rem;

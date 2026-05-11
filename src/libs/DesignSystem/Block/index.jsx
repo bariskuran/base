@@ -54,24 +54,28 @@ const Block = ({ title, description, code, example, lastBlock }) => {
                 )}
             </S.titleArea>
             <S.line $lastBlock={lastBlock} />
-            <Flex.column justify="start" full>
-                {(example || description) && ajax === 0 && (
-                    <S.contentArea area-title="Block Content">
-                        <Typo
-                            as={isJsxDescription(description) ? "div" : "pre"}
-                            balance
-                        >
-                            {description}
-                        </Typo>
-                        <Flex.row justify="start">{example}</Flex.row>
-                    </S.contentArea>
-                )}
-                {((code && ajax === 1) || (!example && !description && code)) && (
-                    <S.contentArea area-title="Block Content">
-                        <CodeViewer>{code}</CodeViewer>
-                    </S.contentArea>
-                )}
-            </Flex.column>
+            <S.mainColumn>
+                <Flex.column justify="start" full minWidth={0}>
+                    {(example || description) && ajax === 0 && (
+                        <S.contentArea area-title="Block Content">
+                            <Typo
+                                as={isJsxDescription(description) ? "div" : "pre"}
+                                balance
+                            >
+                                {description}
+                            </Typo>
+                            <Flex.row justify="start" full minWidth={0}>
+                                {example}
+                            </Flex.row>
+                        </S.contentArea>
+                    )}
+                    {((code && ajax === 1) || (!example && !description && code)) && (
+                        <S.contentArea area-title="Block Content">
+                            <CodeViewer>{code}</CodeViewer>
+                        </S.contentArea>
+                    )}
+                </Flex.column>
+            </S.mainColumn>
         </S.container>
     );
 };

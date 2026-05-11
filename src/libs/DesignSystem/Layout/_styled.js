@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 export const S = {
     container: styled.div`
         width: 100%;
+        min-width: 0;
         display: flex;
         align-items: flex-start;
 
