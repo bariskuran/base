@@ -37,7 +37,13 @@ export const Base = (props = {}) => {
     /* RETURN */
     return (
         <PopTipWrapper popTip={popTip}>
-            <ScaleWrapper size={size} isMatch={isMatch} fullWidth={fullWidth} disabled={disabled}>
+            <ScaleWrapper
+                size={size}
+                isMatch={isMatch}
+                fullWidth={fullWidth}
+                disabled={disabled}
+                isActivated={isActivated}
+            >
                 <Variant ref={forwardedRef} {...variantProps}>
                     <IconArea
                         areaName="prefix"

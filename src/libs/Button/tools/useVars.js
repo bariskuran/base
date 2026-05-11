@@ -252,6 +252,7 @@ export const useVars = ({
     const blockedByClickCooldown = !skipClickCooldown && clickBlocker;
     const fullWidthJustifyContent =
         fullWidth === "left" ? "flex-start" : fullWidth === "right" ? "flex-end" : "center";
+    const cursor = disabled || isActivated ? "default" : "pointer";
 
     const shouldBindClickHandler =
         disabled || blockedByClickCooldown || isMatch || (delay && delay > 0) || !!onClick;
@@ -331,6 +332,7 @@ export const useVars = ({
         style: {
             background: bg,
             color: c,
+            cursor,
             ...(fullWidth ? { width: "100%" } : {}),
             ...(fullWidth ? { justifyContent: fullWidthJustifyContent } : {}),
             ...(minHeight ? { minHeight: `${minHeight}rem` } : {}),

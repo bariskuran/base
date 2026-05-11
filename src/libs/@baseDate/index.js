@@ -32,9 +32,9 @@ import {
  *   e.g. "DD gününde MM ayında YYYY yılında, saat HH:NN"
  *
  * Locale/timezone:
- * - `timeZone` defaults to user timezone from `baseStore.clientData.get().timeZone` if available,
+ * - `timezone` defaults to user timezone from `baseStore.clientData.get().timeZone` if available,
  *   otherwise uses environment local timezone.
- * - `timeZone` may be IANA name like "Europe/Athens" or an offset like "+2", "-05:30".
+ * - `timezone` may be IANA name like "Europe/Athens" or an offset like "+2", "-05:30".
  *
  * Week:
  * - `firstDayOfWeek` is read from `baseStore.globalData.get().baseDateSettings.firstDayOfWeek`
@@ -44,7 +44,7 @@ import {
  * @param {undefined|null|string|number|Object} [settings.initial]
  * @param {string} [settings.format]
  * @param {string} [settings.initialFormat] - Input parser format; defaults to `defaultFormat`.
- * @param {string|number} [settings.timeZone]
+ * @param {string|number} [settings.timezone]
  * @param {Object} [settings.calculate]
  *
  * @returns {string|number}
@@ -106,7 +106,7 @@ import {
  * // 10) Use IANA timezone (e.g. Greece)
  * baseDate({
  *   initial: "28/03/1982 09:15",
- *   timeZone: "Europe/Athens",
+ *   timezone: "Europe/Athens",
  *   format: "|DD|/|MM|/|YYYY| |HH|:|NN| |AP|",
  * });
  * // "28/03/1982 09:15 AM"
@@ -115,7 +115,7 @@ import {
  * // 11) Use numeric offset timezone
  * baseDate({
  *   initial: "28/03/1982 09:15",
- *   timeZone: "+02:00",
+ *   timezone: "+02:00",
  *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
  * });
  * // "28/03/1982 09:15"
@@ -228,15 +228,15 @@ import {
  *
  */
 export const baseDate = (opts = {}) => {
-    const { defaultFormat, timeZone: storeTz } = resolveDefaultsFromStore();
+    const { defaultFormat, timezone: storeTz } = resolveDefaultsFromStore();
 
-    const { initial, format, initialFormat, timeZone, calculate } = opts || {};
+    const { initial, format, initialFormat, timezone, calculate } = opts || {};
 
     const tz =
-        typeof timeZone === "number" && Number.isFinite(timeZone)
-            ? timeZone
-            : typeof timeZone === "string" && timeZone.trim()
-              ? timeZone.trim()
+        typeof timezone === "number" && Number.isFinite(timezone)
+            ? timezone
+            : typeof timezone === "string" && timezone.trim()
+              ? timezone.trim()
               : storeTz;
     const initFmt =
         typeof initialFormat === "string" && initialFormat.trim()
@@ -381,4 +381,9 @@ export const baseDate = (opts = {}) => {
         return dateObj.getTime();
     }
     return formatWithTokens(dateObj, fmt, tz);
+};
+
+export const getNow = (opts = {}) => {
+    const { format, timezone } = opts || {};
+    return baseDate({ format, timezone });
 };

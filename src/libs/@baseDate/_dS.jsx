@@ -4,12 +4,11 @@ import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
 import { baseStore } from "../@baseStore";
-import { baseDate } from ".";
-import { Space } from "../Space";
+import { baseDate, getNow } from ".";
 
 const X = () => {
     const [_baseDate] = baseStore.useGlobal((s) => [s._baseDate]);
-    const { outputs, setLocal } = baseStore.useLocal({ outputs: {} });
+    const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
         <Ds.page
@@ -27,14 +26,13 @@ const X = () => {
                         
                         PROJECT_SETTINGS.baseDateSettings: {
                             defaultFormat: "|DD|-|MM|-|YYYY|",
-                            defaultTimeZone: "UTC",
+                            timezone: "UTC",
                             firstDayOfWeek: 1, // 1 = monday
                         }
                     
                     • Current defaultFormat is "${_baseDate.defaultFormat}"
-                    • Current defaultTimeZone is "${_baseDate.defaultTimeZone}"
+                    • Current timezone is "${_baseDate.timezone}"
                     • Current firstDayOfWeek is "${_baseDate.firstDayOfWeek}"
-                    • Current timeZone is "${_baseDate.timeZone}"
                     `}
             />
             <Ds.block
@@ -95,53 +93,54 @@ const X = () => {
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="returns timestamp"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex1 = baseDate({
+                                {...outputButtonProps({
+                                    path: "formatting",
+                                    activeLabel: "timestamp",
+                                    fn: () =>
+                                        baseDate({
                                             initial: "19-02-2026 17:00",
                                             format: "timestamp",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="formatting for the initial value"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex1 = baseDate({
+                                {...outputButtonProps({
+                                    path: "formatting",
+                                    activeLabel: "initial-format",
+                                    fn: () =>
+                                        baseDate({
                                             initial: "28-03-1982 01:15",
                                             initialFormat: "|DD|-|MM|-|YYYY| |HH|:|NN|",
                                             format: "|DD|.|mm|.|YY| |hh|.|nn|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="free-form format usage"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex1 = baseDate({
+                                {...outputButtonProps({
+                                    path: "formatting",
+                                    activeLabel: "free-form",
+                                    fn: () =>
+                                        baseDate({
                                             initial: "28-03-1982 01:15",
                                             initialFormat: "|DD|-|MM|-|YYYY| |HH|:|NN|",
                                             format: "I was born on |YYYY|. The month was |MM|. And the day was |DD|.",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                         </Flex>
-                        <Space size="l" />
-                        {outputs.ex1 != null && (
-                            <Typo.span balance>Output: {outputs.ex1}</Typo.span>
-                        )}
+                        <Output path="formatting" />
                     </Flex.column>
                 }
             />
             <Ds.block
                 title="Basic usage"
-                code={`import { baseDate } from "${SYS.basePath}";
+                code={`import { baseDate, getNow } from "${SYS.basePath}";
 
                         
                         baseDate({});
+                        getNow({ format: "|DD|/|MM|/|YYYY| |HH|:|NN|", timezone: "Europe/London" });
                         baseDate({ initial: 1700000000000 });
                         baseDate({ initial: "19-02-2026" });
                         baseDate({ initial: "02/02/2026 17.00", initialFormat: "|MM|/|DD|/|YYYY| |HH|.|NN|"});
@@ -151,45 +150,60 @@ const X = () => {
                     <Flex.column gap={10} padding={10}>
                         <Flex gap={10} wrap>
                             <Button.plain
-                                label="Get 'Now'"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex2 = baseDate({});
-                                    })
-                                }
+                                label="Get 'Now' via baseDate({})"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "now",
+                                    fn: () => baseDate({}),
+                                })}
+                            />
+                            <Button.plain
+                                label="getNow shorthand"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "getNow",
+                                    fn: () =>
+                                        getNow({
+                                            format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
+                                            timezone: "Europe/London",
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="Initial Value: Timestamp"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex2 = baseDate({ initial: 1700000000000 });
-                                    })
-                                }
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "timestamp",
+                                    fn: () => baseDate({ initial: 1700000000000 }),
+                                })}
                             />
                             <Button.plain
                                 label="Initial Value: String, compatible with current format."
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex2 = baseDate({ initial: "19-02-2026" });
-                                    })
-                                }
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "string-compatible",
+                                    fn: () => baseDate({ initial: "19-02-2026" }),
+                                })}
                             />
                             <Button.plain
                                 label="Initial Value: String, incompatible with current format."
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex2 = baseDate({
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "string-incompatible",
+                                    fn: () =>
+                                        baseDate({
                                             initial: "2026/02/19 17.00",
                                             initialFormat: "|YYYY|/|MM|/|DD| |HH|.|NN|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="Initial Value: Object"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex2 = baseDate({
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "object",
+                                    fn: () =>
+                                        baseDate({
                                             initial: {
                                                 year: 1984,
                                                 month: 8,
@@ -198,15 +212,11 @@ const X = () => {
                                                 minute: 30,
                                             },
                                             format: "|DD|-|MM|-|YYYY| |HH|:|NN|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                         </Flex>
-                        <Space size="l" />
-                        {outputs.ex2 != null && (
-                            <Typo.span balance>Output: {outputs.ex2}</Typo.span>
-                        )}
+                        <Output path="basic" />
                     </Flex.column>
                 }
             />
@@ -215,39 +225,38 @@ const X = () => {
                 description={`It is possible to use any IANA timezone name or a numeric offset like "+02:00".`}
                 code={`import { baseDate } from "${SYS.basePath}";
                 
-                    baseDate({ timeZone: "Europe/London", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
-                    baseDate({ timeZone: "+02:00", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
+                    baseDate({ timezone: "Europe/London", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
+                    baseDate({ timezone: "+02:00", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
                 `}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="returns London time"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex3 = baseDate({
-                                            timeZone: "Europe/London",
+                                {...outputButtonProps({
+                                    path: "timezone",
+                                    activeLabel: "london",
+                                    fn: () =>
+                                        baseDate({
+                                            timezone: "Europe/London",
                                             format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="returns given timezone: +2"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex3 = baseDate({
-                                            timeZone: "+02:00",
+                                {...outputButtonProps({
+                                    path: "timezone",
+                                    activeLabel: "offset",
+                                    fn: () =>
+                                        baseDate({
+                                            timezone: "+02:00",
                                             format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                         </Flex>
-                        <Space size="l" />
-                        {outputs.ex3 != null && (
-                            <Typo.span balance>Output: {outputs.ex3}</Typo.span>
-                        )}
+                        <Output path="timezone" />
                     </Flex.column>
                 }
             />
@@ -285,31 +294,35 @@ const X = () => {
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="adds 5 days to now"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex4 = baseDate({
+                                {...outputButtonProps({
+                                    path: "calculations",
+                                    activeLabel: "add-days",
+                                    fn: () =>
+                                        baseDate({
                                             calculate: { day: 5 },
                                             format: "|DD|/|MM|/|YYYY|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="subtracts 10 days from initial"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex4 = baseDate({
+                                {...outputButtonProps({
+                                    path: "calculations",
+                                    activeLabel: "subtract-days",
+                                    fn: () =>
+                                        baseDate({
                                             initial: "10/03/2024",
                                             calculate: { day: -10 },
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="advanced calculation object"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex4 = baseDate({
+                                {...outputButtonProps({
+                                    path: "calculations",
+                                    activeLabel: "advanced",
+                                    fn: () =>
+                                        baseDate({
                                             initial: "31/12/2023 23:30",
                                             calculate: {
                                                 year: 1,
@@ -319,32 +332,58 @@ const X = () => {
                                                 minute: -45,
                                             },
                                             format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                             <Button.plain
                                 label="invalid calculation object"
-                                onClick={() =>
-                                    setLocal((s) => {
-                                        s.outputs.ex4 = baseDate({
+                                {...outputButtonProps({
+                                    path: "calculations",
+                                    activeLabel: "invalid",
+                                    fn: () =>
+                                        baseDate({
                                             initial: "10/03/2024",
                                             calculate: "invalid",
                                             format: "|DD|/|MM|/|YYYY|",
-                                        });
-                                    })
-                                }
+                                        }),
+                                })}
                             />
                         </Flex>
-                        <Space size="l" />
-                        {outputs.ex4 != null && (
-                            <Typo.span balance>Output: {outputs.ex4}</Typo.span>
-                        )}
+                        <Output path="calculations" />
                     </Flex.column>
                 }
             />
+            <Ds.block
+                title="Ready to use dates"
+                description={
+                    <>
+                        <Typo.p>
+                            Certain date ranges are calculated only once when the page loads and are
+                            stored globally. This prevents redundant recalculations at the component
+                            level and saves resources.
+                        </Typo.p>
+                        <Typo.p>
+                            A background timer in Base updates the ready-to-use dates every day at
+                            00:00:00.
+                        </Typo.p>
+                        <Typo.p>
+                            You can access these ready-to-use dates via
+                            "globalData._baseDate.package".
+                        </Typo.p>
+                        <Typo.p>
+                            {
+                                "For the current time, use baseDate({}) or package.getNow({ format, timezone })."
+                            }
+                        </Typo.p>
+                        <Typo.bold>Current ready-to-use dates in GlobalData:</Typo.bold>
+                        <Typo.code>
+                            {JSON.stringify(Object.keys(_baseDate.package), null, 2)}
+                        </Typo.code>
+                    </>
+                }
+            />
             <Ds.api
-                args="baseDate({ initial, format, initialFormat, timeZone, calculate });"
+                args="baseDate({ initial, format, initialFormat, timezone, calculate }); getNow({ format, timezone });"
                 returns='Formatted string, or Unix ms when format is "timestamp" (case-insensitive).'
                 props={{
                     initial: {
@@ -362,7 +401,7 @@ const X = () => {
                             "When initial is string, parsing pattern override (otherwise store defaultFormat).",
                         type: "string",
                     },
-                    timeZone: {
+                    timezone: {
                         description:
                             "IANA (e.g. Europe/Athens), offset string (+02:00), or finite number as hours offset. Default: clientData.timeZone from store if set, else local. Offset has no DST; use IANA for locale rules.",
                         type: "string | number",
@@ -371,6 +410,11 @@ const X = () => {
                         description:
                             "Plain object only; non-objects ignored. Truncated int deltas: year, month, day (calendar/clamp), then hour, minute, second, seconds (sums), millisecond applied as millis after calendar step.",
                         type: "object",
+                    },
+                    getNow: {
+                        description:
+                            "Shorthand for baseDate({ format, timezone }). Without arguments, returns the same current date output as baseDate({}).",
+                        type: "function",
                     },
                 }}
             />

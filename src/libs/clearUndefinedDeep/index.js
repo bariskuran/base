@@ -1,6 +1,8 @@
 export const clearUndefinedDeep = (obj) => {
     if (Array.isArray(obj)) {
-        return obj.map(clearUndefinedDeep);
+        return obj
+            .map(clearUndefinedDeep)
+            .filter((value) => value !== undefined);
     }
 
     if (obj && typeof obj === "object") {

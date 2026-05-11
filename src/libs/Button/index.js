@@ -24,7 +24,7 @@ const genericVariants = {
     closeIcon: {
         ...Plain,
         bgColor: "transparent",
-        color: "foreground",
+        color: "inherit",
         hoverBgColor: "transparent",
         activeBgColor: "transparent",
         icon: {
@@ -37,11 +37,11 @@ const genericVariants = {
         bgColor: "transparent",
         hoverBgColor: "transparent",
         activeBgColor: "transparent",
-        color: "foreground",
+        color: "inherit",
         prefix: {
             icon: "copy",
             width: 10,
-            color: "foreground",
+            color: "inherit",
             hoverColor: "primary",
             activeColor: "success",
             flat: true,

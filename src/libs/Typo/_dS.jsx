@@ -58,7 +58,7 @@ const X = () => (
                 size: { description: "Font size.", type: "string | number", defaultValue: "theme/body default" },
                 fontSize: { description: "Alias for size.", type: "string | number", defaultValue: "undefined" },
                 weight: { description: "Font weight.", type: "number | string", defaultValue: "400" },
-                color: { description: "Text color.", type: "string", defaultValue: "theme.foreground" },
+                color: { description: "Text color.", type: "string", defaultValue: "inherit" },
                 highlight: { description: "Highlight background/text helper.", type: "string", defaultValue: "undefined" },
                 width: { description: "Component width.", type: "string | number", defaultValue: "auto" },
                 maxWidth: { description: "Maximum width.", type: "string | number", defaultValue: "none" },

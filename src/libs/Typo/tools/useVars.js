@@ -49,7 +49,7 @@ const useVars = ({ children, content, contentArray, ...p }) => {
             width: cssNormalizeSize(width),
             maxWidth: cssNormalizeSize(maxWidth),
             size: cssNormalizeSize(size),
-            color: color ? clr.color : highlight ? highlightClr.opposite : theme.foreground,
+            color: color ? clr.color : highlight ? highlightClr.opposite : undefined,
             highlight: highlight ? colorGet(highlight || clr.opposite)?.color : undefined,
         };
     }, [p, currentBreakpoint, theme]);

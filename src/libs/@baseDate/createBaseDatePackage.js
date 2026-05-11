@@ -1,16 +1,16 @@
-import { baseDate } from "../@baseDate";
+import { baseDate, getNow } from "../@baseDate";
 import { baseStore } from "../@baseStore";
 
 const getDefaults = () => {
     const { _baseDate } = baseStore?.globalData?.get?.() || {};
-    const { defaultFormat, firstDayOfWeek, timeZone } = _baseDate || {};
-    return { defaultFormat, firstDayOfWeek, timeZone };
+    const { defaultFormat, firstDayOfWeek, timezone } = _baseDate || {};
+    return { defaultFormat, firstDayOfWeek, timezone };
 };
 
-const weekdayIndexInTz = (timestamp, timeZone) => {
+const weekdayIndexInTz = (timestamp, timezone) => {
     try {
         const name = new Intl.DateTimeFormat("en-US", {
-            timeZone: typeof timeZone === "string" ? timeZone : undefined,
+            timeZone: typeof timezone === "string" ? timezone : undefined,
             weekday: "short",
         }).format(new Date(timestamp));
         const map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
@@ -20,103 +20,107 @@ const weekdayIndexInTz = (timestamp, timeZone) => {
     }
 };
 
-const startOfDayTs = (nowTs, timeZone) => {
-    const y = Number(baseDate({ initial: nowTs, timeZone, format: "|YYYY|" }));
-    const m = Number(baseDate({ initial: nowTs, timeZone, format: "|MM|" }));
-    const d = Number(baseDate({ initial: nowTs, timeZone, format: "|DD|" }));
+const startOfDayTs = (nowTs, timezone) => {
+    const y = Number(baseDate({ initial: nowTs, timezone, format: "|YYYY|" }));
+    const m = Number(baseDate({ initial: nowTs, timezone, format: "|MM|" }));
+    const d = Number(baseDate({ initial: nowTs, timezone, format: "|DD|" }));
 
     return baseDate({
         initial: { year: y, month: m, day: d, hour: 0, minute: 0, second: 0, millisecond: 0 },
-        timeZone,
+        timezone,
         format: "timestamp",
     });
 };
 
-const endOfDayTs = (dayStartTs, timeZone) => {
+const endOfDayTs = (dayStartTs, timezone) => {
     const nextStart = baseDate({
         initial: dayStartTs,
-        timeZone,
+        timezone,
         calculate: { day: 1 },
         format: "timestamp",
     });
     return nextStart - 1;
 };
 
-const startOfMonthTs = (nowTs, timeZone) => {
-    const y = Number(baseDate({ initial: nowTs, timeZone, format: "|YYYY|" }));
-    const m = Number(baseDate({ initial: nowTs, timeZone, format: "|MM|" }));
+const startOfMonthTs = (nowTs, timezone) => {
+    const y = Number(baseDate({ initial: nowTs, timezone, format: "|YYYY|" }));
+    const m = Number(baseDate({ initial: nowTs, timezone, format: "|MM|" }));
     return baseDate({
         initial: { year: y, month: m, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 },
-        timeZone,
+        timezone,
         format: "timestamp",
     });
 };
 
-const startOfYearTs = (nowTs, timeZone) => {
-    const y = Number(baseDate({ initial: nowTs, timeZone, format: "|YYYY|" }));
+const startOfYearTs = (nowTs, timezone) => {
+    const y = Number(baseDate({ initial: nowTs, timezone, format: "|YYYY|" }));
     return baseDate({
         initial: { year: y, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 },
-        timeZone,
+        timezone,
         format: "timestamp",
     });
 };
 
-const makePoint = ({ timestamp, timeZone, defaultFormat, longFormat }) => {
+const makePoint = ({ timestamp, timezone, defaultFormat, longFormat }) => {
     const ts = Number(timestamp);
 
     return {
         timestamp: ts,
-        defaultString: baseDate({ initial: ts, timeZone, format: defaultFormat }),
-        longString: baseDate({ initial: ts, timeZone, format: longFormat }),
+        defaultString: baseDate({ initial: ts, timezone, format: defaultFormat }),
+        longString: baseDate({ initial: ts, timezone, format: longFormat }),
         calculate: (calculate, overrides = {}) =>
             baseDate({
                 initial: ts,
-                timeZone,
+                timezone,
                 calculate: calculate && typeof calculate === "object" ? calculate : undefined,
                 ...overrides,
             }),
     };
 };
 
-const makeLastDaysRange = ({ endDayStartTs, daysBackInclusive, timeZone, defaultFormat }) => {
-    const endTs = endOfDayTs(endDayStartTs, timeZone);
+const makeLastDaysRange = ({ endDayStartTs, daysBackInclusive, timezone, defaultFormat }) => {
+    const endTs = endOfDayTs(endDayStartTs, timezone);
 
     const startTs = baseDate({
         initial: endDayStartTs,
-        timeZone,
+        timezone,
         calculate: { day: -(daysBackInclusive - 1) },
         format: "timestamp",
     });
 
     return {
         default: [
-            baseDate({ initial: startTs, timeZone, format: defaultFormat }),
-            baseDate({ initial: endTs, timeZone, format: defaultFormat }),
+            baseDate({ initial: startTs, timezone, format: defaultFormat }),
+            baseDate({ initial: endTs, timezone, format: defaultFormat }),
         ],
         timestamps: [startTs, endTs],
     };
 };
 
 export const createBaseDatePackage = (opts = {}) => {
-    const { defaultFormat, firstDayOfWeek, timeZone: storeTz } = getDefaults();
+    const { defaultFormat, firstDayOfWeek, timezone: storeTz } = getDefaults();
 
     const tz =
-        typeof opts.timeZone === "number" && Number.isFinite(opts.timeZone)
-            ? opts.timeZone
-            : typeof opts.timeZone === "string" && opts.timeZone.trim()
-              ? opts.timeZone.trim()
+        typeof opts.timezone === "number" && Number.isFinite(opts.timezone)
+            ? opts.timezone
+            : typeof opts.timezone === "string" && opts.timezone.trim()
+              ? opts.timezone.trim()
               : storeTz;
 
     const longFormat = "|DD|/|MM|/|YYYY| |HH|:|NN|:|SS|";
 
     const nowTs = Date.now();
+    const getNowInTz = (opts = {}) => {
+        const { format, timezone } = opts || {};
+        return getNow({ format, timezone: timezone ?? tz });
+    };
 
     const todayStartTs = startOfDayTs(nowTs, tz);
     const todayEndTs = endOfDayTs(todayStartTs, tz);
 
     const tomorrowStartTs = baseDate({
         initial: todayStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { day: 1 },
         format: "timestamp",
     });
@@ -124,7 +128,7 @@ export const createBaseDatePackage = (opts = {}) => {
 
     const yesterdayStartTs = baseDate({
         initial: todayStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { day: -1 },
         format: "timestamp",
     });
@@ -136,7 +140,7 @@ export const createBaseDatePackage = (opts = {}) => {
 
     const thisWeekStartTs = baseDate({
         initial: todayStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { day: -deltaThisWeekStart },
         format: "timestamp",
     });
@@ -144,7 +148,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const thisWeekEndTs = endOfDayTs(
         baseDate({
             initial: thisWeekStartTs,
-            timeZone: tz,
+            timezone: tz,
             calculate: { day: 6 },
             format: "timestamp",
         }),
@@ -153,7 +157,7 @@ export const createBaseDatePackage = (opts = {}) => {
 
     const nextWeekStartTs = baseDate({
         initial: thisWeekStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { day: 7 },
         format: "timestamp",
     });
@@ -161,7 +165,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const nextWeekEndTs = endOfDayTs(
         baseDate({
             initial: nextWeekStartTs,
-            timeZone: tz,
+            timezone: tz,
             calculate: { day: 6 },
             format: "timestamp",
         }),
@@ -170,7 +174,7 @@ export const createBaseDatePackage = (opts = {}) => {
 
     const lastWeekStartTs = baseDate({
         initial: thisWeekStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { day: -7 },
         format: "timestamp",
     });
@@ -178,7 +182,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const lastWeekEndTs = endOfDayTs(
         baseDate({
             initial: lastWeekStartTs,
-            timeZone: tz,
+            timezone: tz,
             calculate: { day: 6 },
             format: "timestamp",
         }),
@@ -189,13 +193,13 @@ export const createBaseDatePackage = (opts = {}) => {
     const thisMonthStartTs = startOfMonthTs(nowTs, tz);
     const nextMonthStartTs = baseDate({
         initial: thisMonthStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { month: 1 },
         format: "timestamp",
     });
     const lastMonthStartTs = baseDate({
         initial: thisMonthStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { month: -1 },
         format: "timestamp",
     });
@@ -204,7 +208,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const nextMonthEndTs =
         baseDate({
             initial: nextMonthStartTs,
-            timeZone: tz,
+            timezone: tz,
             calculate: { month: 1 },
             format: "timestamp",
         }) - 1;
@@ -214,13 +218,13 @@ export const createBaseDatePackage = (opts = {}) => {
     const thisYearStartTs = startOfYearTs(nowTs, tz);
     const nextYearStartTs = baseDate({
         initial: thisYearStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { year: 1 },
         format: "timestamp",
     });
     const lastYearStartTs = baseDate({
         initial: thisYearStartTs,
-        timeZone: tz,
+        timezone: tz,
         calculate: { year: -1 },
         format: "timestamp",
     });
@@ -229,39 +233,33 @@ export const createBaseDatePackage = (opts = {}) => {
     const nextYearEndTs =
         baseDate({
             initial: nextYearStartTs,
-            timeZone: tz,
+            timezone: tz,
             calculate: { year: 1 },
             format: "timestamp",
         }) - 1;
     const lastYearEndTs = thisYearStartTs - 1;
 
-    // Core points
-    const now = {
-        ...makePoint({ timestamp: nowTs, timeZone: tz, defaultFormat, longFormat }),
-        get: () => Date.now(),
-    };
-
     const day = {
-        ...makePoint({ timestamp: todayStartTs, timeZone: tz, defaultFormat, longFormat }),
-        value: Number(baseDate({ initial: todayStartTs, timeZone: tz, format: "|DD|" })), // 31
+        ...makePoint({ timestamp: todayStartTs, timezone: tz, defaultFormat, longFormat }),
+        value: Number(baseDate({ initial: todayStartTs, timezone: tz, format: "|DD|" })), // 31
         weekdayIndex: weekdayIndexInTz(todayStartTs, tz), // 6
-        weekdayShort: baseDate({ initial: todayStartTs, timeZone: tz, format: "|aa|" }), // Sat
-        weekdayLong: baseDate({ initial: todayStartTs, timeZone: tz, format: "|AA|" }), // Saturday
+        weekdayShort: baseDate({ initial: todayStartTs, timezone: tz, format: "|aa|" }), // Sat
+        weekdayLong: baseDate({ initial: todayStartTs, timezone: tz, format: "|AA|" }), // Saturday
     };
 
     const monthStartForNames = thisMonthStartTs;
     const month = {
-        ...makePoint({ timestamp: monthStartForNames, timeZone: tz, defaultFormat, longFormat }),
-        value: Number(baseDate({ initial: monthStartForNames, timeZone: tz, format: "|MM|" })), // 1..12
-        short: baseDate({ initial: monthStartForNames, timeZone: tz, format: "|oo|" }), // Jan
-        long: baseDate({ initial: monthStartForNames, timeZone: tz, format: "|OO|" }), // January
+        ...makePoint({ timestamp: monthStartForNames, timezone: tz, defaultFormat, longFormat }),
+        value: Number(baseDate({ initial: monthStartForNames, timezone: tz, format: "|MM|" })), // 1..12
+        short: baseDate({ initial: monthStartForNames, timezone: tz, format: "|oo|" }), // Jan
+        long: baseDate({ initial: monthStartForNames, timezone: tz, format: "|OO|" }), // January
     };
 
     const yearStartForNums = thisYearStartTs;
     const year = {
-        ...makePoint({ timestamp: yearStartForNums, timeZone: tz, defaultFormat, longFormat }),
-        value: Number(baseDate({ initial: yearStartForNums, timeZone: tz, format: "|YYYY|" })), // 2026
-        short: Number(baseDate({ initial: yearStartForNums, timeZone: tz, format: "|YY|" })), // 26
+        ...makePoint({ timestamp: yearStartForNums, timezone: tz, defaultFormat, longFormat }),
+        value: Number(baseDate({ initial: yearStartForNums, timezone: tz, format: "|YYYY|" })), // 2026
+        short: Number(baseDate({ initial: yearStartForNums, timezone: tz, format: "|YY|" })), // 26
     };
 
     // günün sonuna kadar kalan milisaniye
@@ -270,148 +268,148 @@ export const createBaseDatePackage = (opts = {}) => {
     // Output object
     return {
         tsTillEndOfDay,
-        now,
+        getNow: getNowInTz,
 
         year,
         month,
         day,
 
-        today: makePoint({ timestamp: todayStartTs, timeZone: tz, defaultFormat, longFormat }),
-        todayEnd: makePoint({ timestamp: todayEndTs, timeZone: tz, defaultFormat, longFormat }),
+        today: makePoint({ timestamp: todayStartTs, timezone: tz, defaultFormat, longFormat }),
+        todayEnd: makePoint({ timestamp: todayEndTs, timezone: tz, defaultFormat, longFormat }),
 
         tomorrow: makePoint({
             timestamp: tomorrowStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         tomorrowEnd: makePoint({
             timestamp: tomorrowEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
 
         yesterday: makePoint({
             timestamp: yesterdayStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         yesterdayEnd: makePoint({
             timestamp: yesterdayEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
 
         nextWeekStart: makePoint({
             timestamp: nextWeekStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         nextWeekEnd: makePoint({
             timestamp: nextWeekEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         thisWeekStart: makePoint({
             timestamp: thisWeekStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         thisWeekEnd: makePoint({
             timestamp: thisWeekEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         lastWeekStart: makePoint({
             timestamp: lastWeekStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         lastWeekEnd: makePoint({
             timestamp: lastWeekEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
 
         thisMonthStart: makePoint({
             timestamp: thisMonthStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         thisMonthEnd: makePoint({
             timestamp: thisMonthEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         nextMonthStart: makePoint({
             timestamp: nextMonthStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         nextMonthEnd: makePoint({
             timestamp: nextMonthEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         lastMonthStart: makePoint({
             timestamp: lastMonthStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         lastMonthEnd: makePoint({
             timestamp: lastMonthEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
 
         thisYearStart: makePoint({
             timestamp: thisYearStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         thisYearEnd: makePoint({
             timestamp: thisYearEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         nextYearStart: makePoint({
             timestamp: nextYearStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         nextYearEnd: makePoint({
             timestamp: nextYearEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         lastYearStart: makePoint({
             timestamp: lastYearStartTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
         lastYearEnd: makePoint({
             timestamp: lastYearEndTs,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
             longFormat,
         }),
@@ -419,43 +417,43 @@ export const createBaseDatePackage = (opts = {}) => {
         last7Days: makeLastDaysRange({
             endDayStartTs: todayStartTs,
             daysBackInclusive: 7,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
         }),
         last15Days: makeLastDaysRange({
             endDayStartTs: todayStartTs,
             daysBackInclusive: 15,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
         }),
         last30Days: makeLastDaysRange({
             endDayStartTs: todayStartTs,
             daysBackInclusive: 30,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
         }),
         last45Days: makeLastDaysRange({
             endDayStartTs: todayStartTs,
             daysBackInclusive: 45,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
         }),
         last60Days: makeLastDaysRange({
             endDayStartTs: todayStartTs,
             daysBackInclusive: 60,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
         }),
         last90Days: makeLastDaysRange({
             endDayStartTs: todayStartTs,
             daysBackInclusive: 90,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
         }),
         last180Days: makeLastDaysRange({
             endDayStartTs: todayStartTs,
             daysBackInclusive: 180,
-            timeZone: tz,
+            timezone: tz,
             defaultFormat,
         }),
     };

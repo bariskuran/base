@@ -40,6 +40,7 @@ const S = {
     row2: styled.div`
         display: flex;
         flex: 1 1 auto;
+        min-width: 0;
         background: ${({ theme }) => theme.greys.shade40};
         height: 1px;
         align-self: center;

@@ -60,14 +60,19 @@ export const Root = styled.span`
 `;
 
 export const Svg = styled.svg`
-    ${({ $fill, theme }) => css`
+    ${({ $fill }) => {
+        const shouldInherit = $fill == null || $fill === "" || $fill === "inherit";
+        const color = shouldInherit ? "inherit" : $fill;
+        const fill = shouldInherit ? "currentColor" : $fill;
+
+        return css`
         position: absolute;
         inset: 0;
         display: block;
         width: 100%;
         height: 100%;
-        fill: ${$fill || theme.foreground};
-        color: ${$fill || theme.foreground};
+        fill: ${fill};
+        color: ${color};
         pointer-events: none;
         transition:
             fill 0.2s ease,
@@ -76,7 +81,8 @@ export const Svg = styled.svg`
         @media (prefers-reduced-motion: reduce) {
             transition: none;
         }
-    `}
+    `;
+    }}
 `;
 
 /** Single surface: opacity + layer scale + spin/pulse (replaces LayerBox → SpinBox → PulseBox). */

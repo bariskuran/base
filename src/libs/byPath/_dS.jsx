@@ -5,17 +5,18 @@ import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 import { Button } from "../Button";
-import { Space } from "../Space";
 
 const dataReset = { user: { profile: { name: "Baris" } } };
 const dataReset2 = { user: { profile: { name: "Baris" } }, items: [{ id: 1 }, { id: 2 }] };
 
+const PATH_BASIC = "byPath-basic";
+const PATH_MAPPING = "byPath-mapping";
+
 const X = () => {
-    const { data, output, output2, setLocal } = baseStore.useLocal({
+    const { data, setLocal } = baseStore.useLocal({
         data: dataReset,
-        output: null,
-        output2: null,
     });
+    const { outputButtonProps, Output, clearOutput } = Ds.useOutputViewer();
 
     return (
         <Ds.page
@@ -31,48 +32,56 @@ const X = () => {
                 byPath.set(data, "user.profile.name", "Selin");
                 byPath.delete(data, 'user.profile.name');`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Typo.code>data = {JSON.stringify(data)}</Typo.code>
-                        <Button.string
-                            label="byPath.get(data, 'user.profile.name')"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = byPath.get(data, "user.profile.name");
-                                })
-                            }
-                        />
-                        <Button.string
-                            label='byPath.set(data, "user.profile.name", "Selin")'
-                            onClick={() => {
-                                const newData = byPath.set(data, "user.profile.name", "Selin");
-                                setLocal((s) => {
-                                    s.data = newData;
-                                    s.output = JSON.stringify(newData);
-                                });
-                            }}
-                        />
-                        <Button.string
-                            label="byPath.delete(data, 'user.profile.name')"
-                            onClick={() => {
-                                const newData = byPath.delete(data, "user.profile.name");
-                                setLocal((s) => {
-                                    s.data = newData;
-                                    s.output = JSON.stringify(newData);
-                                });
-                            }}
-                        />
+                        <Flex gap={10} full wrap>
+                            <Button.plain
+                                label="byPath.get(data, 'user.profile.name')"
+                                {...outputButtonProps({
+                                    path: PATH_BASIC,
+                                    activeLabel: "get",
+                                    fn: () => byPath.get(data, "user.profile.name"),
+                                })}
+                            />
+                            <Button.plain
+                                label='byPath.set(data, "user.profile.name", "Selin")'
+                                {...outputButtonProps({
+                                    path: PATH_BASIC,
+                                    activeLabel: "set",
+                                    fn: () => {
+                                        const next = byPath.set(data, "user.profile.name", "Selin");
+                                        setLocal((s) => {
+                                            s.data = next;
+                                        });
+                                        return next;
+                                    },
+                                })}
+                            />
+                            <Button.plain
+                                label="byPath.delete(data, 'user.profile.name')"
+                                {...outputButtonProps({
+                                    path: PATH_BASIC,
+                                    activeLabel: "delete",
+                                    fn: () => {
+                                        const next = byPath.delete(data, "user.profile.name");
+                                        setLocal((s) => {
+                                            s.data = next;
+                                        });
+                                        return next;
+                                    },
+                                })}
+                            />
+                        </Flex>
                         <Button.plain
                             label="Reset"
                             onClick={() => {
                                 setLocal((s) => {
                                     s.data = dataReset;
-                                    s.output = null;
                                 });
+                                clearOutput(PATH_BASIC);
                             }}
                         />
-                        <Space size="l" />
-                        {output && <Typo.span balance>Output or Result:</Typo.span>}
-                        <Typo.span balance>{output}</Typo.span>
+                        <Output path={PATH_BASIC} />
                     </Flex.column>
                 }
             />
@@ -86,24 +95,21 @@ const X = () => {
                       firstId: "items.0.id",
                     });`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Typo.pre>data = {JSON.stringify(dataReset2)}</Typo.pre>
                         <Button.plain
                             label="byPath.mapping(data, { username: 'user.profile.name', firstId: 'items.0.id' })"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output2 = JSON.stringify(
-                                        byPath.mapping(dataReset2, {
-                                            username: "user.profile.name",
-                                            firstId: "items.0.id",
-                                        }),
-                                    );
-                                })
-                            }
+                            {...outputButtonProps({
+                                path: PATH_MAPPING,
+                                activeLabel: "mapping",
+                                fn: () =>
+                                    byPath.mapping(dataReset2, {
+                                        username: "user.profile.name",
+                                        firstId: "items.0.id",
+                                    }),
+                            })}
                         />
-                        <Space size="l" />
-                        {output2 && <Typo.span balance>Output or Result:</Typo.span>}
-                        <Typo.span balance>{output2}</Typo.span>
+                        <Output path={PATH_MAPPING} />
                     </Flex.column>
                 }
             />

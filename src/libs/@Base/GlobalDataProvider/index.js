@@ -120,7 +120,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                 _baseDate: {
                     defaultFormat: "DD/MM/YYYY",
                     firstDayOfWeek: 1,
-                    timeZone: clientData.timeZone,
+                    timezone: clientData.timeZone,
                     ...baseDateSettings,
                     package: createBaseDatePackage(),
                 },
@@ -201,7 +201,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         const generatedClientData = getCD();
         baseStore.globalData.set((s) => {
             s._clientData = generatedClientData;
-            s._baseDate.timeZone = generatedClientData.timeZone;
+            s._baseDate.timezone = generatedClientData.timeZone;
         });
     };
     useEventListener("resize", updateClientData, { getFirst: false });

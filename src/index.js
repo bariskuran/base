@@ -66,7 +66,7 @@ export {
 } from "react-router-dom";
 
 /* TAILOR MADE */
-export { baseDate } from "./libs/@baseDate";
+export { baseDate, getNow } from "./libs/@baseDate";
 export { baseFetch, useBaseFetch } from "./libs/@baseFetch";
 export { baseStore } from "./libs/@baseStore";
 export { baseStore as cs } from "./libs/@baseStore";

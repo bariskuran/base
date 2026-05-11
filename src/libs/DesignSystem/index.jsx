@@ -5,6 +5,8 @@ import api from "./ApiViewer";
 import page from "./Page";
 import block from "./Block";
 import variant from "./VariantViewer";
+import output from "./OutputArea";
+import useOutputViewer from "./useOutputViewer";
 import { baseStore } from "../@baseStore";
 
 const getShowInternalDs = () => {
@@ -168,6 +170,8 @@ const Ds = {
     api,
     page,
     block,
+    output,
+    useOutputViewer,
     layout: Layout,
 };
 export default Ds;

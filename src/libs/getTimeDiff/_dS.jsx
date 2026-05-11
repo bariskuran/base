@@ -4,19 +4,12 @@ import { getTimeDiff } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
-import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
 
 const fixedEpoch = 1700000000000;
 const fixedLater = fixedEpoch + 36 * 60 * 60 * 1000;
 
 const X = () => {
-    const { outputs, setLocal } = baseStore.useLocal({ outputs: {} });
-
-    const put = (value, path) =>
-        setLocal((s) => {
-            s.outputs[path] = JSON.stringify(value, null, 2);
-        });
+    const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
         <Ds.page
@@ -38,7 +31,7 @@ const X = () => {
                 </>
             }
         >
-            {/* <Ds.block
+            <Ds.block
                 title="Basic usage"
                 description="getTimeDiff basicly compares two dates and returns the difference in different units and breakdowns."
                 code={`import { getTimeDiff } from "${SYS.basePath}";
@@ -48,69 +41,34 @@ const X = () => {
                         getTimeDiff(new Date(1700000000000));
                     `}
                 example={
-                    <Flex.column gap={10} padding={10}>
-                        <Flex gap={10}>
+                    <Flex.column gap={10} padding={10} full>
+                        <Flex gap={10} full>
                             <Button.plain
                                 label="ts"
-                                onClick={() => {
-                                    put(
-                                        getTimeDiff("1700000000000", 1700000000000 + 3600000),
-                                        "ex1",
-                                    );
-                                }}
+                                {...outputButtonProps({
+                                    path: "block1",
+                                    activeLabel: "ts",
+                                    fn: getTimeDiff("1700000000000", 1700000000000 + 3600000),
+                                })}
                             />
                             <Button.plain
                                 label="baseDate obj to now"
-                                onClick={() => {
-                                    put(getTimeDiff({ initial: "28/03/1982" }), "ex1");
-                                }}
+                                {...outputButtonProps({
+                                    path: "block1",
+                                    activeLabel: "baseDate",
+                                    fn: getTimeDiff({ initial: "28/03/1982" }),
+                                })}
                             />
                             <Button.plain
                                 label="Date() to now"
-                                onClick={() => {
-                                    put(getTimeDiff(new Date(1700000000000)), "ex1");
-                                }}
+                                {...outputButtonProps({
+                                    path: "block1",
+                                    activeLabel: "Date",
+                                    fn: getTimeDiff(new Date(1700000000000)),
+                                })}
                             />
                         </Flex>
-                        <OutputArea outputs={outputs} path="ex1" />
-                    </Flex.column>
-                }
-            />
-            <Ds.block
-                title="Inputs & baseDate objects"
-                description={
-                    <>
-                        Use the same option shapes as baseDate.
-                        <br />
-                        <br />
-                        Check out <Button.string
-                            to="/design-system/baseDate"
-                            label="baseDate()"
-                        />{" "}
-                        for more details.
-                    </>
-                }
-                code={`import { getTimeDiff } from "${SYS.basePath}";
-
-                        // Details for object props:
-                        // → Design System → baseDate()`}
-                example={
-                    <Flex.column gap={10} padding={10}>
-                        <Flex gap={10}>
-                            <Button.plain
-                                label="two numbers (~26h gap)"
-                                onClick={() => {
-                                    put(
-                                        getTimeDiff(
-                                            fixedEpoch,
-                                            fixedEpoch + 1000 * 60 * 60 * 26 + 3500,
-                                        ),
-                                        "ex2",
-                                    );
-                                }}
-                            />
-                        </Flex>
-                        <OutputArea outputs={outputs} path="ex2" />
+                        <Output path="block1" />
                     </Flex.column>
                 }
             />
@@ -128,26 +86,30 @@ const X = () => {
                         <Flex gap={10}>
                             <Button.plain
                                 label="two numbers (~26h gap)"
-                                onClick={() => {
-                                    put(
+                                {...outputButtonProps({
+                                    path: "primitives",
+                                    activeLabel: "numbers",
+                                    fn: () =>
                                         getTimeDiff(
                                             fixedEpoch,
                                             fixedEpoch + 1000 * 60 * 60 * 26 + 3500,
                                         ),
-                                        "ex3",
-                                    );
-                                }}
+                                })}
                             />
                             <Button.plain
                                 label="two Date instances"
-                                onClick={() => {
-                                    const a = new Date(fixedEpoch);
-                                    const b = new Date(fixedEpoch + 86400000);
-                                    put(getTimeDiff(a, b), "ex3");
-                                }}
+                                {...outputButtonProps({
+                                    path: "primitives",
+                                    activeLabel: "dates",
+                                    fn: () => {
+                                        const a = new Date(fixedEpoch);
+                                        const b = new Date(fixedEpoch + 86400000);
+                                        return getTimeDiff(a, b);
+                                    },
+                                })}
                             />
                         </Flex>
-                        <OutputArea outputs={outputs} path="ex3" />
+                        <Output path="primitives" />
                     </Flex.column>
                 }
             />
@@ -161,22 +123,26 @@ const X = () => {
                     <Flex.column gap={10} padding={10}>
                         <Flex gap={10} wrap>
                             <Button.plain
-                                label="single ms (1h before live now)"
-                                onClick={() => put(getTimeDiff(Date.now() - 3600000), "ex4")}
+                                label="single ms"
+                                {...outputButtonProps({
+                                    path: "one-argument",
+                                    activeLabel: "ms",
+                                    fn: () => getTimeDiff(fixedEpoch - 3600000),
+                                })}
                             />
                             <Button.plain
                                 label="single object (past date)"
-                                onClick={() =>
-                                    put(
+                                {...outputButtonProps({
+                                    path: "one-argument",
+                                    activeLabel: "object",
+                                    fn: () =>
                                         getTimeDiff({
                                             initial: { year: 2020, month: 1, day: 1 },
                                         }),
-                                        "ex4",
-                                    )
-                                }
+                                })}
                             />
                         </Flex>
-                        <OutputArea outputs={outputs} path="ex4" />
+                        <Output path="one-argument" />
                     </Flex.column>
                 }
             />
@@ -205,8 +171,10 @@ const X = () => {
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="two objects + display formats"
-                                onClick={() =>
-                                    put(
+                                {...outputButtonProps({
+                                    path: "baseDate-objects",
+                                    activeLabel: "formats",
+                                    fn: () =>
                                         getTimeDiff(
                                             {
                                                 initial: 1700000000000,
@@ -217,14 +185,14 @@ const X = () => {
                                                 format: "|DD|/|MM|/|YYYY|",
                                             },
                                         ),
-                                        "ex5",
-                                    )
-                                }
+                                })}
                             />
                             <Button.plain
                                 label="calculate on initial"
-                                onClick={() =>
-                                    put(
+                                {...outputButtonProps({
+                                    path: "baseDate-objects",
+                                    activeLabel: "calculate",
+                                    fn: () =>
                                         getTimeDiff(
                                             {
                                                 initial: "10/03/2024",
@@ -232,12 +200,10 @@ const X = () => {
                                             },
                                             { initial: "20/03/2024" },
                                         ),
-                                        "ex5",
-                                    )
-                                }
+                                })}
                             />
                         </Flex>
-                        <OutputArea outputs={outputs} path="ex5" />
+                        <Output path="baseDate-objects" />
                     </Flex.column>
                 }
             />
@@ -253,9 +219,13 @@ const X = () => {
                     <Flex.column gap={10} padding={10}>
                         <Button.plain
                             label="exactly 36h apart (fixed ms)"
-                            onClick={() => put(getTimeDiff(fixedEpoch, fixedLater), "ex6")}
+                            {...outputButtonProps({
+                                path: "fractional-breakdown",
+                                activeLabel: "36h",
+                                fn: () => getTimeDiff(fixedEpoch, fixedLater),
+                            })}
                         />
-                        <OutputArea outputs={outputs} path="ex6" />
+                        <Output path="fractional-breakdown" />
                     </Flex.column>
                 }
             />
@@ -272,21 +242,33 @@ const X = () => {
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="time1 before time2"
-                                onClick={() => put(getTimeDiff(1000, 2000), "ex7")}
+                                {...outputButtonProps({
+                                    path: "timeline",
+                                    activeLabel: "before",
+                                    fn: () => getTimeDiff(1000, 2000),
+                                })}
                             />
                             <Button.plain
                                 label="time1 after time2"
-                                onClick={() => put(getTimeDiff(2000, 1000), "ex7")}
+                                {...outputButtonProps({
+                                    path: "timeline",
+                                    activeLabel: "after",
+                                    fn: () => getTimeDiff(2000, 1000),
+                                })}
                             />
                             <Button.plain
                                 label="same instant"
-                                onClick={() => put(getTimeDiff(42, 42), "ex7")}
+                                {...outputButtonProps({
+                                    path: "timeline",
+                                    activeLabel: "same",
+                                    fn: () => getTimeDiff(42, 42),
+                                })}
                             />
                         </Flex>
-                        <OutputArea outputs={outputs} path="ex7" />
+                        <Output path="timeline" />
                     </Flex.column>
                 }
-            /> */}
+            />
             <Ds.api
                 args="getTimeDiff(time1, time2?);"
                 returns="Compare result with snapshots, signed gap, fractional spans (in), and UTC calendar breakdown."
@@ -333,14 +315,5 @@ const X = () => {
         </Ds.page>
     );
 };
-
-const OutputArea = ({ outputs, path }) =>
-    outputs[path] != null ? (
-        <>
-            <Space size="m" />
-            <Typo.span balance>Output</Typo.span>
-            <Typo.code>{outputs[path]}</Typo.code>
-        </>
-    ) : null;
 
 export default X;

@@ -36,11 +36,11 @@ export const getPartsForOffset = (date, offsetMinutes) => {
     };
 };
 
-export const safeIntlParts = (date, timeZone) => {
-    if (!timeZone || typeof Intl === "undefined" || !Intl.DateTimeFormat) return null;
+export const safeIntlParts = (date, timezone) => {
+    if (!timezone || typeof Intl === "undefined" || !Intl.DateTimeFormat) return null;
     try {
         const dtf = new Intl.DateTimeFormat("en-US", {
-            timeZone,
+            timeZone: timezone,
             year: "numeric",
             month: "2-digit",
             day: "2-digit",
@@ -67,8 +67,8 @@ export const safeIntlParts = (date, timeZone) => {
     }
 };
 
-export const getTzOffsetMinutesForInstant = (timeZone, dateUTC) => {
-    const parts = safeIntlParts(dateUTC, timeZone);
+export const getTzOffsetMinutesForInstant = (timezone, dateUTC) => {
+    const parts = safeIntlParts(dateUTC, timezone);
     if (!parts) return 0;
 
     const asUTC = Date.UTC(
@@ -84,7 +84,7 @@ export const getTzOffsetMinutesForInstant = (timeZone, dateUTC) => {
     return Math.round((asUTC - dateUTC.getTime()) / 60000);
 };
 
-export const makeDateFromPartsInTz = (parts, timeZone) => {
+export const makeDateFromPartsInTz = (parts, timezone) => {
     const y = Number.isFinite(parts.year) ? parts.year : DATE_DEFAULTS.year;
     const m = Number.isFinite(parts.month) ? parts.month : DATE_DEFAULTS.month;
     const d = Number.isFinite(parts.day) ? parts.day : DATE_DEFAULTS.day;
@@ -96,13 +96,13 @@ export const makeDateFromPartsInTz = (parts, timeZone) => {
 
     const utcGuess = new Date(Date.UTC(y, (m || 1) - 1, d || 1, hh, nn, ss, ms));
 
-    const offsetStr = parseOffsetMinutes(timeZone);
+    const offsetStr = parseOffsetMinutes(timezone);
     if (typeof offsetStr === "number") {
         return new Date(utcGuess.getTime() - offsetStr * 60000);
     }
 
-    if (timeZone && typeof timeZone === "string") {
-        const off = getTzOffsetMinutesForInstant(timeZone, utcGuess);
+    if (timezone && typeof timezone === "string") {
+        const off = getTzOffsetMinutesForInstant(timezone, utcGuess);
         return new Date(utcGuess.getTime() - off * 60000);
     }
 
@@ -216,9 +216,9 @@ export const parseInitialString = (str, initialFormat) => {
 
 export const pad = (n, len = 2) => String(Math.trunc(n)).padStart(len, "0");
 
-export const formatWithTokens = (date, format, timeZone) => {
+export const formatWithTokens = (date, format, timezone) => {
     const fmt = String(format || "");
-    const offsetMinutes = parseOffsetMinutes(timeZone);
+    const offsetMinutes = parseOffsetMinutes(timezone);
 
     const has24h = fmt.includes("HH") || fmt.includes("hh");
     const has12h = fmt.includes("ZZ") || fmt.includes("zz");
@@ -254,7 +254,7 @@ export const formatWithTokens = (date, format, timeZone) => {
         monthLong = safeFmt({ month: "long" }) || "";
         monthShort = safeFmt({ month: "short" }) || "";
     } else {
-        const p = safeIntlParts(date, timeZone);
+        const p = safeIntlParts(date, timezone);
 
         year = p?.year ?? date.getFullYear();
         month = p?.month ?? date.getMonth() + 1;
@@ -271,7 +271,7 @@ export const formatWithTokens = (date, format, timeZone) => {
                 ? (() => {
                       try {
                           return new Intl.DateTimeFormat("default", {
-                              timeZone: timeZone || undefined,
+                              timeZone: timezone || undefined,
                               weekday: "short",
                           }).format(date);
                       } catch {
@@ -285,7 +285,7 @@ export const formatWithTokens = (date, format, timeZone) => {
                 ? (() => {
                       try {
                           return new Intl.DateTimeFormat("default", {
-                              timeZone: timeZone || undefined,
+                              timeZone: timezone || undefined,
                               month: "long",
                           }).format(date);
                       } catch {
@@ -299,7 +299,7 @@ export const formatWithTokens = (date, format, timeZone) => {
                 ? (() => {
                       try {
                           return new Intl.DateTimeFormat("default", {
-                              timeZone: timeZone || undefined,
+                              timeZone: timezone || undefined,
                               month: "short",
                           }).format(date);
                       } catch {
@@ -376,7 +376,7 @@ export const resolveDefaultsFromStore = () => {
 
     const firstDayOfWeek = typeof bs.firstDayOfWeek === "number" ? bs.firstDayOfWeek : 1;
 
-    const timeZone = typeof cd.timeZone === "string" && cd.timeZone ? cd.timeZone : undefined;
+    const timezone = typeof cd.timeZone === "string" && cd.timeZone ? cd.timeZone : undefined;
 
-    return { defaultFormat, firstDayOfWeek, timeZone };
+    return { defaultFormat, firstDayOfWeek, timezone };
 };

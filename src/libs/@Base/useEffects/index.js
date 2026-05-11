@@ -14,8 +14,8 @@ export const useEffects = () => {
 
     /* Start baseDatePackage updater   */
     const startTimeout = () => {
-        const timeZone = _baseDate?.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const datePackage = createBaseDatePackage({ timeZone });
+        const timezone = _baseDate?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const datePackage = createBaseDatePackage({ timezone });
 
         set((s) => {
             s._baseDate.package = datePackage;

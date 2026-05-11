@@ -103,9 +103,6 @@ export const getButtonColorPalette = ({
     const inverse1 = inverseToneFn(selectedHex8, hoverRate);
     const inverse2 = inverseToneFn(selectedHex8, activeRate);
 
-    const solidTextFallback = (stateBg) =>
-        isTransparentSurface(stateBg) ? textForSolidBg(theme, null, normalBg1) : textForSolidBg(theme, null, stateBg);
-
     if (outlined) {
         const overlayBase = isLight ? "#ffffff" : "#000000";
         const outlinedBg1 = "transparent";
@@ -141,30 +138,33 @@ export const getButtonColorPalette = ({
     }
 
     const pendingBgSolid = resolvedPendingBg || normalBg2;
+    const resolvedTextColor = resolvePathOrRaw(theme, color);
+    const textForSurface = (stateBg) =>
+        resolvedTextColor || (isTransparentSurface(stateBg) ? "inherit" : textForSolidBg(theme, null, stateBg));
 
     return {
         default: {
             bg: normalBg1,
-            color: textForSolidBg(theme, color, normalBg1),
+            color: textForSurface(normalBg1),
         },
         hover: {
             bg: normalBg2,
             color:
-                resolvePathOrRaw(theme, hoverColor) || resolvePathOrRaw(theme, color) || solidTextFallback(normalBg2),
+                resolvePathOrRaw(theme, hoverColor) || resolvedTextColor || textForSurface(normalBg2),
         },
         active: {
             bg: normalBg3,
             color:
                 resolvePathOrRaw(theme, activeColor) ||
-                resolvePathOrRaw(theme, color) ||
-                solidTextFallback(normalBg3),
+                resolvedTextColor ||
+                textForSurface(normalBg3),
         },
         pending: {
             bg: pendingBgSolid,
             color:
                 resolvePathOrRaw(theme, pendingColor) ||
-                resolvePathOrRaw(theme, color) ||
-                solidTextFallback(pendingBgSolid),
+                resolvedTextColor ||
+                textForSurface(pendingBgSolid),
         },
         inverse1,
         inverse2,
