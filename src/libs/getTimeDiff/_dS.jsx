@@ -4,6 +4,7 @@ import { getTimeDiff } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
+import { baseDate } from "../@baseDate";
 
 const fixedEpoch = 1700000000000;
 const fixedLater = fixedEpoch + 36 * 60 * 60 * 1000;
@@ -23,10 +24,9 @@ const X = () => {
                     </Typo.p>
                     <Typo.p>The order of the dates does not matter.</Typo.p>
                     <Typo.p>
-                        Dates can be provided as a Date(), a baseDate object, or a timestamp. The
-                        baseDate object is an in-house function with additional features. For
-                        details on the baseDate object, see the{" "}
-                        <Button.string to="/design-system/baseDate" label="baseDate()" /> section.
+                        Dates can be provided as a Date(), a baseDate object, a timestamp number,
+                        purely numeric timestamp strings, or other date strings that{" "}
+                        <Button.string to="/design-system/baseDate" label="baseDate()" /> can parse.
                     </Typo.p>
                 </>
             }
@@ -73,38 +73,57 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Primitives (ms, Date)"
+                title="ts, Date and baseDate equality comparison"
                 code={`import { getTimeDiff } from "${SYS.basePath}";
 
-                        const a = Date.now();
-                        const b = a + 1000 * 60 * 60 * 26 + 3500;
+                        const msValue = 1000 * 60 * 60 * 26 + 3500;
 
-                        getTimeDiff(a, b);
-                        getTimeDiff(new Date(a), new Date(b));`}
+                        const a = Date.now();
+                        const c = a + msValue;
+                        const d = baseDate({
+                            initial: a,
+                            calculate: { millisecond: msValue },
+                            format: "timestamp",
+                        });
+
+                        const r1 = getTimeDiff(a, c);
+                        const r2 = getTimeDiff(new Date(a), new Date(c));
+                        const r3 = getTimeDiff(String(a), String(c));
+                        const r4 = getTimeDiff(a, d);
+
+                        // r1, r2, r3, r4 → same tsDiff
+                        `}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Flex gap={10}>
                             <Button.plain
-                                label="two numbers (~26h gap)"
+                                label="equality comparison"
                                 {...outputButtonProps({
                                     path: "primitives",
-                                    activeLabel: "numbers",
-                                    fn: () =>
-                                        getTimeDiff(
-                                            fixedEpoch,
-                                            fixedEpoch + 1000 * 60 * 60 * 26 + 3500,
-                                        ),
-                                })}
-                            />
-                            <Button.plain
-                                label="two Date instances"
-                                {...outputButtonProps({
-                                    path: "primitives",
-                                    activeLabel: "dates",
+                                    activeLabel: "r1",
                                     fn: () => {
-                                        const a = new Date(fixedEpoch);
-                                        const b = new Date(fixedEpoch + 86400000);
-                                        return getTimeDiff(a, b);
+                                        const GAP = 1000 * 60 * 60 * 26 + 3500;
+                                        // eslint-disable-next-line react-hooks/purity
+                                        const a = Date.now();
+                                        const c = a + GAP;
+                                        const d = baseDate({
+                                            initial: a,
+                                            calculate: { millisecond: GAP },
+                                            format: "timestamp",
+                                        });
+
+                                        const r1 = getTimeDiff(a, c).tsDiff;
+                                        const r2 = getTimeDiff(new Date(a), new Date(c)).tsDiff;
+                                        const r3 = getTimeDiff(String(a), String(c)).tsDiff;
+                                        const r4 = getTimeDiff(a, d).tsDiff;
+
+                                        return {
+                                            r1,
+                                            r2,
+                                            r3,
+                                            r4,
+                                            equal: r1 === r2 && r2 === r3 && r3 === r4,
+                                        };
                                     },
                                 })}
                             />
@@ -114,13 +133,14 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="One argument → compare to now"
+                title="Usage with a single argument"
+                description='The single argument is compared to “now”. When the second argument is omitted, the other side uses empty baseDate options: same epoch ms as format "timestamp", same display string as baseDate with no arguments.'
                 code={`import { getTimeDiff } from "${SYS.basePath}";
 
                         getTimeDiff(Date.now() - 3600000);
                         getTimeDiff({ initial: "01/01/2020" });`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="single ms"
@@ -167,7 +187,7 @@ const X = () => {
                             { initial: "20/03/2024" },
                         );`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="two objects + display formats"
@@ -216,7 +236,7 @@ const X = () => {
                         const b = a + 36 * 60 * 60 * 1000;
                         getTimeDiff(a, b);`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Button.plain
                             label="exactly 36h apart (fixed ms)"
                             {...outputButtonProps({
@@ -231,14 +251,14 @@ const X = () => {
             />
             <Ds.block
                 title="time1 / time2 & atTimeline"
-                description="tsDiff = time2.ts − time1.ts. Each side includes atTimeline: position of that instant relative to the other (inPast / inFuture / sameInstant)."
+                description="tsDiff = |time2.ts − time1.ts| (always ≥ 0). Each side includes atTimeline: position of that instant relative to the other (inPast / inFuture / sameInstant)."
                 code={`import { getTimeDiff } from "${SYS.basePath}";
 
                         getTimeDiff(1000, 2000);
                         getTimeDiff(2000, 1000);
                         getTimeDiff(42, 42);`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
                             <Button.plain
                                 label="time1 before time2"
@@ -271,7 +291,7 @@ const X = () => {
             />
             <Ds.api
                 args="getTimeDiff(time1, time2?);"
-                returns="Compare result with snapshots, signed gap, fractional spans (in), and UTC calendar breakdown."
+                returns="Compare result with snapshots, absolute ms gap (tsDiff), fractional spans (in), and UTC calendar breakdown."
                 props={{
                     time1: {
                         description:
@@ -297,7 +317,8 @@ const X = () => {
                         type: "object",
                     },
                     tsDiff: {
-                        description: "Signed milliseconds: time2.ts − time1.ts.",
+                        description:
+                            "Non-negative milliseconds: |time2.ts − time1.ts|. Order: see time1/time2 atTimeline.",
                         type: "number",
                     },
                     in: {

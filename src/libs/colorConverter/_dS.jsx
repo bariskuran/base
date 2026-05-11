@@ -42,7 +42,7 @@ const X = () => {
                     colorConverter("greys.shade20");
                     `}
                 example={
-                    <Flex.column gap={10}>
+                    <Flex.column gap={10} full>
                         <Typo.span>Color string input:</Typo.span>
                         <Flex gap={10}>
                             <input
@@ -61,7 +61,7 @@ const X = () => {
                                 />
                             )}
                         </Flex>
-                        <Typo.code>{outStrText}</Typo.code>
+                        <Ds.output directValue={outStrText} />
                     </Flex.column>
                 }
             />

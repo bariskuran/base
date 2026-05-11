@@ -29,7 +29,13 @@ const { changedPaths, differences } = findDifferences(oldData, newData);`}
                         <Typo.bold balance>newData</Typo.bold>
                         <Typo.code>{JSON.stringify(newData, null, 2)}</Typo.code>
                     </Flex.column>
-                    <Flex.column padding={10} gap={8} bgColor="backgrounds.shade25" full>
+                    <Flex.column
+                        padding={10}
+                        gap={8}
+                        bgColor="backgrounds.shade25"
+                        color="foreground"
+                        full
+                    >
                         <Typo.bold balance>diff tree (differences)</Typo.bold>
                         <Typo.code>{JSON.stringify(diffResult, null, 2)}</Typo.code>
                     </Flex.column>

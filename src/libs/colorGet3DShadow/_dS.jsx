@@ -54,7 +54,7 @@ const X = () => {
                         \`;
                         `}
                 example={
-                    <Flex.column gap={12}>
+                    <Flex.column gap={12} full>
                         <Flex gap={10}>
                             <Flex.column gap={4}>
                                 <Typo.span>depth: {depth}</Typo.span>
@@ -125,9 +125,7 @@ const X = () => {
                                 $color={color}
                             />
                         </Flex>
-                        <Typo.code>
-                            {JSON.stringify({ depth, hoverDepth, transition, color }, null, 2)}
-                        </Typo.code>
+                        <Ds.output directValue={{ depth, hoverDepth, transition, color }} />
                     </Flex.column>
                 }
             />

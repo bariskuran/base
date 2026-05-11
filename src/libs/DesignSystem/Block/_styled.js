@@ -51,7 +51,8 @@ const S = {
     `,
 
     mainColumn: styled.div`
-        flex: 1 1 0%;
+        /* flex: 1 1 0%; */
+        flex: 1 1 auto;
         min-width: 0;
         display: flex;
         flex-direction: column;

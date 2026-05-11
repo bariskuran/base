@@ -55,16 +55,13 @@ const Block = ({ title, description, code, example, lastBlock }) => {
             </S.titleArea>
             <S.line $lastBlock={lastBlock} />
             <S.mainColumn>
-                <Flex.column justify="start" full minWidth={0}>
+                <Flex.column full minWidth={0}>
                     {(example || description) && ajax === 0 && (
                         <S.contentArea area-title="Block Content">
-                            <Typo
-                                as={isJsxDescription(description) ? "div" : "pre"}
-                                balance
-                            >
+                            <Typo as={isJsxDescription(description) ? "div" : "pre"} balance>
                                 {description}
                             </Typo>
-                            <Flex.row justify="start" full minWidth={0}>
+                            <Flex.row full minWidth={0}>
                                 {example}
                             </Flex.row>
                         </S.contentArea>

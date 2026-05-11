@@ -367,8 +367,8 @@ export const formatWithTokens = (date, format, timezone) => {
 
 export const resolveDefaultsFromStore = () => {
     const gd = baseStore?.globalData?.get?.() || {};
-    const cd = baseStore?.clientData?.get?.() || {};
-    const bs = gd.baseDateSettings || {};
+    const cd = gd._clientData || {};
+    const bs = gd._baseDate || gd.baseDateSettings || {};
     const defaultFormat =
         typeof bs.defaultFormat === "string" && bs.defaultFormat
             ? bs.defaultFormat
@@ -376,7 +376,16 @@ export const resolveDefaultsFromStore = () => {
 
     const firstDayOfWeek = typeof bs.firstDayOfWeek === "number" ? bs.firstDayOfWeek : 1;
 
-    const timezone = typeof cd.timeZone === "string" && cd.timeZone ? cd.timeZone : undefined;
+    let timezone;
+    if (typeof cd.timeZone === "string" && cd.timeZone.trim()) {
+        timezone = cd.timeZone.trim();
+    } else if (typeof bs.timezone === "number" && Number.isFinite(bs.timezone)) {
+        timezone = bs.timezone;
+    } else if (typeof bs.timezone === "string" && bs.timezone.trim()) {
+        timezone = bs.timezone.trim();
+    } else if (typeof Intl !== "undefined" && typeof Intl.DateTimeFormat === "function") {
+        timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
 
     return { defaultFormat, firstDayOfWeek, timezone };
 };

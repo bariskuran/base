@@ -25,6 +25,7 @@ const X = () => {
         output2: null,
         output3: null,
     });
+    const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     const prettyTextLibrary = useMemo(
         () => JSON.stringify(textLibrary ?? {}, null, 2),
@@ -65,41 +66,39 @@ const X = () => {
                         getText("copyContent");
                         t("copyContent");`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Flex.column gap={0}>
                             <Typo.span>Current Language: "{language}"</Typo.span>
                             <Typo.span>Language List: {JSON.stringify(languageList)}</Typo.span>
                         </Flex.column>
-                        <Button.plain
-                            label='Run getText("copyContent")'
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = t("copyContent");
-                                })
-                            }
-                        />
-                        <Button.plain
-                            label="Run t('backToHome')"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = t("backToHome");
-                                })
-                            }
-                        />
-                        <Typo.span>
-                            If there is no match in the system, it returns the input text itself.
-                        </Typo.span>
-
-                        <Button.plain
-                            label="Run t('49')"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = t("49");
-                                })
-                            }
-                        />
+                        <Flex gap={10}>
+                            <Button.plain
+                                label="getText('copyContent')"
+                                {...outputButtonProps({
+                                    path: "block1",
+                                    activeLabel: "bt1",
+                                    fn: getText("copyContent"),
+                                })}
+                            />
+                            <Button.plain
+                                label="t('backToHome')"
+                                {...outputButtonProps({
+                                    path: "block1",
+                                    activeLabel: "bt2",
+                                    fn: t("backToHome"),
+                                })}
+                            />
+                            <Button.plain
+                                label="Unknown text -> t('49')"
+                                {...outputButtonProps({
+                                    path: "block1",
+                                    activeLabel: "bt3",
+                                    fn: t("49"),
+                                })}
+                            />
+                        </Flex>
                         <Space size="l" />
-                        {output != null && <Typo.span balance>Output: {output}</Typo.span>}
+                        <Output path="block1" />
                     </Flex.column>
                 }
             />
@@ -109,20 +108,20 @@ const X = () => {
 
                         getText("save", customLib);`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Flex.column gap={0}>
                             <Typo.span>const customLib = {JSON.stringify(customLib)}</Typo.span>
                         </Flex.column>
                         <Button.plain
-                            label='Run getText("save", customLib)'
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output2 = getText("save", customLib);
-                                })
-                            }
+                            label='getText("save", customLib)'
+                            {...outputButtonProps({
+                                path: "block2",
+                                activeLabel: "bt1",
+                                fn: getText("save", customLib),
+                            })}
                         />
                         <Space size="l" />
-                        {output2 != null && <Typo.span balance>Output: {output2}</Typo.span>}
+                        <Output path="block2" />
                     </Flex.column>
                 }
             />
@@ -132,20 +131,20 @@ const X = () => {
 
                         getText(customObj);`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Flex.column gap={0}>
                             <Typo.span>const customObj = {JSON.stringify(customObj)}</Typo.span>
                         </Flex.column>
                         <Button.plain
-                            label="Run getText(customObj)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output3 = getText(customObj);
-                                })
-                            }
+                            label="getText(customObj)"
+                            {...outputButtonProps({
+                                path: "block3",
+                                activeLabel: "bt1",
+                                fn: getText(customObj),
+                            })}
                         />
                         <Space size="l" />
-                        {output3 != null && <Typo.span balance>Output: {output3}</Typo.span>}
+                        <Output path="block3" />
                     </Flex.column>
                 }
             />

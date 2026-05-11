@@ -31,7 +31,7 @@ const X = () => {
                         colorShader("rgba(0,0,0,0.5)", 20);
                         colorShader("red", 20);`}
                 example={
-                    <Flex.column gap={12}>
+                    <Flex.column gap={12} full>
                         <Flex gap={10}>
                             <Flex.column gap={4}>
                                 <Typo.span>Color input:</Typo.span>
@@ -79,9 +79,7 @@ const X = () => {
                                 }}
                             />
                         </Flex>
-                        <Typo.code>
-                            {JSON.stringify({ color, percent, result: shaded }, null, 2)}
-                        </Typo.code>
+                        <Ds.output directValue={{ color, percent, result: shaded }} />
                     </Flex.column>
                 }
             />

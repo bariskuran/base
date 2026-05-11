@@ -31,7 +31,7 @@ colorFind("rgba(0,0,0,0.5)", { output: "hex8" });
 colorFind("red");
 colorFind("#07f", { output: "hex8" });`}
                 example={
-                    <Flex.column gap={12}>
+                    <Flex.column gap={12} full>
                         <Flex gap={10}>
                             <Flex.column gap={4}>
                                 <Typo.span>Input:</Typo.span>
@@ -77,8 +77,7 @@ colorFind("#07f", { output: "hex8" });`}
                                 </Flex.column>
                             )}
                         </Flex>
-
-                        <Typo.code>{JSON.stringify({ input, output, result }, null, 2)}</Typo.code>
+                        <Ds.output directValue={{ input, output, result }} />
                     </Flex.column>
                 }
             />

@@ -219,15 +219,18 @@ export const useVars = ({ props, children, content, className, style, forwardedR
     }, [surfaceFromGeneratedProps, userRootStyle, shellChromeFromGenerated, rootSizingProps]);
 
     const flexAriaLabel = useMemo(() => {
-        const raw = props?.["aria-label"];
+        const raw =
+            mergedBreakpointRow?.["aria-label"] ??
+            mergedBreakpointRow?.ariaLabel ??
+            props?.["aria-label"] ??
+            props?.ariaLabel;
         if (raw == null || raw === "") return "Flex";
         return String(raw).trim();
-    }, [props]);
+    }, [mergedBreakpointRow, props]);
 
     const domRestProps = useMemo(() => {
         const raw = getFlexDomRestProps(props);
-        if (raw["aria-label"] == null) return raw;
-        const { "aria-label": _omitAria, ...rest } = raw;
+        const { "aria-label": _a1, ariaLabel: _a2, ...rest } = raw;
         return rest;
     }, [props]);
 

@@ -90,7 +90,7 @@ const X = () => {
                     copyToClipboard(function() {});
                 `}
                 example={
-                    <Flex gap={10} padding={10}>
+                    <Flex gap={10} padding={10} wrap>
                         <Button.plain
                             label="Obj"
                             onClick={() => {

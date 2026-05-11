@@ -27,7 +27,7 @@ You can use colorPickHigherContrast via direct import from base, or via the them
 
 colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                 example={
-                    <Flex.column gap={10}>
+                    <Flex.column gap={10} full>
                         <Flex gap={10}>
                             <Flex.column gap={4}>
                                 <Typo.span>Background</Typo.span>
@@ -100,7 +100,7 @@ colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                                 }}
                             />
                         </Flex>
-                        <Typo.code>{JSON.stringify(output, null, 2)}</Typo.code>
+                        <Ds.output directValue={output} />
                     </Flex.column>
                 }
             />

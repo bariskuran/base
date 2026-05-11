@@ -92,14 +92,18 @@ const Swatch = ({ background, targetColor, wcag, tolerance, step }) => {
     const result = colorWcagMatch(background, targetColor, wcag, { tolerance, step });
 
     return (
-        <Flex.column>
+        <Flex.column full>
             <AimedDiv $background={targetColor} $color={background}>
                 aim
             </AimedDiv>
             <ResultDiv $background={background} $color={result?.color} />
-            <Typo.span children={`Color: ${result?.color}`} />
-            <Typo.span children={`Final Ratio: ${result?.finalRatio}`} />
-            <Typo.span children={`Lightness: ${result?.lightness}`} />
+            <Ds.output
+                directValue={{
+                    Color: result?.color,
+                    finalRatio: result?.finalRatio,
+                    lightness: result?.shaded,
+                }}
+            />
         </Flex.column>
     );
 };
@@ -205,7 +209,7 @@ const X = () => {
                     "lightness": 48
                 }`}
                 example={
-                    <Flex.column gap={10}>
+                    <Flex.column gap={10} full>
                         <Flex gap={10}>
                             <Slider
                                 label="WCAG"

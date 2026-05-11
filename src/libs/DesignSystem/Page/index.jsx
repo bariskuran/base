@@ -6,8 +6,8 @@ import { isJsxDescription } from "../isJsxDescription";
 const Page = ({ children, title, releasedOn, description }) => {
     /* */
     return (
-        <Flex.column>
-            <Flex.row alignItems="stretch">
+        <Flex.column full>
+            <Flex.row alignItems="stretch" full>
                 <Flex.column width="max-content" alignSelf="stretch">
                     <S.title>{title}</S.title>
                     <Flex.row full>

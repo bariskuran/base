@@ -28,7 +28,7 @@ const X = () => {
                     colorAlpha("primary", 35);
                     colorAlpha("rgba(0,119,255,0.4)", 0.8);`}
                 example={
-                    <Flex.column gap={10}>
+                    <Flex.column gap={10} full>
                         <Flex gap={10}>
                             <Flex.column gap={4}>
                                 <Typo.span>Color input: / {alpha} </Typo.span>
@@ -94,7 +94,7 @@ const X = () => {
                                 }}
                             />
                         </Flex>
-                        <Typo.code>{JSON.stringify({ color, alpha, result }, null, 2)}</Typo.code>
+                        <Ds.output directValue={{ color, alpha, result }} />
                     </Flex.column>
                 }
             />

@@ -26,18 +26,19 @@ import {
  * - if `format: "timestamp"` (case-insensitive) -> returns number (timestamp, ms)
  *
  * Format:
- * - If `format` is not provided, it tries `baseStore.globalData.get().baseDateSettings.defaultFormat`
+ * - If `format` is not provided, it tries `baseStore.globalData.get()._baseDate.defaultFormat`
  * - If still missing, defaults to `"DD/MM/YYYY"`
  * - Format tokens are free-form and can be mixed with any text:
  *   e.g. "DD gününde MM ayında YYYY yılında, saat HH:NN"
  *
  * Locale/timezone:
- * - `timezone` defaults to user timezone from `baseStore.clientData.get().timeZone` if available,
- *   otherwise uses environment local timezone.
+ * - `timezone` defaults to `globalData._clientData.timeZone`, then `_baseDate.timezone`, then the
+ *   browser default from `Intl.DateTimeFormat().resolvedOptions().timeZone` when available; if Intl
+ *   is missing, formatting falls back to local `Date` getters.
  * - `timezone` may be IANA name like "Europe/Athens" or an offset like "+2", "-05:30".
  *
  * Week:
- * - `firstDayOfWeek` is read from `baseStore.globalData.get().baseDateSettings.firstDayOfWeek`
+ * - `firstDayOfWeek` is read from `baseStore.globalData.get()._baseDate.firstDayOfWeek`
  *   (defaults to Monday = 1 if missing)
  *
  * @param {Object} [settings]

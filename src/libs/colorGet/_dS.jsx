@@ -28,8 +28,8 @@ const X = () => {
                 colorGet("primary");
                 `}
                 example={
-                    <Flex.column gap={12}>
-                        <Flex gap={10}>
+                    <Flex.column gap={12} full>
+                        <Flex gap={10} full>
                             <Flex.column gap={4}>
                                 <Typo.span>Input:</Typo.span>
                                 <Flex gap={10}>
@@ -55,7 +55,8 @@ const X = () => {
                                 </Flex>
                             </Flex.column>
                         </Flex>
-                        <Typo.code>{`
+                        <Ds.output
+                            directValue={`
                                 color: ${out?.color},
                                 colorApi: {
                                       colorConverterResults,
@@ -66,7 +67,8 @@ const X = () => {
                                 oppositeApi: {
                                     // same content as colorApi, but for the opposite color
                                 }
-                            `}</Typo.code>
+                            `}
+                        />
                     </Flex.column>
                 }
             />

@@ -716,5 +716,7 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "typo",
     "typography",
     "full",
+    "aria-label",
+    "ariaLabel",
     ...Object.keys(FLEX_PROPS_KEBAB_TO_CAMEL),
 ]);

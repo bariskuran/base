@@ -158,6 +158,14 @@ const X = () => {
                                 })}
                             />
                             <Button.plain
+                                label="Get 'Now' with format"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "now2",
+                                    fn: () => baseDate({ format: "|DD|/|MM|/|YYYY| |HH|:|NN|" }),
+                                })}
+                            />
+                            <Button.plain
                                 label="getNow shorthand"
                                 {...outputButtonProps({
                                     path: "basic",

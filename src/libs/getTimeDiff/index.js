@@ -1,5 +1,7 @@
 import { baseDate } from "../@baseDate";
-import { isNumber } from "../isNumber";
+
+/** Only treat strings as raw ms timestamps when they are purely numeric (avoids `parseFloat("31/01/2026") === 31`). */
+const looksLikeNumericTimestampString = (s) => /^-?\d+(\.\d+)?$/.test(s);
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -106,14 +108,17 @@ const resolveSide = (arg) => {
 
     if (typeof arg === "string") {
         const s = arg.trim();
-        if (s === "" || !isNumber(s)) {
-            throw new Error("getTimeDiff: string must be a numeric timestamp (ms)");
+        if (s === "") throw new Error("getTimeDiff: empty string");
+
+        if (looksLikeNumericTimestampString(s)) {
+            const n = Number(s);
+            if (!Number.isFinite(n)) throw new Error("getTimeDiff: invalid numeric string");
+            const dateObj = new Date(n);
+            const date = baseDate({ initial: n });
+            return { ts: n, dateObj, date };
         }
-        const n = Number(s);
-        if (!Number.isFinite(n)) throw new Error("getTimeDiff: invalid numeric string");
-        const dateObj = new Date(n);
-        const date = baseDate({ initial: n });
-        return { ts: n, dateObj, date };
+
+        return resolveSide({ initial: s });
     }
 
     if (typeof arg === "number") {
@@ -136,7 +141,9 @@ const resolveSide = (arg) => {
         const dateObj = new Date(ts);
         const date = displayFormat
             ? baseDate({ ...opts, format: displayFormat })
-            : baseDate(opts);
+            : Object.keys(opts).length === 0
+              ? baseDate({ initial: ts })
+              : baseDate(opts);
 
         return { ts, dateObj, date };
     }
@@ -231,17 +238,19 @@ const breakdownCalendarUTC = (minTs, maxTs) => {
 };
 
 /**
- * Signed millisecond gap and duration views between two instants.
+ * Millisecond difference and duration views between two instants.
+ * `tsDiff` is always non-negative; order is expressed via `time1.atTimeline` / `time2.atTimeline`.
  *
  * @param {number | string | Date | Object} time1
- * @param {number | string | Date | Object} [time2] — omitted → `Date.now()`
+ * @param {number | string | Date | Object} [time2] — omitted → compared to “now” via empty
+ *   `baseDate` options (`resolveSide({})`: same instant as `baseDate({ format: "timestamp" })`,
+ *   display string matches `baseDate({})`).
  */
 export const getTimeDiff = (time1, time2) => {
     const r1 = resolveSide(time1);
-    const r2 = time2 === undefined ? resolveSide(Date.now()) : resolveSide(time2);
+    const r2 = time2 === undefined ? resolveSide({}) : resolveSide(time2);
 
-    const tsDiff = r2.ts - r1.ts;
-    const absMs = Math.abs(tsDiff);
+    const absMs = Math.abs(r2.ts - r1.ts);
 
     const lo = Math.min(r1.ts, r2.ts);
     const hi = Math.max(r1.ts, r2.ts);
@@ -260,7 +269,7 @@ export const getTimeDiff = (time1, time2) => {
             date: r2.date,
             atTimeline: timelineRel(r2.ts, r1.ts),
         },
-        tsDiff,
+        tsDiff: absMs,
         in: omitZeroNumericProps(buildIn(absMs)),
         breakdown: omitZeroNumericProps(br),
     };

@@ -28,7 +28,7 @@ You can use colorTinter via direct import from base, or via the theme helper in 
 
 colorTinter("#4f46e5", 20);`}
                 example={
-                    <Flex.column gap={12}>
+                    <Flex.column gap={12} full>
                         <Flex gap={10}>
                             <Flex.column gap={4}>
                                 <Typo.span>Color input:</Typo.span>
@@ -76,9 +76,7 @@ colorTinter("#4f46e5", 20);`}
                                 }}
                             />
                         </Flex>
-                        <Typo.code>
-                            {JSON.stringify({ color, percent, result: tinted }, null, 2)}
-                        </Typo.code>
+                        <Ds.output directValue={{ color, percent, result: tinted }} />
                     </Flex.column>
                 }
             />
