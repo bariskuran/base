@@ -1,5 +1,6 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
+import { Flex } from "../Flex";
 import { ButtonList } from ".";
 
 const buttons = [
@@ -128,29 +129,31 @@ const X = () => {
             />
             <Ds.block
                 title="flat (no ScrollFlex)"
-                code={`import { ButtonList } from "${SYS.basePath}";
+                code={`import { ButtonList, Flex } from "${SYS.basePath}";
 
-                    <ButtonList
-                        flat
-                        buttons={[
-                            { label: "One", onClick: () => {} },
-                            { label: "Two", onClick: () => {} },
-                        ]}
-                        commonButtonProps={{ variant: "plain" }}
-                        flexProps={{ direction: "row", gap: 8 }}
-                    />`}
-                description="ScrollFlex / ScrollBar removed; inner Flex keeps flexProps. scrollBarProps and ScrollFlex variant have no effect."
+                    <Flex direction="row" gap={8}>
+                        <ButtonList
+                            flat
+                            buttons={[
+                                { label: "One", onClick: () => {} },
+                                { label: "Two", onClick: () => {} },
+                            ]}
+                            commonButtonProps={{ variant: "plain" }}
+                        />
+                    </Flex>`}
+                description="No outer Variant, no inner Flex or ScrollFlex: only Button nodes in a fragment so the parent (e.g. Popover ScrollFlex content Flex) owns gap, direction, and scroll."
                 example={
-                    <ButtonList
-                        flat
-                        buttons={[
-                            { label: "One", onClick: () => {} },
-                            { label: "Two", onClick: () => {} },
-                            { label: "Three", onClick: () => {} },
-                        ]}
-                        commonButtonProps={{ variant: "plain" }}
-                        flexProps={{ direction: "row", gap: 8 }}
-                    />
+                    <Flex direction="row" gap={8}>
+                        <ButtonList
+                            flat
+                            buttons={[
+                                { label: "One", onClick: () => {} },
+                                { label: "Two", onClick: () => {} },
+                                { label: "Three", onClick: () => {} },
+                            ]}
+                            commonButtonProps={{ variant: "plain" }}
+                        />
+                    </Flex>
                 }
             />
             <Ds.api
@@ -168,7 +171,7 @@ const X = () => {
                     },
                     flexProps: {
                         description:
-                            'Forwarded to the Flex content inside ScrollFlex when flat is false. Ignored when flat is true. Without width/height, sizing follows content; the ScrollFlex shell limits overflow (e.g. max-width: 100%). ButtonList.column merges direction: "column" into flexProps.',
+                            'Forwarded to ScrollFlex content (inner Flex) when flat is false. Ignored when flat is true (buttons are direct children of the parent). Without width/height, sizing follows content; the ScrollFlex shell limits overflow (e.g. max-width: 100%). ButtonList.column merges direction: "column" into flexProps when flat is false.',
                         type: "object",
                     },
                     scrollBarProps: {
@@ -178,12 +181,12 @@ const X = () => {
                     },
                     variant: {
                         description:
-                            "When variant matches a ScrollFlex preset string (`plain`, `border`, `shadow`, `hoverShadow`; aliases include `WithShadow`, `WithHoverShadow`), it is applied only to the inner ScrollFlex—the outer ButtonList wrapper still follows componentCreator rules (DefaultVariant or PlainVariant when nested). Any other string or component selects the outer wrapper Variant. Ignored when flat is true (no ScrollFlex).",
+                            "When variant matches a ScrollFlex preset string (`plain`, `border`, `shadow`, `hoverShadow`; aliases include `WithShadow`, `WithHoverShadow`), it is applied only to the inner ScrollFlex—the outer ButtonList wrapper still follows componentCreator rules (DefaultVariant or PlainVariant when nested). Any other string or component selects the outer wrapper Variant. Ignored when flat is true (no wrapper, no ScrollFlex).",
                         type: "string | component",
                     },
                     flat: {
                         description:
-                            "When true, omits ScrollFlex and ScrollBar. Buttons render inside a plain Flex with the same flexProps (no scrolling). scrollBarProps and ScrollFlex-only variant strings are ignored. Row layout still wraps the inner Flex in the width-clamp grid.",
+                            "When true, renders only Button nodes in a fragment: no DefaultVariant/PlainVariant wrapper, no ScrollFlex, no inner Flex, no row clamp grid. Layout (gap, direction, scroll) comes from the parent. flexProps, scrollBarProps, scrollFlex variant strings, and style/ref on the list wrapper have no effect.",
                         type: "boolean",
                         defaultValue: "false",
                     },

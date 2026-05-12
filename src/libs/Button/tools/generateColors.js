@@ -4,7 +4,7 @@ import { colorAlpha } from "../../colorAlpha";
 import { colorTinter } from "../../colorTinter";
 import { colorFind } from "../../colorFind";
 
-const resolvePathOrRaw = (theme, v) => {
+export const resolvePathOrRaw = (theme, v) => {
     if (v == null || v === "") return null;
     return colorFind(v, { theme, output: "hex8" }) || v;
 };

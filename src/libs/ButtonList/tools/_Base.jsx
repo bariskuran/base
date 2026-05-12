@@ -1,6 +1,5 @@
 import useVars from "./useVars";
 import { Button } from "../../Button";
-import { Flex } from "../../Flex";
 import { ScrollFlex } from "../../ScrollFlex";
 
 const rowClampGridStyle = {
@@ -30,12 +29,11 @@ export const Base = (p = {}) => {
 
     const buttonNodes = preparedItems.map((item, i) => <Button key={i} {...item} />);
 
-    /** No ScrollFlex; plain Flex keeps flexProps without a scroll container. */
-    const listInner = flat ? (
-        <Flex {...resolvedFlexProps} full>
-            {buttonNodes}
-        </Flex>
-    ) : (
+    if (flat) {
+        return <>{buttonNodes}</>;
+    }
+
+    const listInner = (
         <ScrollFlex
             {...(scrollFlexVariant != null ? { variant: scrollFlexVariant } : {})}
             flexProps={resolvedFlexProps}
