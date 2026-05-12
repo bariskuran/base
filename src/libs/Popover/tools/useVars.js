@@ -10,7 +10,10 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const { exportData, buttonProps, scrollBoxProps = {}, ...floatingUiProps } = p || {};
+    const { exportData, buttonProps, scrollBoxProps = {}, scrollFlexProps = {}, ...floatingUiProps } =
+        p || {};
+
+    const mergedScrollBoxProps = { ...scrollFlexProps, ...scrollBoxProps };
 
     /**
      *
@@ -61,7 +64,7 @@ const useVars = (p) => {
             onClickHandler,
             buttonProps,
             floatingUiProps,
-            scrollBoxProps,
+            scrollBoxProps: mergedScrollBoxProps,
             observerRef,
         },
         {

@@ -54,7 +54,7 @@ export const DefaultVariant = styled.div`
             max-width: calc(100vw - 40rem);
             word-wrap: break-word;
             overflow-wrap: break-word;
-            padding: 5rem;
+            padding: 2rem;
             border-radius: 5rem;
             filter: drop-shadow(1rem 1rem 4rem ${theme.colorAlpha(theme.foreground, 0.5)});
 

@@ -11,10 +11,10 @@ export const Base = ({ children, ...p }) => {
         buttonProps,
         uniqueId,
         observerRef,
-        scrollFlexProps,
+        scrollBoxProps,
     } = useVars(p);
 
-    const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollFlexProps || {};
+    const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollBoxProps || {};
 
     /* RETURN */
     return (
@@ -25,8 +25,8 @@ export const Base = ({ children, ...p }) => {
             content={
                 <ScrollFlex
                     {...restScrollFlexProps}
-                    flexProps={{ ...flexProps, maxHeight: 300, maxWidth: 300 }}
-                    scrollBarProps={{ ...scrollBarProps }}
+                    flexProps={{ ...flexProps }}
+                    scrollBarProps={{ edgeMargin: 0, ...scrollBarProps }}
                 >
                     {children}
                 </ScrollFlex>
@@ -38,14 +38,13 @@ export const Base = ({ children, ...p }) => {
             <Button
                 ref={observerRef}
                 activeManually={isOpen}
-                {...(buttonProps || {
-                    outlined: true,
-                    icon: {
-                        icon: "threeDotsLarge",
-                        activeIcon: "threeDotsLargeHorizontal",
-                        width: 16,
-                    },
-                })}
+                {...(buttonProps || {})}
+                icon={{
+                    icon: "threeDotsLarge",
+                    activeIcon: "threeDotsLargeHorizontal",
+                    width: 16,
+                    ...(buttonProps?.icon || {}),
+                }}
             />
         </FloatingUi>
     );

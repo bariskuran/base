@@ -196,6 +196,8 @@ const useVars = (p) => {
         flexProps = EMPTY_FLEX_PROPS,
         width,
         height,
+        maxHeight,
+        maxWidth,
         widthByRef,
         heightByRef,
         widthById,
@@ -205,6 +207,17 @@ const useVars = (p) => {
         __hasParentUiComponent,
         ...restProps
     } = p || {};
+
+    const explicitWidthValue = getExplicitWidth({ width, flexProps, restProps });
+    const explicitHeightValue = getExplicitHeight({ height, flexProps });
+    const hasWidthRefOrId =
+        !!widthByRef || (typeof widthById === "string" && widthById.trim() !== "");
+    const hasHeightRefOrId =
+        !!heightByRef || (typeof heightById === "string" && heightById.trim() !== "");
+    const intrinsicWidth =
+        (explicitWidthValue == null || explicitWidthValue === "") && !hasWidthRefOrId;
+    const intrinsicHeight =
+        (explicitHeightValue == null || explicitHeightValue === "") && !hasHeightRefOrId;
 
     const containerRef = useRef(null);
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
@@ -250,10 +263,12 @@ const useVars = (p) => {
             flexProps,
             restProps,
         });
-        const resolvedHeight = explicitHeight ?? measuredHeight;
-        const resolvedWidth = explicitWidth ?? measuredWidth;
+        const resolvedHeight = intrinsicHeight ? undefined : explicitHeight ?? measuredHeight;
+        const resolvedWidth = intrinsicWidth ? undefined : explicitWidth ?? measuredWidth;
 
         const shouldRender =
+            intrinsicWidth ||
+            intrinsicHeight ||
             explicitHeight != null ||
             measuredHeight != null ||
             !hasMeasuredHeight ||
@@ -300,6 +315,8 @@ const useVars = (p) => {
         flexProps,
         hasMeasuredHeight,
         height,
+        intrinsicHeight,
+        intrinsicWidth,
         measuredHeight,
         measuredWidth,
         restProps,
@@ -312,6 +329,7 @@ const useVars = (p) => {
     );
 
     useLayoutEffect(() => {
+        if (intrinsicHeight) return;
         if (getExplicitHeight({ height, flexProps }) != null) return;
         const refEl = getRefElement(heightByRef);
         const idEl =
@@ -352,9 +370,10 @@ const useVars = (p) => {
         return () => {
             observer.disconnect();
         };
-    }, [flexProps, height, heightById, heightByRef, setLocal]);
+    }, [flexProps, height, heightById, heightByRef, intrinsicHeight, setLocal]);
 
     useLayoutEffect(() => {
+        if (intrinsicWidth) return;
         if (getExplicitWidth({ width, flexProps, restProps }) != null) return;
         const refEl = getRefElement(widthByRef);
         const idEl =
@@ -383,7 +402,7 @@ const useVars = (p) => {
         return () => {
             observer.disconnect();
         };
-    }, [flexProps, restProps, setLocal, width, widthById, widthByRef]);
+    }, [flexProps, intrinsicWidth, restProps, setLocal, width, widthById, widthByRef]);
 
     const variantOuterStyle = useMemo(() => {
         const ew = getExplicitWidth({ width, flexProps, restProps });
@@ -397,9 +416,56 @@ const useVars = (p) => {
         if (eh != null && eh !== "") {
             out.height = getCssSize(eh);
         }
+
+        if (intrinsicWidth) {
+            out.width = "max-content";
+            if (maxWidth === null) {
+                delete out.maxWidth;
+            } else if (maxWidth !== undefined && maxWidth !== "") {
+                out.maxWidth = getCssSize(maxWidth);
+            } else {
+                out.maxWidth = getCssSize("30vw");
+            }
+        } else if (maxWidth !== undefined && maxWidth !== null && maxWidth !== "") {
+            out.maxWidth = getCssSize(maxWidth);
+        }
+
+        if (intrinsicHeight) {
+            out.height = "max-content";
+            if (maxHeight === null) {
+                delete out.maxHeight;
+            } else if (maxHeight !== undefined && maxHeight !== "") {
+                out.maxHeight = getCssSize(maxHeight);
+            } else {
+                out.maxHeight = getCssSize("30vh");
+            }
+        } else if (maxHeight !== undefined && maxHeight !== null && maxHeight !== "") {
+            out.maxHeight = getCssSize(maxHeight);
+        }
+
+        if (
+            (out.maxHeight != null && out.maxHeight !== "") ||
+            (out.maxWidth != null && out.maxWidth !== "")
+        ) {
+            if (!out.display) out.display = "flex";
+            if (!out.flexDirection) out.flexDirection = "column";
+            if (out.minHeight === undefined || out.minHeight === null) out.minHeight = 0;
+            if (out.minWidth === undefined || out.minWidth === null) out.minWidth = 0;
+            if (!out.overflow) out.overflow = "hidden";
+        }
+
         const merged = { ...out, ...(restProps.style || {}) };
         return Object.keys(merged).length ? merged : undefined;
-    }, [width, height, flexProps, restProps]);
+    }, [
+        flexProps,
+        height,
+        intrinsicHeight,
+        intrinsicWidth,
+        maxHeight,
+        maxWidth,
+        restProps,
+        width,
+    ]);
 
     /* Return */
     return useExportData(
@@ -413,6 +479,7 @@ const useVars = (p) => {
             shouldRender: organizedFlexProps.shouldRender,
             contentPaddingStyle: organizedFlexProps.contentPaddingStyle,
             variantOuterStyle,
+            intrinsicHeight,
             ...restProps,
             shellGutters,
         },

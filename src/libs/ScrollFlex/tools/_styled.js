@@ -2,7 +2,9 @@ import styled from "styled-components";
 import { Flex } from "../../Flex";
 
 const shellShouldForward = (prop) =>
-    !["$gutterTop", "$gutterRight", "$gutterBottom", "$gutterLeft"].includes(prop);
+    !["$gutterTop", "$gutterRight", "$gutterBottom", "$gutterLeft", "$intrinsicHeight"].includes(
+        prop,
+    );
 
 export const S = {
     shell: styled.div.withConfig({ shouldForwardProp: shellShouldForward })`
@@ -17,6 +19,8 @@ export const S = {
         max-width: 100%;
         height: 100%;
         flex: 1 1 auto;
+        overflow-x: ${(p) => (p.$intrinsicHeight ? "hidden" : "visible")};
+        overflow-y: ${(p) => (p.$intrinsicHeight ? "auto" : "visible")};
         padding-top: ${(p) => p.$gutterTop};
         padding-right: ${(p) => p.$gutterRight};
         padding-bottom: ${(p) => p.$gutterBottom};

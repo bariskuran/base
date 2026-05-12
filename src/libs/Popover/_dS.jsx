@@ -21,6 +21,12 @@ const Panel2 = () => (
         <div>Action H</div>
         <div>Action I</div>
         <div>Action J</div>
+        <div>Action H</div>
+        <div>Action I</div>
+        <div>Action J</div>
+        <div>Action H</div>
+        <div>Action I</div>
+        <div>Action J</div>
     </Flex.column>
 );
 
@@ -38,9 +44,31 @@ const X = () => (
                         <div>Panel content</div>
                         </Popover>`}
             example={
+                <Popover>
+                    <Panel buttonProps={{ icon: { width: 16 } }} />
+                </Popover>
+            }
+        />
+        <Ds.block
+            title="Advanced Usage"
+            code={`import { Popover } from "${SYS.basePath}";
+
+                        <Popover>
+                        <div>Panel content</div>
+                        </Popover>`}
+            example={
                 <Flex gap={12}>
-                    <Popover>
+                    <Popover buttonProps={{ icon: { flat: true } }}>
                         <Panel />
+                    </Popover>
+                    <Popover buttonProps={{ label: "Menu", outlined: true }}>
+                        <Panel2 />
+                    </Popover>
+                    <Popover
+                        buttonProps={{ label: "Menu", outlined: false }}
+                        scrollFlexProps={{ scrollBarProps: { edgeMargin: 10, variant: "primary" } }}
+                    >
+                        <Panel2 />
                     </Popover>
                 </Flex>
             }
@@ -57,7 +85,7 @@ const X = () => (
             example={
                 <Popover
                     buttonProps={{ label: "Open menu", outlined: true }}
-                    // scrollFlexProps={{ height: 100, maxHeight: 140, padding: 8 }}
+                    // scrollFlexProps={{ scrollBarProps: { edgeMargin: 0 } }}
                 >
                     <Panel2 />
                 </Popover>
@@ -78,7 +106,8 @@ const X = () => (
                     defaultValue: "{}",
                 },
                 scrollBoxProps: {
-                    description: "Props forwarded to internal ScrollFlex panel.",
+                    description:
+                        "ScrollFlex props for the panel (width, height, maxWidth, maxHeight, flexProps, scrollBarProps, …). If width and height are omitted, the panel sizes to content up to maxWidth/maxHeight (defaults 30vw / 30vh). scrollFlexProps is merged as a legacy alias.",
                     type: "object",
                     defaultValue: "{}",
                 },
