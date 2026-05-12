@@ -32,9 +32,9 @@ const X = () => (
             title="Skip First Render"
             code={`import { useEffectAfterMount } from "${SYS.basePath}";
 
-useEffectAfterMount(() => {
-  // runs after mount on dependency updates
-}, [value]);`}
+                        useEffectAfterMount(() => {
+                        // runs after mount on dependency updates
+                        }, [value]);`}
             example={<Demo />}
         />
         <Ds.api

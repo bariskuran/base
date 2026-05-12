@@ -24,10 +24,10 @@ const X = () => (
             title="Track Scroll Position and Direction"
             code={`import { useScrollTopLeft } from "${SYS.basePath}";
 
-const { scrollTop, scrollLeft, directionX, directionY, calc } = useScrollTopLeft({
-  source: window,
-  delay: 80,
-});`}
+                        const { scrollTop, scrollLeft, directionX, directionY, calc } = useScrollTopLeft({
+                        source: window,
+                        delay: 80,
+                        });`}
             example={<Demo />}
         />
         <Ds.api

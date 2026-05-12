@@ -20,7 +20,13 @@ const variants = {
     bold: { bold: true },
     italic: { italic: true },
     pre: { as: "pre" },
-    code: { as: "pre", whiteSpace: "pre-wrap", codeFormat: true, codeFormatJsxProps: true },
+    code: {
+        as: "pre",
+        whiteSpace: "pre-wrap",
+        codeFormat: true,
+        codeFormatJsxProps: true,
+        codeFormatCalls: true,
+    },
 };
 
 export const Typo = componentCreator({

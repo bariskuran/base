@@ -15,7 +15,7 @@ const X = () => {
                 title="Basic usage"
                 code={`import { sleep } from "${SYS.basePath}";
 
-await sleep(500);`}
+                        await sleep(500);`}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Button

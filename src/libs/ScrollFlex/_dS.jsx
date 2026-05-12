@@ -55,13 +55,13 @@ const X = () => {
                 description="You can further customize ScrollFlex using Flex and ScrollBar props."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
                 
-                        <ScrollFlex
-                        variant="hoverShadow"
-                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
-                        scrollBarProps={{ variant: "primary", fillMode: true }}
-                    >
-                        {longText}
-                    </ScrollFlex>`}
+                            <ScrollFlex
+                            variant="hoverShadow"
+                            flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
+                            scrollBarProps={{ variant: "primary", fillMode: true }}
+                        >
+                            {longText}
+                        </ScrollFlex>`}
                 example={
                     <ScrollFlex
                         variant="hoverShadow"
@@ -115,27 +115,27 @@ const X = () => {
                 description="If width or height is not provided, ScrollFlex attempts to fill its parent’s width and height. Because CSS height depends on the parent chain, this may not always produce the expected result. If no valid height can be resolved from the parent tree, ScrollFlex falls back to 200. Otherwise, it uses the parent’s height."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
-                    <Flex gap={10}>
-                        /* First Flex won't be displayed because it and its parents have no height */
-                        <Flex>
-                            <ScrollFlex>{longText}</ScrollFlex>
-                        </Flex>
-                        <Flex height={150}>
-                            <ScrollFlex>{longText}</ScrollFlex>
-                        </Flex>
-                        <Flex height={150}>
+                        <Flex gap={10}>
+                            /* First Flex won't be displayed because it and its parents have no height */
                             <Flex>
                                 <ScrollFlex>{longText}</ScrollFlex>
                             </Flex>
-                        </Flex>
-                        <Flex height={150}>
-                            <Flex>
+                            <Flex height={150}>
+                                <ScrollFlex>{longText}</ScrollFlex>
+                            </Flex>
+                            <Flex height={150}>
                                 <Flex>
                                     <ScrollFlex>{longText}</ScrollFlex>
                                 </Flex>
                             </Flex>
-                        </Flex>
-                    </Flex>`}
+                            <Flex height={150}>
+                                <Flex>
+                                    <Flex>
+                                        <ScrollFlex>{longText}</ScrollFlex>
+                                    </Flex>
+                                </Flex>
+                            </Flex>
+                        </Flex>`}
                 example={
                     <Flex gap={10}>
                         <Flex>
@@ -166,8 +166,8 @@ const X = () => {
                     The same feature can be used for width via the "widthByRef" or "widthById" props.`}
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
-                    <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>Source 150x150</Flex>
-                    <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>`}
+                        <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>Source 150x150</Flex>
+                        <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>`}
                 example={
                     <Flex gap={10} align="stretch">
                         <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>
@@ -182,11 +182,11 @@ const X = () => {
                 description="Same as heightByRef, but the source element is resolved with document.getElementById. Use a stable, page-unique id on the element whose height you want to mirror. Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
 
-                    <Flex id={HEIGHT_BY_ID_DEMO_SOURCE} height={150} width={150} bgColor="aliceblue">
-                            Source 150x150
-                    </Flex>
-                    <ScrollFlex widthById={HEIGHT_BY_ID_DEMO_SOURCE} heightById={HEIGHT_BY_ID_DEMO_SOURCE}>{longText}</ScrollFlex>
-                    </Flex>`}
+                        <Flex id={HEIGHT_BY_ID_DEMO_SOURCE} height={150} width={150} bgColor="aliceblue">
+                                Source 150x150
+                        </Flex>
+                        <ScrollFlex widthById={HEIGHT_BY_ID_DEMO_SOURCE} heightById={HEIGHT_BY_ID_DEMO_SOURCE}>{longText}</ScrollFlex>
+                        </Flex>`}
                 example={
                     <Flex gap={10} align="stretch">
                         <Flex
@@ -211,10 +211,10 @@ const X = () => {
                 description="As in the rest of the Base library, you can change the variant using a prop, or by using the compound component pattern as Component.variantName."
                 code={`import { ScrollFlex } from "${SYS.basePath}";
                     
-                    <ScrollFlex ... />
-                    <ScrollFlex.border ... /> // same as default
-                    <ScrollFlex variant="shadow" ... />
-                    <ScrollFlex.hoverShadow `}
+                        <ScrollFlex ... />
+                        <ScrollFlex.border ... /> // same as default
+                        <ScrollFlex variant="shadow" ... />
+                        <ScrollFlex.hoverShadow `}
                 example={
                     <Ds.variant
                         variants={[

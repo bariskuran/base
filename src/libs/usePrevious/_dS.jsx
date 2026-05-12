@@ -23,7 +23,7 @@ const X = () => (
             title="Previous Value Tracking"
             code={`import { usePrevious } from "${SYS.basePath}";
 
-const [prev, setPrev] = usePrevious(value);`}
+                        const [prev, setPrev] = usePrevious(value);`}
             example={<Demo />}
         />
         <Ds.api

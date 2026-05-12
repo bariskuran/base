@@ -36,7 +36,7 @@ At this stage, this is mainly architectural documentation. Usage examples will b
                         </Typo.p>
                         <Typo.code>{`{
   "__hasParentUiComponent": true,
-  // future extension point for extra nested-ui signals
+  "__typoPhrasingHost": true
 }`}</Typo.code>
                     </Flex.column>
                 }
@@ -48,7 +48,7 @@ At this stage, this is mainly architectural documentation. Usage examples will b
                 props={{
                     value: {
                         description:
-                            "Optional extra context payload merged with internal __hasParentUiComponent flag.",
+                            "Optional extra context merged with the parent NestedBaseUi layer (if any), then with internal flags such as __hasParentUiComponent. Typo sets __typoPhrasingHost under phrasing-only hosts (e.g. Typo.p) so nested Typo.code maps to a <code> root instead of <pre>.",
                         type: "object",
                     },
                     children: {

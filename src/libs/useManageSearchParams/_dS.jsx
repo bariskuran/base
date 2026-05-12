@@ -32,9 +32,9 @@ const X = () => (
             title="Read and Update Search Params"
             code={`import { useManageSearchParams } from "${SYS.basePath}";
 
-const { page, set, clear, raw } = useManageSearchParams({
-  defaults: { page: 1 },
-});`}
+                        const { page, set, clear, raw } = useManageSearchParams({
+                        defaults: { page: 1 },
+                        });`}
             example={<Demo />}
         />
         <Ds.api

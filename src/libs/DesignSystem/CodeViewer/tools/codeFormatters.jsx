@@ -305,6 +305,253 @@ export const formatJsxPropsForViewer = (text = "", indentUnit = "    ") => {
     return result;
 };
 
+/** `(` indeksinden itibaren eşleşen kapanan `)` (string / iç içe parantez güvenli). */
+export const findMatchingCloseParen = (text, openParenIndex) => {
+    let depth = 0;
+    let quote = null;
+
+    for (let i = openParenIndex; i < text.length; i += 1) {
+        const ch = text[i];
+        const prev = i > 0 ? text[i - 1] : "";
+
+        if (quote) {
+            if (ch === quote && prev !== "\\") quote = null;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'" || ch === "`") {
+            quote = ch;
+            continue;
+        }
+
+        if (ch === "(") {
+            depth += 1;
+            continue;
+        }
+
+        if (ch === ")") {
+            depth -= 1;
+            if (depth === 0) return i;
+        }
+    }
+
+    return -1;
+};
+
+/** Virgülle ayrılmış üst seviye parçalar (obje / dizi / parantez derinliği ve string güvenli). */
+export const splitTopLevelByDelimiter = (text, delimiterChar = ",") => {
+    const result = [];
+    let current = "";
+    let quote = null;
+    let brace = 0;
+    let paren = 0;
+    let bracket = 0;
+
+    for (let i = 0; i < text.length; i += 1) {
+        const ch = text[i];
+        const prev = i > 0 ? text[i - 1] : "";
+
+        if (quote) {
+            current += ch;
+            if (ch === quote && prev !== "\\") quote = null;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'" || ch === "`") {
+            quote = ch;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "{") {
+            brace += 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "}") {
+            brace -= 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "(") {
+            paren += 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === ")") {
+            paren -= 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "[") {
+            bracket += 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === "]") {
+            bracket -= 1;
+            current += ch;
+            continue;
+        }
+
+        if (ch === delimiterChar && brace === 0 && paren === 0 && bracket === 0) {
+            if (current.trim()) result.push(current.trim());
+            current = "";
+            continue;
+        }
+
+        current += ch;
+    }
+
+    if (current.trim()) result.push(current.trim());
+
+    return result;
+};
+
+const findTopLevelColonForPair = (text) => {
+    let quote = null;
+    let brace = 0;
+    let paren = 0;
+    let bracket = 0;
+
+    for (let i = 0; i < text.length; i += 1) {
+        const ch = text[i];
+        const prev = i > 0 ? text[i - 1] : "";
+
+        if (quote) {
+            if (ch === quote && prev !== "\\") quote = null;
+            continue;
+        }
+
+        if (ch === '"' || ch === "'" || ch === "`") {
+            quote = ch;
+            continue;
+        }
+
+        if (ch === "{") {
+            brace += 1;
+            continue;
+        }
+
+        if (ch === "}") {
+            brace -= 1;
+            continue;
+        }
+
+        if (ch === "(") {
+            paren += 1;
+            continue;
+        }
+
+        if (ch === ")") {
+            paren -= 1;
+            continue;
+        }
+
+        if (ch === "[") {
+            bracket += 1;
+            continue;
+        }
+
+        if (ch === "]") {
+            bracket -= 1;
+            continue;
+        }
+
+        if (ch === ":" && brace === 0 && paren === 0 && bracket === 0) return i;
+    }
+
+    return -1;
+};
+
+const formatLeafPairOrExpr = (ft, innerIndent, indentUnit) => {
+    if (!ft) return "";
+    if (ft[0] === "{" || ft[0] === "[") {
+        return prettyPrintOuterLiteral(ft, innerIndent, indentUnit);
+    }
+
+    const ci = findTopLevelColonForPair(ft);
+    if (ci === -1) return `${innerIndent}${ft}`;
+
+    const key = ft.slice(0, ci).trim();
+    const val = ft.slice(ci + 1).trim();
+
+    if (val[0] === "{" || val[0] === "[") {
+        const nested = prettyPrintOuterLiteral(val, innerIndent, indentUnit);
+        return `${innerIndent}${key}:\n${nested}`;
+    }
+
+    return `${innerIndent}${key}: ${val}`;
+};
+
+/** Obje / dizi literalini çıktı görünümü için satırlara böler (JSX değil). */
+export const prettyPrintOuterLiteral = (s, baseIndent, indentUnit = "    ") => {
+    const t = s.trim();
+    const open = t[0];
+    if (open !== "{" && open !== "[") return `${baseIndent}${t}`;
+
+    const close = open === "{" ? "}" : "]";
+    if (t[t.length - 1] !== close) return `${baseIndent}${t}`;
+
+    const inner = t.slice(1, -1).trim();
+    if (!inner) return `${baseIndent}${open}${close}`;
+
+    const parts = splitTopLevelByDelimiter(inner, ",");
+    const innerIndent = baseIndent + indentUnit;
+    const formattedParts = parts.map((p) => formatLeafPairOrExpr(p.trim(), innerIndent, indentUnit));
+
+    return `${baseIndent}${open}\n${formattedParts.join(`,\n`)}\n${baseIndent}${close}`;
+};
+
+/**
+ * `isDeepEqual({ a: 1 }, …)` gibi tek üst seviye çağrıları okunur biçimde satırlara böler.
+ * JSX biçimlendirmesinden sonra uygulanır; eşleşmezse metni olduğu gibi döndürür.
+ */
+export const formatFnCallSnippetForViewer = (text = "", indentUnit = "    ") => {
+    const raw = String(text)
+        .trim()
+        .replace(/;+\s*$/, "");
+    const m = raw.match(/^([\w$]+(?:\.[\w$]+)*)\s*\(/);
+    if (!m) return text;
+
+    const openIdx = raw.indexOf("(");
+    const closeIdx = findMatchingCloseParen(raw, openIdx);
+    if (closeIdx === -1) return text;
+
+    const tail = raw.slice(closeIdx + 1).trim();
+    if (tail !== "" && tail !== ";") return text;
+
+    const inner = raw.slice(openIdx + 1, closeIdx).trim();
+    const name = m[1];
+    if (!inner) return text;
+
+    const args = splitTopLevelByDelimiter(inner, ",");
+    const complex =
+        args.length > 1 ||
+        args.some((a) => {
+            const x = a.trim();
+            return x.length > 48 || /[{[\]}]/.test(x);
+        });
+
+    if (!complex) return text;
+
+    const argIndent = indentUnit;
+    const formattedArgs = args.map((a) => {
+        const x = a.trim();
+        if (x[0] === "{" || x[0] === "[") {
+            return prettyPrintOuterLiteral(x, argIndent, indentUnit);
+        }
+        return `${argIndent}${x}`;
+    });
+
+    return `${name}(\n${formattedArgs.join(`,\n`)}\n)`;
+};
+
 export const renderHighlightedCode = (text = "", TagStartComp) => {
     const regex = /<(?!\/|>|!|\?)([A-Z][A-Za-z0-9._-]*)/g;
     const nodes = [];

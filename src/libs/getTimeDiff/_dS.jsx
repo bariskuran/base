@@ -17,27 +17,25 @@ const X = () => {
             title="getTimeDiff()"
             releasedOn="1.0.0"
             description={
-                <Flex.column gap={12}>
-                    <Typo.span balance>
+                <>
+                    <Typo.p>
                         Calculates the difference between two given dates in all units, returning
                         both total and breakdown values.
-                    </Typo.span>
-                    <Typo.span balance>The order of the dates does not matter.</Typo.span>
-                    <Typo.span balance>
+                    </Typo.p>
+                    <Typo.p>The order of the dates does not matter.</Typo.p>
+                    <Typo.p>
                         Dates can be provided as a Date(), a baseDate object, a timestamp number,
                         purely numeric timestamp strings, or other date strings that{" "}
                         <Button.string to="/design-system/baseDate" label="baseDate()" /> can parse.
-                    </Typo.span>
-                    <Typo.span balance>
-                        <Typo.bold>breakdown</Typo.bold> (year, month, day, hour, …) is counted on the{" "}
-                        <Typo.bold>UTC</Typo.bold> calendar between the two instants, not on your local
-                        wall-clock calendar. For labels in a chosen timezone, use{" "}
-                        <code>time1.date</code> / <code>time2.date</code> (from{" "}
+                    </Typo.p>
+                    <Typo.p>
+                        <b>breakdown</b> (year, month, day, hour, …) is counted on the <b>UTC</b>{" "}
+                        calendar between the two instants, not on your local wall-clock calendar.
+                        For labels in a chosen timezone, use 'time1.date' / 'time2.date' (from{" "}
                         <Button.string to="/design-system/baseDate" label="baseDate()" />
-                        ). <Typo.bold>ts</Typo.bold> and <Typo.bold>tsDiff</Typo.bold> are always plain
-                        epoch milliseconds (timezone-agnostic).
-                    </Typo.span>
-                </Flex.column>
+                        ). ts and tsDiff are always plain epoch milliseconds (timezone-agnostic).
+                    </Typo.p>
+                </>
             }
         >
             <Ds.block
@@ -51,7 +49,7 @@ const X = () => {
                     `}
                 example={
                     <Flex.column gap={10} padding={10} full>
-                        <Flex gap={10} full>
+                        <Flex gap={10} full wrap>
                             <Button.plain
                                 label="ts"
                                 {...outputButtonProps({
@@ -187,7 +185,7 @@ const X = () => {
                             },
                             {
                                 initial: 1700086400000,
-                                format: "|DD|/|MM|/|YYYY|",
+                                format: "|YY|/|MM|/|DD|",
                             },
                         );
 
@@ -211,7 +209,7 @@ const X = () => {
                                             },
                                             {
                                                 initial: 1700086400000,
-                                                format: "|DD|/|MM|/|YYYY|",
+                                                format: "|YY|/|MM|/|DD|",
                                             },
                                         ),
                                 })}
@@ -299,7 +297,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="getTimeDiff(time1, time2?);"
+                args="getTimeDiff(time1, time2);"
                 returns="Compare result with snapshots, absolute ms gap (tsDiff), fractional spans (in), and UTC calendar breakdown."
                 props={{
                     time1: {
@@ -309,8 +307,7 @@ const X = () => {
                         required: true,
                     },
                     time2: {
-                        description:
-                            "Same shapes as time1. If omitted, the other side is Date.now().",
+                        description: "Same shapes as time1. If omitted, the other side is 'now'.",
                         type: "number | string | Date | object",
                     },
                 }}

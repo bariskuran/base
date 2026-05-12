@@ -3,7 +3,7 @@ import { useNavigate, useLocation, useParams, useSearchParams, useMatches } from
 import { baseStore } from "../../@baseStore";
 import { getClientData } from "../../getClientData";
 import { createBaseDatePackage } from "../../@baseDate/createBaseDatePackage";
-import { notifierFunctions } from "../notifier";
+import { notifierFunctions } from "../../notifier/_Base";
 import { TEXT_LIBRARY } from "../../../constants/TEXT_LIBRARY";
 import { useEventListener } from "../../useEventListener";
 import { loadingApi } from "../loadingQueueManager";
@@ -108,6 +108,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     closingDelay: 500,
                     disableNotifier: false,
                     disableAutoKill: false,
+                    variant: null,
                     ...notifierSettings,
                     queue: [],
                     count: 0,

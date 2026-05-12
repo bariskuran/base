@@ -11,7 +11,8 @@ const S = styled.span`
         all: unset;
         width: max-content;
         display: inline-flex;
-        align-items: center;
+        align-items: baseline;
+        vertical-align: baseline;
         gap: 8rem;
         cursor: pointer;
         transition: all 0.5s;
@@ -41,7 +42,7 @@ const S = styled.span`
         & > [data-slot="label"] {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: baseline;
             transition: all 0.5s;
 
             ${($labelPadStartRem > 0 || $labelPadEndRem > 0) &&
@@ -55,7 +56,7 @@ const S = styled.span`
         & > [data-slot="suffix"] {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: baseline;
             width: max-content;
             transition: all 0.5s;
         }

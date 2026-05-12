@@ -484,6 +484,10 @@ const X = () => (
                     description: "overflow-y.",
                     type: "string",
                 },
+                userSelect: {
+                    description: "CSS user-select (e.g. none, text, all, auto). Kebab-case user-select is accepted.",
+                    type: "string | boolean",
+                },
                 content: {
                     description:
                         "children yerine kullanılabilen içerik (ikisi birlikte verilirse children önceliklidir).",

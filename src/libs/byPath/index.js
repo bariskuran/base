@@ -1,4 +1,4 @@
-import { isContainer } from "../isContainer";
+import { isArrayOrPlainObject } from "../isArrayOrPlainObject";
 
 /**
  * Utilities to work with nested values via dot-separated paths.
@@ -64,7 +64,7 @@ export const byPath = (() => {
             if (parts.length === 0) return state;
 
             if (enableDirectUpdate) {
-                if (!isContainer(state)) {
+                if (!isArrayOrPlainObject(state)) {
                     return byPath.set(state, path, newValue, false);
                 }
 
@@ -82,7 +82,7 @@ export const byPath = (() => {
                     const nextSeg = parts[i + 1];
                     const child = readFrom(cur, key);
 
-                    if (!isContainer(child)) {
+                    if (!isArrayOrPlainObject(child)) {
                         writeTo(cur, key, makeContainerForNext(nextSeg));
                     }
 
@@ -93,7 +93,7 @@ export const byPath = (() => {
             }
 
             const rootIsIndex = isIndex(parts[0]);
-            const baseRoot = isContainer(state) ? state : rootIsIndex ? [] : {};
+            const baseRoot = isArrayOrPlainObject(state) ? state : rootIsIndex ? [] : {};
 
             const rootCopy = cloneContainer(baseRoot);
             let curCopy = rootCopy;
@@ -109,9 +109,9 @@ export const byPath = (() => {
                 }
 
                 const nextSeg = parts[i + 1];
-                const origChild = isContainer(curOrig) ? readFrom(curOrig, key) : undefined;
+                const origChild = isArrayOrPlainObject(curOrig) ? readFrom(curOrig, key) : undefined;
 
-                const nextContainer = isContainer(origChild)
+                const nextContainer = isArrayOrPlainObject(origChild)
                     ? origChild
                     : makeContainerForNext(nextSeg);
 
@@ -129,19 +129,19 @@ export const byPath = (() => {
             if (parts.length === 0) return state;
 
             if (enableDirectUpdate) {
-                if (!isContainer(state)) return state;
+                if (!isArrayOrPlainObject(state)) return state;
 
                 let cur = state;
                 for (let i = 0; i < parts.length - 1; i++) {
                     cur = readFrom(cur, parts[i]);
-                    if (!isContainer(cur)) return state;
+                    if (!isArrayOrPlainObject(cur)) return state;
                 }
 
                 deleteFrom(cur, parts[parts.length - 1]);
                 return state;
             }
 
-            if (!isContainer(state)) return state;
+            if (!isArrayOrPlainObject(state)) return state;
 
             const stack = [];
             let curOrig = state;
@@ -149,7 +149,7 @@ export const byPath = (() => {
             for (let i = 0; i < parts.length - 1; i++) {
                 stack.push({ node: curOrig, key: parts[i] });
                 curOrig = readFrom(curOrig, parts[i]);
-                if (!isContainer(curOrig)) return state;
+                if (!isArrayOrPlainObject(curOrig)) return state;
             }
 
             const lastKey = parts[parts.length - 1];

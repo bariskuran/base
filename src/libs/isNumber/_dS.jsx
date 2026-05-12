@@ -2,13 +2,10 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isNumber } from ".";
 import { Flex } from "../Flex";
-import { Typo } from "../Typo";
 import { Button } from "../Button";
-import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { output, setLocal } = baseStore.useLocal({ output: null });
+    const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
         <Ds.page title="isNumber()" releasedOn="1.0.0" description="Checks finite numeric values.">
@@ -16,44 +13,38 @@ const X = () => {
                 title="Basic usage"
                 code={`import { isNumber } from "${SYS.basePath}";
 
-isNumber(12);
-
-isNumber("12.4");
-
-isNumber("abc");`}
+                        isNumber(12);
+                        isNumber("12.4");
+                        isNumber("abc");`}
                 example={
-                    <Flex.column gap={10} padding={10}>
-                        <Button.string
-                            label="Run isNumber(12)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(isNumber(12));
-                                })
-                            }
-                        />
-                        <Button.string
-                            label='Run isNumber("12.4")'
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(isNumber("12.4"));
-                                })
-                            }
-                        />
-                        <Button.string
-                            label='Run isNumber("abc")'
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(isNumber("abc"));
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {output != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.code>{output}</Typo.code>
-                            </>
-                        )}
+                    <Flex.column gap={10} padding={10} full>
+                        <Flex gap={10} wrap>
+                            <Button.plain
+                                label="isNumber(12)"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but1",
+                                    fn: () => isNumber(12),
+                                })}
+                            />
+                            <Button.plain
+                                label='isNumber("12.4")'
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but2",
+                                    fn: () => isNumber("12.4"),
+                                })}
+                            />
+                            <Button.plain
+                                label='isNumber("abc")'
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but3",
+                                    fn: () => isNumber("abc"),
+                                })}
+                            />
+                        </Flex>
+                        <Output path="basic" />
                     </Flex.column>
                 }
             />

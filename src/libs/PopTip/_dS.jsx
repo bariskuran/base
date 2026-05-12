@@ -35,7 +35,7 @@ const X = () => {
                 title="Basic Usage"
                 code={`import { PopTip } from "${SYS.basePath}";
 
-                    <PopTip content="floating content">Content</PopTip>`}
+                        <PopTip content="floating content">Content</PopTip>`}
                 example={
                     <Flex padding={10}>
                         <PopTip content="floating content">Content</PopTip>
@@ -48,22 +48,22 @@ const X = () => {
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip content="Top / Left" alignX="left" alignY="top">
-                            <Template>T/L</Template>
+                        <Template>T/L</Template>
                         </PopTip>
                         <PopTip content="Top / Center" alignX="center" alignY="top">
-                            <Template>T/C</Template>
+                        <Template>T/C</Template>
                         </PopTip>
                         <PopTip content="Top / Right" alignX="right" alignY="top">
-                            <Template>T/R</Template>
+                        <Template>T/R</Template>
                         </PopTip>
                         <PopTip content="Bottom / Left" alignX="left" alignY="bottom">
-                            <Template>B/L</Template>
+                        <Template>B/L</Template>
                         </PopTip>
                         <PopTip content="Bottom / Center" alignX="center" alignY="bottom">
-                            <Template>B/C</Template>
+                        <Template>B/C</Template>
                         </PopTip>
                         <PopTip content="Bottom / Right" alignX="right" alignY="bottom">
-                            <Template>B/R</Template>
+                        <Template>B/R</Template>
                         </PopTip>`}
                 example={
                     <Flex gap={10}>
@@ -94,19 +94,19 @@ const X = () => {
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip content="theme" bgColor="success">
-                            <Template>theme</Template>
+                        <Template>theme</Template>
                         </PopTip>
                         <PopTip content="theme path" bgColor="foregrounds.tint50">
-                            <Template>theme.path</Template>
+                        <Template>theme.path</Template>
                         </PopTip>
                         <PopTip content="css colors" bgColor="skyblue">
-                            <Template>css colors</Template>
+                        <Template>css colors</Template>
                         </PopTip>
                         <PopTip content="override color" bgColor="skyblue" color="#fff">
-                            <Template>override color</Template>
+                        <Template>override color</Template>
                         </PopTip>
                         <PopTip content="disable arrow" disableArrow>
-                            <Template>disable arrow</Template>
+                        <Template>disable arrow</Template>
                         </PopTip>`}
                 example={
                     <Flex gap={10}>
@@ -134,7 +134,7 @@ const X = () => {
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip content="enable escaping" enableEscaping>
-                            <Template>enable escaping</Template>
+                        <Template>enable escaping</Template>
                         </PopTip>`}
                 example={
                     <Flex gap={10}>

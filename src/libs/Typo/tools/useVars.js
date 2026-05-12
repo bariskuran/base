@@ -5,7 +5,12 @@ import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { baseStore } from "../../@baseStore";
 import { getTruncatedHtml } from "./getTruncatedHtml";
 import { cssSpacingResolver } from "../../cssSpacingResolver";
-import { dedent, formatJsxPropsForViewer } from "../../DesignSystem/CodeViewer/tools/codeFormatters.jsx";
+import {
+    dedent,
+    formatFnCallSnippetForViewer,
+    formatJsxPropsForViewer,
+} from "../../DesignSystem/CodeViewer/tools/codeFormatters.jsx";
+import { useNestedBaseUiContext, NESTED_UI_TYPO_PHRASING_HOST } from "../../NestedBaseUi";
 
 const sysDefaults = {
     as: "span",
@@ -31,6 +36,8 @@ const useVars = ({ children, content, contentArray, ...p }) => {
 
     const ref = useRef(null);
 
+    const nestedUi = useNestedBaseUiContext();
+
     const controlledProps = useMemo(() => {
         const responsiveProps = p.responsive?.[currentBreakpoint] || {};
         const mergedProps = { ...sysDefaults, ...p, ...responsiveProps };
@@ -54,6 +61,14 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         };
     }, [p, currentBreakpoint, theme]);
 
+    const displayProps = useMemo(() => {
+        const underPhrasingHost = nestedUi?.[NESTED_UI_TYPO_PHRASING_HOST];
+        if (underPhrasingHost && controlledProps.as === "pre") {
+            return { ...controlledProps, as: "code" };
+        }
+        return controlledProps;
+    }, [controlledProps, nestedUi]);
+
     const setTruncatedHtml = useCallback(
         (nextHtml) => {
             setLocal((s) => {
@@ -70,11 +85,15 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         }
 
         const base = dedent(rawFinalVisibleContent);
-        return controlledProps.codeFormatJsxProps === false ? base : formatJsxPropsForViewer(base);
+        const jsxDone =
+            controlledProps.codeFormatJsxProps === false ? base : formatJsxPropsForViewer(base);
+        if (controlledProps.codeFormatCalls === false) return jsxDone;
+        return formatFnCallSnippetForViewer(jsxDone);
     }, [
         rawFinalVisibleContent,
         controlledProps.codeFormat,
         controlledProps.codeFormatJsxProps,
+        controlledProps.codeFormatCalls,
     ]);
     const margin = cssSpacingResolver(p, "margin");
     const padding = cssSpacingResolver(p, "padding");
@@ -89,8 +108,8 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         const result = getTruncatedHtml({
             visibleRef: ref,
             content: finalVisibleContent,
-            as: controlledProps.as,
-            clamp: controlledProps.clamp || 1,
+            as: displayProps.as,
+            clamp: displayProps.clamp || 1,
             suffix: "...",
         });
 
@@ -98,8 +117,8 @@ const useVars = ({ children, content, contentArray, ...p }) => {
     }, [
         isEllipsisBaseFinal,
         finalVisibleContent,
-        controlledProps.as,
-        controlledProps.clamp,
+        displayProps.as,
+        displayProps.clamp,
         setTruncatedHtml,
     ]);
 
@@ -146,7 +165,7 @@ const useVars = ({ children, content, contentArray, ...p }) => {
 
     return useExportData(
         {
-            ...controlledProps,
+            ...displayProps,
             margin,
             padding,
             shouldUseOverlayCopy,

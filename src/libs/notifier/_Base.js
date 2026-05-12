@@ -1,6 +1,6 @@
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../@baseStore";
 import { isValidElement } from "react";
-import { isPlainObject } from "../../isPlainObject";
+import { isPlainObject } from "../isPlainObject";
 
 const isRenderableNotificationValue = (value) => {
     if (typeof value === "string" || typeof value === "number") return true;
@@ -9,13 +9,14 @@ const isRenderableNotificationValue = (value) => {
 };
 
 const normalizeNotificationInput = (notification, extra = {}) => {
-    const { queueId, bgColor, ...rest } = extra;
+    const { queueId, bgColor, variant, ...rest } = extra;
 
     if (isRenderableNotificationValue(notification)) {
         return {
             value: notification,
             queueId,
             bgColor,
+            variant,
             ...rest,
         };
     }
@@ -25,10 +26,17 @@ const normalizeNotificationInput = (notification, extra = {}) => {
             return null;
         }
 
+        const {
+            value,
+            bgColor: notificationBgColor,
+            variant: notificationVariant,
+        } = notification;
+
         return {
-            ...notification,
+            value,
             queueId,
-            bgColor,
+            bgColor: bgColor ?? notificationBgColor,
+            variant: variant ?? notificationVariant,
             ...rest,
         };
     }
@@ -42,7 +50,7 @@ const normalizeNotificationInput = (notification, extra = {}) => {
  * - Registers notification lifecycle handlers (`onAdd`, `onRemove`)
  * - Triggers a notification via `add`
  * - Removes a notification via `remove` This can be used when disableAutoKill is true.
- * - Type is optional and define by the user.
+ * - Variant is optional and defined by the user.
  *
  * @example
  * const Bell = () => {
@@ -63,7 +71,7 @@ const normalizeNotificationInput = (notification, extra = {}) => {
  *   }, []);
  *
  * useEffect(()=>{
- *    _notifier.add("Bell1 notification", { type: "success", disableAutoKill: true });
+ *    _notifier.add("Bell1 notification", { variant: "plain", disableAutoKill: true });
  *    _notifier.remove(id, { reason: "autoKill" });
  *    _notifier.clear({ reason: "clearAll" });
  * },[])
@@ -71,7 +79,7 @@ const normalizeNotificationInput = (notification, extra = {}) => {
  *   return (
  *     <button
  *       onClick={() => {
- *         _notifier.add("Bell1 notification", { type: "success", disableAutoKill: true });
+ *         _notifier.add("Bell1 notification", { variant: "plain", disableAutoKill: true });
  *         _notifier.remove(id, { reason: "autoKill" });
  *         _notifier.clear({ reason: "clearAll" });
  *       }}
@@ -166,7 +174,7 @@ const add = (notification, options = {}) => {
         disableAutoKill: disableAutoKillGlobal,
     } = _notifier;
 
-    const { killAfter, closingDelay, disableAutoKill, ...rest } = options;
+    const { killAfter, closingDelay, disableAutoKill, bgColor, variant } = options;
 
     const totalKillAfter = (killAfter || killAfterGlobal || 5) * 1000;
     const totalDisable =
@@ -177,7 +185,8 @@ const add = (notification, options = {}) => {
 
     const item = normalizeNotificationInput(notification, {
         queueId: id,
-        ...rest,
+        bgColor,
+        variant,
         remove: () => changeStatus(id, "closing", totalClosingDelay),
         disableAutoKill: totalDisable,
         killAfter: totalKillAfter,
@@ -198,7 +207,7 @@ const add = (notification, options = {}) => {
         d._notifier.count = newCount;
     });
 
-    if (!disableAutoKill) scheduleAutoKill(id, totalKillAfter, totalClosingDelay);
+    if (!totalDisable) scheduleAutoKill(id, totalKillAfter, totalClosingDelay);
 
     return id;
 };

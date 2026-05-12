@@ -1,6 +1,6 @@
 import { shallowEqual } from "../../shallowEqual";
 import { isPlainObject } from "../../isPlainObject";
-import { isContainer } from "../../isContainer";
+import { isArrayOrPlainObject } from "../../isArrayOrPlainObject";
 import { typeOf } from "../../typeOf";
 
 let __baseStoreSeq = 0;
@@ -34,7 +34,7 @@ const createDraftProxy = (root, markChanged) => {
             child = {};
             parent[prop] = child;
             markChanged();
-        } else if (!isContainer(child)) {
+        } else if (!isArrayOrPlainObject(child)) {
             throw new Error(
                 `CoreStore: cannot create deep path at "${String(prop)}" because it is not an object/array.`,
             );
@@ -83,7 +83,7 @@ const createDraftProxy = (root, markChanged) => {
     };
 
     const proxify = (target) => {
-        if (!isContainer(target)) return target;
+        if (!isArrayOrPlainObject(target)) return target;
         if (proxyCache.has(target)) return proxyCache.get(target);
 
         const p = new Proxy(target, {

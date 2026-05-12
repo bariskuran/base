@@ -61,7 +61,7 @@ const sharedStyles = ({
     ${$whiteSpace != null ? `white-space: ${$whiteSpace};` : ""}
     ${$overflow != null ? `overflow: ${$overflow};` : ""}
     ${$italic ? `font-style: italic;` : ""}
-    ${$unselectable ? "user-select: none !important;" : "user-select: text !important;"}
+    ${$unselectable ? "user-select: none !important;" : ""}
     ${$bold ? `font-weight: bold;` : ""}
     ${$disabled ? `opacity: 0.5;` : ""}
     ${$underline ? `text-decoration: underline;` : ""}

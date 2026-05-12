@@ -7,6 +7,8 @@ import { colorAlpha } from "../../colorAlpha";
 import { getText } from "../../getText";
 import { copyToClipboard } from "../../copyToClipboard";
 import { useExportedData } from "../../useExportedData";
+import NestedBaseUi, { NESTED_UI_TYPO_PHRASING_HOST } from "../../NestedBaseUi";
+import { isTypoPhrasingOnlyHostTag } from "./isTypoPhrasingOnlyHostTag";
 
 export const Base = (props) => {
     const { children, content, contentArray, ...p } = props;
@@ -70,6 +72,20 @@ export const Base = (props) => {
         />
     );
 
+    const innerFlow = (
+        <>
+            {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
+            {vars.canUseInlineCopy && <S.inlineCopy>{CopyButton}</S.inlineCopy>}
+        </>
+    );
+
+    const innerMarked =
+        isTypoPhrasingOnlyHostTag(vars.as) && !vars.shouldUseInnerHtml ? (
+            <NestedBaseUi value={{ [NESTED_UI_TYPO_PHRASING_HOST]: true }}>{innerFlow}</NestedBaseUi>
+        ) : (
+            innerFlow
+        );
+
     const Main = vars.shouldUseInnerHtml ? (
         <S.container
             {...commonProps}
@@ -87,8 +103,7 @@ export const Base = (props) => {
             $overflow={vars.overflow}
             $isManuallyHover={isManuallyHover}
         >
-            {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
-            {vars.canUseInlineCopy && <S.inlineCopy>{CopyButton}</S.inlineCopy>}
+            {innerMarked}
         </S.container>
     );
 

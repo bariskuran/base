@@ -18,7 +18,7 @@ const X = () => (
             title="Track Mouse Position"
             code={`import { useMouseXY } from "${SYS.basePath}";
 
-const [x, y] = useMouseXY(80);`}
+                        const [x, y] = useMouseXY(80);`}
             example={<Demo />}
         />
         <Ds.api

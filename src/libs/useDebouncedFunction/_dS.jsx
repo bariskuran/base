@@ -28,18 +28,18 @@ const X = () => {
                 lastBlock
                 code={`import { useDebouncedFunction } from "${SYS.basePath}";
 
-                    const debuncedFunction = useDebouncedFunction(fn, 
+                        const debuncedFunction = useDebouncedFunction(fn, 
                         { 
-                            delay,
-                            isThrottle,
-                            getFirst,
-                            functionName,
-                            onStart,
-                            onEnd,
+                        delay,
+                        isThrottle,
+                        getFirst,
+                        functionName,
+                        onStart,
+                        onEnd,
                         },
-                    );
+                        );
 
-                    debuncedFunction();`}
+                        debuncedFunction();`}
             />
         </Ds.page>
     );

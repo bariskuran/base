@@ -27,7 +27,7 @@ const X = () => (
             title="Viewport Entry Tracking"
             code={`import { useObserver } from "${SYS.basePath}";
 
-const { ref, inViewport } = useObserver({ threshold: 0.2 });`}
+                        const { ref, inViewport } = useObserver({ threshold: 0.2 });`}
             example={<Demo />}
         />
         <Ds.api

@@ -31,7 +31,7 @@ const X = () => (
             title="Debounced Input Value"
             code={`import { useDebouncedValue } from "${SYS.basePath}";
 
-const [debouncedValue, setValue, state] = useDebouncedValue("", { delay: 500 });`}
+                        const [debouncedValue, setValue, state] = useDebouncedValue("", { delay: 500 });`}
             example={<Demo />}
         />
         <Ds.api

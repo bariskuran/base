@@ -1,6 +1,6 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { typeOf } from ".";
+import { isArray } from ".";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
 
@@ -8,31 +8,39 @@ const X = () => {
     const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
-        <Ds.page title="typeOf()" releasedOn="1.0.0" description="Extended type detector helper.">
+        <Ds.page title="isArray()" releasedOn="1.0.0" description="Checks array values.">
             <Ds.block
-                title="Single and multi input"
-                code={`import { typeOf } from "${SYS.basePath}";
+                title="Basic usage"
+                code={`import { isArray } from "${SYS.basePath}";
 
-                        typeOf(null);
-
-                        typeOf(1, "x", []);`}
+                    isArray([]);
+                    isArray({});
+                    isArray(new Date());`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
                             <Button.plain
-                                label="typeOf(null)"
+                                label="isArray([])"
                                 {...outputButtonProps({
                                     path: "basic",
                                     activeLabel: "but1",
-                                    fn: () => typeOf(null),
+                                    fn: () => isArray([]),
                                 })}
                             />
                             <Button.plain
-                                label='typeOf(1, "x", [])'
+                                label="isArray({})"
                                 {...outputButtonProps({
                                     path: "basic",
                                     activeLabel: "but2",
-                                    fn: () => typeOf(1, "x", []),
+                                    fn: () => isArray({}),
+                                })}
+                            />
+                            <Button.plain
+                                label="isArray(new Date())"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but3",
+                                    fn: () => isArray(new Date()),
                                 })}
                             />
                         </Flex>
@@ -41,13 +49,13 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="typeOf(...args);"
-                returns="undefined with no args; string for one arg; string[] for multiple."
+                args="isArray(v);"
+                returns="True if v is an array."
                 props={{
-                    "...args": {
-                        description: "One or more values to inspect.",
-                        type: "any[]",
-                        defaultValue: "[]",
+                    v: {
+                        description: "Value to test.",
+                        type: "any",
+                        required: true,
                     },
                 }}
             />

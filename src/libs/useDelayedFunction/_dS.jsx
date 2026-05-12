@@ -25,7 +25,7 @@ const X = () => {
                 lastBlock
                 code={`import { useDelayedFunction } from "${SYS.basePath}";
 
-                    const { run, cancel, runNow, isPending } = delayedFunction(fn, { delay: 500 });`}
+                        const { run, cancel, runNow, isPending } = delayedFunction(fn, { delay: 500 });`}
             />
         </Ds.page>
     );

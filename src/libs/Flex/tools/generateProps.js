@@ -459,6 +459,7 @@ export const FLEX_PROPS_KEBAB_TO_CAMEL = Object.freeze({
     overflow: "overflow",
     "overflow-x": "overflowX",
     "overflow-y": "overflowY",
+    "user-select": "userSelect",
     "min-width": "minWidth",
     "min-height": "minHeight",
     "max-width": "maxWidth",
@@ -582,6 +583,7 @@ export const generateProps = ({
         overflow,
         overflowX,
         overflowY,
+        userSelect,
     } = mergedObj;
 
     const childCommon = childrenCommon;
@@ -647,6 +649,14 @@ export const generateProps = ({
         overflow,
         overflowX,
         overflowY,
+        userSelect:
+            userSelect == null || userSelect === ""
+                ? undefined
+                : typeof userSelect === "boolean"
+                  ? userSelect
+                      ? "none"
+                      : "auto"
+                  : String(userSelect).trim() || undefined,
         wrap: normalizeWrap(wrap),
         inProps: generateInProps({
             childCommon,
@@ -711,6 +721,7 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "overflowX",
     "overflowY",
     "wrap",
+    "userSelect",
     "responsive",
     "exportData",
     "typo",

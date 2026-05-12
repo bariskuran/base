@@ -2,13 +2,10 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { isPlainObject } from ".";
 import { Flex } from "../Flex";
-import { Typo } from "../Typo";
 import { Button } from "../Button";
-import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { output, setLocal } = baseStore.useLocal({ output: null });
+    const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
         <Ds.page
@@ -20,42 +17,38 @@ const X = () => {
                 title="Basic usage"
                 code={`import { isPlainObject } from "${SYS.basePath}";
 
-isPlainObject({ a: 1 });
+                        isPlainObject({ a: 1 });
 
-isPlainObject(new Date());`}
+                        isPlainObject(new Date());`}
                 example={
-                    <Flex.column gap={10} padding={10}>
-                        <Button.string
-                            label="Run isPlainObject({})"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(isPlainObject({}));
-                                })
-                            }
-                        />
-                        <Button.string
-                            label="Run isPlainObject(new Date())"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(isPlainObject(new Date()));
-                                })
-                            }
-                        />
-                        <Button.string
-                            label="Run isPlainObject([])"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    s.output = JSON.stringify(isPlainObject([]));
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {output != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.code>{output}</Typo.code>
-                            </>
-                        )}
+                    <Flex.column gap={10} padding={10} full>
+                        <Flex gap={10} wrap>
+                            <Button.plain
+                                label="isPlainObject({})"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but1",
+                                    fn: () => isPlainObject({}),
+                                })}
+                            />
+                            <Button.plain
+                                label="isPlainObject(new Date())"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but2",
+                                    fn: () => isPlainObject(new Date()),
+                                })}
+                            />
+                            <Button.plain
+                                label="isPlainObject([])"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but3",
+                                    fn: () => isPlainObject([]),
+                                })}
+                            />
+                        </Flex>
+                        <Output path="basic" />
                     </Flex.column>
                 }
             />

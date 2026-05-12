@@ -16,9 +16,9 @@ const X = () => {
                 title="Basic usage"
                 code={`import { scrollLock } from "${SYS.basePath}";
 
-scrollLock(true);
+                        scrollLock(true);
 
-scrollLock(false);`}
+                        scrollLock(false);`}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Flex gap={10}>

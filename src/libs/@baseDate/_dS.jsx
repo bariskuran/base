@@ -233,8 +233,8 @@ const X = () => {
                 description={`It is possible to use any IANA timezone name or a numeric offset like "+02:00".`}
                 code={`import { baseDate } from "${SYS.basePath}";
                 
-                    baseDate({ timezone: "Europe/London", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
-                    baseDate({ timezone: "+02:00", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
+                        baseDate({ timezone: "Europe/London", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
+                        baseDate({ timezone: "+02:00", format: "|DD|/|MM|/|YYYY| |HH|:|NN|", });
                 `}
                 example={
                     <Flex.column gap={10} padding={10}>
@@ -327,38 +327,38 @@ const X = () => {
                 }
                 code={`import { baseDate } from "${SYS.basePath}";
                 
-                baseDate({ 
-                    calc: { day: 5 },
-                    format: "|DD|/|MM|/|YYYY|"
-                });
-                baseDate({ 
-                    initial: "10/03/2024",
-                    calc: { day: -10 }
-                });
-                baseDate({ 
-                    initial: "31/12/2023 23:30",
-                    calc: { 
-                        year: 1,
-                        month: -1,
-                        day: 2,
-                        hour: 1,
-                        minute: -45
-                    },
-                    format: "|DD|/|MM|/|YYYY| |HH|:|NN|"
-                });
-                baseDate({
-                    initial: "10/03/2024",
-                    calc: "invalid",
-                    format: "|DD|/|MM|/|YYYY|",
-                });
-                baseDate({ initial: "31/03/2024", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
-                baseDate({ initial: "31/03/2023", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
-                baseDate({ initial: "29/03/2024", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
-                baseDate({
-                    initial: { year: 2024, month: 6, day: 1, hour: 10, minute: 0 },
-                    calc: { y: 1, m: -1, ms: 3600000 },
-                    format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
-                });
+                        baseDate({ 
+                            calc: { day: 5 },
+                            format: "|DD|/|MM|/|YYYY|"
+                        });
+                        baseDate({ 
+                            initial: "10/03/2024",
+                            calc: { day: -10 }
+                        });
+                        baseDate({ 
+                            initial: "31/12/2023 23:30",
+                            calc: { 
+                                year: 1,
+                                month: -1,
+                                day: 2,
+                                hour: 1,
+                                minute: -45
+                            },
+                            format: "|DD|/|MM|/|YYYY| |HH|:|NN|"
+                        });
+                        baseDate({
+                            initial: "10/03/2024",
+                            calc: "invalid",
+                            format: "|DD|/|MM|/|YYYY|",
+                        });
+                        baseDate({ initial: "31/03/2024", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
+                        baseDate({ initial: "31/03/2023", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
+                        baseDate({ initial: "29/03/2024", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
+                        baseDate({
+                            initial: { year: 2024, month: 6, day: 1, hour: 10, minute: 0 },
+                            calc: { y: 1, m: -1, ms: 3600000 },
+                            format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
+                        });
                 `}
                 example={
                     <Flex.column gap={10} padding={10}>

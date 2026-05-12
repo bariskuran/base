@@ -10,8 +10,10 @@ import { Icon } from "../../@Icon";
 const Com = ({ arg }) => <Button.withCopyIcon onClick={() => copyToClipboard(arg)} label={arg} />;
 
 const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock }) => {
-    /* RETURN */
-    if (!props || typeof props !== "object" || Object.keys(props).length === 0) return null;
+    const hasProps = props && typeof props === "object" && Object.keys(props).length > 0;
+    const hasReturnProps =
+        returnProps && typeof returnProps === "object" && Object.keys(returnProps).length > 0;
+    if (!hasProps && !hasReturnProps && !args && !returns) return null;
 
     const sortedEntries = Object.entries(props || {}).sort(
         ([nameA, metaA = {}], [nameB, metaB = {}]) => {
@@ -50,16 +52,16 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock }) => {
                             ) : null}
                         </Flex.column>
                     )}
-                    <PropContainer obj={sortedEntries} />
+                    {hasProps && <PropContainer obj={sortedEntries} />}
                     {returns && (
-                        <Flex marginTop={20}>
+                        <Flex marginTop={20} gap={10} alignItems="baseline">
                             <span>
-                                <b>Returns: </b>
-                            </span>{" "}
+                                <b>Returns:</b>
+                            </span>
                             {returns}
                         </Flex>
                     )}
-                    <PropContainer obj={sortedReturnProps} />
+                    {hasReturnProps && <PropContainer obj={sortedReturnProps} />}
                 </Flex.column>
             }
         />

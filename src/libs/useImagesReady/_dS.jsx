@@ -18,7 +18,7 @@ const X = () => (
             title="Watch DOM Images"
             code={`import { useImagesReady } from "${SYS.basePath}";
 
-const isReady = useImagesReady(onReady, { selector: "img", includeErrors: true });`}
+                        const isReady = useImagesReady(onReady, { selector: "img", includeErrors: true });`}
             example={<Demo />}
         />
         <Ds.api

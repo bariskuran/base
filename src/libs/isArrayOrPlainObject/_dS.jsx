@@ -1,6 +1,6 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { sortBy } from ".";
+import { isArrayOrPlainObject } from ".";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
 
@@ -9,34 +9,42 @@ const X = () => {
 
     return (
         <Ds.page
-            title="sortBy"
+            title="isArrayOrPlainObject()"
             releasedOn="1.0.0"
-            description="Natural asc/desc comparator helpers."
+            description="Checks array or plain object."
         >
             <Ds.block
-                title="Natural sorting"
-                code={`import { sortBy } from "${SYS.basePath}";
+                title="Basic usage"
+                code={`import { isArrayOrPlainObject } from "${SYS.basePath}";
 
-                        ["10px", "2px", "1px"].sort(sortBy.asc);
-
-                        ["a", "c", "b"].sort(sortBy.desc);`}
+                        isArrayOrPlainObject([]);
+                        isArrayOrPlainObject({});
+                        isArrayOrPlainObject(new Date());`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
                             <Button.plain
-                                label='["10px","2px","1px"].sort(sortBy.asc)'
+                                label="([])"
                                 {...outputButtonProps({
                                     path: "basic",
                                     activeLabel: "but1",
-                                    fn: () => ["10px", "2px", "1px"].sort(sortBy.asc),
+                                    fn: () => isArrayOrPlainObject([]),
                                 })}
                             />
                             <Button.plain
-                                label='["a","c","b"].sort(sortBy.desc)'
+                                label="({})"
                                 {...outputButtonProps({
                                     path: "basic",
                                     activeLabel: "but2",
-                                    fn: () => ["a", "c", "b"].sort(sortBy.desc),
+                                    fn: () => isArrayOrPlainObject({}),
+                                })}
+                            />
+                            <Button.plain
+                                label="(new Date())"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but3",
+                                    fn: () => isArrayOrPlainObject(new Date()),
                                 })}
                             />
                         </Flex>
@@ -45,17 +53,12 @@ const X = () => {
                 }
             />
             <Ds.api
-                args={["sortBy.asc(a, b);", "sortBy.desc(a, b);"]}
-                returns="Comparator return value (−1, 0, 1 style) for Array.sort."
+                args="isArrayOrPlainObject(v);"
+                returns="True if v is a non-null array or plain object."
                 props={{
-                    asc: {
-                        description: "Ascending natural-order comparator (a, b).",
-                        type: "function",
-                        required: true,
-                    },
-                    desc: {
-                        description: "Descending natural-order comparator (a, b).",
-                        type: "function",
+                    v: {
+                        description: "Value to test.",
+                        type: "any",
                         required: true,
                     },
                 }}

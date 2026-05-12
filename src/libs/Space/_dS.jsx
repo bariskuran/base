@@ -10,9 +10,9 @@ const X = () => (
             title="Preset and Custom Size"
             code={`import { Space } from "${SYS.basePath}";
 
-<Typo>Top</Typo>
-<Space size="xl" />
-<Typo>Bottom</Typo>`}
+                        <Typo>Top</Typo>
+                        <Space size="xl" />
+                        <Typo>Bottom</Typo>`}
             example={
                 <Card padding={12}>
                     <Typo.span children="Top" />

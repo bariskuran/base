@@ -10,15 +10,15 @@ const X = () => (
             title="Basic Variants"
             code={`import { Typo } from "${SYS.basePath}";
 
-<Typo.h3>Heading</Typo.h3>
-<Typo.p>Body text</Typo.p>
-<Typo.quote>Quoted text</Typo.quote>
-<Typo.code>{\`
-    <Button
-        label="Hello"
-        variant="plain"
-    />
-\`}</Typo.code>`}
+                        <Typo.h3>Heading</Typo.h3>
+                        <Typo.p>Body text</Typo.p>
+                        <Typo.quote>Quoted text</Typo.quote>
+                        <Typo.code>{\`
+                            <Button
+                                label="Hello"
+                                variant="plain"
+                            />
+                        \`}</Typo.code>`}
             example={
                 <Flex.column gap={8}>
                     <Typo.h3>Heading</Typo.h3>
@@ -87,6 +87,23 @@ const X = () => (
                 fitContent: { description: "Fits width to content.", type: "boolean", defaultValue: "false" },
                 enableQuoteMarks: { description: "Adds quote marks style.", type: "boolean", defaultValue: "false" },
                 balance: { description: "Enables text-wrap balance.", type: "boolean", defaultValue: "false" },
+                codeFormat: {
+                    description:
+                        "String içerikte dedent + (isteğe bağlı) JSX prop satırları + üst seviye çağrı/ literal kırılımı.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                codeFormatJsxProps: {
+                    description: "codeFormat açıkken <Tag prop…> açılışlarını çok satıra böler.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                codeFormatCalls: {
+                    description:
+                        'codeFormat açıkken `foo({ a: 1 }, …)` gibi tek çağrıları ve `{ }` / `[ ]` içeriğini okunur biçimde satırlara böler.',
+                    type: "boolean",
+                    defaultValue: "false",
+                },
                 exportData: { description: "Debug/export passthrough.", type: "boolean | function | object", defaultValue: "false" },
             }}
         />

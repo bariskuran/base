@@ -34,7 +34,7 @@ const X = () => (
             title="Window Event Listener"
             code={`import { useEventListener } from "${SYS.basePath}";
 
-useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
+                        useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
             example={<Demo />}
         />
         <Ds.api

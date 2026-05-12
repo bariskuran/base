@@ -24,10 +24,10 @@ const X = () => (
             title="Measure Scrollable Size"
             code={`import { useScrollWidthHeight } from "${SYS.basePath}";
 
-const [width, height, recalc] = useScrollWidthHeight(source, {
-  settleDelay: 250,
-  resizeDelay: 1000,
-});`}
+                        const [width, height, recalc] = useScrollWidthHeight(source, {
+                        settleDelay: 250,
+                        resizeDelay: 1000,
+                        });`}
             example={<Demo />}
         />
         <Ds.api

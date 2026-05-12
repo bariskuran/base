@@ -5,9 +5,32 @@ import { Button } from "../../Button";
 import { colorGet } from "../../colorGet";
 import { useEffect } from "react";
 import { baseStore } from "../../@baseStore";
+import { DefaultVariant } from "../DefaultVariant";
+import { PlainVariant } from "../PlainVariant";
+import { TestVariant } from "../TestVariant";
+
+const NOTIFIER_VARIANTS = {
+    default: DefaultVariant,
+    plain: PlainVariant,
+    test: TestVariant,
+};
+
+const resolveNotifierVariant = (variant, fallback) => {
+    if (variant == null || variant === false) return fallback;
+    if (typeof variant === "string") return NOTIFIER_VARIANTS[variant] || fallback;
+    return variant;
+};
 
 export const Base = (p = {}) => {
-    const { Variant, isEmpty, queue = [], theme, containerRef, closingDelay } = useVars(p);
+    const {
+        Variant,
+        variant: notifierVariant,
+        isEmpty,
+        queue = [],
+        theme,
+        containerRef,
+        closingDelay,
+    } = useVars(p);
     const [_notifier] = baseStore.useGlobal((s) => [s._notifier]);
     const { closingDelay: closingDelayGlobal } = _notifier || {};
 
@@ -21,6 +44,7 @@ export const Base = (p = {}) => {
                             key={item.queueId}
                             item={item}
                             Variant={Variant}
+                            notifierVariant={notifierVariant}
                             theme={theme}
                             containerRef={containerRef}
                         />
@@ -30,10 +54,12 @@ export const Base = (p = {}) => {
     );
 };
 
-const Box = ({ item, Variant, theme, containerRef }) => {
-    const { bgColor, value, disableAutoKill, remove, killAfter, status, closingDelay } = item || {};
+const Box = ({ item, Variant, notifierVariant, theme, containerRef }) => {
+    const { bgColor, value, variant, disableAutoKill, remove, killAfter, status, closingDelay } =
+        item || {};
 
     const colors = useMemo(() => colorGet(bgColor || theme?.background), [bgColor, theme]);
+    const ItemVariant = resolveNotifierVariant(variant ?? notifierVariant, Variant);
 
     const { boxHeight, setLocal } = baseStore.useLocal({ boxHeight: 0 });
 
@@ -51,7 +77,7 @@ const Box = ({ item, Variant, theme, containerRef }) => {
 
     /* RETURN */
     return (
-        <Variant
+        <ItemVariant
             ref={containerRef}
             $bgColor={colors?.color}
             $colors={colors}
@@ -67,6 +93,6 @@ const Box = ({ item, Variant, theme, containerRef }) => {
                 <Button.closeIcon onClick={remove} color={colors?.opposite} />
             </div>
             <div data-slot="content">{value}</div>
-        </Variant>
+        </ItemVariant>
     );
 };

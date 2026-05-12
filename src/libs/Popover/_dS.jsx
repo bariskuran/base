@@ -16,9 +16,9 @@ const X = () => (
             title="Basic Usage"
             code={`import { Popover } from "${SYS.basePath}";
 
-<Popover>
-  <div>Panel content</div>
-</Popover>`}
+                        <Popover>
+                        <div>Panel content</div>
+                        </Popover>`}
             example={
                 <Flex gap={12}>
                     <Popover>

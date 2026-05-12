@@ -20,9 +20,9 @@ const X = () => (
             title="Throttled Scroll Callback"
             code={`import { useScrollThrottle } from "${SYS.basePath}";
 
-useScrollThrottle(() => {
-  // on scroll
-}, 120);`}
+                        useScrollThrottle(() => {
+                        // on scroll
+                        }, 120);`}
             example={<Demo />}
         />
         <Ds.api

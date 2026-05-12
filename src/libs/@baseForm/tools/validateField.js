@@ -1,4 +1,4 @@
-import { isEqual } from "../../isEqual";
+import { isDeepEqual } from "../../isDeepEqual";
 import { baseStore } from "../../@baseStore";
 
 export const validateField = ({ value, validationRules = [], field }) => {
@@ -66,7 +66,7 @@ export const validateField = ({ value, validationRules = [], field }) => {
     // -----------------------------
     // 4) DIRTY / TOUCHED MERGE RULES
     // -----------------------------
-    const selfDirty = !isEqual(value, field?.defaultValue);
+    const selfDirty = !isDeepEqual(value, field?.defaultValue);
     isDirty = isDirty || selfDirty;
     isTouched = true;
 

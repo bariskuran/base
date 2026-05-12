@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { isEqual } from "../isEqual";
+import { isDeepEqual } from "../isDeepEqual";
 import { findDifferences as findDifferencesFn } from "../findDifferences";
 import { baseStore } from "../@baseStore";
 
@@ -38,7 +38,7 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
         }
 
         for (let i = 0; i < next.length; i++) {
-            if (!isEqual(prev[i], next[i])) {
+            if (!isDeepEqual(prev[i], next[i])) {
                 prevRef.current = next.slice();
                 return true;
             }

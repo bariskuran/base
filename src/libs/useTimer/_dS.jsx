@@ -38,10 +38,10 @@ const X = () => (
             title="Start/Stop Loop Timer"
             code={`import { useTimer } from "${SYS.basePath}";
 
-const { start, stop, isRunning } = useTimer({
-  refreshTime: 700,
-  loop: true,
-});`}
+                        const { start, stop, isRunning } = useTimer({
+                        refreshTime: 700,
+                        loop: true,
+                        });`}
             example={<Demo />}
         />
         <Ds.api

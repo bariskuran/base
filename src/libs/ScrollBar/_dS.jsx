@@ -73,35 +73,35 @@ const X = () => {
                 description="ScrollBar hides the default browser scrollbar of its parent container and shows its own scrollbar for the x and y axis if needed. You don’t need to configure for x or y axis specifically."
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    const longText = generateRandom.loremIpsum(1000);
-                    const shortText = generateRandom.loremIpsum(50);
+                        const longText = generateRandom.loremIpsum(1000);
+                        const shortText = generateRandom.loremIpsum(50);
 
-                    const TwoAxisLargeContent = ({ children, childrenProps, short }) => (
-                        <Flex
-                            width={150}
-                            height={100}
-                            bgColor="aliceblue"
-                            yAlign="start"
-                            overflow="hidden"
-                            padding={10}
-                            childrenProps={childrenProps}
-                        >
-                            <div>{short ? shortText : longText}</div>
-                            {children}
-                        </Flex>
-                    );
+                        const TwoAxisLargeContent = ({ children, childrenProps, short }) => (
+                            <Flex
+                                width={150}
+                                height={100}
+                                bgColor="aliceblue"
+                                yAlign="start"
+                                overflow="hidden"
+                                padding={10}
+                                childrenProps={childrenProps}
+                            >
+                                <div>{short ? shortText : longText}</div>
+                                {children}
+                            </Flex>
+                        );
 
-                    <Flex gap={10}>
-                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
-                            <ScrollBar />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]} short>
-                            <ScrollBar />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar />
-                        </TwoAxisLargeContent>
-                    </Flex>`}
+                        <Flex gap={10}>
+                            <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
+                                <ScrollBar />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent childrenProps={[{ width: 1500 }]} short>
+                                <ScrollBar />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar />
+                            </TwoAxisLargeContent>
+                        </Flex>`}
                 example={
                     <Flex gap={10}>
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
@@ -123,14 +123,14 @@ const X = () => {
                 The ScrollBar automatically decides which axis should trigger scrolling. If the Y axis is not present or is disabled, the Y scroll trigger will also scroll the X axis.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <Flex gap={10}>
-                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
-                            <ScrollBar disableX />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
-                            <ScrollBar disableY />
-                        </TwoAxisLargeContent>
-                    </Flex>`}
+                        <Flex gap={10}>
+                            <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
+                                <ScrollBar disableX />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
+                                <ScrollBar disableY />
+                            </TwoAxisLargeContent>
+                        </Flex>`}
                 example={
                     <Flex gap={10}>
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
@@ -151,14 +151,14 @@ const X = () => {
                     Both props can be used together.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <Flex gap={10}>
-                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
-                            <ScrollBar disableX />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
-                            <ScrollBar disableY />
-                        </TwoAxisLargeContent>
-                    </Flex>`}
+                        <Flex gap={10}>
+                            <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
+                                <ScrollBar disableX />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
+                                <ScrollBar disableY />
+                            </TwoAxisLargeContent>
+                        </Flex>`}
                 example={
                     <Flex gap={10}>
                         <TwoAxisLargeContent>
@@ -179,32 +179,32 @@ const X = () => {
                 `}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <Flex gap={10} wrap>
-                        <TwoAxisLargeContent>
-                            <ScrollBar thickness={10} />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar maxLength={50} />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar minThumbLength={5} />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar truckColor="red" />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar thumbColor="primary" />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar trackMargin={30} />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar edgeMargin={30} />
-                        </TwoAxisLargeContent>
-                        <TwoAxisLargeContent>
-                            <ScrollBar exactThumbSize={3} />
-                        </TwoAxisLargeContent>
-                    </Flex>`}
+                        <Flex gap={10} wrap>
+                            <TwoAxisLargeContent>
+                                <ScrollBar thickness={10} />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar maxLength={50} />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar minThumbLength={5} />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar truckColor="red" />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar thumbColor="primary" />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar trackMargin={30} />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar edgeMargin={30} />
+                            </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar exactThumbSize={3} />
+                            </TwoAxisLargeContent>
+                        </Flex>`}
                 example={
                     <Flex gap={10} wrap>
                         <TwoAxisLargeContent>
@@ -301,9 +301,9 @@ const X = () => {
                 description="As in the rest of the Base library, you can change the variant using a prop, or by using the compound component pattern as Component.variantName."
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <ScrollBar />
-                    <ScrollBar variant="primary" />
-                    <ScrollBar.fullTop />`}
+                        <ScrollBar />
+                        <ScrollBar variant="primary" />
+                        <ScrollBar.fullTop />`}
                 example={
                     <Ds.variant
                         variants={[
@@ -336,22 +336,22 @@ const X = () => {
                 I can't fully guarantee all behaviors when using custom variants. Therefore, please be careful and test thoroughly when creating your own variant.`}
                 code={`import { ScrollBar, styled, css } from "${SYS.basePath}";
 
-                    export const CustomVariant = styled.div\`
-                        ${() => css`
-                            &[data-slot="track"] {
-                                background: skyblue;
-                                overflow: visible !important;
-                            }
-                            & > [data-slot="thumb"] {
-                                transform: scaleX(20);
-                                background: blue;
-                            }
-                        `}
-                    \`};
+                        export const CustomVariant = styled.div\`
+                            ${() => css`
+                                &[data-slot="track"] {
+                                    background: skyblue;
+                                    overflow: visible !important;
+                                }
+                                & > [data-slot="thumb"] {
+                                    transform: scaleX(20);
+                                    background: blue;
+                                }
+                            `}
+                        \`};
 
-                    <TwoAxisLargeContent>
-                        <ScrollBar variant={CustomVariant} />
-                    </TwoAxisLargeContent>
+                        <TwoAxisLargeContent>
+                            <ScrollBar variant={CustomVariant} />
+                        </TwoAxisLargeContent>
 `}
                 example={
                     <Flex gap={10}>
@@ -368,9 +368,9 @@ const X = () => {
                     You should place it on layout level and enable 'body' prop. It will add a new scrollbar to the body of the page.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                    <AppLevelContainer>
-                        <ScrollBar body />
-                    </AppLevelContainer>`}
+                        <AppLevelContainer>
+                            <ScrollBar body />
+                        </AppLevelContainer>`}
             />
             <Ds.api
                 args="<ScrollBar />"

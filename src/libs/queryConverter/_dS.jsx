@@ -4,13 +4,11 @@ import { queryConverter } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
-import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
 
 const obj = { page: 2, filter: { q: "test" }, list: ["a", "b"] };
 
 const X = () => {
-    const { output, setLocal } = baseStore.useLocal({ output: null });
+    const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
         <Ds.page
@@ -22,29 +20,27 @@ const X = () => {
                 title="Export / import"
                 code={`import { queryConverter } from "${SYS.basePath}";
 
-const qs = queryConverter.export({ page: 2, filter: { q: "test" } });
+                        const qs = queryConverter.export({ page: 2, filter: { q: "test" } });
 
-const obj = queryConverter.import(qs);`}
+                        const obj = queryConverter.import(qs);`}
                 example={
-                    <Flex.column gap={10} padding={10}>
+                    <Flex.column gap={10} padding={10} full>
                         <Typo.code>sample = {JSON.stringify(obj, null, 2)}</Typo.code>
-                        <Button.string
-                            label="Run export then import (round-trip)"
-                            onClick={() =>
-                                setLocal((s) => {
-                                    const qs = queryConverter.export(obj);
-                                    const parsed = queryConverter.import(qs);
-                                    s.output = JSON.stringify({ qs, parsed }, null, 2);
-                                })
-                            }
-                        />
-                        <Space size="l" />
-                        {output != null && (
-                            <>
-                                <Typo.span balance>Output</Typo.span>
-                                <Typo.code>{output}</Typo.code>
-                            </>
-                        )}
+                        <Flex gap={10} wrap>
+                            <Button.plain
+                                label="(export → import)"
+                                {...outputButtonProps({
+                                    path: "basic",
+                                    activeLabel: "but1",
+                                    fn: () => {
+                                        const qs = queryConverter.export(obj);
+                                        const parsed = queryConverter.import(qs);
+                                        return { qs, parsed };
+                                    },
+                                })}
+                            />
+                        </Flex>
+                        <Output path="basic" />
                     </Flex.column>
                 }
             />

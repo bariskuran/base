@@ -23,6 +23,7 @@ const CONTAINER_STYLE_KEYS = new Set([
     "overflow",
     "overflowX",
     "overflowY",
+    "userSelect",
     "background",
     "backgroundColor",
     "color",

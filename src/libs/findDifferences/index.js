@@ -1,6 +1,6 @@
 import { typeOf } from "../typeOf";
-import { isEqual } from "../isEqual";
-import { isContainer } from "../isContainer";
+import { isDeepEqual } from "../isDeepEqual";
+import { isArrayOrPlainObject } from "../isArrayOrPlainObject";
 
 /**
  * Builds a diff tree and a flat list of changed paths between two values.
@@ -16,7 +16,7 @@ import { isContainer } from "../isContainer";
  * @param {*} oldData
  * @param {*} newData
  * @param {Object} [settings]
- * @param {Object} [settings.isEqualSettings] - Settings passed into `isEqual`.
+ * @param {Object} [settings.isDeepEqualSettings] - Settings passed into `isDeepEqual`.
  * @returns {Object} {changedPaths: string[], differences: any}
  *
  * @example
@@ -42,10 +42,10 @@ import { isContainer } from "../isContainer";
  * // tree  => { items: [ , { title: { oldValue: "B", newValue: "C" } } ] }
  */
 export const findDifferences = (oldData, newData, settings = {}) => {
-    const { isEqualSettings } = settings || {};
+    const { isDeepEqualSettings } = settings || {};
 
-    if (isEqual(oldData, newData, isEqualSettings)) {
-        return [[], {}];
+    if (isDeepEqual(oldData, newData, isDeepEqualSettings)) {
+        return { changedPaths: [], differences: {} };
     }
 
     const t1 = typeOf(oldData);
@@ -57,27 +57,27 @@ export const findDifferences = (oldData, newData, settings = {}) => {
         t1 !== t2 ||
         isLeafType(t1) ||
         isLeafType(t2) ||
-        !isContainer(oldData) ||
-        !isContainer(newData)
+        !isArrayOrPlainObject(oldData) ||
+        !isArrayOrPlainObject(newData)
     ) {
         return [["$"], { oldValue: oldData, newValue: newData }];
     }
 
-    const tree = diffTree(oldData, newData, isEqualSettings);
+    const tree = diffTree(oldData, newData, isDeepEqualSettings);
     const paths = findPaths(tree);
     return { changedPaths: paths, differences: tree };
 };
 
 const isDiffLeaf = (v) => v && typeof v === "object" && ("oldValue" in v || "newValue" in v);
 
-const diffTree = (a, b, isEqualSettings, level = 0, maxDepth = 50) => {
+const diffTree = (a, b, isDeepEqualSettings, level = 0, maxDepth = 50) => {
     if (level > maxDepth) return { oldValue: a, newValue: b };
-    if (isEqual(a, b, isEqualSettings)) return {};
+    if (isDeepEqual(a, b, isDeepEqualSettings)) return {};
 
     const ta = typeOf(a);
     const tb = typeOf(b);
 
-    if (ta !== tb || !(ta === "object" || ta === "array") || !isContainer(a) || !isContainer(b)) {
+    if (ta !== tb || !(ta === "object" || ta === "array") || !isArrayOrPlainObject(a) || !isArrayOrPlainObject(b)) {
         return { oldValue: a, newValue: b };
     }
 
@@ -87,7 +87,7 @@ const diffTree = (a, b, isEqualSettings, level = 0, maxDepth = 50) => {
         let maxChangedIndex = -1;
 
         for (let i = 0; i < len; i++) {
-            const sub = diffTree(a[i], b[i], isEqualSettings, level + 1, maxDepth);
+            const sub = diffTree(a[i], b[i], isDeepEqualSettings, level + 1, maxDepth);
             if (isDiffLeaf(sub) || (sub && typeof sub === "object" && Object.keys(sub).length)) {
                 changedByIndex.set(i, sub);
                 if (i > maxChangedIndex) maxChangedIndex = i;
@@ -108,7 +108,7 @@ const diffTree = (a, b, isEqualSettings, level = 0, maxDepth = 50) => {
     const keys = new Set([...Object.keys(a || {}), ...Object.keys(b || {})]);
     const out = {};
     for (const k of keys) {
-        const sub = diffTree(a?.[k], b?.[k], isEqualSettings, level + 1, maxDepth);
+        const sub = diffTree(a?.[k], b?.[k], isDeepEqualSettings, level + 1, maxDepth);
         if (isDiffLeaf(sub) || (sub && typeof sub === "object" && Object.keys(sub).length)) {
             out[k] = sub;
         }

@@ -31,8 +31,8 @@ const X = () => (
             title="Element Overflow Detection"
             code={`import { useCheckOverflow } from "${SYS.basePath}";
 
-const ref = useRef(null);
-const { isOverflowing } = useCheckOverflow({ ref });`}
+                        const ref = useRef(null);
+                        const { isOverflowing } = useCheckOverflow({ ref });`}
             example={<Demo />}
         />
         <Ds.api

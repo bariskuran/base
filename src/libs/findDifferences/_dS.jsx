@@ -43,7 +43,7 @@ const { changedPaths, differences } = findDifferences(oldData, newData);`}
             }
         />
         <Ds.api
-            args="const { changedPaths, differences } = findDifferences(oldData, newData, { isEqualSettings });"
+            args="const { changedPaths, differences } = findDifferences(oldData, newData, { isDeepEqualSettings });"
             props={{
                 oldData: {
                     description: "Previous value.",
@@ -55,8 +55,8 @@ const { changedPaths, differences } = findDifferences(oldData, newData);`}
                     type: "any",
                     required: true,
                 },
-                isEqualSettings: {
-                    description: "Forwarded options for internal isEqual checks.",
+                isDeepEqualSettings: {
+                    description: "Forwarded options for internal isDeepEqual checks.",
                     type: "object",
                     defaultValue: "{}",
                 },

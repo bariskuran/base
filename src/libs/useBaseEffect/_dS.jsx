@@ -36,9 +36,9 @@ const X = () => (
             title="After-Mount Effect"
             code={`import { useBaseEffect } from "${SYS.basePath}";
 
-useBaseEffect(() => {
-  // run on dependency changes
-}, [value], { useEffectAfterMount: true });`}
+                        useBaseEffect(() => {
+                        // run on dependency changes
+                        }, [value], { useEffectAfterMount: true });`}
             example={<Demo />}
         />
         <Ds.api
