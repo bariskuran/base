@@ -439,9 +439,15 @@ const useVars = (p) => {
             const w = getCssSize(ew);
             out.width = w;
             out.maxWidth = w;
+        } else if (!intrinsicWidth && measuredWidth != null && measuredWidth !== "") {
+            const w = getCssSize(measuredWidth);
+            out.width = w;
+            out.maxWidth = w;
         }
         if (eh != null && eh !== "") {
             out.height = getCssSize(eh);
+        } else if (!intrinsicHeight && measuredHeight != null && measuredHeight !== "") {
+            out.height = getCssSize(measuredHeight);
         }
 
         if (intrinsicWidth) {
@@ -490,6 +496,8 @@ const useVars = (p) => {
         intrinsicWidth,
         maxHeight,
         maxWidth,
+        measuredHeight,
+        measuredWidth,
         restProps,
         width,
     ]);

@@ -109,7 +109,12 @@ const X = () => (
                     </Popover>
                     <Popover
                         buttonProps={{ label: "Menu", outlined: false }}
-                        scrollFlexProps={{ scrollBarProps: { edgeMargin: 10, variant: "primary" } }}
+                        scrollFlexProps={{
+                            flexProps: {
+                                gap: 5,
+                            },
+                            scrollBarProps: { edgeMargin: 10, variant: "primary" },
+                        }}
                     >
                         <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
                     </Popover>
