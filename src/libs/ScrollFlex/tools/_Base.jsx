@@ -14,7 +14,6 @@ export const Base = ({ children, ...p }) => {
         shellGutters,
         contentPaddingStyle,
         variantOuterStyle,
-        intrinsicHeight,
     } = useVars(p);
 
     if (!shouldRender) return null;
@@ -34,7 +33,6 @@ export const Base = ({ children, ...p }) => {
                     $gutterRight={gutterRight}
                     $gutterBottom={gutterBottom}
                     $gutterLeft={gutterLeft}
-                    $intrinsicHeight={intrinsicHeight}
                     aria-label="ScrollFlex shell"
                 >
                     <S.content

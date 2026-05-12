@@ -12,6 +12,7 @@ const useVars = (p = {}) => {
         scrollBarProps = {},
         scrollFlexVariant,
         exportData,
+        flat = false,
     } = p;
 
     const preparedItems = useMemo(
@@ -25,21 +26,10 @@ const useVars = (p = {}) => {
         const d = resolvedFlexProps?.direction;
         if (d == null) return true;
         const s = String(d).toLowerCase();
-        return !(
-            s === "column" ||
-            s === "column-reverse" ||
-            s === "y" ||
-            s === "y-reverse"
-        );
+        return !(s === "column" || s === "column-reverse" || s === "y" || s === "y-reverse");
     }, [resolvedFlexProps]);
 
-    const mergedScrollBarProps = useMemo(
-        () => ({
-            ...scrollBarProps,
-            edgeMargin: scrollBarProps?.edgeMargin ?? -5,
-        }),
-        [scrollBarProps],
-    );
+    const mergedScrollBarProps = useMemo(() => ({ ...scrollBarProps }), [scrollBarProps]);
 
     return useExportData(
         {
@@ -51,6 +41,7 @@ const useVars = (p = {}) => {
             scrollFlexVariant,
             buttons,
             commonButtonProps,
+            flat,
         },
         {
             preparedItems,

@@ -126,6 +126,33 @@ const X = () => {
                     />
                 }
             />
+            <Ds.block
+                title="flat (no ScrollFlex)"
+                code={`import { ButtonList } from "${SYS.basePath}";
+
+                    <ButtonList
+                        flat
+                        buttons={[
+                            { label: "One", onClick: () => {} },
+                            { label: "Two", onClick: () => {} },
+                        ]}
+                        commonButtonProps={{ variant: "plain" }}
+                        flexProps={{ direction: "row", gap: 8 }}
+                    />`}
+                description="ScrollFlex / ScrollBar removed; inner Flex keeps flexProps. scrollBarProps and ScrollFlex variant have no effect."
+                example={
+                    <ButtonList
+                        flat
+                        buttons={[
+                            { label: "One", onClick: () => {} },
+                            { label: "Two", onClick: () => {} },
+                            { label: "Three", onClick: () => {} },
+                        ]}
+                        commonButtonProps={{ variant: "plain" }}
+                        flexProps={{ direction: "row", gap: 8 }}
+                    />
+                }
+            />
             <Ds.api
                 args="<ButtonList buttons={[]} />"
                 props={{
@@ -141,17 +168,24 @@ const X = () => {
                     },
                     flexProps: {
                         description:
-                            'Forwarded to the Flex content inside ScrollFlex. Without width/height, sizing follows content; the ScrollFlex shell limits overflow (e.g. max-width: 100%). ButtonList.column merges direction: "column" into flexProps.',
+                            'Forwarded to the Flex content inside ScrollFlex when flat is false. Ignored when flat is true. Without width/height, sizing follows content; the ScrollFlex shell limits overflow (e.g. max-width: 100%). ButtonList.column merges direction: "column" into flexProps.',
                         type: "object",
                     },
                     scrollBarProps: {
-                        description: "Forwarded to ScrollBar inside ScrollFlex.",
+                        description:
+                            "Forwarded to ScrollBar inside ScrollFlex when flat is false. Ignored when flat is true.",
                         type: "object",
                     },
                     variant: {
                         description:
-                            "When variant matches a ScrollFlex preset string (`plain`, `border`, `shadow`, `hoverShadow`; aliases include `WithShadow`, `WithHoverShadow`), it is applied only to the inner ScrollFlex—the outer ButtonList wrapper still follows componentCreator rules (DefaultVariant or PlainVariant when nested). Any other string or component selects the outer wrapper Variant.",
+                            "When variant matches a ScrollFlex preset string (`plain`, `border`, `shadow`, `hoverShadow`; aliases include `WithShadow`, `WithHoverShadow`), it is applied only to the inner ScrollFlex—the outer ButtonList wrapper still follows componentCreator rules (DefaultVariant or PlainVariant when nested). Any other string or component selects the outer wrapper Variant. Ignored when flat is true (no ScrollFlex).",
                         type: "string | component",
+                    },
+                    flat: {
+                        description:
+                            "When true, omits ScrollFlex and ScrollBar. Buttons render inside a plain Flex with the same flexProps (no scrolling). scrollBarProps and ScrollFlex-only variant strings are ignored. Row layout still wraps the inner Flex in the width-clamp grid.",
+                        type: "boolean",
+                        defaultValue: "false",
                     },
                     exportData: {
                         description: "Debug / export-data passthrough for underlying hooks.",

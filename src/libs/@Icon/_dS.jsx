@@ -74,7 +74,7 @@ const X = () => {
             />
             <Ds.block
                 title="flat"
-                description="Instead of the default square box, the icon will use a box sized proportionally to its viewBox: width comes from width/size (rem), and height is determined by the viewBox ratio."
+                description="ViewBox-proportional box instead of a square: `width`/`size` targets the **long** side of the viewBox (same mental model as a square icon). Root width is `width × viewW / max(viewW, viewH)` so tall narrow glyphs (e.g. vertical dots) no longer blow up vertically for the same numeric width."
                 code={`import { Icon } from "${SYS.basePath}";
                 
                         <Icon icon="baseLogo" width={80} />

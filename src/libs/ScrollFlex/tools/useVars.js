@@ -306,9 +306,36 @@ const useVars = (p) => {
             ...flexPropsWithoutPadding
         } = mergedFlexProps;
 
+        const alignedFlexProps = mergeDefaultAlignment(flexPropsWithoutPadding);
+
+        /* Outer Variant already gets `height`; the same value on the inner Flex caps the
+         * border-box and lets overflowing children paint over the bottom padding. Inner
+         * should grow with content + padding; `min-height: 100%` keeps short lists filling
+         * the shell when the outer height is definite. */
+        const hasBoundedScrollHeight =
+            shouldRender && resolvedHeight != null && resolvedHeight !== "";
+
+        const resolvedContentFlexProps = hasBoundedScrollHeight
+            ? (() => {
+                  const {
+                      height: _omitHeight,
+                      maxHeight: _omitMaxHeight,
+                      style: alignedStyle,
+                      ...restAligned
+                  } = alignedFlexProps;
+                  const nextStyle = { ...(alignedStyle || {}) };
+                  delete nextStyle.height;
+                  delete nextStyle.maxHeight;
+                  if (nextStyle.minHeight == null && nextStyle.minBlockSize == null) {
+                      nextStyle.minHeight = "100%";
+                  }
+                  return { ...restAligned, style: nextStyle };
+              })()
+            : alignedFlexProps;
+
         return {
             shouldRender,
-            flexProps: mergeDefaultAlignment(flexPropsWithoutPadding),
+            flexProps: resolvedContentFlexProps,
             contentPaddingStyle,
         };
     }, [

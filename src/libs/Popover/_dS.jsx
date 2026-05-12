@@ -2,6 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { Popover } from ".";
 import { Flex } from "../Flex";
+import { ButtonList } from "../ButtonList";
 
 const Panel = () => (
     <Flex.column gap={2}>
@@ -30,6 +31,48 @@ const Panel2 = () => (
     </Flex.column>
 );
 
+const LargeContent = () => {
+    return (
+        <Flex minWidth={1000} minHeight={700}>
+            Large content 1000x700
+        </Flex>
+    );
+};
+
+const buttons = [
+    {
+        bgColor: "error",
+        label: "test",
+        hoverLabel: "test hover",
+        prefix: {
+            icon: "bullet",
+        },
+        onClick: () => console.log("click"),
+    },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+];
+
+const commonButtonProps = {
+    bgColor: "success",
+    prefix: { icon: "user" },
+    size: 100,
+};
+
 const X = () => (
     <Ds.page
         title="<Popover>"
@@ -40,14 +83,8 @@ const X = () => (
             title="Basic Usage"
             code={`import { Popover } from "${SYS.basePath}";
 
-                        <Popover>
-                        <div>Panel content</div>
-                        </Popover>`}
-            example={
-                <Popover>
-                    <Panel buttonProps={{ icon: { width: 16 } }} />
-                </Popover>
-            }
+                        <Popover>content</Popover>`}
+            example={<Popover>content</Popover>}
         />
         <Ds.block
             title="Advanced Usage"
@@ -68,7 +105,13 @@ const X = () => (
                         buttonProps={{ label: "Menu", outlined: false }}
                         scrollFlexProps={{ scrollBarProps: { edgeMargin: 10, variant: "primary" } }}
                     >
-                        <Panel2 />
+                        <LargeContent />
+                    </Popover>
+                    <Popover
+                        buttonProps={{ label: "Menu", outlined: false }}
+                        scrollFlexProps={{ scrollBarProps: { edgeMargin: 10, variant: "primary" } }}
+                    >
+                        <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
                     </Popover>
                 </Flex>
             }

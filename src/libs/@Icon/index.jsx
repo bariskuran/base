@@ -145,11 +145,16 @@ export const Icon = ({
 
     if (!baseMeta) return null;
 
+    /** Flat: `width` hedefi, kare ikonlardaki gibi uzun kenara (max(viewW,viewH)) hizalansın; dar view genişliği orantılı küçülür. */
+    const viewLong = Math.max(baseMeta.viewW, baseMeta.viewH);
+    const flatRootWidth = flat ? baseSize * (baseMeta.viewW / viewLong) : baseSize;
+
     return (
         <PopTipWrapper popTipProps={popTipProps}>
             <Root
                 $size={baseSize}
                 $flat={flat}
+                $flatRootWidth={flatRootWidth}
                 $aspectW={flat ? baseMeta.viewW : 1}
                 $aspectH={flat ? baseMeta.viewH : 1}
                 onMouseEnter={() =>

@@ -30,13 +30,13 @@ export const pulseTwiceScaled = keyframes`
 `;
 
 export const Root = styled.span`
-    ${({ $size, $flat, $aspectW, $aspectH }) =>
+    ${({ $size, $flat, $flatRootWidth, $aspectW, $aspectH }) =>
         $flat
             ? css`
                   position: relative;
                   display: inline-grid;
                   place-items: center;
-                  width: ${$size}rem;
+                  width: ${$flatRootWidth}rem;
                   aspect-ratio: ${$aspectW} / ${$aspectH};
                   height: auto;
                   min-width: 0;

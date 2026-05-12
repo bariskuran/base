@@ -1,5 +1,6 @@
 import useVars from "./useVars";
 import { Button } from "../../Button";
+import { Flex } from "../../Flex";
 import { ScrollFlex } from "../../ScrollFlex";
 
 const rowClampGridStyle = {
@@ -19,31 +20,34 @@ export const Base = (p = {}) => {
         scrollFlexVariant,
         preparedItems,
         isRowLayout,
+        flat,
     } = useVars(p);
 
     const userStyle = p.style;
-    const variantStyle =
-        isRowLayout ?
-            { width: "100%", maxWidth: "100%", minWidth: 0, ...(userStyle || {}) }
-        :   userStyle;
+    const variantStyle = isRowLayout
+        ? { width: "100%", maxWidth: "100%", minWidth: 0, ...(userStyle || {}) }
+        : userStyle;
 
-    const scrollFlexInner = (
+    const buttonNodes = preparedItems.map((item, i) => <Button key={i} {...item} />);
+
+    /** No ScrollFlex; plain Flex keeps flexProps without a scroll container. */
+    const listInner = flat ? (
+        <Flex {...resolvedFlexProps} full>
+            {buttonNodes}
+        </Flex>
+    ) : (
         <ScrollFlex
             {...(scrollFlexVariant != null ? { variant: scrollFlexVariant } : {})}
             flexProps={resolvedFlexProps}
             scrollBarProps={mergedScrollBarProps}
         >
-            {preparedItems.map((item, i) => (
-                <Button key={i} {...item} />
-            ))}
+            {buttonNodes}
         </ScrollFlex>
     );
 
     return (
         <Variant ref={forwardedRef} style={variantStyle}>
-            {isRowLayout ?
-                <div style={rowClampGridStyle}>{scrollFlexInner}</div>
-            :   scrollFlexInner}
+            {isRowLayout ? <div style={rowClampGridStyle}>{listInner}</div> : listInner}
         </Variant>
     );
 };
