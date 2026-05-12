@@ -16,19 +16,19 @@ import { isPlainObject } from "../isPlainObject";
  * @returns {boolean}
  *
  * @example
- * shallowEqual({ a: 1, b: 2 }, { a: 1, b: 2 }); // true
+ * isShallowEqual({ a: 1, b: 2 }, { a: 1, b: 2 }); // true
  *
  * @example
- * shallowEqual([1, 2], [1, 2]); // true
+ * isShallowEqual([1, 2], [1, 2]); // true
  *
  * @example
- * shallowEqual({ a: 1 }, { a: 1, b: 2 }); // false
+ * isShallowEqual({ a: 1 }, { a: 1, b: 2 }); // false
  *
  * @example
- * shallowEqual(new Date(0), new Date(0)); // false
+ * isShallowEqual(new Date(0), new Date(0)); // false
  */
 
-export const shallowEqual = (a, b) => {
+export const isShallowEqual = (a, b) => {
     if (Object.is(a, b)) return true;
 
     const ta = typeOf(a);

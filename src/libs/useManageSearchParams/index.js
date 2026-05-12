@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useCallback, useRef } from "react";
 import { baseStore } from "../@baseStore";
 import { manageSearchParams } from "./manageSearchParams";
-import { shallowEqual } from "../shallowEqual";
+import { isShallowEqual } from "../isShallowEqual";
 
 /**
  * React hook for managing typed, nested, optionally base64-encoded
@@ -87,8 +87,8 @@ export const useManageSearchParams = (options = {}) => {
         const prevBind = lastBindRef.current;
         lastBindRef.current = bind;
 
-        if (prevBind && shallowEqual(prevBind, bind)) return;
-        if (shallowEqual(decoded, next)) return;
+        if (prevBind && isShallowEqual(prevBind, bind)) return;
+        if (isShallowEqual(decoded, next)) return;
 
         manageSearchParams.set(next, { replace, maxLength });
     }, [bind, decoded, replace, maxLength]);

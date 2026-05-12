@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
-import { shallowEqual } from "../shallowEqual";
+import { isShallowEqual } from "../isShallowEqual";
 import { baseStore } from "../@baseStore";
 
 /**
@@ -29,7 +29,7 @@ export const useExportData = ({ exportData, ...returnedData }, exportedData = {}
     useEffect(() => {
         if (typeof exportData !== "function") return;
 
-        if (prevRef.current && shallowEqual(prevRef.current, latestRestRef.current)) {
+        if (prevRef.current && isShallowEqual(prevRef.current, latestRestRef.current)) {
             return;
         }
 
@@ -45,7 +45,7 @@ export const useExportedData = () => {
 
     const exportData = useCallback((data) => {
         setLocal((s) => {
-            if (shallowEqual(s.exportedData, data)) return;
+            if (isShallowEqual(s.exportedData, data)) return;
             s.exportedData = data;
         });
     }, []);

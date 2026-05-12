@@ -11,23 +11,10 @@ export const Base = ({ children, ...p }) => {
         buttonProps,
         uniqueId,
         observerRef,
-        scrollBoxProps,
+        scrollFlexProps,
     } = useVars(p);
 
-    const { flexProps: scrollBoxFlexProps, ...scrollBoxRest } = scrollBoxProps || {};
-    const content = (
-        <ScrollFlex
-            {...scrollBoxRest}
-            flexProps={{
-                width: "100%",
-                ...(scrollBoxFlexProps && typeof scrollBoxFlexProps === "object"
-                    ? scrollBoxFlexProps
-                    : {}),
-            }}
-        >
-            {children}
-        </ScrollFlex>
-    );
+    const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollFlexProps || {};
 
     /* RETURN */
     return (
@@ -35,7 +22,15 @@ export const Base = ({ children, ...p }) => {
             {...floatingUiProps}
             open={isOpen}
             onClick={onClickHandler}
-            content={content}
+            content={
+                <ScrollFlex
+                    {...restScrollFlexProps}
+                    flexProps={{ ...flexProps, maxHeight: 300, maxWidth: 300 }}
+                    scrollBarProps={{ ...scrollBarProps }}
+                >
+                    {children}
+                </ScrollFlex>
+            }
             uniqueId={uniqueId}
             enableEscaping={true}
             alignY="top"
@@ -48,7 +43,7 @@ export const Base = ({ children, ...p }) => {
                     icon: {
                         icon: "threeDotsLarge",
                         activeIcon: "threeDotsLargeHorizontal",
-                        width: 18,
+                        width: 16,
                     },
                 })}
             />

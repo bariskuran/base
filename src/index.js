@@ -100,7 +100,7 @@ export { NUMBERS } from "./constants/NUMBERS";
 export { pushAsSorted } from "./libs/pushAsSorted";
 export { queryConverter } from "./libs/queryConverter";
 export { scrollLock } from "./libs/scrollLock";
-export { shallowEqual } from "./libs/shallowEqual";
+export { isShallowEqual } from "./libs/isShallowEqual";
 export { sleep } from "./libs/sleep";
 export { sortBy } from "./libs/sortBy";
 export { stringCaseConverter } from "./libs/stringCaseConverter";

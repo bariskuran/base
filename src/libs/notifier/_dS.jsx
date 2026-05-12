@@ -138,7 +138,7 @@ const X = () => {
                             label="x40"
                             onClick={() =>
                                 Array.from({ length: 40 }).forEach((_, index) =>
-                                    notifier.add(`item: ${index}`),
+                                    notifier.add(`item: ${index + 1}`, { disableAutoKill: true }),
                                 )
                             }
                         />

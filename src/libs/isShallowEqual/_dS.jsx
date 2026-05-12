@@ -1,6 +1,6 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { shallowEqual } from ".";
+import { isShallowEqual } from ".";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
 
@@ -9,19 +9,19 @@ const X = () => {
 
     return (
         <Ds.page
-            title="shallowEqual()"
+            title="isShallowEqual()"
             releasedOn="1.0.0"
             description="Shallow compare for arrays/plain objects."
         >
             <Ds.block
                 title="Object and array checks"
-                code={`import { shallowEqual } from "${SYS.basePath}";
+                code={`import { isShallowEqual } from "${SYS.basePath}";
 
-                        shallowEqual({ a: 1 }, { a: 1 });
+                        isShallowEqual({ a: 1 }, { a: 1 });
 
-                        shallowEqual([1, 2], [1, 2]);
+                        isShallowEqual([1, 2], [1, 2]);
 
-                        shallowEqual({ a: { b: 1 } }, { a: { b: 1 } });`}
+                        isShallowEqual({ a: { b: 1 } }, { a: { b: 1 } });`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
@@ -30,7 +30,7 @@ const X = () => {
                                 {...outputButtonProps({
                                     path: "basic",
                                     activeLabel: "but1",
-                                    fn: () => shallowEqual({ a: 1 }, { a: 1 }),
+                                    fn: () => isShallowEqual({ a: 1 }, { a: 1 }),
                                 })}
                             />
                             <Button.plain
@@ -38,7 +38,7 @@ const X = () => {
                                 {...outputButtonProps({
                                     path: "basic",
                                     activeLabel: "but2",
-                                    fn: () => shallowEqual([1, 2], [1, 2]),
+                                    fn: () => isShallowEqual([1, 2], [1, 2]),
                                 })}
                             />
                             <Button.plain
@@ -46,7 +46,7 @@ const X = () => {
                                 {...outputButtonProps({
                                     path: "basic",
                                     activeLabel: "but3",
-                                    fn: () => shallowEqual({ a: { b: 1 } }, { a: { b: 1 } }),
+                                    fn: () => isShallowEqual({ a: { b: 1 } }, { a: { b: 1 } }),
                                 })}
                             />
                         </Flex>
@@ -55,7 +55,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="shallowEqual(a, b);"
+                args="isShallowEqual(a, b);"
                 returns="Boolean shallow equality result."
                 props={{
                     a: {

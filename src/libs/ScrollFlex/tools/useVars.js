@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { baseStore } from "../../@baseStore";
 import { useExportData } from "../../useExportedData";
-import { shallowEqual } from "../../shallowEqual";
+import { isShallowEqual } from "../../isShallowEqual";
 
 const EMPTY_FLEX_PROPS = {};
 const EMPTY_SCROLL_BAR_PROPS = {};
@@ -222,7 +222,7 @@ const useVars = (p) => {
             const nextLayoutData = pickScrollBarLayoutData(data);
 
             setLocal((s) => {
-                if (shallowEqual(s.scrollBarExportedData, nextLayoutData)) return;
+                if (isShallowEqual(s.scrollBarExportedData, nextLayoutData)) return;
                 s.scrollBarExportedData = nextLayoutData;
             });
 

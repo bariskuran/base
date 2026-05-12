@@ -25,7 +25,7 @@ export const Base = ({ children, ...p }) => {
             <Variant
                 ref={containerRef}
                 $borderColor={borderColor}
-                aria-label="ScrollFlex"
+                aria-label="ScrollFlex container"
                 style={variantOuterStyle}
             >
                 <S.shell
@@ -33,6 +33,7 @@ export const Base = ({ children, ...p }) => {
                     $gutterRight={gutterRight}
                     $gutterBottom={gutterBottom}
                     $gutterLeft={gutterLeft}
+                    aria-label="ScrollFlex shell"
                 >
                     <S.content
                         aria-label="ScrollFlex content"

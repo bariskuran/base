@@ -10,18 +10,29 @@ const S = {
 
             display: flex;
             flex-direction: column;
-            gap: 10rem;
             justify-content: flex-start;
-            width: 300rem;
+            align-items: stretch;
+            width: 320rem;
             height: ${$isEmpty ? 0 : "100vh"};
+            min-height: 0;
             opacity: ${$isEmpty ? 0 : 1};
             pointer-events: ${$isEmpty ? "none" : "auto"};
             position: fixed;
-            padding: 10rem;
             top: 0;
             right: 0;
             z-index: 9999999;
             box-sizing: border-box;
+            padding-right: 6rem;
+        `}
+    `,
+    /** ScrollFlex yukseklik zinciri: flex cocuk min-height 0 */
+    scrollArea: styled.div`
+        ${() => css`
+            flex: 1 1 auto;
+            min-height: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
         `}
     `,
 };

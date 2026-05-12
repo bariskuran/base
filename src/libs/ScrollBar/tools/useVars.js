@@ -47,10 +47,16 @@ const useVars = (p) => {
     const isExternalInlineMode = hasExternalSource && !hasExternalPositionSource;
     const effectiveTrackMargin = isExternalInlineMode ? 0 : trackMargin;
     const effectiveEdgeMargin = isExternalInlineMode ? 0 : edgeMargin;
-    const effectiveEdgeMarginX =
-        isExternalInlineMode ? 0 : edgeMarginX != null ? edgeMarginX : edgeMargin;
-    const effectiveEdgeMarginY =
-        isExternalInlineMode ? 0 : edgeMarginY != null ? edgeMarginY : edgeMargin;
+    const effectiveEdgeMarginX = isExternalInlineMode
+        ? 0
+        : edgeMarginX != null
+          ? edgeMarginX
+          : edgeMargin;
+    const effectiveEdgeMarginY = isExternalInlineMode
+        ? 0
+        : edgeMarginY != null
+          ? edgeMarginY
+          : edgeMargin;
     const effectiveOpposite = isExternalInlineMode ? false : opposite;
     const effectiveMirror = isExternalInlineMode ? false : mirror;
 

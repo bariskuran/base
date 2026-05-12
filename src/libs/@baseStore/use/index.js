@@ -1,5 +1,5 @@
 import { useRef, useSyncExternalStore, useMemo } from "react";
-import { shallowEqual } from "../../shallowEqual";
+import { isShallowEqual } from "../../isShallowEqual";
 
 export const use = (store, selector, equalityFn) => {
     if (!store || typeof store.subscribe !== "function" || typeof store.get !== "function") {
@@ -39,7 +39,7 @@ export const use = (store, selector, equalityFn) => {
                     if (!a || typeof a !== "object" || !b || typeof b !== "object") {
                         return Object.is(a, b);
                     }
-                    return shallowEqual(a, b);
+                    return isShallowEqual(a, b);
                 });
 
             if (typeof selector !== "function") {

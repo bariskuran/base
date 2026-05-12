@@ -4,14 +4,32 @@ import { Popover } from ".";
 import { Flex } from "../Flex";
 
 const Panel = () => (
-    <Flex.column gap={6}>
+    <Flex.column gap={2}>
         <div>Action A</div>
         <div>Action B</div>
     </Flex.column>
 );
+const Panel2 = () => (
+    <Flex.column gap={2} padding={2}>
+        <div>Action A</div>
+        <div>Action B</div>
+        <div>Action C</div>
+        <div>Action D</div>
+        <div>Action E</div>
+        <div>Action F</div>
+        <div>Action G</div>
+        <div>Action H</div>
+        <div>Action I</div>
+        <div>Action J</div>
+    </Flex.column>
+);
 
 const X = () => (
-    <Ds.page title="<Popover>" releasedOn="1.0.0" description="Click-triggered floating action panel.">
+    <Ds.page
+        title="<Popover>"
+        releasedOn="1.0.0"
+        description="Click-triggered floating action panel."
+    >
         <Ds.block
             title="Basic Usage"
             code={`import { Popover } from "${SYS.basePath}";
@@ -30,37 +48,85 @@ const X = () => (
         <Ds.block
             title="Button and Panel Customization"
             code={`<Popover
-  buttonProps={{ label: "Open menu", outlined: true }}
-  scrollBoxProps={{ maxHeight: 200, padding: 8 }}
-  alignX="left"
->
-  <Panel />
-</Popover>`}
+                  buttonProps={{ label: "Open menu", outlined: true }}
+                  scrollBoxProps={{ maxHeight: 200, padding: 8 }}
+                  alignX="left"
+                >
+                  <Panel />
+                </Popover>`}
             example={
                 <Popover
                     buttonProps={{ label: "Open menu", outlined: true }}
-                    scrollBoxProps={{ maxHeight: 140, padding: 8 }}
-                    alignX="left"
+                    // scrollFlexProps={{ height: 100, maxHeight: 140, padding: 8 }}
                 >
-                    <Panel />
+                    <Panel2 />
                 </Popover>
             }
         />
         <Ds.api
             args="<Popover>{null}</Popover>"
             props={{
-                children: { description: "Popover panel content.", type: "ReactNode", required: true, defaultValue: "null" },
-                buttonProps: { description: "Props forwarded to internal trigger Button.", type: "object", defaultValue: "{}" },
-                scrollBoxProps: { description: "Props forwarded to internal ScrollFlex panel.", type: "object", defaultValue: "{}" },
-                variant: { description: "Popover/FloatingUi variant.", type: "string | component", defaultValue: '"default"' },
-                alignX: { description: "Horizontal alignment.", type: "string", defaultValue: '"center"' },
-                alignY: { description: "Vertical alignment (internally forced top by default).", type: "string", defaultValue: '"top"' },
-                bgColor: { description: "Panel background color.", type: "string", defaultValue: "theme.background" },
-                color: { description: "Panel text color override.", type: "string", defaultValue: "auto" },
-                disableArrow: { description: "Hides arrow.", type: "boolean", defaultValue: "false" },
-                primary: { description: "Theme primary style.", type: "boolean", defaultValue: "false" },
-                secondary: { description: "Theme secondary style.", type: "boolean", defaultValue: "false" },
-                exportData: { description: "Debug/export passthrough.", type: "boolean | function | object", defaultValue: "false" },
+                children: {
+                    description: "Popover panel content.",
+                    type: "ReactNode",
+                    required: true,
+                    defaultValue: "null",
+                },
+                buttonProps: {
+                    description: "Props forwarded to internal trigger Button.",
+                    type: "object",
+                    defaultValue: "{}",
+                },
+                scrollBoxProps: {
+                    description: "Props forwarded to internal ScrollFlex panel.",
+                    type: "object",
+                    defaultValue: "{}",
+                },
+                variant: {
+                    description: "Popover/FloatingUi variant.",
+                    type: "string | component",
+                    defaultValue: '"default"',
+                },
+                alignX: {
+                    description: "Horizontal alignment.",
+                    type: "string",
+                    defaultValue: '"center"',
+                },
+                alignY: {
+                    description: "Vertical alignment (internally forced top by default).",
+                    type: "string",
+                    defaultValue: '"top"',
+                },
+                bgColor: {
+                    description: "Panel background color.",
+                    type: "string",
+                    defaultValue: "theme.background",
+                },
+                color: {
+                    description: "Panel text color override.",
+                    type: "string",
+                    defaultValue: "auto",
+                },
+                disableArrow: {
+                    description: "Hides arrow.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                primary: {
+                    description: "Theme primary style.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                secondary: {
+                    description: "Theme secondary style.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                exportData: {
+                    description: "Debug/export passthrough.",
+                    type: "boolean | function | object",
+                    defaultValue: "false",
+                },
             }}
         />
     </Ds.page>

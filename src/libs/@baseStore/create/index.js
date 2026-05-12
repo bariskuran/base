@@ -1,4 +1,4 @@
-import { shallowEqual } from "../../shallowEqual";
+import { isShallowEqual } from "../../isShallowEqual";
 import { isPlainObject } from "../../isPlainObject";
 import { isArrayOrPlainObject } from "../../isArrayOrPlainObject";
 import { typeOf } from "../../typeOf";
@@ -155,7 +155,7 @@ export const create = (initialState = {}) => {
             changed = true;
         } else if (updater && typeof updater === "object") {
             next = { ...prev, ...updater };
-            changed = !shallowEqual(next, prev);
+            changed = !isShallowEqual(next, prev);
         } else {
             next = updater;
             changed = !Object.is(next, prev);

@@ -1,6 +1,7 @@
 import S from "./_styled";
 import { useMemo } from "react";
 import { useVars } from "./useVars";
+import { ScrollFlex } from "../../ScrollFlex";
 import { Button } from "../../Button";
 import { colorGet } from "../../colorGet";
 import { useEffect } from "react";
@@ -8,6 +9,7 @@ import { baseStore } from "../../@baseStore";
 import { DefaultVariant } from "../DefaultVariant";
 import { PlainVariant } from "../PlainVariant";
 import { TestVariant } from "../TestVariant";
+import { Flex } from "../../Flex";
 
 const NOTIFIER_VARIANTS = {
     default: DefaultVariant,
@@ -37,18 +39,24 @@ export const Base = (p = {}) => {
     /* RETURN */
     return (
         <S.container $isEmpty={isEmpty} $closingDelay={(closingDelay || closingDelayGlobal) * 1000}>
-            {queue.map(
-                (item) =>
-                    item.value && (
-                        <Box
-                            key={item.queueId}
-                            item={item}
-                            Variant={Variant}
-                            notifierVariant={notifierVariant}
-                            theme={theme}
-                            containerRef={containerRef}
-                        />
-                    ),
+            {!isEmpty && (
+                <ScrollFlex.plain paddingLeft={30} paddingRight={10} paddingTop={10}>
+                    <Flex.column gap={10} full paddingBottom={10}>
+                        {queue.map(
+                            (item) =>
+                                item.value && (
+                                    <Box
+                                        key={item.queueId}
+                                        item={item}
+                                        Variant={Variant}
+                                        notifierVariant={notifierVariant}
+                                        theme={theme}
+                                        containerRef={containerRef}
+                                    />
+                                ),
+                        )}
+                    </Flex.column>
+                </ScrollFlex.plain>
             )}
         </S.container>
     );
