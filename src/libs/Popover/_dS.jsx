@@ -161,7 +161,7 @@ const X = () => (
                     </Popover>`}
             example={
                 <Popover
-                    buttonProps={{ label: "Menu", outlined: false }}
+                    buttonProps={{ label: "flat ButtonList usage", outlined: false }}
                     scrollFlexProps={{
                         flexProps: {
                             gap: 5,

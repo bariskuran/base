@@ -1,9 +1,16 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { baseStore } from "../../@baseStore";
 import { resolvePathOrRaw } from "../../Button/tools/generateColors.js";
 import { generateRandom } from "../../generateRandom";
 import { useExportData } from "../../useExportedData";
-import { useObserver } from "../../useObserver";
+
+const FLOATING_UI_SELECTOR = '[aria-label="floating-ui"]';
+
+const rectsDiffer = (a, b, eps) =>
+    Math.abs(a.top - b.top) > eps ||
+    Math.abs(a.left - b.left) > eps ||
+    Math.abs(a.width - b.width) > eps ||
+    Math.abs(a.height - b.height) > eps;
 
 const useVars = (p) => {
     /**
@@ -11,12 +18,7 @@ const useVars = (p) => {
      * Incoming Props
      *
      */
-    const {
-        exportData,
-        buttonProps,
-        scrollBoxProps = {},
-        scrollFlexProps = {},
-    } = p || {};
+    const { exportData, buttonProps, scrollBoxProps = {}, scrollFlexProps = {} } = p || {};
 
     const mergedScrollBoxProps = { ...scrollFlexProps, ...scrollBoxProps };
 
@@ -58,7 +60,7 @@ const useVars = (p) => {
 
     useEffect(() => {
         setLocalByPath("isOpen", popoverId === uniqueId);
-    }, [popoverId]);
+    }, [popoverId, uniqueId, setLocalByPath]);
 
     const onClickHandler = () => {
         if (isOpen) {
@@ -72,13 +74,87 @@ const useVars = (p) => {
         }
     };
 
-    const { ref: observerRef, inViewport } = useObserver({
-        disable: !isOpen,
-        onExit: () =>
-            setGlobal((s) => {
-                s.popoverId = null;
-            }),
-    });
+    const triggerElRef = useRef(null);
+    const anchorSnapshotRef = useRef(null);
+    const rafRef = useRef(null);
+
+    const observerRef = useCallback((node) => {
+        triggerElRef.current = node;
+    }, []);
+
+    const closePopover = useCallback(() => {
+        setGlobal((s) => {
+            s.popoverId = null;
+        });
+    }, [setGlobal]);
+
+    const checkAnchorMoved = useCallback(() => {
+        if (!isOpen || popoverId !== uniqueId) return;
+        const el = triggerElRef.current;
+        const snap = anchorSnapshotRef.current;
+        if (!el || !snap) return;
+        const r = el.getBoundingClientRect();
+        const next = { top: r.top, left: r.left, width: r.width, height: r.height };
+        if (rectsDiffer(snap, next, 1)) {
+            closePopover();
+        }
+    }, [isOpen, popoverId, uniqueId, closePopover]);
+
+    const scheduleAnchorCheck = useCallback(() => {
+        if (rafRef.current != null) return;
+        rafRef.current = requestAnimationFrame(() => {
+            rafRef.current = null;
+            checkAnchorMoved();
+        });
+    }, [checkAnchorMoved]);
+
+    useLayoutEffect(() => {
+        if (!isOpen) {
+            anchorSnapshotRef.current = null;
+            return;
+        }
+
+        const el = triggerElRef.current;
+        if (!el) return;
+
+        const r = el.getBoundingClientRect();
+        anchorSnapshotRef.current = {
+            top: r.top,
+            left: r.left,
+            width: r.width,
+            height: r.height,
+        };
+
+        const onScrollCapture = (e) => {
+            const t = e.target;
+            if (t && typeof t === "object" && t.nodeType === 1 && typeof t.closest === "function") {
+                if (t.closest(FLOATING_UI_SELECTOR)) return;
+            }
+            scheduleAnchorCheck();
+        };
+
+        window.addEventListener("resize", scheduleAnchorCheck);
+        document.addEventListener("scroll", onScrollCapture, true);
+
+        const vv = typeof window !== "undefined" ? window.visualViewport : null;
+        if (vv) {
+            vv.addEventListener("resize", scheduleAnchorCheck);
+            vv.addEventListener("scroll", scheduleAnchorCheck);
+        }
+
+        return () => {
+            window.removeEventListener("resize", scheduleAnchorCheck);
+            document.removeEventListener("scroll", onScrollCapture, true);
+            if (vv) {
+                vv.removeEventListener("resize", scheduleAnchorCheck);
+                vv.removeEventListener("scroll", scheduleAnchorCheck);
+            }
+            if (rafRef.current != null) {
+                cancelAnimationFrame(rafRef.current);
+                rafRef.current = null;
+            }
+        };
+    }, [isOpen, scheduleAnchorCheck]);
 
     /* Return */
     return useExportData(
@@ -86,7 +162,6 @@ const useVars = (p) => {
             exportData,
             ...p,
             allProps: p,
-            inViewport,
             setLocal,
             setLocalByPath,
             isOpen,
