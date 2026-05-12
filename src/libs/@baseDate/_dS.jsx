@@ -270,20 +270,74 @@ const X = () => {
             />
             <Ds.block
                 title="Calculations"
-                description="In addition to other features, you can also perform calculations within a single function."
+                description={
+                    <Flex.column gap={14}>
+                        <Typo.span balance>
+                            One of the best features of baseDate is its versatility: with a single
+                            function, you can both format the current date/time and change the
+                            timezone, as well as perform date calculations via a straightforward{" "}
+                            <code>calc</code> object.
+                        </Typo.span>
+                        <Flex.column gap={8}>
+                            <Typo.span>
+                                The <code>calc</code> object accepts positive or negative numeric
+                                values as props — for example:
+                            </Typo.span>
+                            <Typo.code
+                                codeFormat={false}
+                            >{`{ year: 1 }     or     { year: -1 }`}</Typo.code>
+                        </Flex.column>
+
+                        <Flex.column gap={8}>
+                            <Typo.span>
+                                To make key naming more convenient, aliases can be used for each
+                                property:
+                            </Typo.span>
+                            <Typo.code codeFormat={false}>{`• year / years / y
+• month / months / m
+• day / days / d
+• hour / hours / h
+• minute / minutes / min
+• second / sec / s / seconds / secs
+• millisecond / milliseconds / milisecond / ms`}</Typo.code>
+                        </Flex.column>
+
+                        <Typo.span balance>
+                            Date calculations are performed using the UTC calendar. However, the
+                            resulting date will be formatted according to the provided timezone.
+                        </Typo.span>
+
+                        <Typo.span balance>
+                            For calculations, the <code>calc</code> object uses Gregorian calendar
+                            logic for the most user-friendly and expected behavior, not strict
+                            mathematical addition or subtraction. Therefore, results might differ
+                            from what you&apos;d get using <code>Date.setMonth</code>.
+                        </Typo.span>
+
+                        <Flex.column gap={8}>
+                            <Typo.span>The most notable examples:</Typo.span>
+                            <Typo.code
+                                codeFormat={false}
+                            >{`• 31 March minus 1 month = 29 February (leap year)
+• 31 March minus 1 month = 28 February (non-leap year)
+• 29 March minus 1 month = 29 February (leap year)
+• 29 March minus 1 month = 28 February (non-leap year)`}</Typo.code>
+                        </Flex.column>
+                    </Flex.column>
+                }
                 code={`import { baseDate } from "${SYS.basePath}";
                 
                 baseDate({ 
-                    calculate: { day: 5 },
+                    calc: { day: 5 },
                     format: "|DD|/|MM|/|YYYY|"
                 });
                 baseDate({ 
                     initial: "10/03/2024",
-                    calculate: { day: -10 }
+                    calc: { day: -10 }
                 });
                 baseDate({ 
                     initial: "31/12/2023 23:30",
-                    calculate: { 
+                    calc: { 
                         year: 1,
                         month: -1,
                         day: 2,
@@ -294,9 +348,18 @@ const X = () => {
                 });
                 baseDate({
                     initial: "10/03/2024",
-                    calculate: "invalid",
+                    calc: "invalid",
                     format: "|DD|/|MM|/|YYYY|",
-                });`}
+                });
+                baseDate({ initial: "31/03/2024", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
+                baseDate({ initial: "31/03/2023", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
+                baseDate({ initial: "29/03/2024", calc: { month: -1 }, format: "|DD|/|MM|/|YYYY|" });
+                baseDate({
+                    initial: { year: 2024, month: 6, day: 1, hour: 10, minute: 0 },
+                    calc: { y: 1, m: -1, ms: 3600000 },
+                    format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
+                });
+                `}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Flex gap={10} wrap>
@@ -307,7 +370,7 @@ const X = () => {
                                     activeLabel: "add-days",
                                     fn: () =>
                                         baseDate({
-                                            calculate: { day: 5 },
+                                            calc: { day: 5 },
                                             format: "|DD|/|MM|/|YYYY|",
                                         }),
                                 })}
@@ -320,7 +383,7 @@ const X = () => {
                                     fn: () =>
                                         baseDate({
                                             initial: "10/03/2024",
-                                            calculate: { day: -10 },
+                                            calc: { day: -10 },
                                         }),
                                 })}
                             />
@@ -332,7 +395,7 @@ const X = () => {
                                     fn: () =>
                                         baseDate({
                                             initial: "31/12/2023 23:30",
-                                            calculate: {
+                                            calc: {
                                                 year: 1,
                                                 month: -1,
                                                 day: 2,
@@ -351,13 +414,86 @@ const X = () => {
                                     fn: () =>
                                         baseDate({
                                             initial: "10/03/2024",
-                                            calculate: "invalid",
+                                            calc: "invalid",
                                             format: "|DD|/|MM|/|YYYY|",
+                                        }),
+                                })}
+                            />
+                            <Button.plain
+                                label="31Mar minus 1month (leapYear)"
+                                {...outputButtonProps({
+                                    path: "calc-calendar-clamp",
+                                    activeLabel: "may31-minus3-leap",
+                                    fn: () =>
+                                        baseDate({
+                                            initial: "31/03/2024",
+                                            calc: { month: -1 },
+                                            format: "|DD|/|MM|/|YYYY|",
+                                        }),
+                                })}
+                            />
+                            <Button.plain
+                                label="31Mar minus 1month (non-leap)"
+                                {...outputButtonProps({
+                                    path: "calc-calendar-clamp",
+                                    activeLabel: "may31-minus3-common",
+                                    fn: () =>
+                                        baseDate({
+                                            initial: "31/03/2023",
+                                            calc: { month: -1 },
+                                            format: "|DD|/|MM|/|YYYY|",
+                                        }),
+                                })}
+                            />
+                            <Button.plain
+                                label="29Mar minus 1month (leapYear)"
+                                {...outputButtonProps({
+                                    path: "calc-calendar-clamp",
+                                    activeLabel: "may30-minus3-leap",
+                                    fn: () =>
+                                        baseDate({
+                                            initial: "29/03/2024",
+                                            calc: { month: -1 },
+                                            format: "|DD|/|MM|/|YYYY|",
+                                        }),
+                                })}
+                            />
+                            <Button.plain
+                                label="29Mar minus 1month (non-leap)"
+                                {...outputButtonProps({
+                                    path: "calc-calendar-clamp",
+                                    activeLabel: "may30-minus3-common",
+                                    fn: () =>
+                                        baseDate({
+                                            initial: "29/03/2023",
+                                            calc: { month: -1 },
+                                            format: "|DD|/|MM|/|YYYY|",
+                                        }),
+                                })}
+                            />
+                            <Button.plain
+                                label="aliases: y, m, ms (+1h wall)"
+                                {...outputButtonProps({
+                                    path: "calc-alias-demo",
+                                    activeLabel: "aliases",
+                                    fn: () =>
+                                        baseDate({
+                                            initial: {
+                                                year: 2024,
+                                                month: 6,
+                                                day: 1,
+                                                hour: 10,
+                                                minute: 0,
+                                            },
+                                            calc: { y: 1, m: -1, ms: 3_600_000 },
+                                            format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
                                         }),
                                 })}
                             />
                         </Flex>
                         <Output path="calculations" />
+                        <Output path="calc-calendar-clamp" />
+                        <Output path="calc-alias-demo" />
                     </Flex.column>
                 }
             />
@@ -391,7 +527,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="baseDate({ initial, format, initialFormat, timezone, calculate }); getNow({ format, timezone });"
+                args="baseDate({ initial, format, initialFormat, timezone, calc }); getNow({ format, timezone });"
                 returns='Formatted string, or Unix ms when format is "timestamp" (case-insensitive).'
                 props={{
                     initial: {
@@ -414,9 +550,9 @@ const X = () => {
                             "IANA (e.g. Europe/Athens), offset string (+02:00), or finite number as hours offset. Default: clientData.timeZone from store if set, else local. Offset has no DST; use IANA for locale rules.",
                         type: "string | number",
                     },
-                    calculate: {
+                    calc: {
                         description:
-                            "Plain object only; non-objects ignored. Truncated int deltas: year, month, day (calendar/clamp), then hour, minute, second, seconds (sums), millisecond applied as millis after calendar step.",
+                            "Must be a plain object (arrays, Date, primitives ignored). Calendar aliases — first finite number wins: year/years/y, month/months/m, day/days/d, hour/hours/h, minute/minutes/min. Summed groups: second/sec/s/seconds/secs; millisecond/milliseconds/milisecond/ms. Calendar-style wall date + clamp; then duration.",
                         type: "object",
                     },
                     getNow: {

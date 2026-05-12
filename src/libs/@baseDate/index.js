@@ -9,6 +9,40 @@ import {
     formatWithTokens,
 } from "./tools";
 
+/** First finite integer among alias keys (calendar-style fields). */
+const calcFirstInt = (obj, keys) => {
+    if (!obj || typeof obj !== "object") return 0;
+    for (const k of keys) {
+        if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+        const v = obj[k];
+        if (typeof v === "number" && Number.isFinite(v)) return Math.trunc(v);
+    }
+    return 0;
+};
+
+/** Sum truncated ints for every listed key (second/ms deltas may combine multiple props). */
+const calcSumInts = (obj, keys) => {
+    if (!obj || typeof obj !== "object") return 0;
+    let t = 0;
+    for (const k of keys) {
+        if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+        const v = obj[k];
+        if (typeof v === "number" && Number.isFinite(v)) t += Math.trunc(v);
+    }
+    return t;
+};
+
+const isCalcObject = (v) =>
+    v != null && typeof v === "object" && !Array.isArray(v) && !(v instanceof Date);
+
+const CALC_YEAR = ["year", "years", "y"];
+const CALC_MONTH = ["month", "months", "m"];
+const CALC_DAY = ["day", "days", "d"];
+const CALC_HOUR = ["hour", "hours", "h"];
+const CALC_MINUTE = ["minute", "minutes", "min"];
+const CALC_SECONDS = ["second", "sec", "s", "seconds", "secs"];
+const CALC_MS = ["millisecond", "milliseconds", "milisecond", "ms"];
+
 /**
  * Creates a Date (or timestamp) from multiple input shapes, with flexible formatting.
  *
@@ -26,19 +60,18 @@ import {
  * - if `format: "timestamp"` (case-insensitive) -> returns number (timestamp, ms)
  *
  * Format:
- * - If `format` is not provided, it tries `baseStore.globalData.get()._baseDate.defaultFormat`
+ * - If `format` is not provided, it tries `baseStore.globalData.get().baseDateSettings.defaultFormat`
  * - If still missing, defaults to `"DD/MM/YYYY"`
  * - Format tokens are free-form and can be mixed with any text:
  *   e.g. "DD gününde MM ayında YYYY yılında, saat HH:NN"
  *
  * Locale/timezone:
- * - `timezone` defaults to `globalData._clientData.timeZone`, then `_baseDate.timezone`, then the
- *   browser default from `Intl.DateTimeFormat().resolvedOptions().timeZone` when available; if Intl
- *   is missing, formatting falls back to local `Date` getters.
+ * - `timezone` defaults to user timezone from `baseStore.clientData.get().timeZone` if available,
+ *   otherwise uses environment local timezone.
  * - `timezone` may be IANA name like "Europe/Athens" or an offset like "+2", "-05:30".
  *
  * Week:
- * - `firstDayOfWeek` is read from `baseStore.globalData.get()._baseDate.firstDayOfWeek`
+ * - `firstDayOfWeek` is read from `baseStore.globalData.get().baseDateSettings.firstDayOfWeek`
  *   (defaults to Monday = 1 if missing)
  *
  * @param {Object} [settings]
@@ -46,7 +79,13 @@ import {
  * @param {string} [settings.format]
  * @param {string} [settings.initialFormat] - Input parser format; defaults to `defaultFormat`.
  * @param {string|number} [settings.timezone]
- * @param {Object} [settings.calculate]
+ * @param {Object} [settings.calc] — Calendar-style deltas, not raw millisecond math. After resolving
+ *   `initial` in `timezone`, year/month adjust the **Gregorian wall date**, then the day is **clamped**
+ *   to the target month’s length (e.g. 31 May − 3 months → 29 Feb in a leap year, 28 Feb otherwise).
+ *   This prioritises predictable UX over `Date#setMonth` overflow behaviour in edge cases.
+ *   Ignored unless value is a non-array, non-Date object. Accepted keys (first match wins per group,
+ *   except second/ms groups which sum): year/years/y, month/months/m, day/days/d, hour/hours/h,
+ *   minute/minutes/min; second/sec/s/seconds/secs (summed); millisecond/milliseconds/milisecond/ms (summed).
  *
  * @returns {string|number}
  *
@@ -125,7 +164,7 @@ import {
  * // Add 5 days
  * baseDate({
  *   initial: "10/03/2024",
- *   calculate: { day: 5 },
+ *   calc: { day: 5 },
  *   format: "|DD|/|MM|/|YYYY|",
  * });
  * // "15/03/2024"
@@ -134,7 +173,7 @@ import {
  * // Subtract 10 days (crossing month boundary)
  * baseDate({
  *   initial: "05/03/2024",
- *   calculate: { day: -10 },
+ *   calc: { day: -10 },
  *   format: "|DD|/|MM|/|YYYY|",
  * });
  * // "24/02/2024"
@@ -143,7 +182,7 @@ import {
  * // Subtract 1 month from May 31
  * baseDate({
  *   initial: "31/05/2024",
- *   calculate: { month: -1 },
+ *   calc: { month: -1 },
  *   format: "|DD|/|MM|/|YYYY|",
  * });
  * // "30/04/2024"
@@ -152,7 +191,7 @@ import {
  * // Subtract 1 month from March 31 (leap year aware)
  * baseDate({
  *   initial: "31/03/2024",
- *   calculate: { month: -1 },
+ *   calc: { month: -1 },
  *   format: "|DD|/|MM|/|YYYY|",
  * });
  * // "29/02/2024"
@@ -161,7 +200,7 @@ import {
  * // Subtract 1 month from March 31 (non-leap year)
  * baseDate({
  *   initial: "31/03/2023",
- *   calculate: { month: -1 },
+ *   calc: { month: -1 },
  *   format: "|DD|/|MM|/|YYYY|",
  * });
  * // "28/02/2023"
@@ -170,7 +209,7 @@ import {
  * // Add 1 year to Feb 29 (leap year normalization)
  * baseDate({
  *   initial: "29/02/2024",
- *   calculate: { year: 1 },
+ *   calc: { year: 1 },
  *   format: "|DD|/|MM|/|YYYY|",
  * });
  * // "28/02/2025"
@@ -179,7 +218,7 @@ import {
  * // Add 6 hours
  * baseDate({
  *   initial: "01/04/2024 10:30",
- *   calculate: { hour: 6 },
+ *   calc: { hour: 6 },
  *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
  * });
  * // "01/04/2024 16:30"
@@ -188,7 +227,7 @@ import {
  * // Subtract 20 minutes (crossing hour boundary)
  * baseDate({
  *   initial: "01/04/2024 10:10",
- *   calculate: { minute: -20 },
+ *   calc: { minute: -20 },
  *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|",
  * });
  * // "01/04/2024 09:50"
@@ -197,7 +236,7 @@ import {
  * // Subtract 5000 seconds (~1h 23m 20s)
  * baseDate({
  *   initial: "01/04/2024 12:00:00",
- *   calculate: { seconds: -5000 },
+ *   calc: { seconds: -5000 },
  *   format: "|DD|/|MM|/|YYYY| |HH|:|NN|:|SS|",
  * });
  * // "01/04/2024 10:36:40"
@@ -206,7 +245,7 @@ import {
  * // Complex calculation
  * baseDate({
  *   initial: "31/12/2023 23:30",
- *   calculate: {
+ *   calc: {
  *     year: 1,
  *     month: -1,
  *     day: 2,
@@ -218,10 +257,10 @@ import {
  * // "02/12/2024 23:45"
  *
  * @example
- * // Invalid calculate input is ignored
+ * // Invalid `calc` input is ignored
  * baseDate({
  *   initial: "10/03/2024",
- *   calculate: "invalid",
+ *   calc: "invalid",
  *   format: "|DD|/|MM|/|YYYY|",
  * });
  * // "10/03/2024"
@@ -231,7 +270,7 @@ import {
 export const baseDate = (opts = {}) => {
     const { defaultFormat, timezone: storeTz } = resolveDefaultsFromStore();
 
-    const { initial, format, initialFormat, timezone, calculate } = opts || {};
+    const { initial, format, initialFormat, timezone, calc } = opts || {};
 
     const tz =
         typeof timezone === "number" && Number.isFinite(timezone)
@@ -277,19 +316,18 @@ export const baseDate = (opts = {}) => {
 
     if (!dateObj || Number.isNaN(dateObj.getTime())) dateObj = new Date();
 
-    const calc = calculate && typeof calculate === "object" ? calculate : null;
+    const calcOpts = isCalcObject(calc) ? calc : null;
 
-    if (calc) {
-        const toInt = (v) => (typeof v === "number" && Number.isFinite(v) ? Math.trunc(v) : 0);
+    if (calcOpts) {
 
-        const addYears = toInt(calc.year);
-        const addMonths = toInt(calc.month);
-        const addDays = toInt(calc.day);
+        const addYears = calcFirstInt(calcOpts, CALC_YEAR);
+        const addMonths = calcFirstInt(calcOpts, CALC_MONTH);
+        const addDays = calcFirstInt(calcOpts, CALC_DAY);
 
-        const addHours = toInt(calc.hour);
-        const addMinutes = toInt(calc.minute);
-        const addSeconds = toInt(calc.second) + toInt(calc.seconds);
-        const addMs = toInt(calc.millisecond);
+        const addHours = calcFirstInt(calcOpts, CALC_HOUR);
+        const addMinutes = calcFirstInt(calcOpts, CALC_MINUTE);
+        const addSeconds = calcSumInts(calcOpts, CALC_SECONDS);
+        const addMs = calcSumInts(calcOpts, CALC_MS);
 
         const getTzParts = (d, tzValue) => {
             const off = parseOffsetMinutes(tzValue);

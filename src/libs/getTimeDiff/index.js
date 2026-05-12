@@ -141,9 +141,7 @@ const resolveSide = (arg) => {
         const dateObj = new Date(ts);
         const date = displayFormat
             ? baseDate({ ...opts, format: displayFormat })
-            : Object.keys(opts).length === 0
-              ? baseDate({ initial: ts })
-              : baseDate(opts);
+            : baseDate(opts);
 
         return { ts, dateObj, date };
     }
@@ -241,14 +239,15 @@ const breakdownCalendarUTC = (minTs, maxTs) => {
  * Millisecond difference and duration views between two instants.
  * `tsDiff` is always non-negative; order is expressed via `time1.atTimeline` / `time2.atTimeline`.
  *
+ * **`breakdown`** walks calendar units in **UTC** between the earlier and later instant (years, then months,
+ * days-in-month, then clock fields). It is not the viewer's local (IANA) calendar breakdown.
+ *
  * @param {number | string | Date | Object} time1
- * @param {number | string | Date | Object} [time2] — omitted → compared to “now” via empty
- *   `baseDate` options (`resolveSide({})`: same instant as `baseDate({ format: "timestamp" })`,
- *   display string matches `baseDate({})`).
+ * @param {number | string | Date | Object} [time2] — omitted → `Date.now()`
  */
 export const getTimeDiff = (time1, time2) => {
     const r1 = resolveSide(time1);
-    const r2 = time2 === undefined ? resolveSide({}) : resolveSide(time2);
+    const r2 = time2 === undefined ? resolveSide(Date.now()) : resolveSide(time2);
 
     const absMs = Math.abs(r2.ts - r1.ts);
 

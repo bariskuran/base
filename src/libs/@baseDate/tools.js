@@ -179,8 +179,10 @@ export const parseInitialString = (str, initialFormat) => {
     let year = picked.YYYY != null ? Number(picked.YYYY) : null;
     if (year == null && picked.YY != null) year = 2000 + Number(picked.YY);
 
-    const month = picked.MM != null ? Number(picked.MM) : picked.mm != null ? Number(picked.mm) : null;
-    const day = picked.DD != null ? Number(picked.DD) : picked.dd != null ? Number(picked.dd) : null;
+    const month =
+        picked.MM != null ? Number(picked.MM) : picked.mm != null ? Number(picked.mm) : null;
+    const day =
+        picked.DD != null ? Number(picked.DD) : picked.dd != null ? Number(picked.dd) : null;
 
     let hour = picked.HH != null ? Number(picked.HH) : picked.hh != null ? Number(picked.hh) : null;
     if (hour == null && (picked.ZZ != null || picked.zz != null)) {
@@ -367,8 +369,8 @@ export const formatWithTokens = (date, format, timezone) => {
 
 export const resolveDefaultsFromStore = () => {
     const gd = baseStore?.globalData?.get?.() || {};
-    const cd = gd._clientData || {};
-    const bs = gd._baseDate || gd.baseDateSettings || {};
+    const cd = baseStore?.clientData?.get?.() || {};
+    const bs = gd.baseDateSettings || {};
     const defaultFormat =
         typeof bs.defaultFormat === "string" && bs.defaultFormat
             ? bs.defaultFormat
@@ -376,16 +378,7 @@ export const resolveDefaultsFromStore = () => {
 
     const firstDayOfWeek = typeof bs.firstDayOfWeek === "number" ? bs.firstDayOfWeek : 1;
 
-    let timezone;
-    if (typeof cd.timeZone === "string" && cd.timeZone.trim()) {
-        timezone = cd.timeZone.trim();
-    } else if (typeof bs.timezone === "number" && Number.isFinite(bs.timezone)) {
-        timezone = bs.timezone;
-    } else if (typeof bs.timezone === "string" && bs.timezone.trim()) {
-        timezone = bs.timezone.trim();
-    } else if (typeof Intl !== "undefined" && typeof Intl.DateTimeFormat === "function") {
-        timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    }
+    const timezone = typeof cd.timeZone === "string" && cd.timeZone ? cd.timeZone : undefined;
 
     return { defaultFormat, firstDayOfWeek, timezone };
 };

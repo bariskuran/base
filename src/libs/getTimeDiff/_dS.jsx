@@ -17,18 +17,27 @@ const X = () => {
             title="getTimeDiff()"
             releasedOn="1.0.0"
             description={
-                <>
-                    <Typo.p>
+                <Flex.column gap={12}>
+                    <Typo.span balance>
                         Calculates the difference between two given dates in all units, returning
                         both total and breakdown values.
-                    </Typo.p>
-                    <Typo.p>The order of the dates does not matter.</Typo.p>
-                    <Typo.p>
+                    </Typo.span>
+                    <Typo.span balance>The order of the dates does not matter.</Typo.span>
+                    <Typo.span balance>
                         Dates can be provided as a Date(), a baseDate object, a timestamp number,
                         purely numeric timestamp strings, or other date strings that{" "}
                         <Button.string to="/design-system/baseDate" label="baseDate()" /> can parse.
-                    </Typo.p>
-                </>
+                    </Typo.span>
+                    <Typo.span balance>
+                        <Typo.bold>breakdown</Typo.bold> (year, month, day, hour, …) is counted on the{" "}
+                        <Typo.bold>UTC</Typo.bold> calendar between the two instants, not on your local
+                        wall-clock calendar. For labels in a chosen timezone, use{" "}
+                        <code>time1.date</code> / <code>time2.date</code> (from{" "}
+                        <Button.string to="/design-system/baseDate" label="baseDate()" />
+                        ). <Typo.bold>ts</Typo.bold> and <Typo.bold>tsDiff</Typo.bold> are always plain
+                        epoch milliseconds (timezone-agnostic).
+                    </Typo.span>
+                </Flex.column>
             }
         >
             <Ds.block
@@ -82,7 +91,7 @@ const X = () => {
                         const c = a + msValue;
                         const d = baseDate({
                             initial: a,
-                            calculate: { millisecond: msValue },
+                            calc: { millisecond: msValue },
                             format: "timestamp",
                         });
 
@@ -108,7 +117,7 @@ const X = () => {
                                         const c = a + GAP;
                                         const d = baseDate({
                                             initial: a,
-                                            calculate: { millisecond: GAP },
+                                            calc: { millisecond: GAP },
                                             format: "timestamp",
                                         });
 
@@ -134,7 +143,7 @@ const X = () => {
             />
             <Ds.block
                 title="Usage with a single argument"
-                description='The single argument is compared to “now”. When the second argument is omitted, the other side uses empty baseDate options: same epoch ms as format "timestamp", same display string as baseDate with no arguments.'
+                description="The single argument is compared to 'now'."
                 code={`import { getTimeDiff } from "${SYS.basePath}";
 
                         getTimeDiff(Date.now() - 3600000);
@@ -157,7 +166,7 @@ const X = () => {
                                     activeLabel: "object",
                                     fn: () =>
                                         getTimeDiff({
-                                            initial: { year: 2020, month: 1, day: 1 },
+                                            calc: { hour: -1 },
                                         }),
                                 })}
                             />
@@ -183,7 +192,7 @@ const X = () => {
                         );
 
                         getTimeDiff(
-                            { initial: "10/03/2024", calculate: { day: 5 } },
+                            { initial: "10/03/2024", calc: { day: 5 } },
                             { initial: "20/03/2024" },
                         );`}
                 example={
@@ -208,15 +217,15 @@ const X = () => {
                                 })}
                             />
                             <Button.plain
-                                label="calculate on initial"
+                                label="calc on initial"
                                 {...outputButtonProps({
                                     path: "baseDate-objects",
-                                    activeLabel: "calculate",
+                                    activeLabel: "calc",
                                     fn: () =>
                                         getTimeDiff(
                                             {
                                                 initial: "10/03/2024",
-                                                calculate: { day: 5 },
+                                                calc: { day: 5 },
                                             },
                                             { initial: "20/03/2024" },
                                         ),
@@ -229,7 +238,7 @@ const X = () => {
             />
             <Ds.block
                 title="in (fractional) vs breakdown (calendar)"
-                description="in spreads |tsDiff| across averaged units (e.g. inYears uses 365.25-day years). breakdown walks UTC from the earlier instant: full years, then months (never ≥12 before years roll), then days in month, then clock fields. Zeros omitted."
+                description="in spreads |tsDiff| across averaged units (e.g. inYears uses 365.25-day years). breakdown walks the UTC calendar from the earlier instant: full years, then months (never ≥12 before years roll), then days in month, then clock fields — not the local (IANA) calendar. Zeros omitted."
                 code={`import { getTimeDiff } from "${SYS.basePath}";
 
                         const a = 1700000000000;

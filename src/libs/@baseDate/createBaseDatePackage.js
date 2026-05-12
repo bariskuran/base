@@ -36,7 +36,7 @@ const endOfDayTs = (dayStartTs, timezone) => {
     const nextStart = baseDate({
         initial: dayStartTs,
         timezone,
-        calculate: { day: 1 },
+        calc: { day: 1 },
         format: "timestamp",
     });
     return nextStart - 1;
@@ -68,11 +68,11 @@ const makePoint = ({ timestamp, timezone, defaultFormat, longFormat }) => {
         timestamp: ts,
         defaultString: baseDate({ initial: ts, timezone, format: defaultFormat }),
         longString: baseDate({ initial: ts, timezone, format: longFormat }),
-        calculate: (calculate, overrides = {}) =>
+        calc: (delta, overrides = {}) =>
             baseDate({
                 initial: ts,
                 timezone,
-                calculate: calculate && typeof calculate === "object" ? calculate : undefined,
+                calc: delta && typeof delta === "object" ? delta : undefined,
                 ...overrides,
             }),
     };
@@ -84,7 +84,7 @@ const makeLastDaysRange = ({ endDayStartTs, daysBackInclusive, timezone, default
     const startTs = baseDate({
         initial: endDayStartTs,
         timezone,
-        calculate: { day: -(daysBackInclusive - 1) },
+        calc: { day: -(daysBackInclusive - 1) },
         format: "timestamp",
     });
 
@@ -121,7 +121,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const tomorrowStartTs = baseDate({
         initial: todayStartTs,
         timezone: tz,
-        calculate: { day: 1 },
+        calc: { day: 1 },
         format: "timestamp",
     });
     const tomorrowEndTs = endOfDayTs(tomorrowStartTs, tz);
@@ -129,7 +129,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const yesterdayStartTs = baseDate({
         initial: todayStartTs,
         timezone: tz,
-        calculate: { day: -1 },
+        calc: { day: -1 },
         format: "timestamp",
     });
     const yesterdayEndTs = endOfDayTs(yesterdayStartTs, tz);
@@ -141,7 +141,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const thisWeekStartTs = baseDate({
         initial: todayStartTs,
         timezone: tz,
-        calculate: { day: -deltaThisWeekStart },
+        calc: { day: -deltaThisWeekStart },
         format: "timestamp",
     });
 
@@ -149,7 +149,7 @@ export const createBaseDatePackage = (opts = {}) => {
         baseDate({
             initial: thisWeekStartTs,
             timezone: tz,
-            calculate: { day: 6 },
+            calc: { day: 6 },
             format: "timestamp",
         }),
         tz,
@@ -158,7 +158,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const nextWeekStartTs = baseDate({
         initial: thisWeekStartTs,
         timezone: tz,
-        calculate: { day: 7 },
+        calc: { day: 7 },
         format: "timestamp",
     });
 
@@ -166,7 +166,7 @@ export const createBaseDatePackage = (opts = {}) => {
         baseDate({
             initial: nextWeekStartTs,
             timezone: tz,
-            calculate: { day: 6 },
+            calc: { day: 6 },
             format: "timestamp",
         }),
         tz,
@@ -175,7 +175,7 @@ export const createBaseDatePackage = (opts = {}) => {
     const lastWeekStartTs = baseDate({
         initial: thisWeekStartTs,
         timezone: tz,
-        calculate: { day: -7 },
+        calc: { day: -7 },
         format: "timestamp",
     });
 
@@ -183,7 +183,7 @@ export const createBaseDatePackage = (opts = {}) => {
         baseDate({
             initial: lastWeekStartTs,
             timezone: tz,
-            calculate: { day: 6 },
+            calc: { day: 6 },
             format: "timestamp",
         }),
         tz,
@@ -194,13 +194,13 @@ export const createBaseDatePackage = (opts = {}) => {
     const nextMonthStartTs = baseDate({
         initial: thisMonthStartTs,
         timezone: tz,
-        calculate: { month: 1 },
+        calc: { month: 1 },
         format: "timestamp",
     });
     const lastMonthStartTs = baseDate({
         initial: thisMonthStartTs,
         timezone: tz,
-        calculate: { month: -1 },
+        calc: { month: -1 },
         format: "timestamp",
     });
 
@@ -209,7 +209,7 @@ export const createBaseDatePackage = (opts = {}) => {
         baseDate({
             initial: nextMonthStartTs,
             timezone: tz,
-            calculate: { month: 1 },
+            calc: { month: 1 },
             format: "timestamp",
         }) - 1;
     const lastMonthEndTs = thisMonthStartTs - 1;
@@ -219,13 +219,13 @@ export const createBaseDatePackage = (opts = {}) => {
     const nextYearStartTs = baseDate({
         initial: thisYearStartTs,
         timezone: tz,
-        calculate: { year: 1 },
+        calc: { year: 1 },
         format: "timestamp",
     });
     const lastYearStartTs = baseDate({
         initial: thisYearStartTs,
         timezone: tz,
-        calculate: { year: -1 },
+        calc: { year: -1 },
         format: "timestamp",
     });
 
@@ -234,7 +234,7 @@ export const createBaseDatePackage = (opts = {}) => {
         baseDate({
             initial: nextYearStartTs,
             timezone: tz,
-            calculate: { year: 1 },
+            calc: { year: 1 },
             format: "timestamp",
         }) - 1;
     const lastYearEndTs = thisYearStartTs - 1;
