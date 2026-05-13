@@ -78,6 +78,11 @@ const X = () => {
                         description: "Unique id for coordinating popover state.",
                         type: "string | number",
                     },
+                    dismissWithoutAnimationRef: {
+                        description:
+                            "Optional ref with `.current === true` when `open` becomes false: skip the closing opacity/transform transition and set status to closed immediately (e.g. anchor moved). Cleared inside FloatingUi after read.",
+                        type: "React.MutableRefObject<boolean>",
+                    },
                     enableEscaping: {
                         description:
                             "When true, outside click and Escape key can close the floating panel.",

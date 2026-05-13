@@ -77,12 +77,14 @@ const useVars = (p) => {
     const triggerElRef = useRef(null);
     const anchorSnapshotRef = useRef(null);
     const rafRef = useRef(null);
+    const dismissWithoutAnimationRef = useRef(false);
 
     const observerRef = useCallback((node) => {
         triggerElRef.current = node;
     }, []);
 
     const closePopover = useCallback(() => {
+        dismissWithoutAnimationRef.current = true;
         setGlobal((s) => {
             s.popoverId = null;
         });
@@ -126,11 +128,17 @@ const useVars = (p) => {
         };
 
         const onScrollCapture = (e) => {
+            if (!isOpen || popoverId !== uniqueId) return;
             const t = e.target;
-            if (t && typeof t === "object" && t.nodeType === 1 && typeof t.closest === "function") {
+            if (t && t.nodeType === 1 && typeof t.closest === "function") {
                 if (t.closest(FLOATING_UI_SELECTOR)) return;
             }
-            scheduleAnchorCheck();
+            closePopover();
+        };
+
+        const onVisualViewportScroll = () => {
+            if (!isOpen || popoverId !== uniqueId) return;
+            closePopover();
         };
 
         window.addEventListener("resize", scheduleAnchorCheck);
@@ -139,7 +147,7 @@ const useVars = (p) => {
         const vv = typeof window !== "undefined" ? window.visualViewport : null;
         if (vv) {
             vv.addEventListener("resize", scheduleAnchorCheck);
-            vv.addEventListener("scroll", scheduleAnchorCheck);
+            vv.addEventListener("scroll", onVisualViewportScroll);
         }
 
         return () => {
@@ -147,14 +155,14 @@ const useVars = (p) => {
             document.removeEventListener("scroll", onScrollCapture, true);
             if (vv) {
                 vv.removeEventListener("resize", scheduleAnchorCheck);
-                vv.removeEventListener("scroll", scheduleAnchorCheck);
+                vv.removeEventListener("scroll", onVisualViewportScroll);
             }
             if (rafRef.current != null) {
                 cancelAnimationFrame(rafRef.current);
                 rafRef.current = null;
             }
         };
-    }, [isOpen, scheduleAnchorCheck]);
+    }, [isOpen, popoverId, uniqueId, scheduleAnchorCheck, closePopover]);
 
     /* Return */
     return useExportData(
@@ -170,6 +178,7 @@ const useVars = (p) => {
             floatingUiProps: floatingUiPropsResolved,
             scrollBoxProps: mergedScrollBoxProps,
             observerRef,
+            dismissWithoutAnimationRef,
         },
         {
             uniqueId,

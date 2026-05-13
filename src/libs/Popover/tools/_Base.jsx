@@ -12,6 +12,7 @@ export const Base = ({ children, ...p }) => {
         uniqueId,
         observerRef,
         scrollBoxProps,
+        dismissWithoutAnimationRef,
     } = useVars(p);
 
     const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollBoxProps || {};
@@ -20,6 +21,7 @@ export const Base = ({ children, ...p }) => {
     return (
         <FloatingUi
             {...floatingUiProps}
+            dismissWithoutAnimationRef={dismissWithoutAnimationRef}
             open={isOpen}
             onClick={onClickHandler}
             content={

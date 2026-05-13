@@ -29,6 +29,8 @@ const useVars = (p) => {
         uniqueId,
         enableEscaping,
         exportData,
+        /** When true at close time, skip "closing" + transition (e.g. anchor moved). */
+        dismissWithoutAnimationRef,
     } = p || {};
 
     /**
@@ -134,14 +136,25 @@ const useVars = (p) => {
     const closeHandler = () => {
         if (status === "closing" || status === "closed") return;
 
-        setLocalByPath("status", "closing");
+        const instant =
+            dismissWithoutAnimationRef != null && dismissWithoutAnimationRef.current === true;
+        if (dismissWithoutAnimationRef) {
+            dismissWithoutAnimationRef.current = false;
+        }
+
+        delayedOpen.cancel();
+
+        if (instant) {
+            delayedClose.cancel();
+            setLocalByPath("status", "closed");
+        } else {
+            setLocalByPath("status", "closing");
+            delayedClose.run();
+        }
 
         setGlobal((s) => {
             s.popoverId = null;
         });
-
-        delayedOpen.cancel();
-        delayedClose.run();
     };
 
     useEffect(() => {
