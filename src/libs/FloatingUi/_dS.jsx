@@ -1,6 +1,24 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
+import { baseStore } from "../@baseStore";
+import { FloatingUi } from "./";
+import { Button } from "../Button";
+import { Flex } from "../Flex";
+
 const X = () => {
+    const { isOpen, setLocal } = baseStore.useLocal({ isOpen: true });
+
+    const openHandler = () => {
+        setLocal((s) => {
+            s.isOpen = true;
+        });
+    };
+    const closeHandler = () => {
+        setLocal((s) => {
+            s.isOpen = false;
+        });
+    };
+
     /* RETURN */
     return (
         <Ds.page
@@ -16,6 +34,23 @@ const X = () => {
                     <FloatingUi content="Default floating content" open={true}>
                         Content
                     </FloatingUi>`}
+                example={
+                    <Flex.column gap={20}>
+                        <FloatingUi
+                            content="Default floating content"
+                            open={isOpen}
+                            closeHandler={closeHandler}
+                        >
+                            <Flex width={100} height={100} bgColor="skyblue">
+                                content
+                            </Flex>
+                        </FloatingUi>
+                        <Flex gap={10}>
+                            <Button.plain label="Open" onClick={openHandler} disabled={isOpen} />
+                            <Button.plain label="Close" onClick={closeHandler} disabled={!isOpen} />
+                        </Flex>
+                    </Flex.column>
+                }
             />
             <Ds.api
                 args="<FloatingUi open={false}>{null}</FloatingUi>"

@@ -28,6 +28,7 @@ const useVars = (p) => {
         color,
         uniqueId,
         enableEscaping,
+        closeHandler: closeHandlerFromChildComponent,
         exportData,
         /** When true at close time, skip "closing" + transition (e.g. anchor moved). */
         dismissWithoutAnimationRef,
