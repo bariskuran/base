@@ -9,6 +9,9 @@ export const Base = ({ children, ...p }) => {
         flexProps,
         scrollBarProps,
         containerRef,
+        shellRef,
+        shellSurfaceStyle,
+        shellPointerHandlers,
         borderColor,
         shouldRender,
         shellGutters,
@@ -29,6 +32,9 @@ export const Base = ({ children, ...p }) => {
                 style={variantOuterStyle}
             >
                 <S.shell
+                    ref={shellRef}
+                    {...shellPointerHandlers}
+                    style={shellSurfaceStyle}
                     $gutterTop={gutterTop}
                     $gutterRight={gutterRight}
                     $gutterBottom={gutterBottom}

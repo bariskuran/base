@@ -27,7 +27,10 @@ export const componentCreator = ({
         } = props || {};
 
         const uiContext = useNestedBaseUiContext();
-        const __hasParentUiComponent = hasParentFromProps ?? uiContext.__hasParentUiComponent;
+        const __hasParentUiComponent =
+            name === "FloatingUi"
+                ? false
+                : hasParentFromProps ?? uiContext.__hasParentUiComponent;
 
         const globalData = baseStore.globalData?.get?.() || {};
         const globalDefaultVariant = globalData?.defaultVariants?.[name];

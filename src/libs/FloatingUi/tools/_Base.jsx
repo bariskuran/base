@@ -32,9 +32,11 @@ export const Base = ({ children, content, ...p }) => {
         colors,
         status,
         delayMs,
+        floatingMountHost,
+        floatingPadding,
     } = useVars(p);
 
-    /* RETURN */
+    /* Return */
     return (
         <>
             <S.children
@@ -47,7 +49,7 @@ export const Base = ({ children, content, ...p }) => {
             >
                 {children}
             </S.children>
-            {status !== "closed" && isMounted
+            {status !== "closed" && isMounted && floatingMountHost
                 ? createPortal(
                       <NestedBaseUi>
                           <Variant
@@ -67,11 +69,12 @@ export const Base = ({ children, content, ...p }) => {
                               $colors={colors || {}}
                               $status={status}
                               $delayMs={delayMs}
+                              $floatingPadding={floatingPadding}
                           >
                               {content}
                           </Variant>
                       </NestedBaseUi>,
-                      document.body,
+                      floatingMountHost,
                   )
                 : null}
         </>

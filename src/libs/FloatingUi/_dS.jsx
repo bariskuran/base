@@ -4,9 +4,21 @@ import { baseStore } from "../@baseStore";
 import { FloatingUi } from "./";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
+import { ScrollFlex } from "../ScrollFlex";
 
 const X = () => {
-    const { isOpen, setLocal } = baseStore.useLocal({ isOpen: true });
+    const { isOpen, isOpen2, setLocal } = baseStore.useLocal({ isOpen: true });
+
+    const open = (path) => {
+        setLocal((s) => {
+            s[path] = true;
+        });
+    };
+    const close = (path) => {
+        setLocal((s) => {
+            s[path] = false;
+        });
+    };
 
     const openHandler = () => {
         setLocal((s) => {
@@ -19,7 +31,7 @@ const X = () => {
         });
     };
 
-    /* RETURN */
+    /* Return */
     return (
         <Ds.page
             title="<FloatingUi>"
@@ -31,9 +43,13 @@ const X = () => {
                 title="Basic Usage"
                 code={`import { FloatingUi } from "${SYS.basePath}";
 
-                    <FloatingUi content="Default floating content" open={true}>
-                        Content
-                    </FloatingUi>`}
+                    <FloatingUi
+                            content="Default floating content"
+                            open={isOpen}
+                            closeHandler={closeHandler}
+                        >
+                                content
+                        </FloatingUi>`}
                 example={
                     <Flex.column gap={20}>
                         <FloatingUi
@@ -41,15 +57,68 @@ const X = () => {
                             open={isOpen}
                             closeHandler={closeHandler}
                         >
-                            <Flex width={100} height={100} bgColor="skyblue">
-                                content
-                            </Flex>
+                            content
                         </FloatingUi>
                         <Flex gap={10}>
-                            <Button.plain label="Open" onClick={openHandler} disabled={isOpen} />
-                            <Button.plain label="Close" onClick={closeHandler} disabled={!isOpen} />
+                            <Button.plain
+                                label="Open"
+                                onClick={openHandler}
+                                disabled={isOpen}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Button.plain
+                                label="Close"
+                                onClick={closeHandler}
+                                disabled={!isOpen}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
                         </Flex>
                     </Flex.column>
+                }
+            />
+            <Ds.block
+                title="Auto Positioning"
+                code={`import { FloatingUi } from "${SYS.basePath}";
+
+                    `}
+                example={
+                    <ScrollFlex width={400} height={400} padding={0} enableDragging>
+                        <Flex.column
+                            width={600}
+                            height={600}
+                            bgColor="lightgrey"
+                            padding={20}
+                            xAlign="center"
+                            yAlign="center"
+                            gap={10}
+                        >
+                            <FloatingUi
+                                content="Default floating content"
+                                open={isOpen2}
+                                closeHandler={() => close("isOpen2")}
+                            >
+                                <Flex width={100} height={100} bgColor="darkgrey" color="white">
+                                    content
+                                </Flex>
+                            </FloatingUi>
+                            <Button.plain
+                                label="Open"
+                                onClick={() => open("isOpen2")}
+                                disabled={isOpen2}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                            <Button.plain
+                                label="Close"
+                                onClick={() => close("isOpen2")}
+                                disabled={!isOpen2}
+                                skipClickCooldown
+                                skipOnClickHold
+                            />
+                        </Flex.column>
+                    </ScrollFlex>
                 }
             />
             <Ds.api
@@ -73,6 +142,32 @@ const X = () => {
                         description: "Controlled open/close state.",
                         type: "boolean",
                         defaultValue: "false",
+                    },
+                    resolveFloatingMount: {
+                        description:
+                            "Optional (triggerElement) => HTMLElement. Overrides automatic choice of the nearest scrollable ancestor as the portal mount root.",
+                        type: "function",
+                    },
+                    padding: {
+                        description:
+                            "Padding shorthand; numbers become rem, strings pass through (same rules as Flex). Combines with paddingTop/Right/Bottom/Left.",
+                        type: "number | string",
+                    },
+                    paddingTop: {
+                        description: "Overrides top edge of padding shorthand.",
+                        type: "number | string",
+                    },
+                    paddingRight: {
+                        description: "Overrides right edge of padding shorthand.",
+                        type: "number | string",
+                    },
+                    paddingBottom: {
+                        description: "Overrides bottom edge of padding shorthand.",
+                        type: "number | string",
+                    },
+                    paddingLeft: {
+                        description: "Overrides left edge of padding shorthand.",
+                        type: "number | string",
                     },
                     alignX: {
                         description: "Horizontal alignment: start | center | end.",
@@ -116,7 +211,7 @@ const X = () => {
                     dismissWithoutAnimationRef: {
                         description:
                             "Optional ref with `.current === true` when `open` becomes false: skip the closing opacity/transform transition and set status to closed immediately (e.g. anchor moved). Cleared inside FloatingUi after read.",
-                        type: "React.MutableRefObject<boolean>",
+                        type: "ref",
                     },
                     enableEscaping: {
                         description:

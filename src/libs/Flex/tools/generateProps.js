@@ -173,7 +173,7 @@ const expandCssQuadValue = (value) => {
     return [value, value, value, value];
 };
 
-const generate4DirectionProps = ([high, top, right, bottom, left]) => {
+export const generate4DirectionProps = ([high, top, right, bottom, left]) => {
     let [t, r, b, l] = expandCssQuadValue(high);
 
     if (top != null) t = top;

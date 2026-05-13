@@ -3,27 +3,26 @@ import styled, { css } from "styled-components";
 export const PlainVariant = styled.div`
     ${({
         theme,
-        // $bgColor,
-        // $color,
         $positionX,
         $positionY,
         $alignX,
         $alignY,
         $blockVisibility,
         $disableArrow,
-        // $primary,
-        // $secondary,
-        // $open,
-        // $colors,
         $status,
         $delayMs,
+        $floatingPadding,
     }) => {
         const translateY = $alignY === "bottom" ? "-8rem" : "8rem";
-        const isOpen = $status === "opened" || $status === "opening";
+        const isOpen = $status === "opened";
 
         /* Return */
         return css`
             all: unset;
+            display: block;
+            box-sizing: border-box;
+            width: max-content;
+            max-width: calc(100vw - 40rem);
 
             @starting-style {
                 opacity: 0;
@@ -41,14 +40,14 @@ export const PlainVariant = styled.div`
                 opacity: 0;
             `}
 
-            position: fixed;
-            top: ${$positionY || 150}px;
-            left: ${$positionX || 150}px;
+            position: absolute;
+            top: ${$positionY ?? 150}px;
+            left: ${$positionX ?? 150}px;
+            pointer-events: auto;
             z-index: 1000;
-            max-width: calc(100vw - 40rem);
             word-wrap: break-word;
             overflow-wrap: break-word;
-            padding: 10rem;
+            padding: ${$floatingPadding != null ? $floatingPadding : "10rem"};
             border-radius: 5rem;
             filter: drop-shadow(1rem 1rem 4rem ${theme.colorAlpha(theme.foreground, 0.5)});
 
@@ -61,7 +60,7 @@ export const PlainVariant = styled.div`
 
             &::before {
                 content: "";
-                position: fixed;
+                position: absolute;
                 width: 18rem;
                 height: 10rem;
 

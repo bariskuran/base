@@ -8,8 +8,5 @@ export const FloatingUi = componentCreator({
     BaseComp: Base,
     DefaultVariant,
     PlainVariant,
-    variants: {
-        // opposite: opposite,
-        // threeD: threeD,
-    },
+    variants: {},
 });

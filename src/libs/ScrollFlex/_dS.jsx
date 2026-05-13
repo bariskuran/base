@@ -207,6 +207,50 @@ const X = () => {
                 }
             />
             <Ds.block
+                title="Drag-to-Scroll (enableDragging)"
+                description={
+                    <>
+                        <code>enableDragging</code> is disabled by default. When set to{" "}
+                        <code>true</code>, the scroll container shell shows the <code>grab</code> /{" "}
+                        <code>grabbing</code> cursor and allows you to scroll the content both
+                        horizontally and vertically by dragging with the mouse or touch. Dragging
+                        will not start when interacting with links, buttons, or form elements inside
+                        the scroll area.
+                    </>
+                }
+                code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
+
+                    <ScrollFlex
+                        enableDragging
+                        width={180}
+                        height={120}
+                        flexProps={{ width: 400, height: 300 }}
+                    >
+                        <Flex width={400} height={300} bgColor="mistyrose" justify="center" yAlign="center">
+                            Large and tall content — drag the shell to scroll.
+                        </Flex>
+                    </ScrollFlex>`}
+                example={
+                    <ScrollFlex
+                        enableDragging
+                        width={180}
+                        height={120}
+                        flexProps={{ width: 400, height: 300 }}
+                    >
+                        <Flex
+                            width={400}
+                            height={300}
+                            bgColor="mistyrose"
+                            justify="center"
+                            yAlign="center"
+                        >
+                            Large content — drag to scroll.
+                        </Flex>
+                    </ScrollFlex>
+                }
+            />
+
+            <Ds.block
                 title="Variants"
                 description="As in the rest of the Base library, you can change the variant using a prop, or by using the compound component pattern as Component.variantName."
                 code={`import { ScrollFlex } from "${SYS.basePath}";
@@ -299,6 +343,12 @@ const X = () => {
                             </>
                         ),
                         type: "object",
+                    },
+                    enableDragging: {
+                        description:
+                            "Default is false. When set to true, enables both horizontal and vertical scrolling of the shell by dragging with the mouse; the cursor becomes grab / grabbing. Drag-to-scroll does not start from interactive sub-elements (buttons, links, inputs, etc).",
+                        type: "boolean",
+                        defaultValue: "false",
                     },
                 }}
             />

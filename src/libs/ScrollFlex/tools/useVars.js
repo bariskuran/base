@@ -1,7 +1,8 @@
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { baseStore } from "../../@baseStore";
 import { useExportData } from "../../useExportedData";
 import { isShallowEqual } from "../../isShallowEqual";
+import { computeDragScrollFromPointers } from "./computeDragScrollDelta";
 
 const EMPTY_FLEX_PROPS = {};
 const EMPTY_SCROLL_BAR_PROPS = {};
@@ -205,6 +206,7 @@ const useVars = (p) => {
         scrollBarProps = EMPTY_SCROLL_BAR_PROPS,
         exportData: scrollBoxExportData,
         __hasParentUiComponent,
+        enableDragging = false,
         ...restProps
     } = p || {};
 
@@ -220,6 +222,9 @@ const useVars = (p) => {
         (explicitHeightValue == null || explicitHeightValue === "") && !hasHeightRefOrId;
 
     const containerRef = useRef(null);
+    const shellRef = useRef(null);
+    const dragRef = useRef({ active: false, x0: 0, y0: 0, s0l: 0, s0t: 0, pid: null });
+    const [shellDragging, setShellDragging] = useState(false);
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
     const { measuredWidth, measuredHeight, hasMeasuredHeight, scrollBarExportedData, setLocal } =
         baseStore.useLocal({
@@ -502,6 +507,105 @@ const useVars = (p) => {
         width,
     ]);
 
+    const endShellDrag = useCallback(() => {
+        const el = shellRef.current;
+        const pid = dragRef.current.pid;
+        dragRef.current = { active: false, x0: 0, y0: 0, s0l: 0, s0t: 0, pid: null };
+        setShellDragging(false);
+        if (el != null && pid != null) {
+            try {
+                el.releasePointerCapture(pid);
+            } catch (_) {
+                /* ignore */
+            }
+        }
+    }, []);
+
+    useEffect(
+        () => () => {
+            endShellDrag();
+        },
+        [endShellDrag],
+    );
+
+    const shellPointerDown = useCallback(
+        (e) => {
+            if (!enableDragging) return;
+            if (e.pointerType === "mouse" && e.button !== 0) return;
+            const el = shellRef.current;
+            if (!el || e.currentTarget !== el) return;
+            if (
+                e.target !== el &&
+                e.target?.closest?.(
+                    "a,button,input,textarea,select,label,[contenteditable=true],[role=button]",
+                )
+            ) {
+                return;
+            }
+            dragRef.current = {
+                active: true,
+                x0: e.clientX,
+                y0: e.clientY,
+                s0l: el.scrollLeft,
+                s0t: el.scrollTop,
+                pid: e.pointerId,
+            };
+            setShellDragging(true);
+            try {
+                el.setPointerCapture(e.pointerId);
+            } catch (_) {
+                /* ignore */
+            }
+        },
+        [enableDragging],
+    );
+
+    const shellPointerMove = useCallback((e) => {
+        if (!dragRef.current.active) return;
+        const el = shellRef.current;
+        if (!el) return;
+        const d = dragRef.current;
+        const next = computeDragScrollFromPointers(
+            { x: d.x0, y: d.y0 },
+            { x: e.clientX, y: e.clientY },
+            { scrollLeft: d.s0l, scrollTop: d.s0t },
+        );
+        el.scrollLeft = next.scrollLeft;
+        el.scrollTop = next.scrollTop;
+    }, []);
+
+    const shellPointerUp = useCallback(
+        (e) => {
+            if (!dragRef.current.active) return;
+            if (e.type === "lostpointercapture" || e.type === "pointercancel") {
+                endShellDrag();
+                return;
+            }
+            if (dragRef.current.pid != null && e.pointerId !== dragRef.current.pid) return;
+            endShellDrag();
+        },
+        [endShellDrag],
+    );
+
+    const shellSurfaceStyle = useMemo(() => {
+        if (!enableDragging) return undefined;
+        return {
+            cursor: shellDragging ? "grabbing" : "grab",
+            touchAction: "none",
+        };
+    }, [enableDragging, shellDragging]);
+
+    const shellPointerHandlers = useMemo(() => {
+        if (!enableDragging) return {};
+        return {
+            onPointerDown: shellPointerDown,
+            onPointerMove: shellPointerMove,
+            onPointerUp: shellPointerUp,
+            onPointerCancel: shellPointerUp,
+            onLostPointerCapture: shellPointerUp,
+        };
+    }, [enableDragging, shellPointerDown, shellPointerMove, shellPointerUp]);
+
     /* Return */
     return useExportData(
         {
@@ -511,6 +615,9 @@ const useVars = (p) => {
             scrollBarProps: mergedScrollBarProps,
             theme,
             containerRef,
+            shellRef,
+            shellSurfaceStyle,
+            shellPointerHandlers,
             shouldRender: organizedFlexProps.shouldRender,
             contentPaddingStyle: organizedFlexProps.contentPaddingStyle,
             variantOuterStyle,

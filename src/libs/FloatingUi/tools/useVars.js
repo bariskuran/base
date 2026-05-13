@@ -1,18 +1,20 @@
-import { useRef, useEffect, useMemo, useState, useCallback } from "react";
+import { useRef, useEffect, useLayoutEffect, useMemo, useState, useCallback } from "react";
 import { baseStore } from "../../@baseStore";
 import { useEventListener } from "../../useEventListener";
 import { delayedFunction } from "../../delayedFunction";
 import getPosition from "./getPosition";
 import { colorGet } from "../../colorGet";
 import { useExportData } from "../../useExportedData";
-import { useFloatingAutoUpdate } from "./useFloatingAutoUpdate";
+import { useObserver } from "../../useObserver";
+import {
+    acquireFloatingMountHost,
+    ensureFloatingMountHost,
+    pickFloatingMountRoot,
+    releaseFloatingMountHost,
+} from "./floatingMountHost";
+import { generate4DirectionProps } from "../../Flex/tools/generateProps";
 
 const useVars = (p) => {
-    /**
-     *
-     * Incoming Props
-     *
-     */
     const {
         open,
         alignX: alignXFromUser,
@@ -30,15 +32,15 @@ const useVars = (p) => {
         enableEscaping,
         closeHandler: closeHandlerFromChildComponent,
         exportData,
-        /** When true at close time, skip "closing" + transition (e.g. anchor moved). */
         dismissWithoutAnimationRef,
+        resolveFloatingMount,
+        padding,
+        paddingTop,
+        paddingRight,
+        paddingBottom,
+        paddingLeft,
     } = p || {};
 
-    /**
-     *
-     * State
-     **
-     */
     const {
         isMounted,
         setLocal,
@@ -63,11 +65,12 @@ const useVars = (p) => {
 
     const childrenRef = useRef(null);
     const floatingRef = useRef(null);
+    const floatingMountHostRef = useRef(null);
+    const closeHandlerFromChildRef = useRef(closeHandlerFromChildComponent);
 
-    const setChildrenNode = useCallback((node) => {
-        childrenRef.current = node;
-        setReferenceEl(node);
-    }, []);
+    useEffect(() => {
+        closeHandlerFromChildRef.current = closeHandlerFromChildComponent;
+    }, [closeHandlerFromChildComponent]);
 
     const setFloatingNode = useCallback((node) => {
         floatingRef.current = node;
@@ -76,10 +79,13 @@ const useVars = (p) => {
 
     useEffect(() => {
         setLocalByPath("isMounted", true);
-    }, []);
+    }, [setLocalByPath]);
+
+    const setLocalByPathRef = useRef(setLocalByPath);
+    setLocalByPathRef.current = setLocalByPath;
 
     const getPos = useCallback(() => {
-        if (status === "closed") return;
+        if (status !== "opened") return;
 
         getPosition({
             childrenRef,
@@ -89,52 +95,65 @@ const useVars = (p) => {
             alignYFromUser,
             currentAlignX: alignX,
             currentAlignY: alignY,
+            resolveFloatingMount,
+            floatingLayerEl: floatingMountHostRef.current,
         });
-    }, [status, setLocal, alignXFromUser, alignYFromUser, alignX, alignY]);
+    }, [status, setLocal, alignXFromUser, alignYFromUser, alignX, alignY, resolveFloatingMount]);
 
-    /**
-     *
-     * Manage Status
-     **
-     */
     const delayMs = 500;
     const delayedClose = useMemo(
         () =>
             delayedFunction(
                 () => {
-                    setLocalByPath("status", "closed");
+                    setLocalByPathRef.current("status", "closed");
                 },
                 { delay: delayMs },
             ),
-        [setLocalByPath],
-    );
-    const delayedOpen = useMemo(
-        () =>
-            delayedFunction(
-                () => {
-                    setLocalByPath("status", "opened");
-                },
-                { delay: delayMs },
-            ),
-        [setLocalByPath],
+        [delayMs],
     );
 
+    const delayedCloseRef = useRef(delayedClose);
+    delayedCloseRef.current = delayedClose;
     const [popoverId, setGlobal] = baseStore.useGlobal((s) => [s.popoverId]);
 
-    const openHandler = () => {
-        if (status === "opening" || status === "opened") return;
-        setLocalByPath("status", "opening");
+    const dismissInstant = useCallback(() => {
+        if (status === "closing" || status === "closed") return;
         delayedClose.cancel();
-        delayedOpen.run();
+        setLocal((s) => {
+            s.status = "closed";
+            s.blockVisibility = true;
+        });
+        setGlobal((s) => {
+            s.popoverId = null;
+        });
+    }, [status, delayedClose, setLocal, setGlobal]);
+
+    const openHandler = useCallback(() => {
+        if (status === "opened") return;
+        delayedClose.cancel();
+        setLocal((s) => {
+            s.status = "opened";
+            s.blockVisibility = true;
+            s.alignX = alignXFromUser || "center";
+            s.alignY = alignYFromUser || "top";
+        });
 
         if (popoverId && popoverId !== uniqueId) {
             setGlobal((s) => {
                 s.popoverId = null;
             });
         }
-    };
+    }, [status, setLocal, alignXFromUser, alignYFromUser, delayedClose, popoverId, uniqueId, setGlobal]);
 
-    const closeHandler = () => {
+    const closeHandler = useCallback(
+        (options) => {
+            if (options?.instant) dismissInstant();
+            else closeHandlerFromChildRef.current?.();
+        },
+        [dismissInstant],
+    );
+
+    const closeFromOpenProp = useCallback(() => {
         if (status === "closing" || status === "closed") return;
 
         const instant =
@@ -143,47 +162,148 @@ const useVars = (p) => {
             dismissWithoutAnimationRef.current = false;
         }
 
-        delayedOpen.cancel();
-
         if (instant) {
-            delayedClose.cancel();
-            setLocalByPath("status", "closed");
-        } else {
-            setLocalByPath("status", "closing");
-            delayedClose.run();
+            dismissInstant();
+            return;
         }
+        delayedClose.cancel();
+        setLocalByPath("status", "closing");
+        delayedClose.run();
 
         setGlobal((s) => {
             s.popoverId = null;
         });
-    };
+    }, [status, dismissWithoutAnimationRef, delayedClose, setLocalByPath, setGlobal, dismissInstant]);
 
     useEffect(() => {
         if (!isMounted) return;
         if (open) openHandler();
-        else closeHandler();
-        return () => {
-            delayedClose.cancel();
-            delayedOpen.cancel();
-        };
-    }, [open, isMounted]);
+        else closeFromOpenProp();
+    }, [open, isMounted, openHandler, closeFromOpenProp]);
 
-    useEffect(() => {
-        if (status !== "opening") return;
+    useEffect(
+        () => () => {
+            delayedCloseRef.current.cancel();
+        },
+        [],
+    );
+
+    useLayoutEffect(() => {
+        if (status !== "opened") return;
         getPos();
-    }, [status]);
+    }, [status, getPos]);
+
+    const isFloatingActive = status === "opened" || status === "closing";
+
+    const mountRootForHost = useMemo(() => {
+        if (typeof document === "undefined" || !isFloatingActive) return null;
+        if (referenceEl) return pickFloatingMountRoot(referenceEl, resolveFloatingMount);
+        return document.body;
+    }, [isFloatingActive, referenceEl, resolveFloatingMount]);
+
+    useLayoutEffect(() => {
+        if (!mountRootForHost) return undefined;
+        acquireFloatingMountHost(mountRootForHost);
+        return () => {
+            releaseFloatingMountHost(mountRootForHost);
+        };
+    }, [mountRootForHost]);
+
+    const floatingMountHost = useMemo(() => {
+        if (!mountRootForHost) return null;
+        return ensureFloatingMountHost(mountRootForHost);
+    }, [mountRootForHost]);
+
+    floatingMountHostRef.current = floatingMountHost;
+
+    useEventListener("scroll", getPos, {
+        enabled: status === "opened",
+        delay: 0,
+        isThrottle: false,
+        passive: true,
+        capture: true,
+        source: typeof document !== "undefined" ? document : undefined,
+    });
+
+    useEventListener(
+        ["scroll", "resize"],
+        getPos,
+        {
+            enabled:
+                status === "opened" &&
+                typeof window !== "undefined" &&
+                Boolean(window.visualViewport),
+            delay: 0,
+            isThrottle: false,
+            passive: true,
+            source: typeof window !== "undefined" ? window.visualViewport : undefined,
+        },
+    );
+
+    const floatingPadding = useMemo(
+        () =>
+            generate4DirectionProps([
+                padding,
+                paddingTop,
+                paddingRight,
+                paddingBottom,
+                paddingLeft,
+            ]),
+        [padding, paddingTop, paddingRight, paddingBottom, paddingLeft],
+    );
+
+    const { ref: observedChildrenRef } = useObserver({
+        disable: !isFloatingActive,
+        threshold: 0,
+        rootMargin: 0,
+        onExit: () => {
+            closeHandler({ instant: true });
+        },
+    });
+
+    const setChildrenNode = useCallback(
+        (node) => {
+            childrenRef.current = node;
+            setReferenceEl(node);
+            observedChildrenRef(node);
+        },
+        [observedChildrenRef],
+    );
 
     useEventListener("resize", getPos, {
-        delay: 500,
+        enabled: status === "opened",
+        delay: 100,
         passive: true,
-        onStart: () => setLocalByPath("blockVisibility", true),
-        onEnd: () => setLocalByPath("blockVisibility", false),
     });
+
+    useLayoutEffect(() => {
+        if (status !== "opened" || !referenceEl || !floatingEl) return;
+        if (typeof ResizeObserver === "undefined") return;
+
+        let frame = null;
+        const schedulePosition = () => {
+            if (frame != null) return;
+            frame = requestAnimationFrame(() => {
+                frame = null;
+                getPos();
+            });
+        };
+
+        const ro = new ResizeObserver(schedulePosition);
+        ro.observe(referenceEl);
+        ro.observe(floatingEl);
+        schedulePosition();
+
+        return () => {
+            ro.disconnect();
+            if (frame != null) cancelAnimationFrame(frame);
+        };
+    }, [status, referenceEl, floatingEl, getPos]);
 
     useEventListener(
         "pointerdown",
         (e) => {
-            if (!open || !enableEscaping) return;
+            if (!isFloatingActive || !enableEscaping) return;
 
             const target = e.target;
             const triggerEl = childrenRef.current;
@@ -203,7 +323,7 @@ const useVars = (p) => {
     useEventListener(
         "keydown",
         (e) => {
-            if (!open || !enableEscaping) return;
+            if (!isFloatingActive || !enableEscaping) return;
             if (e.key !== "Escape") return;
 
             closeHandler();
@@ -214,24 +334,11 @@ const useVars = (p) => {
         },
     );
 
-    /**
-     *
-     *
-     * Other Vars
-     */
-
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
     const colors = colorGet(
         bgColor || (primary ? theme.primary : secondary ? theme.secondary : theme.background),
     );
-
-    useFloatingAutoUpdate({
-        open: (status === "opening" || status === "opened") && !!referenceEl && !!floatingEl,
-        referenceEl,
-        floatingEl,
-        onUpdate: getPos,
-    });
 
     /* Return */
     return useExportData(
@@ -256,8 +363,16 @@ const useVars = (p) => {
             onMouseEnter,
             onMouseLeave,
             onClick,
+            closeHandler,
         },
-        { isMounted, positionX, positionY, blockVisibility },
+        {
+            isMounted,
+            positionX,
+            positionY,
+            blockVisibility,
+            floatingMountHost,
+            floatingPadding,
+        },
     );
 };
 export default useVars;
