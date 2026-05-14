@@ -24,6 +24,7 @@ const CONTAINER_STYLE_KEYS = new Set([
     "overflowX",
     "overflowY",
     "userSelect",
+    "textAlign",
     "background",
     "backgroundColor",
     "color",

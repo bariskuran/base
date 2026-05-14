@@ -8,7 +8,7 @@ export const PopTip = componentCreator({
         error: { bgColor: "error" },
         success: { bgColor: "success" },
         warning: { bgColor: "warning" },
-        primary: { primary: true },
-        secondary: { secondary: true },
+        primary: { bgColor: "primary" },
+        secondary: { bgColor: "secondary" },
     },
 });

@@ -1,35 +1,35 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { baseStore } from "../@baseStore";
-import { FloatingUi } from "./";
-import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { ScrollFlex } from "../ScrollFlex";
+import { Dropdown } from "../Dropdown";
+import { PopTip } from "../PopTip";
+import { Popover } from "../Popover";
+import { notifier } from "../notifier";
+
+const alignXOptions = [
+    { label: "left", value: "left" },
+    { label: "center", value: "center" },
+    { label: "right", value: "right" },
+];
+
+const alignYOptions = [
+    { label: "top", value: "top" },
+    { label: "bottom", value: "bottom" },
+];
+
+const Template = ({ children }) => (
+    <Flex padding={10} bgColor="foregrounds.tint80" color="foreground">
+        {children}
+    </Flex>
+);
 
 const X = () => {
-    const { isOpen, isOpen2, setLocal } = baseStore.useLocal({ isOpen: true });
-
-    const open = (path) => {
-        setLocal((s) => {
-            s[path] = true;
-        });
-    };
-    const close = (path) => {
-        setLocal((s) => {
-            s[path] = false;
-        });
-    };
-
-    const openHandler = () => {
-        setLocal((s) => {
-            s.isOpen = true;
-        });
-    };
-    const closeHandler = () => {
-        setLocal((s) => {
-            s.isOpen = false;
-        });
-    };
+    const { selectedAlignX, selectedAlignY, setLocal } = baseStore.useLocal({
+        selectedAlignX: "center",
+        selectedAlignY: "top",
+    });
 
     /* Return */
     return (
@@ -37,88 +37,146 @@ const X = () => {
             title="<FloatingUi>"
             releasedOn="1.0.0"
             description={`FloatingUi renders floating content relative to a trigger element, with
-                    controllable position and style. The open state of FloatingUi is controlled externally; in other words, it is a helper component. For detailed usage examples, you can check components like PopOver, PopTip, PopConfirm, and Button. `}
+                    controllable position and style. The open state of FloatingUi is controlled externally; in other words, it is a base component. For Popover, PopTip, PopConfirm, main features are provided by the FloatingUi component.`}
         >
             <Ds.block
                 title="Basic Usage"
                 code={`import { FloatingUi } from "${SYS.basePath}";
 
-                    <FloatingUi
+                        <FloatingUi
                             content="Default floating content"
                             open={isOpen}
                             closeHandler={closeHandler}
                         >
                                 content
                         </FloatingUi>`}
-                example={
-                    <Flex.column gap={20}>
-                        <FloatingUi
-                            content="Default floating content"
-                            open={isOpen}
-                            closeHandler={closeHandler}
-                        >
-                            content
-                        </FloatingUi>
-                        <Flex gap={10}>
-                            <Button.plain
-                                label="Open"
-                                onClick={openHandler}
-                                disabled={isOpen}
-                                skipClickCooldown
-                                skipOnClickHold
-                            />
-                            <Button.plain
-                                label="Close"
-                                onClick={closeHandler}
-                                disabled={!isOpen}
-                                skipClickCooldown
-                                skipOnClickHold
-                            />
-                        </Flex>
-                    </Flex.column>
-                }
+                example={<Popover content="Default floating content">content</Popover>}
             />
             <Ds.block
                 title="Auto Positioning"
-                code={`import { FloatingUi } from "${SYS.basePath}";
-
-                    `}
+                description="Open the Popover and drag the ScrollFlex area to see auto positioning in action. The Popover will also auto-close when it goes outside the viewport."
                 example={
-                    <ScrollFlex width={400} height={400} padding={0} enableDragging>
+                    <ScrollFlex width={300} height={300} padding={0} enableDragging>
                         <Flex.column
                             width={600}
-                            height={600}
+                            height={800}
                             bgColor="lightgrey"
                             padding={20}
                             xAlign="center"
                             yAlign="center"
                             gap={10}
                         >
-                            <FloatingUi
-                                content="Default floating content"
-                                open={isOpen2}
-                                closeHandler={() => close("isOpen2")}
-                            >
-                                <Flex width={100} height={100} bgColor="darkgrey" color="white">
-                                    content
-                                </Flex>
-                            </FloatingUi>
-                            <Button.plain
-                                label="Open"
-                                onClick={() => open("isOpen2")}
-                                disabled={isOpen2}
-                                skipClickCooldown
-                                skipOnClickHold
-                            />
-                            <Button.plain
-                                label="Close"
-                                onClick={() => close("isOpen2")}
-                                disabled={!isOpen2}
-                                skipClickCooldown
-                                skipOnClickHold
-                            />
+                            <Popover disableAutoClose>content</Popover>
                         </Flex.column>
                     </ScrollFlex>
+                }
+            />
+            <Ds.block
+                title="Manual Positioning"
+                description="The position option defaults to 'auto', which determines the placement based on the element's position on the screen and the floating content. However, you can override its position if you wish."
+                example={
+                    <Flex gap={10}>
+                        <Flex gap={20} alignItems="center">
+                            alignX
+                            <Dropdown
+                                options={alignXOptions}
+                                value={selectedAlignX}
+                                onChange={(value) => {
+                                    setLocal((s) => {
+                                        s.selectedAlignX = value;
+                                    });
+                                }}
+                            />
+                            alignY
+                            <Dropdown
+                                options={alignYOptions}
+                                value={selectedAlignY}
+                                onChange={(value) => {
+                                    setLocal((s) => {
+                                        s.selectedAlignY = value;
+                                    });
+                                }}
+                            />
+                        </Flex>
+                        <Popover alignX={selectedAlignX} alignY={selectedAlignY} disableAutoClose>
+                            Manual Positioning
+                        </Popover>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Styling"
+                description="bgColor prop is used to set the background color of the PopTip. It can be a theme color, a theme path, or a css color. color calculates automatically but you can override it via 'color' prop."
+                example={
+                    <Flex gap={10}>
+                        <PopTip content="theme" bgColor="success">
+                            <Template>theme</Template>
+                        </PopTip>
+                        <PopTip content="theme path" bgColor="foregrounds.tint50">
+                            <Template>theme.path</Template>
+                        </PopTip>
+                        <PopTip content="css colors" bgColor="skyblue">
+                            <Template>css colors</Template>
+                        </PopTip>
+                        <PopTip content="override color" bgColor="skyblue" color="#fff">
+                            <Template>override color</Template>
+                        </PopTip>
+                        <PopTip content="disable arrow" disableArrow>
+                            <Template>disable arrow</Template>
+                        </PopTip>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Enable Escaping"
+                description="'esc' button closes the PopTip even if mouse is still on the PopTip."
+                example={
+                    <Flex gap={10}>
+                        <PopTip content="enable escaping" enableEscaping>
+                            <Template>enable escaping</Template>
+                        </PopTip>
+                        <Popover enableEscaping>enableEscaping</Popover>
+                        <Popover>default behaviour = autoClose and escaping is disabled</Popover>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Multiple FloatingUi instances"
+                description="By default, only one FloatingUi instance can be open at a time. You can change this behavior by setting the disableMultipleBlock prop to true."
+                example={
+                    <Flex gap={10}>
+                        <Popover content="content1">disableMultipleBlock false1</Popover>
+                        <Popover content="content2">disableMultipleBlock false2</Popover>
+                        <Popover content="content3" disableMultipleBlock>
+                            disableMultipleBlock true1
+                        </Popover>
+                        <Popover content="content4" disableMultipleBlock>
+                            disableMultipleBlock true2
+                        </Popover>
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Handlers"
+                description="Mouse handlers for FloatingUi element."
+                example={
+                    <Flex gap={10}>
+                        <Popover content="onClick" onClick={() => notifier.add("onClick")}>
+                            onClick
+                        </Popover>
+                        <Popover
+                            content="onMouseEnter"
+                            onMouseEnter={() => notifier.add("onMouseEnter")}
+                        >
+                            onMouseEnter
+                        </Popover>
+                        <Popover
+                            content="onMouseLeave"
+                            onMouseLeave={() => notifier.add("onMouseLeave")}
+                        >
+                            onMouseLeave
+                        </Popover>
+                    </Flex>
                 }
             />
             <Ds.api
@@ -137,21 +195,25 @@ const X = () => {
                     content: {
                         description: "Floating panel content.",
                         type: "ReactNode",
+                        required: true,
                     },
                     open: {
                         description: "Controlled open/close state.",
                         type: "boolean",
                         defaultValue: "false",
+                        required: true,
                     },
-                    resolveFloatingMount: {
+                    closeHandler: {
                         description:
-                            "Optional (triggerElement) => HTMLElement. Overrides automatic choice of the nearest scrollable ancestor as the portal mount root.",
+                            "Called to close the floating layer. Plain calls use the animated closing path; `{ instant: true }` skips transition (exclusive takeover, observer exit, dismissWithoutAnimationRef). Parent must set `open` to false.",
                         type: "function",
+                        required: true,
                     },
                     padding: {
                         description:
                             "Padding shorthand; numbers become rem, strings pass through (same rules as Flex). Combines with paddingTop/Right/Bottom/Left.",
                         type: "number | string",
+                        defaultValue: "10",
                     },
                     paddingTop: {
                         description: "Overrides top edge of padding shorthand.",
@@ -170,27 +232,18 @@ const X = () => {
                         type: "number | string",
                     },
                     alignX: {
-                        description: "Horizontal alignment: start | center | end.",
+                        description:
+                            "Horizontal placement hint: left | center | right (start/end are normalized to left/right in layout).",
                         type: "string",
                         defaultValue: '"center"',
                     },
                     alignY: {
-                        description: "Vertical alignment: top | bottom.",
+                        description: "Vertical placement: top | bottom.",
                         type: "string",
                         defaultValue: '"top"',
                     },
                     disableArrow: {
                         description: "Hides the arrow.",
-                        type: "boolean",
-                        defaultValue: "false",
-                    },
-                    primary: {
-                        description: "Uses theme primary background style.",
-                        type: "boolean",
-                        defaultValue: "false",
-                    },
-                    secondary: {
-                        description: "Uses theme secondary background style.",
                         type: "boolean",
                         defaultValue: "false",
                     },
@@ -204,31 +257,28 @@ const X = () => {
                         type: "string",
                         defaultValue: "auto",
                     },
-                    uniqueId: {
-                        description: "Unique id for coordinating popover state.",
-                        type: "string | number",
-                    },
-                    dismissWithoutAnimationRef: {
+                    disableMultipleBlock: {
                         description:
-                            "Optional ref with `.current === true` when `open` becomes false: skip the closing opacity/transform transition and set status to closed immediately (e.g. anchor moved). Cleared inside FloatingUi after read.",
-                        type: "ref",
+                            "When false (default), a global popover id lets only one exclusive instance stay visually open; opening another steals the slot. When true, multiple instances may stay open; combined with popoverTriggerMarker, outside pointerdown skips closing when the target is another marked trigger.",
+                        type: "boolean",
+                        defaultValue: "false",
                     },
                     enableEscaping: {
                         description:
-                            "When true, outside click and Escape key can close the floating panel.",
+                            "When true, registers a document Escape listener only (no outside pointer listener from this flag). Default false.",
                         type: "boolean",
-                        defaultValue: "true",
+                        defaultValue: "false",
                     },
                     onMouseEnter: {
-                        description: "Mouse/pointer enter handler on trigger element.",
+                        description: "Mouse/pointer enter on the floating panel (variant root).",
                         type: "function",
                     },
                     onMouseLeave: {
-                        description: "Mouse/pointer leave handler on trigger element.",
+                        description: "Mouse/pointer leave on the floating panel (variant root).",
                         type: "function",
                     },
                     onClick: {
-                        description: "Click handler on trigger element.",
+                        description: "Click handler on the floating panel (variant root).",
                         type: "function",
                     },
                     exportData: {

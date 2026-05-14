@@ -1,25 +1,35 @@
-import { baseStore } from "../../@baseStore";
+import { useMemo, useCallback, useState } from "react";
 import { useExportData } from "../../useExportedData";
 
 const useVars = (p) => {
-    const { setLocal, setLocalByPath, isOpen } = baseStore.useLocal({ isOpen: false });
-    const openPopTip = () =>
-        setLocal((s) => {
-            s.isOpen = true;
-        });
-    const closePopTip = () =>
-        setLocal((s) => {
-            s.isOpen = false;
-        });
+    const [isOpen, setIsOpen] = useState(false);
+
+    const openPopTip = useCallback(() => {
+        setIsOpen(true);
+    }, []);
+
+    const closePopTip = useCallback(() => {
+        setIsOpen(false);
+    }, []);
+
+    const floatingUiProps = useMemo(() => {
+        const { exportData: _exportData, ...rest } = p || {};
+        const next = { ...rest };
+        delete next.primary;
+        delete next.secondary;
+        return {
+            ...next,
+            open: rest.open !== undefined ? rest.open : isOpen,
+            closeHandler: typeof rest.closeHandler === "function" ? rest.closeHandler : closePopTip,
+        };
+    }, [p, isOpen, closePopTip, openPopTip]);
 
     /* Return */
     return useExportData(
         {
-            exportData: p.exportData,
+            exportData: p?.exportData,
             ...p,
-            allProps: p,
-            setLocal,
-            setLocalByPath,
+            floatingUiProps,
         },
         { isOpen, openPopTip, closePopTip },
     );

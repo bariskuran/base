@@ -83,22 +83,16 @@ const X = () => (
                 Popover is composed of advanced components such as FloatingUi, ScrollFlex, Button,
                 and ButtonList. As a result, it does not have many features of its own, but can
                 utilize all the features provided by the aforementioned components. <br />
+                <br />A nice feature of the Popover component: by default the system allows only one
+                exclusive popover at a time (see FloatingUi <code>disableMultipleBlock</code>). Use{" "}
+                <code>disableMultipleBlock</code> on Popover when multiple panels should stay open.
                 <br />
-                A nice feature of the Popover component: the system prevents two popovers from being
-                open at the same time. This is a built-in feature and cannot be disabled.
                 <br />
+                <Button.string to="/design-system/floatingUi" label="FloatingUi" />
                 <br />
-                Check out <Button.string to="/design-system/floatingUi" label="FloatingUi" /> for
-                more details.
+                <Button.string to="/design-system/scrollFlex" label="ScrollFlex" />
                 <br />
-                Check out <Button.string to="/design-system/scrollFlex" label="ScrollFlex" /> for
-                more details.
-                <br />
-                Check out <Button.string to="/design-system/button" label="Button" /> for more
-                details.
-                <br />
-                Check out <Button.string to="/design-system/buttonList" label="ButtonList" /> for
-                more details.
+                <Button.string to="/design-system/button" label="Button" />
             </>
         }
     >
@@ -131,12 +125,18 @@ const X = () => (
                     <Popover buttonProps={{ icon: { flat: true } }}>
                         <Panel />
                     </Popover>
-                    <Popover buttonProps={{ label: "Menu", outlined: true }}>
+                    <Popover
+                        buttonProps={{ label: "Menu", outlined: true }}
+                        scrollFlexProps={{ scrollBarProps: { edgeMargin: 0 } }}
+                    >
                         <Panel2 />
                     </Popover>
                     <Popover
                         buttonProps={{ label: "Menu", outlined: false }}
-                        scrollFlexProps={{ scrollBarProps: { edgeMargin: 10, variant: "primary" } }}
+                        scrollFlexProps={{
+                            enableDragging: true,
+                            scrollBarProps: { edgeMargin: 10, variant: "primary" },
+                        }}
                     >
                         <LargeContent />
                     </Popover>
@@ -204,52 +204,22 @@ const X = () => (
             args="<Popover>{null}</Popover>"
             props={{
                 children: {
-                    description: "Popover panel content.",
+                    description: "Panel content rendered inside the internal ScrollFlex.",
                     type: "ReactNode",
                     required: true,
-                    defaultValue: "null",
                 },
                 buttonProps: {
-                    description: "Props forwarded to internal trigger Button.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                scrollBoxProps: {
-                    description:
-                        "ScrollFlex props for the panel (width, height, maxWidth, maxHeight, flexProps, scrollBarProps, …). If width and height are omitted, the panel sizes to content up to maxWidth/maxHeight (defaults 30vw / 30vh). scrollFlexProps is merged as a legacy alias.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                variant: {
-                    description: "Popover/FloatingUi variant.",
-                    type: "string | component",
-                    defaultValue: '"default"',
-                },
-                floatingUiProps: {
-                    description: "FloatingUi props.",
+                    description: "Checkout Button api.",
                     type: "object",
                 },
-                bgColor: {
+                scrollFlexProps: {
+                    description: "Checkout ScrollFlex api.",
+                    type: "object",
+                },
+                _rest: {
                     description:
-                        "Panel background. Resolved like Button colors: theme keys or paths (`primary`, `greys.shade50`), hex/rgb/rgba, and named CSS colors; passed to FloatingUi after `colorFind`.",
-                    type: "string",
-                    defaultValue: "theme.background",
-                },
-                color: {
-                    description:
-                        "Panel text color override; same resolution rules as `bgColor`. When omitted, FloatingUi uses contrast opposite of the resolved background.",
-                    type: "string",
-                    defaultValue: "auto",
-                },
-                disableArrow: {
-                    description: "Hides arrow.",
-                    type: "boolean",
-                    defaultValue: "false",
-                },
-                exportData: {
-                    description: "Debug/export passthrough.",
-                    type: "boolean | function | object",
-                    defaultValue: "false",
+                        "All rest props are passed to the FloatingUi component. Check out FloatingUi api.",
+                    type: "object",
                 },
             }}
         />

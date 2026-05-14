@@ -252,7 +252,9 @@ const X = () => {
             />
             <Ds.block
                 title="fillMode"
-                description="You can change the behavior of the thumb. When you enable this prop, the thumb will fill the entire track area. fillMode ignores minThumbLength, exactThumbSize props."
+                description={`You can change the behavior of the thumb. When you enable this prop, the thumb will fill the entire track area. fillMode ignores minThumbLength, exactThumbSize props.
+                    
+                    fillMode also ignores mouse thumb dragging. Because there is no thumb to drag.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
                         <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>

@@ -49,7 +49,7 @@ export const PlainVariant = styled.div`
             overflow-wrap: break-word;
             padding: ${$floatingPadding != null ? $floatingPadding : "10rem"};
             border-radius: 5rem;
-            filter: drop-shadow(1rem 1rem 4rem ${theme.colorAlpha(theme.foreground, 0.5)});
+            filter: drop-shadow(1px 1px 4rem ${theme.colorAlpha(theme.foreground, 0.5)});
 
             ${$disableArrow &&
             css`
@@ -65,7 +65,7 @@ export const PlainVariant = styled.div`
                 height: 10rem;
 
                 clip-path: polygon(50% 100%, 0 0, 100% 0);
-                filter: drop-shadow(1rem 1rem 4rem ${theme.colorAlpha(theme.foreground, 0.35)});
+                filter: drop-shadow(1px 1px 4rem ${theme.colorAlpha(theme.foreground, 0.35)});
 
                 ${$alignX === "left" &&
                 css`

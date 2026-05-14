@@ -13,6 +13,11 @@ import {
     releaseFloatingMountHost,
 } from "./floatingMountHost";
 import { generate4DirectionProps } from "../../Flex/tools/generateProps";
+import { generateRandom } from "../../generateRandom";
+
+const DEFAULT_FLOATING_PADDING = 10;
+
+const POPOVER_TRIGGER_SELECTOR = "[data-floating-ui-popover-trigger]";
 
 const useVars = (p) => {
     const {
@@ -20,8 +25,6 @@ const useVars = (p) => {
         alignX: alignXFromUser,
         alignY: alignYFromUser,
         disableArrow,
-        primary,
-        secondary,
         onMouseEnter,
         onMouseLeave,
         onClick,
@@ -29,7 +32,8 @@ const useVars = (p) => {
         bgColor,
         color,
         uniqueId,
-        enableEscaping,
+        enableEscaping: enableEscapingProp,
+        popoverOutsideDismiss: popoverOutsideDismissProp,
         closeHandler: closeHandlerFromChildComponent,
         exportData,
         dismissWithoutAnimationRef,
@@ -39,7 +43,19 @@ const useVars = (p) => {
         paddingRight,
         paddingBottom,
         paddingLeft,
+        disableMultipleBlock = false,
+        popoverTriggerMarker = false,
     } = p || {};
+
+    const enableEscaping = enableEscapingProp === true;
+    const popoverOutsideDismiss = popoverOutsideDismissProp === true;
+    const listenOutsidePointer = popoverOutsideDismiss;
+    const listenEscapeKey = enableEscaping;
+
+    const floatingExclusiveId = useMemo(
+        () => (uniqueId != null && uniqueId !== "" ? String(uniqueId) : generateRandom.text(16)),
+        [],
+    );
 
     const {
         isMounted,
@@ -116,6 +132,37 @@ const useVars = (p) => {
     delayedCloseRef.current = delayedClose;
     const [popoverId, setGlobal] = baseStore.useGlobal((s) => [s.popoverId]);
 
+    const exclusiveBlocksOthers = !disableMultipleBlock;
+
+    const effectiveOpen = useMemo(() => {
+        if (!exclusiveBlocksOthers) return open;
+        return open && (popoverId == null || popoverId === floatingExclusiveId);
+    }, [open, exclusiveBlocksOthers, popoverId, floatingExclusiveId]);
+
+    const prevOpenForExclusiveRef = useRef(false);
+
+    useLayoutEffect(() => {
+        if (!exclusiveBlocksOthers) return;
+        if (!open || effectiveOpen) return;
+        if (!prevOpenForExclusiveRef.current) return;
+        closeHandlerFromChildRef.current?.({ instant: true });
+    }, [exclusiveBlocksOthers, open, effectiveOpen]);
+    useLayoutEffect(() => {
+        if (disableMultipleBlock) return;
+        const was = prevOpenForExclusiveRef.current;
+        prevOpenForExclusiveRef.current = open;
+        if (open && !was) {
+            setGlobal((s) => {
+                s.popoverId = floatingExclusiveId;
+            });
+        }
+        if (!open && was) {
+            setGlobal((s) => {
+                if (s.popoverId === floatingExclusiveId) s.popoverId = null;
+            });
+        }
+    }, [open, disableMultipleBlock, floatingExclusiveId, setGlobal]);
+
     const dismissInstant = useCallback(() => {
         if (status === "closing" || status === "closed") return;
         delayedClose.cancel();
@@ -123,10 +170,12 @@ const useVars = (p) => {
             s.status = "closed";
             s.blockVisibility = true;
         });
-        setGlobal((s) => {
-            s.popoverId = null;
-        });
-    }, [status, delayedClose, setLocal, setGlobal]);
+        if (!disableMultipleBlock) {
+            setGlobal((s) => {
+                if (s.popoverId === floatingExclusiveId) s.popoverId = null;
+            });
+        }
+    }, [status, delayedClose, setLocal, setGlobal, disableMultipleBlock, floatingExclusiveId]);
 
     const openHandler = useCallback(() => {
         if (status === "opened") return;
@@ -137,21 +186,15 @@ const useVars = (p) => {
             s.alignX = alignXFromUser || "center";
             s.alignY = alignYFromUser || "top";
         });
+    }, [status, setLocal, alignXFromUser, alignYFromUser, delayedClose]);
 
-        if (popoverId && popoverId !== uniqueId) {
-            setGlobal((s) => {
-                s.popoverId = null;
-            });
+    const closeHandler = useCallback((options) => {
+        if (options?.instant) {
+            closeHandlerFromChildRef.current?.({ instant: true });
+            return;
         }
-    }, [status, setLocal, alignXFromUser, alignYFromUser, delayedClose, popoverId, uniqueId, setGlobal]);
-
-    const closeHandler = useCallback(
-        (options) => {
-            if (options?.instant) dismissInstant();
-            else closeHandlerFromChildRef.current?.();
-        },
-        [dismissInstant],
-    );
+        closeHandlerFromChildRef.current?.();
+    }, []);
 
     const closeFromOpenProp = useCallback(() => {
         if (status === "closing" || status === "closed") return;
@@ -169,17 +212,25 @@ const useVars = (p) => {
         delayedClose.cancel();
         setLocalByPath("status", "closing");
         delayedClose.run();
-
-        setGlobal((s) => {
-            s.popoverId = null;
-        });
-    }, [status, dismissWithoutAnimationRef, delayedClose, setLocalByPath, setGlobal, dismissInstant]);
+    }, [
+        status,
+        dismissWithoutAnimationRef,
+        delayedClose,
+        setLocalByPath,
+        dismissInstant,
+    ]);
 
     useEffect(() => {
         if (!isMounted) return;
-        if (open) openHandler();
-        else closeFromOpenProp();
-    }, [open, isMounted, openHandler, closeFromOpenProp]);
+        if (!open) {
+            closeFromOpenProp();
+            return;
+        }
+        if (effectiveOpen) {
+            openHandler();
+            return;
+        }
+    }, [isMounted, open, effectiveOpen, openHandler, closeFromOpenProp]);
 
     useEffect(
         () => () => {
@@ -243,7 +294,7 @@ const useVars = (p) => {
     const floatingPadding = useMemo(
         () =>
             generate4DirectionProps([
-                padding,
+                padding != null && padding !== "" ? padding : DEFAULT_FLOATING_PADDING,
                 paddingTop,
                 paddingRight,
                 paddingBottom,
@@ -303,7 +354,7 @@ const useVars = (p) => {
     useEventListener(
         "pointerdown",
         (e) => {
-            if (!isFloatingActive || !enableEscaping) return;
+            if (!isFloatingActive || !listenOutsidePointer) return;
 
             const target = e.target;
             const triggerEl = childrenRef.current;
@@ -311,11 +362,23 @@ const useVars = (p) => {
 
             if (triggerEl?.contains(target) || floatingEl?.contains(target)) return;
 
+            if (
+                disableMultipleBlock &&
+                typeof Element !== "undefined" &&
+                target instanceof Element &&
+                typeof target.closest === "function" &&
+                target.closest(POPOVER_TRIGGER_SELECTOR)
+            ) {
+                return;
+            }
+
             closeHandler();
         },
         {
             delay: 0,
             passive: true,
+            capture: true,
+            enabled: isFloatingActive && listenOutsidePointer,
             source: typeof document !== "undefined" ? document : undefined,
         },
     );
@@ -323,22 +386,21 @@ const useVars = (p) => {
     useEventListener(
         "keydown",
         (e) => {
-            if (!isFloatingActive || !enableEscaping) return;
+            if (!isFloatingActive || !listenEscapeKey) return;
             if (e.key !== "Escape") return;
 
             closeHandler();
         },
         {
             delay: 0,
+            enabled: isFloatingActive && listenEscapeKey,
             source: typeof document !== "undefined" ? document : undefined,
         },
     );
 
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
 
-    const colors = colorGet(
-        bgColor || (primary ? theme.primary : secondary ? theme.secondary : theme.background),
-    );
+    const colors = colorGet(bgColor || theme.background);
 
     /* Return */
     return useExportData(
@@ -357,13 +419,12 @@ const useVars = (p) => {
             alignX,
             alignY,
             disableArrow,
-            primary,
-            secondary,
             color,
             onMouseEnter,
             onMouseLeave,
             onClick,
             closeHandler,
+            popoverTriggerMarker,
         },
         {
             isMounted,

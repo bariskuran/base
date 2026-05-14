@@ -21,7 +21,6 @@ const clamp = (value, min, max) => {
     return Math.min(Math.max(value, min), max);
 };
 
-/** Toplam taşma (px): dikdörtgen `box` dışına taşan kısım. */
 const overflowAmount = (rect, box) => {
     let o = 0;
     o += Math.max(0, box.left - rect.left);
@@ -109,7 +108,6 @@ const getPosition = ({
     currentAlignX = "center",
     currentAlignY = "top",
     resolveFloatingMount,
-    /** Portal host (useVars’taki floatingMountHost); ensure çağrısı sayaç dışı host yaratmasın. */
     floatingLayerEl,
 } = {}) => {
     const childrenEl = childrenRef?.current;
@@ -146,7 +144,6 @@ const getPosition = ({
     const liveRect = floatingEl.getBoundingClientRect();
     const fw = Math.max(floatingRect.width, liveRect.width > 0.5 ? liveRect.width : 0);
     const fh = Math.max(floatingRect.height, liveRect.height > 0.5 ? liveRect.height : 0);
-    /** Ok / gölge taşması: getBoundingClientRect ana kutuyu küçük gösterebilir. */
     const arrowSlop = Math.max(72, gap * 2, Math.round(viewportOffset * 2));
     const fhCol = fh + arrowSlop;
 

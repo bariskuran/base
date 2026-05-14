@@ -7,40 +7,40 @@ export const Base = ({ children, ...p }) => {
     const {
         isOpen,
         onClickHandler,
-        floatingUiProps,
+        onCloseHandler,
         buttonProps,
-        uniqueId,
-        observerRef,
-        scrollBoxProps,
+        floatingUiProps,
+        scrollFlexProps,
         dismissWithoutAnimationRef,
     } = useVars(p);
 
-    const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollBoxProps || {};
+    const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollFlexProps || {};
 
-    /* RETURN */
+    /* Return */
     return (
         <FloatingUi
             {...floatingUiProps}
             dismissWithoutAnimationRef={dismissWithoutAnimationRef}
             open={isOpen}
-            onClick={onClickHandler}
+            closeHandler={onCloseHandler}
             content={
                 <ScrollFlex
+                    padding={0}
                     {...restScrollFlexProps}
-                    flexProps={{ ...flexProps }}
+                    flexProps={flexProps}
                     scrollBarProps={{ edgeMargin: 0, ...scrollBarProps }}
                 >
                     {children}
                 </ScrollFlex>
             }
-            uniqueId={uniqueId}
-            enableEscaping={true}
-            alignY="top"
         >
             <Button
-                ref={observerRef}
                 activeManually={isOpen}
                 {...(buttonProps || {})}
+                onClick={(e) => {
+                    buttonProps?.onClick?.(e);
+                    onClickHandler(e);
+                }}
                 icon={{
                     icon: "threeDotsLarge",
                     activeIcon: "threeDotsLargeHorizontal",

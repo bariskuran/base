@@ -10,7 +10,7 @@ const Template = ({ children }) => (
     </Flex>
 );
 const X = () => {
-    /* RETURN */
+    /* Return */
     return (
         <Ds.page
             title="<PopTip>"
@@ -147,23 +147,88 @@ const X = () => {
             <Ds.api
                 args='<PopTip content="">{null}</PopTip>'
                 props={{
-                    variant: {
-                        description: "Variant name or custom styled variant.",
-                        type: "string | component",
-                        defaultValue: '"default"',
-                    },
-                    content: {
-                        description: "Floating content rendered inside PopTip.",
-                        type: "ReactNode",
-                        required: true,
-                    },
                     children: {
                         description: "Trigger element.",
                         type: "ReactNode",
                         required: true,
                     },
+                    content: {
+                        description: "Floating panel body.",
+                        type: "ReactNode",
+                        required: true,
+                    },
+                    variant: {
+                        description: "FloatingUi visual variant.",
+                        type: "string | component",
+                        defaultValue: '"default"',
+                    },
+                    alignX: {
+                        description: "Horizontal placement passed to FloatingUi.",
+                        type: "string",
+                        defaultValue: '"center"',
+                    },
+                    alignY: {
+                        description: "Vertical placement passed to FloatingUi (top | bottom).",
+                        type: "string",
+                        defaultValue: '"top"',
+                    },
+                    disableArrow: {
+                        description: "Hides the floating arrow.",
+                        type: "boolean",
+                        defaultValue: "false",
+                    },
+                    bgColor: {
+                        description: "Floating background color or theme token.",
+                        type: "string",
+                    },
+                    color: {
+                        description: "Floating text color override.",
+                        type: "string",
+                    },
+                    padding: {
+                        description: "FloatingUi padding shorthand.",
+                        type: "number | string",
+                    },
+                    paddingTop: {
+                        description: "Overrides top edge of padding shorthand.",
+                        type: "number | string",
+                    },
+                    paddingRight: {
+                        description: "Overrides right edge of padding shorthand.",
+                        type: "number | string",
+                    },
+                    paddingBottom: {
+                        description: "Overrides bottom edge of padding shorthand.",
+                        type: "number | string",
+                    },
+                    paddingLeft: {
+                        description: "Overrides left edge of padding shorthand.",
+                        type: "number | string",
+                    },
+                    enableEscaping: {
+                        description:
+                            "When true, Escape closes the tip while pointer may still be over it (FloatingUi).",
+                        type: "boolean",
+                        defaultValue: "false",
+                    },
+                    open: {
+                        description: "Optional controlled open state (otherwise hover-driven internal state).",
+                        type: "boolean",
+                    },
+                    closeHandler: {
+                        description: "Optional close callback when using controlled open.",
+                        type: "function",
+                    },
+                    onMouseEnter: {
+                        description: "Trigger mouse/pointer enter; PopTip defaults open behavior if omitted.",
+                        type: "function",
+                    },
+                    onMouseLeave: {
+                        description: "Trigger mouse/pointer leave; PopTip defaults close behavior if omitted.",
+                        type: "function",
+                    },
                     exportData: {
-                        description: "Debug/export callback passthrough.",
+                        description: "Debug/export passthrough.",
                         type: "boolean | function | object",
                         defaultValue: "false",
                     },

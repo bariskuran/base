@@ -36,10 +36,11 @@ const useVars = (p) => {
         exportData,
     } = p || {};
 
-    const trackMargin = trackMarginProp ?? 5;
-    const edgeMargin = edgeMarginProp ?? 5;
-    const edgeMarginX = edgeMarginXProp;
-    const edgeMarginY = edgeMarginYProp;
+    const edgeMarginDefault = -4 - thickness;
+    const trackMargin = trackMarginProp ?? 9;
+    const edgeMargin = edgeMarginProp ?? edgeMarginDefault;
+    const edgeMarginX = edgeMarginXProp ?? edgeMarginDefault;
+    const edgeMarginY = edgeMarginYProp ?? edgeMarginDefault;
     const hasExternalSource =
         sourceByRef != null || (typeof sourceById === "string" && sourceById.trim() !== "");
     const hasExternalPositionSource = positionSourceByRef != null;
@@ -158,12 +159,15 @@ const useVars = (p) => {
         if (!host) return;
 
         const source = resolveExternalSource() || host;
-        const positionSource = resolvePositionSource() || source;
+        const explicitPositionEl = resolvePositionSource();
+        const layoutHostEl = host;
 
         setLocal((s) => {
-            s.resolvedHost = positionSource;
+            /* Bar / hostRect geometrisi: positionSourceByRef varsa o; yoksa scrollbar'ın bağlı olduğu host.
+               Kaydırılan içerik her zaman `source` (resolvedSource / normalizedScrollSource). */
+            s.resolvedHost = explicitPositionEl || layoutHostEl || source;
             s.resolvedSource = source;
-            s.overlayHost = positionSource?.parentElement || null;
+            s.overlayHost = (explicitPositionEl || layoutHostEl)?.parentElement || null;
         });
     }, [body, setLocal, sourceByRef, sourceById, positionSourceByRef]);
 
@@ -471,7 +475,18 @@ const useVars = (p) => {
 
         const observerTargets = isWindowLike
             ? [document.documentElement, document.body]
-            : [resolvedHost];
+            : (() => {
+                  const set = new Set();
+                  if (resolvedHost?.nodeType === 1) set.add(resolvedHost);
+                  const srcEl =
+                      normalizedScrollSource &&
+                      normalizedScrollSource !== window &&
+                      normalizedScrollSource?.nodeType === 1
+                          ? normalizedScrollSource
+                          : null;
+                  if (srcEl) set.add(srcEl);
+                  return [...set];
+              })();
 
         observerTargets.forEach((target) => {
             if (target && resizeObserver) resizeObserver.observe(target);
@@ -481,12 +496,23 @@ const useVars = (p) => {
             typeof MutationObserver !== "undefined" ? new MutationObserver(onObservedChange) : null;
 
         if (mutationObserver) {
-            mutationObserver.observe(isWindowLike ? document.body : resolvedHost, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                characterData: true,
-            });
+            if (isWindowLike) {
+                mutationObserver.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    characterData: true,
+                });
+            } else {
+                observerTargets.forEach((root) => {
+                    mutationObserver.observe(root, {
+                        childList: true,
+                        subtree: true,
+                        attributes: true,
+                        characterData: true,
+                    });
+                });
+            }
         }
 
         syncAllRaf();
@@ -497,6 +523,7 @@ const useVars = (p) => {
         };
     }, [
         resolvedHost,
+        normalizedScrollSource,
         isWindowLike,
         effectiveOpposite,
         effectiveMirror,

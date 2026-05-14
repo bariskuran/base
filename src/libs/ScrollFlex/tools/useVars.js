@@ -2,10 +2,25 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { baseStore } from "../../@baseStore";
 import { useExportData } from "../../useExportedData";
 import { isShallowEqual } from "../../isShallowEqual";
+import { mergeFlexKebabPropAliases, FLEX_PROPS_KEBAB_TO_CAMEL } from "../../Flex/tools/generateProps.js";
 import { computeDragScrollFromPointers } from "./computeDragScrollDelta";
 
 const EMPTY_FLEX_PROPS = {};
 const EMPTY_SCROLL_BAR_PROPS = {};
+
+const lockShellTextSelection = (el) => {
+    if (!el) return;
+    el.style.userSelect = "none";
+    el.style.webkitUserSelect = "none";
+    el.style.MozUserSelect = "none";
+};
+
+const unlockShellTextSelection = (el) => {
+    if (!el) return;
+    el.style.userSelect = "";
+    el.style.webkitUserSelect = "";
+    el.style.MozUserSelect = "";
+};
 
 const pickScrollBarLayoutData = (data = {}) => ({
     showX: !!data.showX,
@@ -15,7 +30,6 @@ const pickScrollBarLayoutData = (data = {}) => ({
     left: !!data.left,
     right: !!data.right,
     edgeMargin: data.edgeMargin,
-    thickness: data.thickness,
 });
 
 const getCssSize = (value) => {
@@ -36,51 +50,103 @@ const normalizeCalcValue = (value) =>
           )
         : value;
 
-const getScrollBarSpace = ({ edgeMargin, thickness } = {}) => {
-    if (edgeMargin == null || thickness == null) return null;
-    return `${edgeMargin}px + ${thickness}rem`;
+/**
+ * Shell padding: kısaltma değerleri boşluk içerir; getCssSize boşlukları sildiği için
+ * "10px 0 10px 10px" gibi değerler bozuluyordu.
+ */
+const getShellPaddingCssValue = (value) => {
+    if (value == null) return null;
+    if (value === 0 || value === "0") return "0";
+    if (typeof value === "number") return `${value}rem`;
+
+    const raw = String(value).trim();
+    if (!raw) return null;
+
+    const singleToken = raw.replace(/\s+/g, "");
+    if (/^-?\d+(\.\d+)?$/.test(singleToken)) return `${singleToken}rem`;
+
+    const spaced = raw.replace(/\s+/g, " ").trim();
+    if (/^calc\(/i.test(spaced)) return normalizeCalcValue(spaced);
+    return normalizeCalcValue(spaced);
 };
 
-const resolveContentPaddingStyle = (props = {}) => {
-    const {
-        padding,
-        paddingTop,
-        paddingRight,
-        paddingBottom,
-        paddingLeft,
-    } = props;
+/** ScrollFlex kökündeki padding anahtarları (camel + Flex kebab aliasları + style içi). */
+const PADDING_CAMEL_KEYS = [
+    "padding",
+    "paddingTop",
+    "paddingRight",
+    "paddingBottom",
+    "paddingLeft",
+    "paddingBlock",
+    "paddingInline",
+    "paddingBlockStart",
+    "paddingBlockEnd",
+    "paddingInlineStart",
+    "paddingInlineEnd",
+];
 
-    const hasUserPadding =
-        padding != null ||
-        paddingTop != null ||
-        paddingRight != null ||
-        paddingBottom != null ||
-        paddingLeft != null;
+const PADDING_CAMEL_SET = new Set(PADDING_CAMEL_KEYS);
 
-    const basePadding = hasUserPadding ? padding : 10;
-
-    return {
-        padding: getCssSize(basePadding),
-        ...(paddingTop != null ? { paddingTop: getCssSize(paddingTop) } : {}),
-        ...(paddingRight != null ? { paddingRight: getCssSize(paddingRight) } : {}),
-        ...(paddingBottom != null ? { paddingBottom: getCssSize(paddingBottom) } : {}),
-        ...(paddingLeft != null ? { paddingLeft: getCssSize(paddingLeft) } : {}),
-    };
+const styleKeyToPaddingCamel = (k) => {
+    if (typeof k !== "string") return null;
+    if (PADDING_CAMEL_SET.has(k)) return k;
+    if (!k.startsWith("padding")) return null;
+    if (!k.includes("-")) return null;
+    const camel = k.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase());
+    return PADDING_CAMEL_SET.has(camel) ? camel : null;
 };
 
-const getShellGutters = (scrollBarData) => {
-    const s = getScrollBarSpace(scrollBarData);
-    const edge = (key) => {
-        if (!s || !scrollBarData?.[key]) return "0px";
-        return `calc(${s})`;
-    };
+const buildShellPaddingStyleFromMerged = (merged) => {
+    const shell = {};
+    for (const key of PADDING_CAMEL_KEYS) {
+        if (merged[key] == null) continue;
+        const css = getShellPaddingCssValue(merged[key]);
+        if (css != null) shell[key] = css;
+    }
+    return shell;
+};
 
-    return {
-        gutterTop: edge("top"),
-        gutterRight: edge("right"),
-        gutterBottom: edge("bottom"),
-        gutterLeft: edge("left"),
-    };
+/**
+ * Sadece ScrollFlex'e verilen (rest) props'tan padding'i ayırır → shell inline style.
+ * flexProps padding'a dokunulmaz; içerik {...flexProps} ile alır.
+ */
+const splitShellPaddingFromRestProps = (restProps) => {
+    if (!restProps || typeof restProps !== "object") {
+        return { shellPaddingStyle: {}, restPropsWithoutShellPadding: {} };
+    }
+
+    const mergedTop = mergeFlexKebabPropAliases(restProps);
+    let shellPaddingStyle = buildShellPaddingStyleFromMerged(mergedTop);
+
+    const next = { ...restProps };
+    for (const key of PADDING_CAMEL_KEYS) {
+        delete next[key];
+    }
+    for (const [kebab, camel] of Object.entries(FLEX_PROPS_KEBAB_TO_CAMEL)) {
+        if (PADDING_CAMEL_SET.has(camel)) delete next[kebab];
+    }
+
+    if (next.style && typeof next.style === "object") {
+        const nextStyle = { ...next.style };
+        for (const k of Object.keys(nextStyle)) {
+            const camel = styleKeyToPaddingCamel(k);
+            if (camel == null) continue;
+            const val = nextStyle[k];
+            if (val != null && shellPaddingStyle[camel] == null) {
+                const css = getShellPaddingCssValue(val);
+                if (css != null) {
+                    shellPaddingStyle = { ...shellPaddingStyle, [camel]: css };
+                }
+            }
+            delete nextStyle[k];
+        }
+        if (Object.keys(nextStyle).length) next.style = nextStyle;
+        else delete next.style;
+    }
+
+    if (Object.keys(shellPaddingStyle).length === 0) shellPaddingStyle = {};
+
+    return { shellPaddingStyle, restPropsWithoutShellPadding: next };
 };
 
 const mergeDefaultAlignment = (props) => {
@@ -107,6 +173,27 @@ const getExplicitHeight = ({ height, flexProps }) => height ?? flexProps.height;
 const getExplicitWidth = ({ width, flexProps, restProps }) =>
     width ?? flexProps.width ?? restProps.width;
 const getRefElement = (ref) => ref?.current || ref || null;
+const getEdgeToMargin = (scrollBarData, scrollBarProps) => {
+    const value = scrollBarData?.edgeMargin ?? scrollBarProps?.edgeMargin ?? -5;
+    const numeric = Number(value);
+
+    return Number.isFinite(numeric) ? Math.abs(numeric) : 5;
+};
+
+const getShellLayoutStyle = (scrollBarData, scrollBarProps) => {
+    const edgeToMargin = getEdgeToMargin(scrollBarData, scrollBarProps);
+    const barSpace = edgeToMargin + 4;
+
+    const hasVerticalBarEdge = !!(scrollBarData?.top || scrollBarData?.bottom);
+    const hasHorizontalBarEdge = !!(scrollBarData?.left || scrollBarData?.right);
+
+    return {
+        width: hasHorizontalBarEdge ? `calc(100% - ${barSpace}px)` : "100%",
+        height: hasVerticalBarEdge ? `calc(100% - ${barSpace}px)` : "100%",
+        ...(scrollBarData?.top ? { alignSelf: "end" } : {}),
+        ...(scrollBarData?.left ? { justifySelf: "end" } : {}),
+    };
+};
 
 const isUsableHeightValue = (value) => {
     if (!value) return false;
@@ -210,29 +297,34 @@ const useVars = (p) => {
         ...restProps
     } = p || {};
 
-    const explicitWidthValue = getExplicitWidth({ width, flexProps, restProps });
-    const explicitHeightValue = getExplicitHeight({ height, flexProps });
+    const { shellPaddingStyle, restPropsWithoutShellPadding } = useMemo(
+        () => splitShellPaddingFromRestProps(restProps),
+        [restProps],
+    );
+
+    const explicitWidthValue = getExplicitWidth({
+        width,
+        flexProps,
+        restProps: restPropsWithoutShellPadding,
+    });
     const hasWidthRefOrId =
         !!widthByRef || (typeof widthById === "string" && widthById.trim() !== "");
-    const hasHeightRefOrId =
-        !!heightByRef || (typeof heightById === "string" && heightById.trim() !== "");
     const intrinsicWidth =
         (explicitWidthValue == null || explicitWidthValue === "") && !hasWidthRefOrId;
-    const intrinsicHeight =
-        (explicitHeightValue == null || explicitHeightValue === "") && !hasHeightRefOrId;
 
     const containerRef = useRef(null);
     const shellRef = useRef(null);
+    const contentRef = useRef(null);
     const dragRef = useRef({ active: false, x0: 0, y0: 0, s0l: 0, s0t: 0, pid: null });
     const [shellDragging, setShellDragging] = useState(false);
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
     const { measuredWidth, measuredHeight, hasMeasuredHeight, scrollBarExportedData, setLocal } =
         baseStore.useLocal({
-        measuredWidth: null,
-        measuredHeight: null,
-        hasMeasuredHeight: false,
-        scrollBarExportedData: pickScrollBarLayoutData(),
-    });
+            measuredWidth: null,
+            measuredHeight: null,
+            hasMeasuredHeight: false,
+            scrollBarExportedData: pickScrollBarLayoutData(),
+        });
 
     const userScrollBarExportData = scrollBarProps?.exportData;
     const exportData = useCallback(
@@ -250,6 +342,7 @@ const useVars = (p) => {
         },
         [setLocal, userScrollBarExportData],
     );
+
     const mergedScrollBarProps = useMemo(
         () => ({
             ...scrollBarProps,
@@ -257,6 +350,8 @@ const useVars = (p) => {
         }),
         [scrollBarProps, exportData],
     );
+
+    const effectiveEnableDragging = enableDragging && !mergedScrollBarProps.fillMode;
 
     const organizedFlexProps = useMemo(() => {
         const explicitHeight = getExplicitHeight({
@@ -266,21 +361,20 @@ const useVars = (p) => {
         const explicitWidth = getExplicitWidth({
             width,
             flexProps,
-            restProps,
+            restProps: restPropsWithoutShellPadding,
         });
-        const resolvedHeight = intrinsicHeight ? undefined : explicitHeight ?? measuredHeight;
-        const resolvedWidth = intrinsicWidth ? undefined : explicitWidth ?? measuredWidth;
+        const resolvedHeight = explicitHeight ?? measuredHeight;
+        const resolvedWidth = intrinsicWidth ? undefined : (explicitWidth ?? measuredWidth);
 
         const shouldRender =
             intrinsicWidth ||
-            intrinsicHeight ||
             explicitHeight != null ||
             measuredHeight != null ||
             !hasMeasuredHeight ||
             (hasMeasuredHeight && explicitHeight == null && measuredHeight == null);
 
         const style = {
-            ...(restProps.style || {}),
+            ...(restPropsWithoutShellPadding.style || {}),
             ...(flexProps.style || {}),
             ...(explicitHeight != null ? { maxHeight: "100vh" } : {}),
         };
@@ -290,33 +384,17 @@ const useVars = (p) => {
         }
 
         const mergedFlexProps = {
-            ...restProps,
+            ...restPropsWithoutShellPadding,
             ...flexProps,
-            ...(resolvedWidth != null && resolvedWidth !== ""
-                ? { width: resolvedWidth }
-                : {}),
+            ...(resolvedWidth != null && resolvedWidth !== "" ? { width: resolvedWidth } : {}),
             ...(shouldRender && resolvedHeight != null && resolvedHeight !== ""
                 ? { height: resolvedHeight }
                 : {}),
             style,
         };
 
-        const contentPaddingStyle = resolveContentPaddingStyle(mergedFlexProps);
-        const {
-            padding: _padding,
-            paddingTop: _paddingTop,
-            paddingRight: _paddingRight,
-            paddingBottom: _paddingBottom,
-            paddingLeft: _paddingLeft,
-            ...flexPropsWithoutPadding
-        } = mergedFlexProps;
+        const alignedFlexProps = mergeDefaultAlignment(mergedFlexProps);
 
-        const alignedFlexProps = mergeDefaultAlignment(flexPropsWithoutPadding);
-
-        /* Outer Variant already gets `height`; the same value on the inner Flex caps the
-         * border-box and lets overflowing children paint over the bottom padding. Inner
-         * should grow with content + padding; `min-height: 100%` keeps short lists filling
-         * the shell when the outer height is definite. */
         const hasBoundedScrollHeight =
             shouldRender && resolvedHeight != null && resolvedHeight !== "";
 
@@ -341,27 +419,24 @@ const useVars = (p) => {
         return {
             shouldRender,
             flexProps: resolvedContentFlexProps,
-            contentPaddingStyle,
         };
     }, [
         flexProps,
         hasMeasuredHeight,
         height,
-        intrinsicHeight,
         intrinsicWidth,
         measuredHeight,
         measuredWidth,
-        restProps,
+        restPropsWithoutShellPadding,
         width,
     ]);
 
-    const shellGutters = useMemo(
-        () => getShellGutters(scrollBarExportedData),
-        [scrollBarExportedData],
+    const shellLayoutStyle = useMemo(
+        () => getShellLayoutStyle(scrollBarExportedData, scrollBarProps),
+        [scrollBarExportedData, scrollBarProps],
     );
 
     useLayoutEffect(() => {
-        if (intrinsicHeight) return;
         if (getExplicitHeight({ height, flexProps }) != null) return;
         const refEl = getRefElement(heightByRef);
         const idEl =
@@ -383,7 +458,8 @@ const useVars = (p) => {
             const nextHeight =
                 refHeight ||
                 (ancestorHeight > 0 ? `min(${ancestorHeight}px, 100vh)` : null) ||
-                (parentHeight > 0 ? `min(${parentHeight}px, 100vh)` : null);
+                (parentHeight > 0 ? `min(${parentHeight}px, 100vh)` : null) ||
+                "200px";
 
             setLocal((s) => {
                 if (s.hasMeasuredHeight && s.measuredHeight === nextHeight) return;
@@ -402,14 +478,16 @@ const useVars = (p) => {
         return () => {
             observer.disconnect();
         };
-    }, [flexProps, height, heightById, heightByRef, intrinsicHeight, setLocal]);
+    }, [flexProps, height, heightById, heightByRef, setLocal]);
 
     useLayoutEffect(() => {
         if (intrinsicWidth) return;
         if (getExplicitWidth({ width, flexProps, restProps }) != null) return;
         const refEl = getRefElement(widthByRef);
         const idEl =
-            typeof document !== "undefined" && widthById ? document.getElementById(widthById) : null;
+            typeof document !== "undefined" && widthById
+                ? document.getElementById(widthById)
+                : null;
         const source = refEl || idEl;
 
         const syncWidth = () => {
@@ -434,10 +512,10 @@ const useVars = (p) => {
         return () => {
             observer.disconnect();
         };
-    }, [flexProps, intrinsicWidth, restProps, setLocal, width, widthById, widthByRef]);
+    }, [flexProps, intrinsicWidth, restPropsWithoutShellPadding, setLocal, width, widthById, widthByRef]);
 
     const variantOuterStyle = useMemo(() => {
-        const ew = getExplicitWidth({ width, flexProps, restProps });
+        const ew = getExplicitWidth({ width, flexProps, restProps: restPropsWithoutShellPadding });
         const eh = getExplicitHeight({ height, flexProps });
         const out = {};
         if (ew != null && ew !== "") {
@@ -451,7 +529,7 @@ const useVars = (p) => {
         }
         if (eh != null && eh !== "") {
             out.height = getCssSize(eh);
-        } else if (!intrinsicHeight && measuredHeight != null && measuredHeight !== "") {
+        } else if (measuredHeight != null && measuredHeight !== "") {
             out.height = getCssSize(measuredHeight);
         }
 
@@ -468,16 +546,7 @@ const useVars = (p) => {
             out.maxWidth = getCssSize(maxWidth);
         }
 
-        if (intrinsicHeight) {
-            out.height = "max-content";
-            if (maxHeight === null) {
-                delete out.maxHeight;
-            } else if (maxHeight !== undefined && maxHeight !== "") {
-                out.maxHeight = getCssSize(maxHeight);
-            } else {
-                out.maxHeight = getCssSize("30vh");
-            }
-        } else if (maxHeight !== undefined && maxHeight !== null && maxHeight !== "") {
+        if (maxHeight !== undefined && maxHeight !== null && maxHeight !== "") {
             out.maxHeight = getCssSize(maxHeight);
         }
 
@@ -492,30 +561,30 @@ const useVars = (p) => {
             if (!out.overflow) out.overflow = "hidden";
         }
 
-        const merged = { ...out, ...(restProps.style || {}) };
+        const merged = { ...out, ...(restPropsWithoutShellPadding.style || {}) };
         return Object.keys(merged).length ? merged : undefined;
     }, [
         flexProps,
         height,
-        intrinsicHeight,
         intrinsicWidth,
         maxHeight,
         maxWidth,
         measuredHeight,
         measuredWidth,
-        restProps,
+        restPropsWithoutShellPadding,
         width,
     ]);
 
     const endShellDrag = useCallback(() => {
-        const el = shellRef.current;
+        const el = contentRef.current;
         const pid = dragRef.current.pid;
         dragRef.current = { active: false, x0: 0, y0: 0, s0l: 0, s0t: 0, pid: null };
         setShellDragging(false);
+        unlockShellTextSelection(el);
         if (el != null && pid != null) {
             try {
                 el.releasePointerCapture(pid);
-            } catch (_) {
+            } catch {
                 /* ignore */
             }
         }
@@ -530,12 +599,13 @@ const useVars = (p) => {
 
     const shellPointerDown = useCallback(
         (e) => {
-            if (!enableDragging) return;
+            if (!effectiveEnableDragging) return;
             if (e.pointerType === "mouse" && e.button !== 0) return;
             const el = shellRef.current;
-            if (!el || e.currentTarget !== el) return;
+            const surfaceEl = contentRef.current;
+            if (!el || !surfaceEl || e.currentTarget !== surfaceEl) return;
             if (
-                e.target !== el &&
+                e.target !== surfaceEl &&
                 e.target?.closest?.(
                     "a,button,input,textarea,select,label,[contenteditable=true],[role=button]",
                 )
@@ -550,18 +620,21 @@ const useVars = (p) => {
                 s0t: el.scrollTop,
                 pid: e.pointerId,
             };
+            if (e.cancelable) e.preventDefault();
+            lockShellTextSelection(surfaceEl);
             setShellDragging(true);
             try {
-                el.setPointerCapture(e.pointerId);
-            } catch (_) {
+                surfaceEl?.setPointerCapture(e.pointerId);
+            } catch {
                 /* ignore */
             }
         },
-        [enableDragging],
+        [effectiveEnableDragging],
     );
 
     const shellPointerMove = useCallback((e) => {
         if (!dragRef.current.active) return;
+        if (e.cancelable) e.preventDefault();
         const el = shellRef.current;
         if (!el) return;
         const d = dragRef.current;
@@ -588,23 +661,35 @@ const useVars = (p) => {
     );
 
     const shellSurfaceStyle = useMemo(() => {
-        if (!enableDragging) return undefined;
+        if (!effectiveEnableDragging) return undefined;
         return {
             cursor: shellDragging ? "grabbing" : "grab",
             touchAction: "none",
         };
-    }, [enableDragging, shellDragging]);
+    }, [effectiveEnableDragging, shellDragging]);
+
+    const shellDragStartCapture = useCallback((e) => {
+        if (!dragRef.current.active) return;
+        e.preventDefault();
+    }, []);
 
     const shellPointerHandlers = useMemo(() => {
-        if (!enableDragging) return {};
+        if (!effectiveEnableDragging) return {};
         return {
             onPointerDown: shellPointerDown,
             onPointerMove: shellPointerMove,
             onPointerUp: shellPointerUp,
             onPointerCancel: shellPointerUp,
             onLostPointerCapture: shellPointerUp,
+            onDragStartCapture: shellDragStartCapture,
         };
-    }, [enableDragging, shellPointerDown, shellPointerMove, shellPointerUp]);
+    }, [
+        effectiveEnableDragging,
+        shellDragStartCapture,
+        shellPointerDown,
+        shellPointerMove,
+        shellPointerUp,
+    ]);
 
     /* Return */
     return useExportData(
@@ -616,14 +701,14 @@ const useVars = (p) => {
             theme,
             containerRef,
             shellRef,
+            contentRef,
+            shellPaddingStyle,
             shellSurfaceStyle,
             shellPointerHandlers,
             shouldRender: organizedFlexProps.shouldRender,
-            contentPaddingStyle: organizedFlexProps.contentPaddingStyle,
+            shellLayoutStyle,
             variantOuterStyle,
-            intrinsicHeight,
-            ...restProps,
-            shellGutters,
+            ...restPropsWithoutShellPadding,
         },
         scrollBarExportedData,
     );

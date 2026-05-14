@@ -7,21 +7,20 @@ export const Base = ({ children, ...p }) => {
     const {
         Variant,
         flexProps,
+        shellPaddingStyle,
         scrollBarProps,
         containerRef,
         shellRef,
+        contentRef,
         shellSurfaceStyle,
         shellPointerHandlers,
         borderColor,
         shouldRender,
-        shellGutters,
-        contentPaddingStyle,
+        shellLayoutStyle,
         variantOuterStyle,
     } = useVars(p);
 
     if (!shouldRender) return null;
-
-    const { gutterTop, gutterRight, gutterBottom, gutterLeft } = shellGutters;
 
     return (
         <NestedBaseUi>
@@ -29,26 +28,27 @@ export const Base = ({ children, ...p }) => {
                 ref={containerRef}
                 $borderColor={borderColor}
                 aria-label="ScrollFlex container"
-                style={variantOuterStyle}
+                style={{
+                    ...variantOuterStyle,
+                    display: "grid",
+                }}
             >
                 <S.shell
                     ref={shellRef}
-                    {...shellPointerHandlers}
-                    style={shellSurfaceStyle}
-                    $gutterTop={gutterTop}
-                    $gutterRight={gutterRight}
-                    $gutterBottom={gutterBottom}
-                    $gutterLeft={gutterLeft}
+                    style={{
+                        ...shellLayoutStyle,
+                        ...shellPaddingStyle,
+                    }}
                     aria-label="ScrollFlex shell"
                 >
                     <S.content
+                        ref={contentRef}
                         aria-label="ScrollFlex content"
                         {...flexProps}
+                        {...shellPointerHandlers}
                         style={{
-                            ...contentPaddingStyle,
                             ...(flexProps?.style || {}),
-                            minWidth: 0,
-                            maxWidth: "100%",
+                            ...(shellSurfaceStyle || {}),
                         }}
                     >
                         {children}

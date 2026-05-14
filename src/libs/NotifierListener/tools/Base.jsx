@@ -1,32 +1,16 @@
 import S from "./_styled";
-import { useMemo } from "react";
+import { useMemo, useRef, useLayoutEffect } from "react";
 import { useVars } from "./useVars";
 import { ScrollFlex } from "../../ScrollFlex";
 import { Button } from "../../Button";
 import { colorGet } from "../../colorGet";
 import { useEffect } from "react";
 import { baseStore } from "../../@baseStore";
-import { DefaultVariant } from "../DefaultVariant";
-import { PlainVariant } from "../PlainVariant";
-import { TestVariant } from "../TestVariant";
 import { Flex } from "../../Flex";
-
-const NOTIFIER_VARIANTS = {
-    default: DefaultVariant,
-    plain: PlainVariant,
-    test: TestVariant,
-};
-
-const resolveNotifierVariant = (variant, fallback) => {
-    if (variant == null || variant === false) return fallback;
-    if (typeof variant === "string") return NOTIFIER_VARIANTS[variant] || fallback;
-    return variant;
-};
 
 export const Base = (p = {}) => {
     const {
-        Variant,
-        variant: notifierVariant,
+        Variant: VariantProp,
         isEmpty,
         queue = [],
         theme,
@@ -35,13 +19,18 @@ export const Base = (p = {}) => {
     } = useVars(p);
     const [_notifier] = baseStore.useGlobal((s) => [s._notifier]);
     const { closingDelay: closingDelayGlobal } = _notifier || {};
+    const Variant = _notifier?.variant || _notifier?.Variant || VariantProp;
 
     /* RETURN */
     return (
-        <S.container $isEmpty={isEmpty} $closingDelay={(closingDelay || closingDelayGlobal) * 1000}>
+        <S.container
+            $isEmpty={isEmpty}
+            $closingDelay={(closingDelay || closingDelayGlobal) * 1000}
+            aria-label="NotifierListener container"
+        >
             {!isEmpty && (
-                <ScrollFlex.plain paddingLeft={30} paddingRight={10} paddingTop={10}>
-                    <Flex.column gap={10} full paddingBottom={10}>
+                <ScrollFlex.plain padding={10} width="100%" height="100%">
+                    <Flex.column full paddingBottom={10}>
                         {queue.map(
                             (item) =>
                                 item.value && (
@@ -49,7 +38,6 @@ export const Base = (p = {}) => {
                                         key={item.queueId}
                                         item={item}
                                         Variant={Variant}
-                                        notifierVariant={notifierVariant}
                                         theme={theme}
                                         containerRef={containerRef}
                                     />
@@ -62,45 +50,80 @@ export const Base = (p = {}) => {
     );
 };
 
-const Box = ({ item, Variant, notifierVariant, theme, containerRef }) => {
-    const { bgColor, value, variant, disableAutoKill, remove, killAfter, status, closingDelay } =
-        item || {};
+const Box = ({ item, Variant, theme }) => {
+    const { bgColor, value, disableAutoKill, remove, killAfter, status, closingDelay } = item || {};
 
     const colors = useMemo(() => colorGet(bgColor || theme?.background), [bgColor, theme]);
-    const ItemVariant = resolveNotifierVariant(variant ?? notifierVariant, Variant);
 
-    const { boxHeight, setLocal } = baseStore.useLocal({ boxHeight: 0 });
+    const shellRef = useRef(null);
+    const contentRef = useRef(null);
+
+    const { height, isEntered, setLocal } = baseStore.useLocal({
+        height: 0,
+        isEntered: false,
+    });
 
     const isClosing = status === "closing";
 
-    useEffect(() => {
-        if (!containerRef?.current) return;
-        const el = containerRef.current;
-        const h = el.getBoundingClientRect().height;
-        el.style.maxHeight = `${h}px`;
-        setLocal((s) => {
-            s.boxHeight = h + "px";
-        });
-    }, [isClosing, containerRef?.current]);
+    const delay = Number(closingDelay || 300);
 
-    /* RETURN */
+    useLayoutEffect(() => {
+        if (!contentRef.current) return;
+
+        const el = contentRef.current;
+
+        const updateHeight = () => {
+            setLocal((s) => {
+                s.height = el.scrollHeight;
+            });
+        };
+
+        updateHeight();
+
+        const ro = new ResizeObserver(updateHeight);
+        ro.observe(el);
+
+        return () => ro.disconnect();
+    }, [value]);
+
+    useEffect(() => {
+        const raf = requestAnimationFrame(() => {
+            setLocal((s) => {
+                s.isEntered = true;
+            });
+        });
+
+        return () => cancelAnimationFrame(raf);
+    }, []);
+
     return (
-        <ItemVariant
-            ref={containerRef}
-            $bgColor={colors?.color}
-            $colors={colors}
-            $closingDelay={closingDelay}
-            $killAfter={killAfter}
-            $disableAutoKill={disableAutoKill}
+        <S.itemShell
+            ref={shellRef}
+            $height={height}
+            $isEntered={isEntered}
             $isClosing={isClosing}
-            $status={status}
-            $boxHeight={boxHeight}
+            $closingDelay={delay}
         >
-            {!disableAutoKill && <div data-slot="timeBar" />}
-            <div data-slot="close">
-                <Button.closeIcon onClick={remove} color={colors?.opposite} />
-            </div>
-            <div data-slot="content">{value}</div>
-        </ItemVariant>
+            <S.itemInner ref={contentRef}>
+                <Variant
+                    $bgColor={colors?.color}
+                    $colors={colors}
+                    $closingDelay={delay}
+                    $killAfter={killAfter}
+                    $disableAutoKill={disableAutoKill}
+                    $isClosing={isClosing}
+                    $status={status}
+                    $boxHeight={`${height}px`}
+                >
+                    {!disableAutoKill && <div data-slot="timeBar" />}
+
+                    <div data-slot="close">
+                        <Button.closeIcon onClick={remove} color={colors?.opposite} />
+                    </div>
+
+                    <div data-slot="content">{value}</div>
+                </Variant>
+            </S.itemInner>
+        </S.itemShell>
     );
 };

@@ -34,6 +34,7 @@ const cssPropMap = {
     overflowY: "overflow-y",
     wrap: "flex-wrap",
     userSelect: "user-select",
+    textAlign: "text-align",
 };
 
 const normalizeStyledProps = (props = {}) => {

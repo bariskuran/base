@@ -9,7 +9,7 @@ export const ScrollBar = componentCreator({
     DefaultVariant: DefaultVariant,
     variants: {
         body: Body,
-        primary: { ...Body, body: false },
+        primary: { ...Body, body: false, edgeMargin: undefined },
         fullTop: {
             ...Body,
             body: false,

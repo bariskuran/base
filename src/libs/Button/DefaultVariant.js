@@ -37,20 +37,22 @@ export const DefaultVariant = styled.span`
         display: flex;
         position: relative;
         top: 0;
-        transition: top 0.2s, box-shadow 0.2s;
+        transition:
+            top 0.2s,
+            box-shadow 0.2s;
         border-radius: 5rem;
         will-change: top, box-shadow;
 
         ${$isHovered &&
         css`
             top: -2rem;
-            box-shadow: 0 4rem 12rem rgba(0, 0, 0, 0.18);
+            box-shadow: 0 4px 12rem rgba(0, 0, 0, 0.18);
         `}
 
         ${$isActivated &&
         css`
             top: 2rem;
-            box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.12) inset;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) inset;
         `}
 
         & > [data-slot="label"] {
@@ -64,7 +66,7 @@ export const DefaultVariant = styled.span`
             align-items: center;
             padding: 6rem 20rem;
             text-transform: uppercase;
-            letter-spacing: 0.5rem;
+            letter-spacing: 0.5px;
             font-weight: 600;
             font-size: 12rem;
             min-height: 20rem;

@@ -23,8 +23,6 @@ export const Base = ({ children, content, ...p }) => {
         alignY,
         blockVisibility,
         disableArrow,
-        primary,
-        secondary,
         onMouseEnter,
         onMouseLeave,
         onClick,
@@ -34,6 +32,7 @@ export const Base = ({ children, content, ...p }) => {
         delayMs,
         floatingMountHost,
         floatingPadding,
+        popoverTriggerMarker,
     } = useVars(p);
 
     /* Return */
@@ -41,11 +40,7 @@ export const Base = ({ children, content, ...p }) => {
         <>
             <S.children
                 ref={childrenRef}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                onPointerEnter={onMouseEnter}
-                onPointerLeave={onMouseLeave}
-                onClick={onClick}
+                {...(popoverTriggerMarker ? { "data-floating-ui-popover-trigger": "" } : {})}
             >
                 {children}
             </S.children>
@@ -63,13 +58,14 @@ export const Base = ({ children, content, ...p }) => {
                               $alignY={alignY}
                               $blockVisibility={blockVisibility}
                               $disableArrow={disableArrow}
-                              $primary={primary}
-                              $secondary={secondary}
                               $openFromUser={openFromUser}
                               $colors={colors || {}}
                               $status={status}
                               $delayMs={delayMs}
                               $floatingPadding={floatingPadding}
+                              onMouseEnter={onMouseEnter}
+                              onMouseLeave={onMouseLeave}
+                              onClick={onClick}
                           >
                               {content}
                           </Variant>

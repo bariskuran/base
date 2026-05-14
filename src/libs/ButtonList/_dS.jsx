@@ -113,7 +113,6 @@ const X = () => {
                     <ButtonList
                         buttons={buttons}
                         commonButtonProps={commonButtonProps}
-                        variant="plain"
                         flexProps={{
                             direction: "row",
                             wrap: false,

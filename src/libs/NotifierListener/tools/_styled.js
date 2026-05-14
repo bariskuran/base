@@ -2,38 +2,53 @@ import styled, { css } from "styled-components";
 
 const S = {
     container: styled.div`
-        ${({
-            $isEmpty,
-            // $closingDelay
-        }) => css`
-            all: unset;
-
+        ${({ $isEmpty }) => css`
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            align-items: stretch;
-            width: 320rem;
+            width: 300rem;
             height: ${$isEmpty ? 0 : "100vh"};
-            min-height: 0;
-            opacity: ${$isEmpty ? 0 : 1};
-            pointer-events: ${$isEmpty ? "none" : "auto"};
             position: fixed;
             top: 0;
             right: 0;
             z-index: 9999999;
+            padding: ${$isEmpty ? 0 : "10rem"};
             box-sizing: border-box;
-            padding-right: 6rem;
+            pointer-events: ${$isEmpty ? "none" : "auto"};
+            overflow: hidden;
+            transition:
+                height 0.2s ease,
+                padding 0.2s ease;
         `}
     `,
-    /** ScrollFlex yukseklik zinciri: flex cocuk min-height 0 */
-    scrollArea: styled.div`
-        ${() => css`
-            flex: 1 1 auto;
-            min-height: 0;
+
+    itemShell: styled.div`
+        ${({ $height, $isEntered, $isClosing, $closingDelay }) => css`
+            all: unset;
+            display: block;
+            overflow: hidden;
             width: 100%;
-            display: flex;
-            flex-direction: column;
+            box-sizing: border-box;
+
+            max-height: ${$isEntered && !$isClosing ? `${$height}px` : 0};
+            opacity: ${$isEntered && !$isClosing ? 1 : 0};
+            transform: translateY(${$isEntered && !$isClosing ? "0" : "-12rem"});
+            margin-bottom: ${$isEntered && !$isClosing ? "10rem" : 0};
+
+            transition:
+                max-height ${$closingDelay}ms ease,
+                opacity ${$closingDelay}ms ease,
+                transform ${$closingDelay}ms ease,
+                margin-bottom ${$closingDelay}ms ease;
         `}
+    `,
+    itemInner: styled.div`
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding-bottom: 5rem;
+        padding-right: 5rem;
     `,
 };
+
 export default S;

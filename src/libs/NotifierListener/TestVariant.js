@@ -15,7 +15,7 @@ export const TestVariant = styled.div`
         $bgColor,
         $killAfter,
         $colors,
-        $closingDelay,
+        // $closingDelay,
         $isClosing,
         // $status,
         // $boxHeight,
@@ -39,7 +39,7 @@ export const TestVariant = styled.div`
 
         & > [data-slot="timeBar"] {
             grid-area: 1 / 1 / 2 / 3;
-            height: 3rem;
+            height: 3px;
             background: ${theme.colorAlpha(theme.primary, 50)};
             transition: width 0.25s ease;
 

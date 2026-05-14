@@ -35,7 +35,7 @@ export const TextAnimation = styled.div`
 
     &::before {
         content: "";
-        height: 2rem;
+        height: 2px;
         background: ${(p) => p.theme.background || "#fff"};
         animation: ${animation} 1000ms infinite;
         position: absolute;
@@ -44,7 +44,7 @@ export const TextAnimation = styled.div`
     }
     &::after {
         content: "";
-        height: 2rem;
+        height: 2px;
         background: ${(p) => p.theme.background || "#fff"};
         animation: ${animation} 1000ms infinite;
         position: absolute;

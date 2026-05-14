@@ -63,7 +63,7 @@ export const FormShapeContainer = styled.div`
         flex: 0 0 50rem;
         display: flex;
         flex-wrap: wrap;
-        gap: 3rem;
+        gap: 3px;
         & > div {
             flex: 0 0 40%;
             background: ${({ theme }) => theme.colorAlpha(theme.greyB5, 20)};

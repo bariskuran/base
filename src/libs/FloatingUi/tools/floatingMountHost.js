@@ -83,7 +83,6 @@ const removeFloatingHostFromDom = (mountRoot) => {
     mountRoot.querySelector(":scope > [data-floating-mount-host]")?.remove();
 };
 
-/** Açık FloatingUi sayısını artırır; host yoksa oluşturur. */
 export const acquireFloatingMountHost = (mountRoot) => {
     const host = ensureFloatingMountHost(mountRoot);
     if (!host) return null;
@@ -92,7 +91,6 @@ export const acquireFloatingMountHost = (mountRoot) => {
     return host;
 };
 
-/** Son kullanımda host düğümünü DOM'dan kaldırır. */
 export const releaseFloatingMountHost = (mountRoot) => {
     if (!mountRoot) return;
     const k = refCountKey(mountRoot);

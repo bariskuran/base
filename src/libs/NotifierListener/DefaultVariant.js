@@ -1,55 +1,26 @@
 import styled, { css, keyframes } from "styled-components";
 
 const timeBar = keyframes`
- from {
-    width: 0;
-}
-   to {
-    width: 100%;
-}
-`;
-
-const sideIn = keyframes`
     from {
-        transform: translateY(-20rem);
-        opacity: 0;
+        width: 0;
     }
+
     to {
-        transform: translateY(0);
-        opacity: 1;
+        width: 100%;
     }
 `;
 
 export const DefaultVariant = styled.div`
-    ${({
-        theme,
-        $bgColor,
-        $killAfter,
-        $colors,
-        $closingDelay,
-        $isClosing,
-        // $status,
-        // $boxHeight,
-    }) => css`
-        all: unset;
-
+    ${({ theme, $bgColor, $killAfter, $colors }) => css`
+        position: relative;
         display: grid;
         grid-template-columns: 1fr 30rem;
-        grid-template-rows: 3rem, 1fr;
+        grid-template-rows: 3ox 1fr;
         width: 100%;
         background: ${$bgColor};
-        ${theme.get3DShadow({ depth: 3, hoverDepth: 1 })}
+        box-shadow: 0rem 3px 5px ${theme.colorAlpha(theme.foreground, 0.3)};
         border-radius: 0 0 10rem 10rem;
         overflow: hidden;
-        transition: max-height ${$closingDelay}ms;
-        animation: ${sideIn} 500ms linear forwards;
-
-        ${$isClosing &&
-        css`
-            opacity: 0;
-            transform: translateY(-20rem);
-            max-height: 0 !important;
-        `}
 
         ${$bgColor &&
         css`
@@ -57,10 +28,12 @@ export const DefaultVariant = styled.div`
         `}
 
         & > [data-slot="timeBar"] {
+            position: relative;
             grid-area: 1 / 1 / 2 / 3;
-            height: 3rem;
-            background: ${theme.colorAlpha(theme.primary, 50)};
-            transition: width 0.25s ease;
+            height: 3px;
+            min-height: 3px;
+            background: ${theme.colorAlpha(theme.primary, 0.5)};
+            overflow: hidden;
 
             &:after {
                 content: "";
@@ -70,12 +43,14 @@ export const DefaultVariant = styled.div`
                 width: 0;
                 height: 100%;
                 background: ${theme.primary};
-                animation: ${timeBar} ${$killAfter}ms linear;
+                animation: ${timeBar} ${$killAfter}ms linear forwards;
             }
         }
+
         & > [data-slot="close"] {
             grid-area: 2 / 2 / 3 / 3;
         }
+
         & > [data-slot="content"] {
             grid-area: 2 / 1 / 3 / 2;
             padding: 10rem;

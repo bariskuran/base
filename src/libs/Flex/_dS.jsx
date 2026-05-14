@@ -488,6 +488,11 @@ const X = () => (
                     description: "CSS user-select (e.g. none, text, all, auto). Kebab-case user-select is accepted.",
                     type: "string | boolean",
                 },
+                textAlign: {
+                    description:
+                        "CSS text-align (e.g. start, end, left, right, center, justify). Kebab-case text-align is accepted.",
+                    type: "string",
+                },
                 content: {
                     description:
                         "children yerine kullanılabilen içerik (ikisi birlikte verilirse children önceliklidir).",

@@ -11,7 +11,7 @@ const shortText = generateRandom.loremIpsum(50);
 const HEIGHT_BY_ID_DEMO_SOURCE = "ds-scrollflex-height-by-id-demo";
 
 const Content = ({ width, height, short }) => (
-    <Flex width={width} height={height} yAlign="start">
+    <Flex width={width} height={height} yAlign="start" bgColor="greys.shade20">
         {short ? shortText : longText}
     </Flex>
 );
@@ -43,33 +43,119 @@ const X = () => {
                 
                         <ScrollFlex width={200} height={100}>
                             {longText}
-                        </ScrollFlex>;`}
+                        </ScrollFlex>
+                        <ScrollFlex width={200} height={100} padding={10}>
+                            {longText}
+                        </ScrollFlex>
+                        <ScrollFlex width={200} height={100}>
+                            <Flex full padding={10}>
+                                {longText}
+                            </Flex>
+                        </ScrollFlex>`}
                 example={
-                    <ScrollFlex width={200} height={100}>
-                        {longText}
-                    </ScrollFlex>
+                    <Flex gap={10}>
+                        <ScrollFlex width={200} height={100}>
+                            {longText}
+                        </ScrollFlex>
+                        <ScrollFlex width={200} height={100} padding={10}>
+                            {longText}
+                        </ScrollFlex>
+                        <ScrollFlex width={200} height={100}>
+                            <Flex full padding={10}>
+                                {longText}
+                            </Flex>
+                        </ScrollFlex>
+                    </Flex>
                 }
             />
             <Ds.block
                 title="Advanced usage"
-                description="You can further customize ScrollFlex using Flex and ScrollBar props."
+                description="You can further customize ScrollFlex using flexProps and scrollBarProps. Also ScrollFlex has a couple of props for advanced usage."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
                 
-                            <ScrollFlex
+                    <Flex gap={10} height={100}>
+                        <ScrollFlex
                             variant="hoverShadow"
-                            flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
                             scrollBarProps={{ variant: "primary", fillMode: true }}
+                            width={200}
                         >
                             {longText}
-                        </ScrollFlex>`}
+                        </ScrollFlex>
+                        <ScrollFlex
+                            variant="shadow"
+                            scrollBarProps={{ variant: "primary" }}
+                            flexProps={{
+                                minWidth: 400,
+                                justify: "center",
+                                borderRadius: 10,
+                                bgColor: "foreground",
+                                color: "backgrounds.tint90",
+                                padding: 10,
+                            }}
+                            width={200}
+                            padding={10}
+                            paddingRight={0}
+                        >
+                            {longText}
+                        </ScrollFlex>
+                        <ScrollFlex
+                            variant="plain"
+                            scrollBarProps={{ variant: "primary" }}
+                            flexProps={{
+                                bgColor: "primary",
+                                color: "foreground",
+                                padding: 10,
+                                textAlign: "center",
+                            }}
+                            width={200}
+                            padding={10}
+                            paddingRight={0}
+                        >
+                            {longText}
+                        </ScrollFlex>
+                    </Flex>`}
                 example={
-                    <ScrollFlex
-                        variant="hoverShadow"
-                        flexProps={{ width: 200, height: 100, justify: "center", borderRadius: 10 }}
-                        scrollBarProps={{ variant: "primary", fillMode: true }}
-                    >
-                        {longText}
-                    </ScrollFlex>
+                    <Flex gap={10} height={100}>
+                        <ScrollFlex
+                            variant="hoverShadow"
+                            scrollBarProps={{ variant: "primary", fillMode: true }}
+                            width={200}
+                        >
+                            {longText}
+                        </ScrollFlex>
+                        <ScrollFlex
+                            variant="shadow"
+                            scrollBarProps={{ variant: "primary" }}
+                            flexProps={{
+                                minWidth: 400,
+                                justify: "center",
+                                borderRadius: 10,
+                                bgColor: "foreground",
+                                color: "backgrounds.tint90",
+                                padding: 10,
+                            }}
+                            width={200}
+                            padding={10}
+                            paddingRight={0}
+                        >
+                            {longText}
+                        </ScrollFlex>
+                        <ScrollFlex
+                            variant="plain"
+                            scrollBarProps={{ variant: "primary" }}
+                            flexProps={{
+                                bgColor: "primary",
+                                color: "foreground",
+                                padding: 10,
+                                textAlign: "center",
+                            }}
+                            width={200}
+                            padding={10}
+                            paddingRight={0}
+                        >
+                            {longText}
+                        </ScrollFlex>
+                    </Flex>
                 }
             />
             <Ds.block
@@ -77,13 +163,17 @@ const X = () => {
                 description="Scrollbar automatically manages the axis of the scrollbar based on the content size."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
                 
-                        <ScrollFlex width={150} height={100}>
+                        <ScrollFlex width={150} height={100} padding={0}>
                             <Content width={1500} />
                         </ScrollFlex>
                         <ScrollFlex width={150} height={100}>
                             <Content />
                         </ScrollFlex>
-                        <ScrollFlex width={150} height={100} scrollBarProps={{ mirror: true, opposite: true }} >
+                        <ScrollFlex
+                            width={150}
+                            height={100}
+                            scrollBarProps={{ mirror: true, opposite: true }}
+                        >
                             <Content width={1500} />
                         </ScrollFlex>
                         <ScrollFlex width={150} height={100} scrollBarProps={{ mirror: true }}>
@@ -91,7 +181,7 @@ const X = () => {
                         </ScrollFlex>`}
                 example={
                     <Flex gap={10}>
-                        <ScrollFlex width={150} height={100}>
+                        <ScrollFlex width={150} height={100} padding={0}>
                             <Content width={1500} />
                         </ScrollFlex>
                         <ScrollFlex width={150} height={100}>
@@ -115,27 +205,26 @@ const X = () => {
                 description="If width or height is not provided, ScrollFlex attempts to fill its parent’s width and height. Because CSS height depends on the parent chain, this may not always produce the expected result. If no valid height can be resolved from the parent tree, ScrollFlex falls back to 200. Otherwise, it uses the parent’s height."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
-                        <Flex gap={10}>
-                            /* First Flex won't be displayed because it and its parents have no height */
+                    <Flex gap={10}>
+                        <Flex>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
+                            <ScrollFlex>{longText}</ScrollFlex>
+                        </Flex>
+                        <Flex height={150}>
                             <Flex>
                                 <ScrollFlex>{longText}</ScrollFlex>
                             </Flex>
-                            <Flex height={150}>
-                                <ScrollFlex>{longText}</ScrollFlex>
-                            </Flex>
-                            <Flex height={150}>
+                        </Flex>
+                        <Flex height={150}>
+                            <Flex>
                                 <Flex>
                                     <ScrollFlex>{longText}</ScrollFlex>
                                 </Flex>
                             </Flex>
-                            <Flex height={150}>
-                                <Flex>
-                                    <Flex>
-                                        <ScrollFlex>{longText}</ScrollFlex>
-                                    </Flex>
-                                </Flex>
-                            </Flex>
-                        </Flex>`}
+                        </Flex>
+                    </Flex>`}
                 example={
                     <Flex gap={10}>
                         <Flex>
@@ -166,8 +255,12 @@ const X = () => {
                     The same feature can be used for width via the "widthByRef" or "widthById" props.`}
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
-                        <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>Source 150x150</Flex>
-                        <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>`}
+                    <Flex gap={10} align="stretch">
+                        <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>
+                            Source 150x150
+                        </Flex>
+                        <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>
+                    </Flex>`}
                 example={
                     <Flex gap={10} align="stretch">
                         <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>
@@ -182,11 +275,22 @@ const X = () => {
                 description="Same as heightByRef, but the source element is resolved with document.getElementById. Use a stable, page-unique id on the element whose height you want to mirror. Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
 
-                        <Flex id={HEIGHT_BY_ID_DEMO_SOURCE} height={150} width={150} bgColor="aliceblue">
-                                Source 150x150
+                    <Flex gap={10} align="stretch">
+                        <Flex
+                            id={HEIGHT_BY_ID_DEMO_SOURCE}
+                            height={150}
+                            width={150}
+                            bgColor="aliceblue"
+                        >
+                            Source 150x150
                         </Flex>
-                        <ScrollFlex widthById={HEIGHT_BY_ID_DEMO_SOURCE} heightById={HEIGHT_BY_ID_DEMO_SOURCE}>{longText}</ScrollFlex>
-                        </Flex>`}
+                        <ScrollFlex
+                            widthById={HEIGHT_BY_ID_DEMO_SOURCE}
+                            heightById={HEIGHT_BY_ID_DEMO_SOURCE}
+                        >
+                            {longText}
+                        </ScrollFlex>
+                    </Flex>`}
                 example={
                     <Flex gap={10} align="stretch">
                         <Flex
@@ -226,8 +330,14 @@ const X = () => {
                         height={120}
                         flexProps={{ width: 400, height: 300 }}
                     >
-                        <Flex width={400} height={300} bgColor="mistyrose" justify="center" yAlign="center">
-                            Large and tall content — drag the shell to scroll.
+                        <Flex
+                            width={400}
+                            height={300}
+                            bgColor="mistyrose"
+                            justify="center"
+                            yAlign="center"
+                        >
+                            Large content — drag to scroll.
                         </Flex>
                     </ScrollFlex>`}
                 example={
@@ -308,7 +418,7 @@ const X = () => {
                     heightByRef: {
                         description:
                             "Uses a React ref element's height when height and flexProps.height are not provided.",
-                        type: "React ref | HTMLElement",
+                        type: "React ref",
                     },
                     heightById: {
                         description:
@@ -318,7 +428,7 @@ const X = () => {
                     widthByRef: {
                         description:
                             "Uses a React ref element's width when width and flexProps.width are not provided.",
-                        type: "React ref | HTMLElement",
+                        type: "React ref",
                     },
                     widthById: {
                         description:
@@ -349,6 +459,12 @@ const X = () => {
                             "Default is false. When set to true, enables both horizontal and vertical scrolling of the shell by dragging with the mouse; the cursor becomes grab / grabbing. Drag-to-scroll does not start from interactive sub-elements (buttons, links, inputs, etc).",
                         type: "boolean",
                         defaultValue: "false",
+                    },
+                    padding: {
+                        description:
+                            "Padding value for the ScrollFlex shell. (not content. For content padding, use flexProps.padding). Also axis are supported such as paddingTop etc.",
+                        type: "number",
+                        defaultValue: 0,
                     },
                 }}
             />
