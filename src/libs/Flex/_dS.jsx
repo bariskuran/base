@@ -110,7 +110,7 @@ const X = () => (
         />
         <Ds.block
             title="full"
-            description='Instead of writing width="100%", you can use the boolean full prop. If width is provided, full will be ignored. It can also be used within responsive breakpoints.'
+            description='Instead of writing width="100%", use the boolean full prop. When the parent is a flex container (display: flex or inline-flex), Flex also applies flex: 1 1 100% so the item fills the row. If width is provided, full is ignored. Works with responsive breakpoints.'
             code={`import { Flex } from "${SYS.basePath}";
 
                  <Flex full direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
@@ -344,7 +344,7 @@ const X = () => (
                 },
                 full: {
                     description:
-                        'width açıkça verilmediyse width="100%" ile aynı; tekrar tekrar width="100%" yazmamak için kısayol.',
+                        'When width is omitted, sets width to 100%. If the parent is a flex container, also sets flex to 1 1 100% (HTML div with display:flex included). Ignored when width or flex/flexGrow/flexShrink/flexBasis is set.',
                     type: "boolean",
                 },
                 height: {

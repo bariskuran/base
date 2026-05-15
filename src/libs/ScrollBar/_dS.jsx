@@ -204,6 +204,9 @@ const X = () => {
                             <TwoAxisLargeContent>
                                 <ScrollBar exactThumbSize={3} />
                             </TwoAxisLargeContent>
+                            <TwoAxisLargeContent>
+                                <ScrollBar disableOpacityEffect />
+                            </TwoAxisLargeContent>
                         </Flex>`}
                 example={
                     <Flex gap={10} wrap>
@@ -230,6 +233,9 @@ const X = () => {
                         </TwoAxisLargeContent>
                         <TwoAxisLargeContent>
                             <ScrollBar exactThumbSize={3} />
+                        </TwoAxisLargeContent>
+                        <TwoAxisLargeContent>
+                            <ScrollBar disableOpacityEffect />
                         </TwoAxisLargeContent>
                     </Flex>
                 }

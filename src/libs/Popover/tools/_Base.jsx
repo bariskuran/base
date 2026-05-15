@@ -8,7 +8,7 @@ export const Base = ({ children, ...p }) => {
         isOpen,
         onClickHandler,
         onCloseHandler,
-        buttonProps,
+        buttonProps = {},
         floatingUiProps,
         scrollFlexProps,
         dismissWithoutAnimationRef,
@@ -26,17 +26,21 @@ export const Base = ({ children, ...p }) => {
             content={
                 <ScrollFlex
                     padding={0}
+                    autoWidth={false}
+                    autoHeight={false}
+                    maxWidth="20vw"
+                    maxHeight="20vh"
                     {...restScrollFlexProps}
                     flexProps={flexProps}
-                    scrollBarProps={{ edgeMargin: 0, ...scrollBarProps }}
+                    scrollBarProps={scrollBarProps}
                 >
                     {children}
                 </ScrollFlex>
             }
         >
             <Button
+                {...buttonProps}
                 activeManually={isOpen}
-                {...(buttonProps || {})}
                 onClick={(e) => {
                     buttonProps?.onClick?.(e);
                     onClickHandler(e);

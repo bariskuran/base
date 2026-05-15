@@ -3,8 +3,11 @@ import {
     Fragment,
     cloneElement,
     isValidElement,
+    useCallback,
+    useLayoutEffect,
     useMemo,
     useRef,
+    useState,
 } from "react";
 import { baseStore } from "../../@baseStore";
 import { useExportData } from "../../useExportedData";
@@ -22,6 +25,16 @@ import { splitUserStyle, SHELL_SURFACE_PROP_KEYS } from "./splitUserStyle.js";
 import { mergeStyles } from "./mergeStyles.js";
 import { resolveFlexTypoWrap } from "./resolveFlexTypoWrap.js";
 
+const FULL_WIDTH_FLEX_IN_FLEX_PARENT = "1 1 100%";
+
+const isFlexDisplayValue = (display) => display === "flex" || display === "inline-flex";
+
+const readParentIsFlexContainer = (node) => {
+    const parent = node?.parentElement;
+    if (!parent || typeof getComputedStyle === "undefined") return false;
+    return isFlexDisplayValue(getComputedStyle(parent).display);
+};
+
 export const useVars = ({ props, children, content, className, style, forwardedRef }) => {
     const [currentBreakpoint] = baseStore.useGlobal((s) => [s._clientData.currentBreakpoint]);
     const rootRef = useRef(null);
@@ -33,6 +46,50 @@ export const useVars = ({ props, children, content, className, style, forwardedR
         const bpOverride = propsNorm?.responsive?.[currentBreakpoint] || {};
         return mergeFlexKebabPropAliases(deepMerge(merged1, bpOverride));
     }, [propsNorm, currentBreakpoint]);
+
+    const bpOverrideRow = propsNorm?.responsive?.[currentBreakpoint] || {};
+
+    const hasUserFlexControl = useMemo(
+        () =>
+            propsNorm?.flex != null ||
+            bpOverrideRow?.flex != null ||
+            propsNorm?.flexGrow != null ||
+            bpOverrideRow?.flexGrow != null ||
+            propsNorm?.flexShrink != null ||
+            bpOverrideRow?.flexShrink != null ||
+            propsNorm?.flexBasis != null ||
+            bpOverrideRow?.flexBasis != null,
+        [bpOverrideRow, propsNorm],
+    );
+
+    const isFullShorthand = useMemo(
+        () =>
+            (propsNorm?.full === true || bpOverrideRow?.full === true) &&
+            propsNorm?.width == null &&
+            bpOverrideRow?.width == null &&
+            !hasUserFlexControl,
+        [bpOverrideRow, hasUserFlexControl, propsNorm],
+    );
+
+    const [parentIsFlex, setParentIsFlex] = useState(false);
+
+    const syncParentIsFlex = useCallback(() => {
+        const el = rootRef.current;
+        setParentIsFlex(Boolean(el && isFullShorthand && readParentIsFlexContainer(el)));
+    }, [isFullShorthand]);
+
+    useLayoutEffect(() => {
+        syncParentIsFlex();
+        const el = rootRef.current;
+        if (!el || !isFullShorthand) return;
+
+        const parent = el.parentElement;
+        if (!parent || typeof ResizeObserver === "undefined") return;
+
+        const ro = new ResizeObserver(syncParentIsFlex);
+        ro.observe(parent);
+        return () => ro.disconnect();
+    }, [isFullShorthand, syncParentIsFlex, mergedBreakpointRow, children, content]);
 
     const childrenCount = Children.count(children ?? content);
 
@@ -128,9 +185,17 @@ export const useVars = ({ props, children, content, className, style, forwardedR
             Boolean(widthStr) &&
             generatedFlexTrimmed === `0 0 ${widthStr}`;
 
-        const shellFlex = skipAutoWidthFlexBasis ? undefined : generatedProps.flex;
+        const fullInFlexParent = isFullShorthand && parentIsFlex;
+
+        const shellFlex = fullInFlexParent
+            ? FULL_WIDTH_FLEX_IN_FLEX_PARENT
+            : skipAutoWidthFlexBasis
+              ? undefined
+              : generatedProps.flex;
         const shellFlexShrink =
-            generatedProps.flexShrink ?? (skipAutoWidthFlexBasis ? String(0) : undefined);
+            fullInFlexParent || skipAutoWidthFlexBasis
+                ? undefined
+                : generatedProps.flexShrink;
 
         return {
             width,
@@ -143,15 +208,15 @@ export const useVars = ({ props, children, content, className, style, forwardedR
             overflowX: generatedProps.overflowX,
             overflowY: generatedProps.overflowY,
             flex: shellFlex,
-            flexGrow: generatedProps.flexGrow,
+            flexGrow: fullInFlexParent ? undefined : generatedProps.flexGrow,
             flexShrink: shellFlexShrink,
-            flexBasis: generatedProps.flexBasis,
+            flexBasis: fullInFlexParent ? undefined : generatedProps.flexBasis,
             alignSelf: generatedProps.alignSelf,
             justifySelf: generatedProps.justifySelf,
             placeSelf: generatedProps.placeSelf,
             order: generatedProps.order,
         };
-    }, [generatedProps, propsNorm]);
+    }, [generatedProps, isFullShorthand, parentIsFlex, propsNorm]);
 
     const surfaceFromGeneratedProps = useMemo(() => {
         const s = {};

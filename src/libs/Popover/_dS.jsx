@@ -125,17 +125,14 @@ const X = () => (
                     <Popover buttonProps={{ icon: { flat: true } }}>
                         <Panel />
                     </Popover>
-                    <Popover
-                        buttonProps={{ label: "Menu", outlined: true }}
-                        scrollFlexProps={{ scrollBarProps: { edgeMargin: 0 } }}
-                    >
+                    <Popover buttonProps={{ label: "Menu", outlined: true }}>
                         <Panel2 />
                     </Popover>
                     <Popover
                         buttonProps={{ label: "Menu", outlined: false }}
                         scrollFlexProps={{
                             enableDragging: true,
-                            scrollBarProps: { edgeMargin: 10, variant: "primary" },
+                            scrollBarProps: { variant: "primary", disableOpacityEffect: true },
                         }}
                     >
                         <LargeContent />

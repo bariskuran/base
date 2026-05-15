@@ -34,6 +34,18 @@ const buttons = [
     { label: "test2", onClick: () => console.log("click2") },
 ];
 
+const buttons2 = [
+    {
+        bgColor: "error",
+        label: "test",
+        hoverLabel: "test hover",
+        prefix: { icon: "bullet" },
+        onClick: () => console.log("click"),
+    },
+    { label: "test2", onClick: () => console.log("click2") },
+    { label: "test2", onClick: () => console.log("click2") },
+];
+
 const commonButtonProps = {
     bgColor: "success",
     prefix: {
@@ -75,55 +87,92 @@ const X = () => {
                         size: 100,
                     };
 
-                    <ButtonList.column 
-                        buttons={buttons}
-                        commonButtonProps={commonButtonProps}
-                        flexProps={{ gap: 5, height: 280 }}
-                        scrollBarProps={{ trackMargin: 0 }}
-                    />`}
+                    <Flex gap={10} height={200}>
+                        <ButtonList.column
+                            buttons={buttons}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{ gap: 5 }}
+                            scrollBarProps={{ trackMargin: 0 }}
+                        />
+                        <ButtonList.column
+                            buttons={buttons2}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{ gap: 5 }}
+                            scrollBarProps={{ trackMargin: 0 }}
+                        />
+                    </Flex>`}
                 example={
-                    <ButtonList.column
-                        buttons={buttons}
-                        commonButtonProps={commonButtonProps}
-                        flexProps={{ gap: 5, height: 280 }}
-                        scrollBarProps={{ trackMargin: 0 }}
-                    />
+                    <Flex gap={10} height={200}>
+                        <ButtonList.column
+                            buttons={buttons}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{ gap: 5 }}
+                            scrollBarProps={{ trackMargin: 0 }}
+                        />
+                        <ButtonList.column
+                            buttons={buttons2}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{ gap: 5 }}
+                            scrollBarProps={{ trackMargin: 0 }}
+                        />
+                    </Flex>
                 }
             />
             <Ds.block
                 title="Horizontal Usage"
                 code={`import { ButtonList } from "${SYS.basePath}";
 
-                    <ButtonList 
-                        buttons={buttons}
-                        commonButtonProps={commonButtonProps}
-                        variant="plain"
-                        flexProps={{ 
-                            direction: "row",
-                            wrap: false,
-                            gap: 8,
-                            width: "100%",
-                            xAlign: "start",
-                            paddingTop: 10,
-                            padding: 0
-                        }} 
-                        scrollBarProps={{ trackMargin: 0 }}
-                    />`}
+                    <Flex.column gap={10} height={200} full>
+                        <ButtonList
+                            buttons={buttons}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{
+                                gap: 5,
+                                padding: 10,
+                                paddingBottom: 0,
+                            }}
+                            scrollBarProps={{
+                                trackMargin: 0,
+                                variant: "primary",
+                                disableOpacityEffect: true,
+                            }}
+                        />
+                        <ButtonList
+                            buttons={buttons2}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{
+                                gap: 5,
+                                padding: 10,
+                            }}
+                            scrollBarProps={{ trackMargin: 0 }}
+                        />
+                    </Flex.column>`}
                 example={
-                    <ButtonList
-                        buttons={buttons}
-                        commonButtonProps={commonButtonProps}
-                        flexProps={{
-                            direction: "row",
-                            wrap: false,
-                            gap: 8,
-                            width: "100%",
-                            xAlign: "start",
-                            paddingTop: 10,
-                            padding: 0,
-                        }}
-                        scrollBarProps={{ trackMargin: 0 }}
-                    />
+                    <Flex.column gap={10} height={200} full>
+                        <ButtonList
+                            buttons={buttons}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{
+                                gap: 5,
+                                padding: 10,
+                                paddingBottom: 0,
+                            }}
+                            scrollBarProps={{
+                                trackMargin: 0,
+                                variant: "primary",
+                                disableOpacityEffect: true,
+                            }}
+                        />
+                        <ButtonList
+                            buttons={buttons2}
+                            commonButtonProps={commonButtonProps}
+                            flexProps={{
+                                gap: 5,
+                                padding: 10,
+                            }}
+                            scrollBarProps={{ trackMargin: 0 }}
+                        />
+                    </Flex.column>
                 }
             />
             <Ds.block

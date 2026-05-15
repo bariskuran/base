@@ -10,7 +10,7 @@ const Page = ({ children, title, releasedOn, description }) => {
             <Flex.row alignItems="stretch" full>
                 <Flex.column width="max-content" alignSelf="stretch">
                     <S.title>{title}</S.title>
-                    <Flex.row full>
+                    <Flex.row full maxHeight={1}>
                         <S.row1 />
                         <S.row2 />
                     </Flex.row>
