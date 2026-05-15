@@ -19,7 +19,6 @@ const sysDefaults = {
     overflow: "visible",
     letterSpacing: 0,
     lineHeight: 1.7,
-    selfAlign: "left",
 };
 
 // useVars.js

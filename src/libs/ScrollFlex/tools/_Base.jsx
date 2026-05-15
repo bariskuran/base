@@ -17,6 +17,9 @@ export const Base = ({ children, ...p }) => {
         borderColor,
         shouldRender,
         shellLayoutStyle,
+        shellViewportStyle,
+        containerGridStyle,
+        contentLayoutStyle,
         variantOuterStyle,
     } = useVars(p);
 
@@ -30,14 +33,16 @@ export const Base = ({ children, ...p }) => {
                 aria-label="ScrollFlex container"
                 style={{
                     ...variantOuterStyle,
+                    ...containerGridStyle,
                     display: "grid",
                 }}
             >
                 <S.shell
                     ref={shellRef}
                     style={{
-                        ...shellLayoutStyle,
+                        ...shellViewportStyle,
                         ...shellPaddingStyle,
+                        ...shellLayoutStyle,
                     }}
                     aria-label="ScrollFlex shell"
                 >
@@ -48,6 +53,7 @@ export const Base = ({ children, ...p }) => {
                         {...shellPointerHandlers}
                         style={{
                             ...(flexProps?.style || {}),
+                            ...(contentLayoutStyle || {}),
                             ...(shellSurfaceStyle || {}),
                         }}
                     >

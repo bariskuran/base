@@ -308,6 +308,51 @@ const X = () => (
                     description: "Border radius.",
                     type: "number | string",
                 },
+                border: {
+                    description:
+                        'Border on all sides. Shorthand: width style color (e.g. "1px solid greys.shade40"). Colors support theme paths, hex, rgb/rgba, and named css colors.',
+                    type: "string | number",
+                },
+                borderTop: {
+                    description: "Top border. Same value format as border.",
+                    type: "string | number",
+                },
+                borderRight: {
+                    description: "Right border. Same value format as border.",
+                    type: "string | number",
+                },
+                borderBottom: {
+                    description: "Bottom border. Same value format as border.",
+                    type: "string | number",
+                },
+                borderLeft: {
+                    description: "Left border. Same value format as border.",
+                    type: "string | number",
+                },
+                borderInline: {
+                    description: "Logical inline-axis border (left+right in LTR).",
+                    type: "string | number",
+                },
+                borderBlock: {
+                    description: "Logical block-axis border (top+bottom).",
+                    type: "string | number",
+                },
+                borderInlineStart: {
+                    description: "Logical inline-start border.",
+                    type: "string | number",
+                },
+                borderInlineEnd: {
+                    description: "Logical inline-end border.",
+                    type: "string | number",
+                },
+                borderBlockStart: {
+                    description: "Logical block-start border.",
+                    type: "string | number",
+                },
+                borderBlockEnd: {
+                    description: "Logical block-end border.",
+                    type: "string | number",
+                },
                 direction: {
                     description: "row | column | row-reverse | column-reverse | x | y.",
                     type: "string",

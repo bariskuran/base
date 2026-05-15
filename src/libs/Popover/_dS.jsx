@@ -115,7 +115,10 @@ const X = () => (
                     </Popover>
                     <Popover
                         buttonProps={{ label: "Menu", outlined: false }}
-                        scrollFlexProps={{ scrollBarProps: { edgeMargin: 10, variant: "primary" } }}
+                        scrollFlexProps={{
+                            enableDragging: true,
+                            scrollBarProps: { variant: "primary", disableOpacityEffect: true },
+                        }}
                     >
                         <LargeContent />
                     </Popover>
@@ -158,12 +161,13 @@ const X = () => (
                     </Popover>`}
             example={
                 <Popover
-                    buttonProps={{ label: "flat ButtonList usage", outlined: false }}
+                    buttonProps={{ label: "flat ButtonList usage" }}
                     scrollFlexProps={{
-                        flexProps: {
-                            gap: 5,
+                        flexProps: { gap: 5 },
+                        scrollBarProps: {
+                            disableOpacityEffect: true,
+                            variant: "primary",
                         },
-                        scrollBarProps: { edgeMargin: 10, variant: "primary" },
                     }}
                 >
                     <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />

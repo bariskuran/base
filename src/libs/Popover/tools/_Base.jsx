@@ -19,13 +19,13 @@ export const Base = ({ children, ...p }) => {
     /* Return */
     return (
         <FloatingUi
-            {...floatingUiProps}
+            {...{ padding: 0, ...floatingUiProps }}
             dismissWithoutAnimationRef={dismissWithoutAnimationRef}
             open={isOpen}
             closeHandler={onCloseHandler}
             content={
                 <ScrollFlex
-                    padding={0}
+                    padding={10}
                     autoWidth={false}
                     autoHeight={false}
                     maxWidth="20vw"

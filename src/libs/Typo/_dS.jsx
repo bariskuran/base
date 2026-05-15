@@ -66,7 +66,11 @@ const X = () => (
                 ellipsis: { description: "Ellipsis mode.", type: "boolean | 'base'", defaultValue: "false" },
                 clamp: { description: "Line clamp count.", type: "number", defaultValue: "undefined" },
                 align: { description: "Text alignment.", type: "string", defaultValue: "inherit" },
-                selfAlign: { description: "Self align helper.", type: "string", defaultValue: '"left"' },
+                selfAlign: {
+                    description:
+                        'Optional grid/flex self alignment: "left" | "center" | "right". When omitted, parent align-items / justify-items apply.',
+                    type: "string",
+                },
                 wrap: { description: "Wrap behavior.", type: "boolean | string", defaultValue: "true" },
                 whiteSpace: { description: "white-space css value.", type: "string", defaultValue: '"normal"' },
                 overflow: { description: "overflow css value.", type: "string", defaultValue: '"visible"' },
