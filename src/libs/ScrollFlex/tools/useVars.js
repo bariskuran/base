@@ -8,6 +8,9 @@ import { computeDragScrollFromPointers } from "./computeDragScrollDelta";
 const EMPTY_FLEX_PROPS = {};
 const EMPTY_SCROLL_BAR_PROPS = {};
 
+/** rem/ölçüm yuvarlamasından kaynaklanan 1–2px taşmayı denemek için (içerik tabanlı yükseklik). */
+const CONTENT_SIZE_MEASURE_SLACK_PX = 1;
+
 const lockShellTextSelection = (el) => {
     if (!el) return;
     el.style.userSelect = "none";
@@ -760,7 +763,8 @@ const useVars = (p) => {
             const pad = axis === "x" ? shellPaddingInsetsPx.x : shellPaddingInsetsPx.y;
             const border =
                 axis === "x" ? containerBorderInsetsPx.x : containerBorderInsetsPx.y;
-            return gutter + pad + border;
+            const slack = axis === "y" ? CONTENT_SIZE_MEASURE_SLACK_PX : 0;
+            return gutter + pad + border + slack;
         },
         [barGutters, containerBorderInsetsPx, shellPaddingInsetsPx],
     );

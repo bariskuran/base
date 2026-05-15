@@ -148,17 +148,18 @@ const X = () => (
             description='The "flat" prop of ButtonList removes outer wrappers, giving layout control to the Popover. You can manage the UI inside the Popover using scrollFlexProps.'
             code={`import { Popover, ButtonList } from "${SYS.basePath}";
 
-                    <Popover
-                        buttonProps={{ label: "Menu", outlined: false }}
-                        scrollFlexProps={{
-                            flexProps: {
-                                gap: 5,
-                                },
-                        scrollBarProps: { edgeMargin: 10, variant: "primary" },
-                        }}
-                    >
-                        <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
-                    </Popover>`}
+                <Popover
+                    buttonProps={{ label: "flat ButtonList usage" }}
+                    scrollFlexProps={{
+                        flexProps: { gap: 5 },
+                        scrollBarProps: {
+                            disableOpacityEffect: true,
+                            variant: "primary",
+                        },
+                    }}
+                >
+                    <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
+                </Popover>`}
             example={
                 <Popover
                     buttonProps={{ label: "flat ButtonList usage" }}
@@ -179,9 +180,9 @@ const X = () => (
             description="bgColor and color props are used to set the background and text color of the Popover. It can be a theme color, a theme path, or a css color."
             code={`import { Popover, ButtonList } from "${SYS.basePath}";
 
-                    <Popover bgColor="lightgrey" color="primary">
-                        <Panel />
-                    </Popover>`}
+                <Popover bgColor="lightgrey" color="primary">
+                    <Panel />
+                </Popover>`}
             example={
                 <Popover bgColor="lightgrey" color="primary">
                     <Panel />
@@ -192,9 +193,9 @@ const X = () => (
             title="disableArrow"
             code={`import { Popover, ButtonList } from "${SYS.basePath}";
 
-                    <Popover disableArrow buttonProps={{ label: "Without Arrow" }}>
-                        <Panel />
-                    </Popover>`}
+                <Popover disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
+                    <Panel />
+                </Popover>`}
             example={
                 <Popover disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
                     <Panel />
@@ -202,11 +203,11 @@ const X = () => (
             }
         />
         <Ds.api
-            args="<Popover>{null}</Popover>"
+            args="<Popover>{React.Node}</Popover>"
             props={{
                 children: {
                     description: "Panel content rendered inside the internal ScrollFlex.",
-                    type: "ReactNode",
+                    type: "React Node",
                     required: true,
                 },
                 buttonProps: {

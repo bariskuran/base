@@ -227,19 +227,23 @@ const X = () => {
                     </Flex>`}
                 example={
                     <Flex gap={10}>
-                        <ScrollFlex>a{/* {longText} */}</ScrollFlex>
-                        <ScrollFlex autoWidth={false} autoHeight={false}>
-                            {shortText}
-                        </ScrollFlex>
                         <Flex height={150}>
+                            <ScrollFlex>a</ScrollFlex>
+                        </Flex>
+                        <Flex width={150} height={150}>
+                            <ScrollFlex autoWidth={false} autoHeight={false}>
+                                abc
+                            </ScrollFlex>
+                        </Flex>
+                        <Flex width={200} height={200}>
                             <ScrollFlex>{longText}</ScrollFlex>
                         </Flex>
-                        <Flex height={150}>
+                        <Flex width={150} height={150}>
                             <Flex>
                                 <ScrollFlex>{longText}</ScrollFlex>
                             </Flex>
                         </Flex>
-                        <Flex height={150}>
+                        <Flex width={100} height={100}>
                             <Flex>
                                 <Flex>
                                     <ScrollFlex>{longText}</ScrollFlex>

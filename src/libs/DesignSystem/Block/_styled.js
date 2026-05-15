@@ -69,12 +69,11 @@ const S = {
         background-color: ${({ theme }) => theme.backgrounds.tint30};
         border-radius: 0 20rem 20rem 0;
         padding: 20rem;
-        align-self: stretch;
         display: flex;
         flex-direction: column;
         gap: 15rem;
         justify-content: flex-start;
-        align-items: center;
+        align-items: flex-start;
         margin-bottom: 20rem;
 
         & > div {
