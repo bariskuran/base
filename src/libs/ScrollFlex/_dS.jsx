@@ -202,7 +202,7 @@ const X = () => {
             />
             <Ds.block
                 title="Auto Width & Height"
-                description="If width or height is not provided, ScrollFlex attempts to fill its parent’s width and height. Because CSS height depends on the parent chain, this may not always produce the expected result. If no valid height can be resolved from the parent tree, ScrollFlex falls back to 200. Otherwise, it uses the parent’s height."
+                description="When width or height are omitted, ScrollFlex uses autoWidth and autoHeight (both default to true). It compares content size with the parent: if content is smaller, the box shrinks to content plus scrollbar gutter when that axis has a bar; if content is larger, the parent size is used with max-width or max-height 100%. Explicit width, height, flexProps dimensions, or *ByRef / *ById disable the corresponding auto axis."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
                 
                     <Flex gap={10}>
@@ -227,9 +227,10 @@ const X = () => {
                     </Flex>`}
                 example={
                     <Flex gap={10}>
-                        <Flex>
-                            <ScrollFlex>{longText}</ScrollFlex>
-                        </Flex>
+                        <ScrollFlex>a{/* {longText} */}</ScrollFlex>
+                        <ScrollFlex autoWidth={false} autoHeight={false}>
+                            {shortText}
+                        </ScrollFlex>
                         <Flex height={150}>
                             <ScrollFlex>{longText}</ScrollFlex>
                         </Flex>
@@ -414,6 +415,18 @@ const X = () => {
                         description:
                             "ScrollFlex height. Explicit height takes precedence over reference-based height.",
                         type: "number | string",
+                    },
+                    autoWidth: {
+                        description:
+                            "When true (default) and width is not set on ScrollFlex, flexProps, or via widthByRef/widthById, width is chosen from content vs parent (content smaller → content width + horizontal bar gutter; otherwise parent width with max-width 100%).",
+                        type: "boolean",
+                        defaultValue: "true",
+                    },
+                    autoHeight: {
+                        description:
+                            "When true (default) and height is not set on ScrollFlex, flexProps, or via heightByRef/heightById, height is chosen from content vs parent (content smaller → content height + vertical bar gutter; otherwise parent height with max-height 100%).",
+                        type: "boolean",
+                        defaultValue: "true",
                     },
                     heightByRef: {
                         description:
