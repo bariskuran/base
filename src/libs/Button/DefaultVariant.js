@@ -64,7 +64,7 @@ export const DefaultVariant = styled.span`
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 6rem 20rem;
+            padding: 6rem 10rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 600;

@@ -51,7 +51,7 @@ const S = styled.span`
             letter-spacing: 0.5rem;
             font-weight: 600;
             font-size: 12rem;
-            padding: 6rem 20rem;
+            padding: 6rem 10rem;
             transition: all 0.5s;
         }
 

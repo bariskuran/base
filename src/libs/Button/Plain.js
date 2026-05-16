@@ -27,7 +27,7 @@ export const S = styled.span`
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 6rem 20rem;
+            padding: 6rem 10rem;
             font-size: 15rem;
             font-weight: 500;
         }

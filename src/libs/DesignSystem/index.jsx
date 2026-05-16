@@ -80,6 +80,7 @@ const publicSitemap = [
     ["isPlainObject", "isPlainObject", l(() => import("../isPlainObject/_dS"))],
     ["notifier", "notifier", l(() => import("../notifier/_dS"))],
     ["Popover", "popover", l(() => import("../Popover/_dS"))],
+    ["PopConfirm", "popConfirm", l(() => import("../PopConfirm/_dS"))],
     ["PopTip", "popTip", l(() => import("../PopTip/_dS"))],
     ["pushAsSorter", "pushAsSorter", l(() => import("../pushAsSorted/_dS"))],
     ["queryConverter", "queryConverter", l(() => import("../queryConverter/_dS"))],

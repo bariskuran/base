@@ -88,8 +88,21 @@ const PropContainer = ({ obj = [] }) => {
     );
 };
 
+const formatDefaultValue = (value) => {
+    if (value == null || value === "") return "—";
+    if (typeof value === "object") {
+        try {
+            return JSON.stringify(value, null, 2);
+        } catch {
+            return "[object]";
+        }
+    }
+    return value;
+};
+
 const PropTable = ({ name, item, striped }) => {
     const { description, type, required, defaultValue } = item || {};
+    const defaultValueDisplay = formatDefaultValue(defaultValue);
 
     /* Return */
     return (
@@ -106,7 +119,7 @@ const PropTable = ({ name, item, striped }) => {
             )}
             <div>{type}</div>
             <div>{description}</div>
-            <div>{defaultValue}</div>
+            <div style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{defaultValueDisplay}</div>
         </S.row>
     );
 };

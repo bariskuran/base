@@ -35,7 +35,7 @@ const S = styled.span`
             justify-content: center;
             align-items: center;
             text-transform: uppercase;
-            padding: 6rem 20rem;
+            padding: 6rem 10rem;
             letter-spacing: 0.5rem;
             font-weight: 600;
             font-size: 12rem;

@@ -27,4 +27,25 @@ export const TEXT_LIBRARY = {
         de: "Inhalt kopieren",
         es: "Copiar contenido",
     },
+    areYouSure: {
+        tr: "Bu işlemi gerçekleştirmek istediğinize emin misiniz?",
+        en: "Are you sure you want to perform this action?",
+        fr: "Êtes-vous sûr de vouloir effectuer cette action?",
+        de: "Sind Sie sicher, dass Sie diese Aktion ausführen möchten?",
+        es: "¿Estás seguro de querer realizar esta acción?",
+    },
+    confirm: {
+        tr: "Onayla",
+        en: "Confirm",
+        fr: "Confirmer",
+        de: "Bestätigen",
+        es: "Confirmar",
+    },
+    cancel: {
+        tr: "Vazgeç",
+        en: "Cancel",
+        fr: "Annuler",
+        de: "Abbrechen",
+        es: "Cancelar",
+    },
 };

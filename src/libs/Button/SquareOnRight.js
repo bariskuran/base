@@ -46,7 +46,7 @@ const S = styled.span`
             background: ${theme.colorAlpha(theme.primary, 0.1)} !important;
 
             & > [data-slot="label"] {
-                padding: 4rem 20rem;
+                padding: 4rem 10rem;
                 font-weight: 600;
             }
 

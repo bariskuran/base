@@ -68,7 +68,11 @@ const useVars = (p) => {
             dismissWithoutAnimationRef,
             requestClose,
         },
-        {},
+        {
+            isOpen,
+            onCloseHandler,
+            requestClose,
+        },
     );
 };
 export default useVars;
