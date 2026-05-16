@@ -367,15 +367,15 @@ const X = () => (
                     type: "string | number",
                 },
                 flexGrow: {
-                    description: "CSS flex-grow.",
+                    description: "CSS flex-grow. Aliases: grow, flex-grow.",
                     type: "string | number",
                 },
                 flexShrink: {
-                    description: "CSS flex-shrink.",
+                    description: "CSS flex-shrink. Aliases: shrink, flex-shrink.",
                     type: "string | number",
                 },
                 flexBasis: {
-                    description: "CSS flex-basis.",
+                    description: "CSS flex-basis. Aliases: basis, flex-basis.",
                     type: "string | number",
                 },
                 order: {

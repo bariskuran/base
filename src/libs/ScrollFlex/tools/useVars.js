@@ -2,148 +2,16 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { baseStore } from "../../@baseStore";
 import { useExportData } from "../../useExportedData";
 import { isShallowEqual } from "../../isShallowEqual";
-import { mergeFlexKebabPropAliases, FLEX_PROPS_KEBAB_TO_CAMEL } from "../../Flex/tools/generateProps.js";
+import {
+    mergeFlexKebabPropAliases,
+    FLEX_PROPS_KEBAB_TO_CAMEL,
+} from "../../Flex/tools/generateProps.js";
 import { computeDragScrollFromPointers } from "./computeDragScrollDelta";
 
 const EMPTY_FLEX_PROPS = {};
 const EMPTY_SCROLL_BAR_PROPS = {};
-
-/** rem/ölçüm yuvarlamasından kaynaklanan 1–2px taşmayı denemek için (içerik tabanlı yükseklik). */
 const CONTENT_SIZE_MEASURE_SLACK_PX = 1;
 
-const lockShellTextSelection = (el) => {
-    if (!el) return;
-    el.style.userSelect = "none";
-    el.style.webkitUserSelect = "none";
-    el.style.MozUserSelect = "none";
-};
-
-const unlockShellTextSelection = (el) => {
-    if (!el) return;
-    el.style.userSelect = "";
-    el.style.webkitUserSelect = "";
-    el.style.MozUserSelect = "";
-};
-
-const pickScrollBarLayoutData = (data = {}) => ({
-    showX: !!data.showX,
-    showY: !!data.showY,
-    top: !!data.top,
-    bottom: !!data.bottom,
-    left: !!data.left,
-    right: !!data.right,
-    edgeMargin: data.edgeMargin,
-    thickness: data.thickness,
-});
-
-const getCssSize = (value) => {
-    if (value == null) return "0";
-    if (value === 0 || value === "0") return "0";
-    if (typeof value === "number") return `${value}rem`;
-
-    const v = String(value).trim().replace(/\s+/g, "");
-    if (/^-?\d+(\.\d+)?$/.test(v)) return `${v}rem`;
-    return normalizeCalcValue(v);
-};
-
-/** Ölçülen px değerleri ve birimli stringler rem'e çevrilmeden kalır. */
-const getLayoutSizeCss = (value) => {
-    if (value == null || value === "") return undefined;
-    if (typeof value === "string") {
-        const trimmed = value.trim();
-        if (/^-?\d+(\.\d+)?(px|rem|em|%|vw|vh|vmin|vmax|dvw|dvh)$/i.test(trimmed)) {
-            return normalizeCalcValue(trimmed);
-        }
-        if (/^calc\(/i.test(trimmed) || /min\(|max\(/i.test(trimmed)) {
-            return normalizeCalcValue(trimmed);
-        }
-    }
-    return getCssSize(value);
-};
-
-const remToPx = (remValue) => {
-    const rem = Number(remValue);
-    if (!Number.isFinite(rem)) return 0;
-    if (typeof document === "undefined") return rem * 16;
-    const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-    return rem * (Number.isFinite(rootPx) && rootPx > 0 ? rootPx : 16);
-};
-
-/**
- * ScrollBar track'inin host içinde kapladığı yatay/dikey pay (px).
- * ScrollBar sayıları rem ile render edilir; küçük varsayılanlar (|edge|+thickness)
- * tarihsel olarak px olarak shell'de kullanılıyordu — ikisini hizalarız.
- */
-const getBarAxisGutterPx = (scrollBarData, scrollBarProps) => {
-    const thickness = Number(
-        scrollBarData?.thickness ?? scrollBarProps?.thickness ?? 4,
-    );
-    const edgeMargin = Number(
-        scrollBarData?.edgeMargin ??
-            scrollBarProps?.edgeMargin ??
-            scrollBarProps?.edgeMarginX ??
-            scrollBarProps?.edgeMarginY ??
-            -4 - thickness,
-    );
-
-    if (!Number.isFinite(thickness)) return 9;
-
-    const thicknessPx = remToPx(thickness);
-    if (!Number.isFinite(edgeMargin)) {
-        return Math.round(thicknessPx);
-    }
-
-    const edgePx = remToPx(edgeMargin);
-    const overlapPx = Math.max(0, thicknessPx + edgePx);
-    const legacyPx = Math.abs(edgeMargin) + thickness;
-
-    if (Math.abs(edgeMargin) <= 24 && thickness <= 24) {
-        return Math.round(legacyPx);
-    }
-
-    return Math.round(Math.max(thicknessPx, overlapPx));
-};
-
-const getContainerBorderInsetsPx = (node) => {
-    if (!node || typeof getComputedStyle === "undefined") {
-        return { x: 0, y: 0 };
-    }
-    const cs = getComputedStyle(node);
-    return {
-        x: (parseFloat(cs.borderLeftWidth) || 0) + (parseFloat(cs.borderRightWidth) || 0),
-        y: (parseFloat(cs.borderTopWidth) || 0) + (parseFloat(cs.borderBottomWidth) || 0),
-    };
-};
-
-const normalizeCalcValue = (value) =>
-    typeof value === "string"
-        ? value.replace(
-              /calc\((.*)\)/g,
-              (_, expression) => `calc(${expression.replace(/\s*([+\-*/])\s*/g, " $1 ")})`,
-          )
-        : value;
-
-/**
- * Shell padding: kısaltma değerleri boşluk içerir; getCssSize boşlukları sildiği için
- * "10px 0 10px 10px" gibi değerler bozuluyordu.
- */
-const getShellPaddingCssValue = (value) => {
-    if (value == null) return null;
-    if (value === 0 || value === "0") return "0";
-    if (typeof value === "number") return `${value}rem`;
-
-    const raw = String(value).trim();
-    if (!raw) return null;
-
-    const singleToken = raw.replace(/\s+/g, "");
-    if (/^-?\d+(\.\d+)?$/.test(singleToken)) return `${singleToken}rem`;
-
-    const spaced = raw.replace(/\s+/g, " ").trim();
-    if (/^calc\(/i.test(spaced)) return normalizeCalcValue(spaced);
-    return normalizeCalcValue(spaced);
-};
-
-/** ScrollFlex kökündeki padding anahtarları (camel + Flex kebab aliasları + style içi). */
 const PADDING_CAMEL_KEYS = [
     "padding",
     "paddingTop",
@@ -160,66 +28,358 @@ const PADDING_CAMEL_KEYS = [
 
 const PADDING_CAMEL_SET = new Set(PADDING_CAMEL_KEYS);
 
-const styleKeyToPaddingCamel = (k) => {
-    if (typeof k !== "string") return null;
-    if (PADDING_CAMEL_SET.has(k)) return k;
-    if (!k.startsWith("padding")) return null;
-    if (!k.includes("-")) return null;
-    const camel = k.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase());
+const lockShellTextSelection = (el) => {
+    if (!el) return;
+    el.style.userSelect = "none";
+    el.style.webkitUserSelect = "none";
+    el.style.MozUserSelect = "none";
+};
+
+const unlockShellTextSelection = (el) => {
+    if (!el) return;
+    el.style.userSelect = "";
+    el.style.webkitUserSelect = "";
+    el.style.MozUserSelect = "";
+};
+
+const normalizeCalcValue = (value) =>
+    typeof value === "string"
+        ? value.replace(
+              /calc\((.*)\)/g,
+              (_, expression) => `calc(${expression.replace(/\s*([+\-*/])\s*/g, " $1 ")})`,
+          )
+        : value;
+
+const getCssSize = (value) => {
+    if (value == null) return "0";
+    if (value === 0 || value === "0") return "0";
+    if (typeof value === "number") return `${value}rem`;
+
+    const v = String(value).trim().replace(/\s+/g, "");
+    if (/^-?\d+(\.\d+)?$/.test(v)) return `${v}rem`;
+
+    return normalizeCalcValue(v);
+};
+
+const getLayoutSizeCss = (value) => {
+    if (value == null || value === "") return undefined;
+
+    if (typeof value === "string") {
+        const v = value.trim();
+
+        if (/^-?\d+(\.\d+)?(px|rem|em|%|vw|vh|vmin|vmax|dvw|dvh)$/i.test(v)) {
+            return normalizeCalcValue(v);
+        }
+
+        if (/^(calc|min|max)\(/i.test(v)) {
+            return normalizeCalcValue(v);
+        }
+    }
+
+    return getCssSize(value);
+};
+
+const remToPx = (remValue) => {
+    const rem = Number(remValue);
+    if (!Number.isFinite(rem)) return 0;
+    if (typeof document === "undefined") return rem * 16;
+
+    const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    return rem * (Number.isFinite(rootPx) && rootPx > 0 ? rootPx : 16);
+};
+
+const parseCssLengthToPx = (value, baseFontSize = 16) => {
+    if (value == null || value === "") return 0;
+
+    const raw = String(value).trim();
+
+    if (raw === "0") return 0;
+    if (/^-?\d+(\.\d+)?px$/i.test(raw)) return parseFloat(raw);
+    if (/^-?\d+(\.\d+)?rem$/i.test(raw)) return remToPx(parseFloat(raw));
+    if (/^-?\d+(\.\d+)?em$/i.test(raw)) return parseFloat(raw) * baseFontSize;
+    if (/^-?\d+(\.\d+)?$/.test(raw)) return remToPx(parseFloat(raw));
+
+    return 0;
+};
+
+const pickScrollBarLayoutData = (data = {}) => ({
+    showX: !!data.showX,
+    showY: !!data.showY,
+    top: !!data.top,
+    bottom: !!data.bottom,
+    left: !!data.left,
+    right: !!data.right,
+    edgeMargin: data.edgeMargin,
+    thickness: data.thickness,
+});
+
+const getBarAxisGutterPx = (scrollBarData, scrollBarProps) => {
+    const thickness = Number(scrollBarData?.thickness ?? scrollBarProps?.thickness ?? 4);
+    const edgeMargin = Number(
+        scrollBarData?.edgeMargin ??
+            scrollBarProps?.edgeMargin ??
+            scrollBarProps?.edgeMarginX ??
+            scrollBarProps?.edgeMarginY ??
+            -4 - thickness,
+    );
+
+    if (!Number.isFinite(thickness)) return 9;
+
+    const thicknessPx = remToPx(thickness);
+
+    if (!Number.isFinite(edgeMargin)) {
+        return Math.round(thicknessPx);
+    }
+
+    const edgePx = remToPx(edgeMargin);
+    const overlapPx = Math.max(0, thicknessPx + edgePx);
+    const legacyPx = Math.abs(edgeMargin) + thickness;
+
+    if (Math.abs(edgeMargin) <= 24 && thickness <= 24) {
+        return Math.round(legacyPx);
+    }
+
+    return Math.round(Math.max(thicknessPx, overlapPx));
+};
+
+const getBarGutterInsets = (scrollBarData, scrollBarProps) => {
+    const gutter = getBarAxisGutterPx(scrollBarData, scrollBarProps);
+
+    return {
+        gutterX: scrollBarData?.left || scrollBarData?.right ? gutter : 0,
+        gutterY: scrollBarData?.top || scrollBarData?.bottom ? gutter : 0,
+    };
+};
+
+const addBarGutterToCssSize = (size, gutterPx) => {
+    if (size == null || size === "") return undefined;
+    if (!gutterPx) return getLayoutSizeCss(size);
+
+    return normalizeCalcValue(`calc(${getLayoutSizeCss(size)} + ${gutterPx}px)`);
+};
+
+const getContainerBorderInsetsPx = (node) => {
+    if (!node || typeof getComputedStyle === "undefined") {
+        return { x: 0, y: 0 };
+    }
+
+    const cs = getComputedStyle(node);
+
+    return {
+        x: (parseFloat(cs.borderLeftWidth) || 0) + (parseFloat(cs.borderRightWidth) || 0),
+        y: (parseFloat(cs.borderTopWidth) || 0) + (parseFloat(cs.borderBottomWidth) || 0),
+    };
+};
+
+const getPaddingInsetsFromElement = (el) => {
+    if (!el || typeof getComputedStyle === "undefined") {
+        return { x: 0, y: 0 };
+    }
+
+    const cs = getComputedStyle(el);
+
+    return {
+        x: Math.round((parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0)),
+        y: Math.round((parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0)),
+    };
+};
+
+const getShellPaddingCssValue = (value) => {
+    if (value == null) return null;
+    if (value === 0 || value === "0") return "0";
+    if (typeof value === "number") return `${value}rem`;
+
+    const raw = String(value).trim();
+    if (!raw) return null;
+
+    const singleToken = raw.replace(/\s+/g, "");
+    if (/^-?\d+(\.\d+)?$/.test(singleToken)) return `${singleToken}rem`;
+
+    return normalizeCalcValue(raw.replace(/\s+/g, " "));
+};
+
+const expandPaddingShorthandPx = (parts) => {
+    if (!parts.length) return [0, 0, 0, 0];
+    if (parts.length === 1) return [parts[0], parts[0], parts[0], parts[0]];
+    if (parts.length === 2) return [parts[0], parts[1], parts[0], parts[1]];
+    if (parts.length === 3) return [parts[0], parts[1], parts[2], parts[1]];
+
+    return [parts[0], parts[1], parts[2], parts[3]];
+};
+
+const getShellPaddingInsetsPx = (shellPaddingStyle) => {
+    if (!shellPaddingStyle || typeof shellPaddingStyle !== "object") {
+        return { x: 0, y: 0 };
+    }
+
+    const p = shellPaddingStyle;
+
+    let top = 0;
+    let right = 0;
+    let bottom = 0;
+    let left = 0;
+
+    if (p.padding != null) {
+        const parts = String(p.padding).trim().split(/\s+/).map(parseCssLengthToPx);
+        [top, right, bottom, left] = expandPaddingShorthandPx(parts);
+    }
+
+    if (p.paddingTop != null) top = parseCssLengthToPx(p.paddingTop);
+    if (p.paddingRight != null) right = parseCssLengthToPx(p.paddingRight);
+    if (p.paddingBottom != null) bottom = parseCssLengthToPx(p.paddingBottom);
+    if (p.paddingLeft != null) left = parseCssLengthToPx(p.paddingLeft);
+
+    if (p.paddingBlock != null) {
+        const parts = String(p.paddingBlock).trim().split(/\s+/).map(parseCssLengthToPx);
+        top = parts[0] ?? 0;
+        bottom = parts[1] ?? parts[0] ?? 0;
+    }
+
+    if (p.paddingInline != null) {
+        const parts = String(p.paddingInline).trim().split(/\s+/).map(parseCssLengthToPx);
+        left = parts[0] ?? 0;
+        right = parts[1] ?? parts[0] ?? 0;
+    }
+
+    if (p.paddingBlockStart != null) top = parseCssLengthToPx(p.paddingBlockStart);
+    if (p.paddingBlockEnd != null) bottom = parseCssLengthToPx(p.paddingBlockEnd);
+    if (p.paddingInlineStart != null) left = parseCssLengthToPx(p.paddingInlineStart);
+    if (p.paddingInlineEnd != null) right = parseCssLengthToPx(p.paddingInlineEnd);
+
+    return {
+        x: Math.round(left + right),
+        y: Math.round(top + bottom),
+    };
+};
+
+const styleKeyToPaddingCamel = (key) => {
+    if (typeof key !== "string") return null;
+    if (PADDING_CAMEL_SET.has(key)) return key;
+    if (!key.startsWith("padding")) return null;
+    if (!key.includes("-")) return null;
+
+    const camel = key.replace(/-([a-z])/g, (_, ch) => ch.toUpperCase());
+
     return PADDING_CAMEL_SET.has(camel) ? camel : null;
 };
 
 const buildShellPaddingStyleFromMerged = (merged) => {
     const shell = {};
+
     for (const key of PADDING_CAMEL_KEYS) {
         if (merged[key] == null) continue;
+
         const css = getShellPaddingCssValue(merged[key]);
         if (css != null) shell[key] = css;
     }
+
     return shell;
 };
 
-/**
- * Sadece ScrollFlex'e verilen (rest) props'tan padding'i ayırır → shell inline style.
- * flexProps padding'a dokunulmaz; içerik {...flexProps} ile alır.
- */
 const splitShellPaddingFromRestProps = (restProps) => {
     if (!restProps || typeof restProps !== "object") {
-        return { shellPaddingStyle: {}, restPropsWithoutShellPadding: {} };
+        return {
+            shellPaddingStyle: {},
+            restPropsWithoutShellPadding: {},
+        };
     }
 
     const mergedTop = mergeFlexKebabPropAliases(restProps);
     let shellPaddingStyle = buildShellPaddingStyleFromMerged(mergedTop);
 
     const next = { ...restProps };
+
     for (const key of PADDING_CAMEL_KEYS) {
         delete next[key];
     }
+
     for (const [kebab, camel] of Object.entries(FLEX_PROPS_KEBAB_TO_CAMEL)) {
         if (PADDING_CAMEL_SET.has(camel)) delete next[kebab];
     }
 
     if (next.style && typeof next.style === "object") {
         const nextStyle = { ...next.style };
-        for (const k of Object.keys(nextStyle)) {
-            const camel = styleKeyToPaddingCamel(k);
+
+        for (const key of Object.keys(nextStyle)) {
+            const camel = styleKeyToPaddingCamel(key);
+
             if (camel == null) continue;
-            const val = nextStyle[k];
-            if (val != null && shellPaddingStyle[camel] == null) {
-                const css = getShellPaddingCssValue(val);
-                if (css != null) {
-                    shellPaddingStyle = { ...shellPaddingStyle, [camel]: css };
-                }
+
+            const value = nextStyle[key];
+
+            if (value != null && shellPaddingStyle[camel] == null) {
+                const css = getShellPaddingCssValue(value);
+                if (css != null) shellPaddingStyle = { ...shellPaddingStyle, [camel]: css };
             }
-            delete nextStyle[k];
+
+            delete nextStyle[key];
         }
+
         if (Object.keys(nextStyle).length) next.style = nextStyle;
         else delete next.style;
     }
 
-    if (Object.keys(shellPaddingStyle).length === 0) shellPaddingStyle = {};
+    return {
+        shellPaddingStyle: Object.keys(shellPaddingStyle).length ? shellPaddingStyle : {},
+        restPropsWithoutShellPadding: next,
+    };
+};
 
-    return { shellPaddingStyle, restPropsWithoutShellPadding: next };
+const CONTENT_FLEX_PART_KEYS = [
+    "flex",
+    "flexGrow",
+    "flexShrink",
+    "flexBasis",
+    "grow",
+    "shrink",
+    "basis",
+    "flex-grow",
+    "flex-shrink",
+    "flex-basis",
+];
+
+const resolveContentFlexShorthand = (props) => {
+    const merged = mergeFlexKebabPropAliases(props || {});
+
+    const explicitFlex =
+        merged.flex != null && String(merged.flex).trim() !== ""
+            ? String(merged.flex).trim()
+            : null;
+
+    const growRaw = merged.flexGrow;
+    const shrinkRaw = merged.flexShrink;
+    const basisRaw = merged.flexBasis;
+
+    const hasGrow = growRaw != null && growRaw !== "";
+    const hasShrink = shrinkRaw != null && shrinkRaw !== "";
+    const hasBasis = basisRaw != null && basisRaw !== "";
+    const hasParts = hasGrow || hasShrink || hasBasis;
+
+    if (explicitFlex) return explicitFlex;
+    if (!hasParts) return null;
+
+    const grow = hasGrow ? String(growRaw) : "0";
+    const shrink = hasShrink ? String(shrinkRaw) : "0";
+    const basis = hasBasis ? getLayoutSizeCss(basisRaw) ?? getCssSize(basisRaw) : "auto";
+
+    return `${grow} ${shrink} ${basis}`;
+};
+
+const applyContentFlexProps = (props) => {
+    if (!props || typeof props !== "object") return props;
+
+    const shorthand = resolveContentFlexShorthand(props);
+    const out = { ...props };
+
+    for (const key of CONTENT_FLEX_PART_KEYS) {
+        delete out[key];
+    }
+
+    if (shorthand == null) return out;
+
+    const style = { ...(out.style || {}), flex: shorthand };
+
+    return { ...out, flex: shorthand, style };
 };
 
 const mergeDefaultAlignment = (props) => {
@@ -242,10 +402,53 @@ const mergeDefaultAlignment = (props) => {
     };
 };
 
-const getExplicitHeight = ({ height, flexProps }) => height ?? flexProps.height;
-const getExplicitWidth = ({ width, flexProps, restProps }) =>
-    width ?? flexProps.width ?? restProps.width;
+const getContainerHeight = ({ height }) => (height != null && height !== "" ? height : null);
+
+const getContainerWidth = ({ width, restProps }) => {
+    if (width != null && width !== "") return width;
+    if (restProps?.width != null && restProps.width !== "") return restProps.width;
+
+    return null;
+};
+
+const isFlexRowParent = (parent) => {
+    if (!parent || typeof getComputedStyle === "undefined") return false;
+
+    const cs = getComputedStyle(parent);
+
+    if (!cs.display.includes("flex")) return false;
+
+    const dir = cs.flexDirection;
+
+    return dir === "row" || dir === "row-reverse";
+};
+
+const resolveContainerWidthSource = ({ width, restProps, measuredWidth, hasWidthRefOrId }) => {
+    if (width != null && width !== "") return width;
+    if (hasWidthRefOrId && measuredWidth != null && measuredWidth !== "") return measuredWidth;
+
+    return getContainerWidth({ width, restProps });
+};
+
+const resolveContainerHeightSource = ({ height, measuredHeight, hasHeightRefOrId }) => {
+    if (height != null && height !== "") return height;
+    if (hasHeightRefOrId && measuredHeight != null && measuredHeight !== "") return measuredHeight;
+
+    return getContainerHeight({ height });
+};
+
 const getRefElement = (ref) => ref?.current || ref || null;
+
+const getRefSize = ({ ref, axis }) => {
+    const el = getRefElement(ref);
+    if (!el?.getBoundingClientRect) return null;
+
+    const rect = el.getBoundingClientRect();
+    const value = axis === "x" ? rect.width : rect.height;
+
+    return value > 0 ? `${value}px` : null;
+};
+
 const getShellLayoutStyle = (scrollBarData, scrollBarProps) => {
     const barSpace = getBarAxisGutterPx(scrollBarData, scrollBarProps);
 
@@ -264,7 +467,9 @@ const isUsableHeightValue = (value) => {
     if (!value) return false;
 
     const v = String(value).trim();
+
     if (v.includes("%")) return false;
+
     return !["auto", "initial", "inherit", "unset", "0", "0px"].includes(v);
 };
 
@@ -284,9 +489,7 @@ const getRuleHeight = (node) => {
             if (!rule.selectorText || !rule.style?.height) continue;
 
             try {
-                if (node.matches(rule.selectorText)) {
-                    return rule.style.height;
-                }
+                if (node.matches(rule.selectorText)) return rule.style.height;
             } catch {
                 continue;
             }
@@ -298,130 +501,65 @@ const getRuleHeight = (node) => {
 
 const getAuthoredHeight = (node) => node?.style?.height || getRuleHeight(node);
 
+const withNodeHidden = (node, fn) => {
+    if (!node) return fn();
+
+    const previousDisplay = node.style.display;
+    node.style.display = "none";
+
+    try {
+        return fn();
+    } finally {
+        node.style.display = previousDisplay;
+    }
+};
+
 const getParentHeightWithoutSelf = (node) => {
     const parent = node?.parentElement;
     if (!node || !parent) return 0;
 
-    const previousDisplay = node.style.display;
-    node.style.display = "none";
-    const parentHeight = parent.getBoundingClientRect().height;
-    node.style.display = previousDisplay;
-
-    return parentHeight;
+    return withNodeHidden(node, () => parent.getBoundingClientRect().height);
 };
 
 const getParentWidthWithoutSelf = (node) => {
     const parent = node?.parentElement;
     if (!node || !parent) return 0;
 
-    const previousDisplay = node.style.display;
-    node.style.display = "none";
-    const parentWidth = parent.getBoundingClientRect().width;
-    node.style.display = previousDisplay;
+    return withNodeHidden(node, () => parent.getBoundingClientRect().width);
+};
 
-    return parentWidth;
+const getAncestorAuthoredHeightWithoutSelf = (node) => {
+    if (!node || typeof document === "undefined") return 0;
+
+    return withNodeHidden(node, () => {
+        let current = node.parentElement;
+
+        while (current && current !== document.body && current !== document.documentElement) {
+            if (isUsableHeightValue(getAuthoredHeight(current))) {
+                return current.getBoundingClientRect().height;
+            }
+
+            current = current.parentElement;
+        }
+
+        return 0;
+    });
 };
 
 const measureContentAxisPx = (el, axis) => {
     if (!el?.getBoundingClientRect) return 0;
+
     const rect = el.getBoundingClientRect();
-    const layout = Math.round(axis === "x" ? rect.width || 0 : rect.height || 0);
-    const scroll = Math.round(axis === "x" ? el.scrollWidth || 0 : el.scrollHeight || 0);
+    const roundAxis = axis === "x" ? Math.ceil : Math.round;
+    const layout = roundAxis(axis === "x" ? rect.width || 0 : rect.height || 0);
+    const scroll = roundAxis(axis === "x" ? el.scrollWidth || 0 : el.scrollHeight || 0);
+
     return Math.max(layout, scroll);
 };
 
-const parseCssLengthToPx = (value, baseFontSize = 16) => {
-    if (value == null || value === "") return 0;
-    const raw = String(value).trim();
-    if (raw === "0") return 0;
-    if (/^-?\d+(\.\d+)?px$/i.test(raw)) return parseFloat(raw);
-    if (/^-?\d+(\.\d+)?rem$/i.test(raw)) return remToPx(parseFloat(raw));
-    if (/^-?\d+(\.\d+)?em$/i.test(raw)) return parseFloat(raw) * baseFontSize;
-    if (/^-?\d+(\.\d+)?$/.test(raw)) return remToPx(parseFloat(raw));
-    return 0;
-};
-
-const expandPaddingShorthandPx = (parts) => {
-    if (!parts.length) return [0, 0, 0, 0];
-    if (parts.length === 1) return [parts[0], parts[0], parts[0], parts[0]];
-    if (parts.length === 2) return [parts[0], parts[1], parts[0], parts[1]];
-    if (parts.length === 3) return [parts[0], parts[1], parts[2], parts[1]];
-    return [parts[0], parts[1], parts[2], parts[3]];
-};
-
-/** ScrollFlex padding prop → shell inline style; yatay/dikey toplam px. */
-const getShellPaddingInsetsPx = (shellPaddingStyle) => {
-    if (!shellPaddingStyle || typeof shellPaddingStyle !== "object") {
-        return { x: 0, y: 0 };
-    }
-
-    let top = 0;
-    let right = 0;
-    let bottom = 0;
-    let left = 0;
-    const p = shellPaddingStyle;
-
-    if (p.padding != null) {
-        const parts = String(p.padding)
-            .trim()
-            .split(/\s+/)
-            .map(parseCssLengthToPx);
-        [top, right, bottom, left] = expandPaddingShorthandPx(parts);
-    }
-    if (p.paddingTop != null) top = parseCssLengthToPx(p.paddingTop);
-    if (p.paddingRight != null) right = parseCssLengthToPx(p.paddingRight);
-    if (p.paddingBottom != null) bottom = parseCssLengthToPx(p.paddingBottom);
-    if (p.paddingLeft != null) left = parseCssLengthToPx(p.paddingLeft);
-
-    if (p.paddingBlock != null) {
-        const parts = String(p.paddingBlock)
-            .trim()
-            .split(/\s+/)
-            .map(parseCssLengthToPx);
-        const [blockStart, blockEnd] =
-            parts.length === 1 ? [parts[0], parts[0]] : [parts[0], parts[1] ?? parts[0]];
-        top = blockStart;
-        bottom = blockEnd;
-    }
-    if (p.paddingInline != null) {
-        const parts = String(p.paddingInline)
-            .trim()
-            .split(/\s+/)
-            .map(parseCssLengthToPx);
-        const [inlineStart, inlineEnd] =
-            parts.length === 1 ? [parts[0], parts[0]] : [parts[0], parts[1] ?? parts[0]];
-        left = inlineStart;
-        right = inlineEnd;
-    }
-    if (p.paddingBlockStart != null) top = parseCssLengthToPx(p.paddingBlockStart);
-    if (p.paddingBlockEnd != null) bottom = parseCssLengthToPx(p.paddingBlockEnd);
-    if (p.paddingInlineStart != null) left = parseCssLengthToPx(p.paddingInlineStart);
-    if (p.paddingInlineEnd != null) right = parseCssLengthToPx(p.paddingInlineEnd);
-
-    return {
-        x: Math.round(left + right),
-        y: Math.round(top + bottom),
-    };
-};
-
-const getPaddingInsetsFromElement = (el) => {
-    if (!el || typeof getComputedStyle === "undefined") {
-        return { x: 0, y: 0 };
-    }
-    const cs = getComputedStyle(el);
-    return {
-        x: Math.round(
-            (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0),
-        ),
-        y: Math.round(
-            (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0),
-        ),
-    };
-};
-
-/** Sıkışmış layout'tan kaçınmak için geçici intrinsic ölçüm. */
 const measureContentIntrinsicAxisPx = (el, axis) => {
     if (!el?.getBoundingClientRect) return 0;
+
     const isX = axis === "x";
     const saved = {
         width: el.style.width,
@@ -444,6 +582,7 @@ const measureContentIntrinsicAxisPx = (el, axis) => {
             el.style.maxHeight = "none";
             el.style.minHeight = "0";
         }
+
         return measureContentAxisPx(el, axis);
     } finally {
         el.style.width = saved.width;
@@ -456,25 +595,6 @@ const measureContentIntrinsicAxisPx = (el, axis) => {
     }
 };
 
-const getBarGutterInsets = (scrollBarData, scrollBarProps) => {
-    const gutter = getBarAxisGutterPx(scrollBarData, scrollBarProps);
-    return {
-        gutterX: scrollBarData?.left || scrollBarData?.right ? gutter : 0,
-        gutterY: scrollBarData?.top || scrollBarData?.bottom ? gutter : 0,
-    };
-};
-
-/** Shell max değeri → container max = max + bar payı (durum 3). */
-const addBarGutterToCssSize = (size, gutterPx) => {
-    if (size == null || size === "") return undefined;
-    if (!gutterPx) return getLayoutSizeCss(size);
-    return normalizeCalcValue(`calc(${getLayoutSizeCss(size)} + ${gutterPx}px)`);
-};
-
-/**
- * İçerik parent'tan küçükse içerik (+ çubuk payı); büyükse parent.
- * parent yoksa fallbackPx; parent varken max %100 ile sınırla.
- */
 const resolveAutoAxisPx = ({
     contentPx,
     parentPx,
@@ -489,48 +609,50 @@ const resolveAutoAxisPx = ({
     const border = Math.max(0, borderInsetPx);
 
     if (parent <= 0 && content <= 0) {
-        return { px: fallbackPx, capToParentPercent: false };
+        return {
+            px: fallbackPx,
+            capToParentPercent: false,
+        };
     }
+
     if (parent <= 0) {
-        return { px: Math.round(content + gutter + border), capToParentPercent: false };
+        return {
+            px: Math.round(content + gutter + border),
+            capToParentPercent: false,
+        };
     }
-    if (content <= parent) {
-        return { px: Math.round(content + gutter + border), capToParentPercent: true };
-    }
-    return { px: Math.round(parent), capToParentPercent: true };
+
+    return {
+        px: Math.round(parent),
+        capToParentPercent: true,
+    };
 };
 
-const getAncestorAuthoredHeightWithoutSelf = (node) => {
-    if (!node) return 0;
+const getTargetByRefOrId = ({ ref, id }) => {
+    const refEl = getRefElement(ref);
 
-    const previousDisplay = node.style.display;
-    node.style.display = "none";
+    if (refEl) return refEl;
 
-    let current = node.parentElement;
-    let height = 0;
-
-    while (current && current !== document.body && current !== document.documentElement) {
-        if (isUsableHeightValue(getAuthoredHeight(current))) {
-            height = current.getBoundingClientRect().height;
-            break;
-        }
-
-        current = current.parentElement;
+    if (typeof document !== "undefined" && typeof id === "string" && id.trim()) {
+        return document.getElementById(id);
     }
 
-    node.style.display = previousDisplay;
-
-    return height;
+    return null;
 };
 
-const getRefSize = ({ ref, axis }) => {
-    const el = getRefElement(ref);
-    if (!el?.getBoundingClientRect) return null;
+const createResizeObserver = (callback, nodes = []) => {
+    if (typeof ResizeObserver === "undefined") return null;
 
-    const rect = el.getBoundingClientRect();
-    const value = axis === "x" ? rect.width : rect.height;
+    const ro = new ResizeObserver(callback);
+    const seen = new Set();
 
-    return value > 0 ? `${value}px` : null;
+    for (const node of nodes) {
+        if (!node || seen.has(node)) continue;
+        seen.add(node);
+        ro.observe(node);
+    }
+
+    return ro;
 };
 
 const useVars = (p) => {
@@ -559,28 +681,26 @@ const useVars = (p) => {
         [restProps],
     );
 
-    const explicitWidthValue = getExplicitWidth({
+    const explicitContainerWidthValue = getContainerWidth({
         width,
-        flexProps,
         restProps: restPropsWithoutShellPadding,
     });
+
     const hasWidthRefOrId =
         !!widthByRef || (typeof widthById === "string" && widthById.trim() !== "");
-    const intrinsicWidth =
-        (explicitWidthValue == null || explicitWidthValue === "") && !hasWidthRefOrId;
 
     const hasHeightRefOrId =
         !!heightByRef || (typeof heightById === "string" && heightById.trim() !== "");
 
+    const intrinsicWidth =
+        (explicitContainerWidthValue == null || explicitContainerWidthValue === "") &&
+        !hasWidthRefOrId;
+
     const hasExplicitContainerHeight =
-        (height != null && height !== "") ||
-        hasHeightRefOrId ||
-        (flexProps.height != null && flexProps.height !== "");
+        (height != null && height !== "") || hasHeightRefOrId;
 
     const hasExplicitContainerWidth =
-        (width != null && width !== "") ||
-        hasWidthRefOrId ||
-        (explicitWidthValue != null && explicitWidthValue !== "");
+        (width != null && width !== "") || hasWidthRefOrId;
 
     const autoHeightEnabled = autoHeight !== false && !hasExplicitContainerHeight;
     const autoWidthEnabled = autoWidth !== false && !hasExplicitContainerWidth;
@@ -588,9 +708,18 @@ const useVars = (p) => {
     const containerRef = useRef(null);
     const shellRef = useRef(null);
     const contentRef = useRef(null);
-    const dragRef = useRef({ active: false, x0: 0, y0: 0, s0l: 0, s0t: 0, pid: null });
+    const dragRef = useRef({
+        active: false,
+        x0: 0,
+        y0: 0,
+        s0l: 0,
+        s0t: 0,
+        pid: null,
+    });
+
     const [shellDragging, setShellDragging] = useState(false);
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
+
     const {
         measuredWidth,
         measuredHeight,
@@ -600,6 +729,7 @@ const useVars = (p) => {
         containerBorderInsetsPx,
         autoHeightCapsToParent,
         autoWidthCapsToParent,
+        autoWidthFlexGrow,
         scrollBarExportedData,
         setLocal,
     } = baseStore.useLocal({
@@ -611,10 +741,12 @@ const useVars = (p) => {
         containerBorderInsetsPx: { x: 0, y: 0 },
         autoHeightCapsToParent: false,
         autoWidthCapsToParent: false,
+        autoWidthFlexGrow: false,
         scrollBarExportedData: pickScrollBarLayoutData(),
     });
 
     const userScrollBarExportData = scrollBarProps?.exportData;
+
     const exportData = useCallback(
         (data) => {
             const nextLayoutData = pickScrollBarLayoutData(data);
@@ -635,93 +767,13 @@ const useVars = (p) => {
         () => ({
             ...scrollBarProps,
             exportData,
+            sourceByRef: scrollBarProps.sourceByRef ?? shellRef,
+            positionSourceByRef: scrollBarProps.positionSourceByRef ?? containerRef,
         }),
         [scrollBarProps, exportData],
     );
 
     const effectiveEnableDragging = enableDragging && !mergedScrollBarProps.fillMode;
-
-    const organizedFlexProps = useMemo(() => {
-        const explicitHeight = getExplicitHeight({
-            height,
-            flexProps,
-        });
-        const explicitWidth = getExplicitWidth({
-            width,
-            flexProps,
-            restProps: restPropsWithoutShellPadding,
-        });
-        const resolvedHeight = explicitHeight ?? measuredHeight;
-
-        const shouldRender =
-            intrinsicWidth ||
-            explicitHeight != null ||
-            measuredHeight != null ||
-            !hasMeasuredHeight ||
-            (hasMeasuredHeight && explicitHeight == null && measuredHeight == null);
-
-        const style = {
-            ...(restPropsWithoutShellPadding.style || {}),
-            ...(flexProps.style || {}),
-            ...(explicitHeight != null ? { maxHeight: "100vh" } : {}),
-        };
-
-        if (explicitWidth != null && style.width == null) {
-            style.width = getCssSize(explicitWidth);
-        }
-
-        const mergedFlexProps = {
-            ...restPropsWithoutShellPadding,
-            ...flexProps,
-            ...(shouldRender && resolvedHeight != null && resolvedHeight !== ""
-                ? { height: resolvedHeight }
-                : {}),
-            style,
-        };
-
-        const alignedFlexProps = mergeDefaultAlignment(mergedFlexProps);
-
-        const shellHeightBounded =
-            hasExplicitContainerHeight ||
-            (maxHeight != null && maxHeight !== "") ||
-            (autoHeightEnabled && measuredHeight != null && measuredHeight !== "");
-
-        const hasBoundedScrollHeight = shouldRender && shellHeightBounded;
-
-        const resolvedContentFlexProps = hasBoundedScrollHeight
-            ? (() => {
-                  const {
-                      height: _omitHeight,
-                      maxHeight: _omitMaxHeight,
-                      style: alignedStyle,
-                      ...restAligned
-                  } = alignedFlexProps;
-                  const nextStyle = { ...(alignedStyle || {}) };
-                  delete nextStyle.height;
-                  delete nextStyle.maxHeight;
-                  if (nextStyle.minHeight == null && nextStyle.minBlockSize == null) {
-                      nextStyle.minHeight = "100%";
-                  }
-                  return { ...restAligned, style: nextStyle };
-              })()
-            : alignedFlexProps;
-
-        return {
-            shouldRender,
-            flexProps: resolvedContentFlexProps,
-        };
-    }, [
-        autoHeightEnabled,
-        flexProps,
-        hasMeasuredHeight,
-        hasExplicitContainerHeight,
-        height,
-        maxHeight,
-        intrinsicWidth,
-        measuredHeight,
-        restPropsWithoutShellPadding,
-        width,
-    ]);
 
     const barGutters = useMemo(
         () => getBarGutterInsets(scrollBarExportedData, scrollBarProps),
@@ -733,67 +785,76 @@ const useVars = (p) => {
         [shellPaddingStyle],
     );
 
-    const hasMaxWidthBound =
-        maxWidth !== undefined && maxWidth !== null && maxWidth !== "";
-    const hasMaxHeightBound =
-        maxHeight !== undefined && maxHeight !== null && maxHeight !== "";
+    const hasMaxWidthBound = maxWidth !== undefined && maxWidth !== null && maxWidth !== "";
+    const hasMaxHeightBound = maxHeight !== undefined && maxHeight !== null && maxHeight !== "";
 
     const contentFillsShellWidth =
         hasExplicitContainerWidth || autoWidthEnabled || hasMaxWidthBound;
+
     const contentFillsShellHeight =
         hasExplicitContainerHeight || autoHeightEnabled || hasMaxHeightBound;
 
     const contentLayoutStyle = useMemo(() => {
         const style = {};
+
         if (!contentFillsShellWidth) {
             style.width = "max-content";
             style.maxWidth = "none";
             style.alignSelf = "flex-start";
+        } else if (
+            !autoWidthEnabled &&
+            !hasExplicitContainerWidth &&
+            contentWidthPx > 0
+        ) {
+            style.minWidth = `${contentWidthPx}px`;
         }
+
         if (!contentFillsShellHeight) {
             style.height = "max-content";
             style.maxHeight = "none";
         }
+
         return Object.keys(style).length ? style : undefined;
-    }, [contentFillsShellHeight, contentFillsShellWidth]);
+    }, [
+        autoWidthEnabled,
+        contentFillsShellHeight,
+        contentFillsShellWidth,
+        contentWidthPx,
+        hasExplicitContainerWidth,
+    ]);
 
     const getContainerExtraInsetPx = useCallback(
         (axis) => {
             const gutter = axis === "x" ? barGutters.gutterX : barGutters.gutterY;
             const pad = axis === "x" ? shellPaddingInsetsPx.x : shellPaddingInsetsPx.y;
-            const border =
-                axis === "x" ? containerBorderInsetsPx.x : containerBorderInsetsPx.y;
-            const slack = axis === "y" ? CONTENT_SIZE_MEASURE_SLACK_PX : 0;
-            return gutter + pad + border + slack;
+            const border = axis === "x" ? containerBorderInsetsPx.x : containerBorderInsetsPx.y;
+            return gutter + pad + border + CONTENT_SIZE_MEASURE_SLACK_PX;
         },
         [barGutters, containerBorderInsetsPx, shellPaddingInsetsPx],
     );
 
-    const needsShellViewport = useMemo(() => {
-        const hasMaxW = maxWidth !== undefined && maxWidth !== null && maxWidth !== "";
-        const hasMaxH = maxHeight !== undefined && maxHeight !== null && maxHeight !== "";
-        return (
+    const needsShellViewport = useMemo(
+        () =>
             hasExplicitContainerWidth ||
             hasExplicitContainerHeight ||
-            hasMaxW ||
-            hasMaxH ||
+            hasMaxWidthBound ||
+            hasMaxHeightBound ||
             autoWidthEnabled ||
             autoHeightEnabled ||
             contentWidthPx > 0 ||
-            contentHeightPx > 0
-        );
-    }, [
-        autoHeightEnabled,
-        autoWidthEnabled,
-        contentHeightPx,
-        contentWidthPx,
-        hasExplicitContainerHeight,
-        hasExplicitContainerWidth,
-        maxHeight,
-        maxWidth,
-    ]);
+            contentHeightPx > 0,
+        [
+            autoHeightEnabled,
+            autoWidthEnabled,
+            contentHeightPx,
+            contentWidthPx,
+            hasExplicitContainerHeight,
+            hasExplicitContainerWidth,
+            hasMaxHeightBound,
+            hasMaxWidthBound,
+        ],
+    );
 
-    /** Durum 3: maxW/maxH shell'de; shell viewport container içinde calc ile bar payı bırakır. */
     const shellViewportStyle = useMemo(() => {
         if (!needsShellViewport) return undefined;
 
@@ -804,15 +865,11 @@ const useVars = (p) => {
             overflow: "hidden",
         };
 
-        if (maxWidth !== undefined && maxWidth !== null && maxWidth !== "" && !hasExplicitContainerWidth) {
+        if (hasMaxWidthBound && !hasExplicitContainerWidth) {
             style.maxWidth = getLayoutSizeCss(maxWidth);
         }
-        if (
-            maxHeight !== undefined &&
-            maxHeight !== null &&
-            maxHeight !== "" &&
-            !hasExplicitContainerHeight
-        ) {
+
+        if (hasMaxHeightBound && !hasExplicitContainerHeight) {
             style.maxHeight = getLayoutSizeCss(maxHeight);
         }
 
@@ -820,6 +877,8 @@ const useVars = (p) => {
     }, [
         hasExplicitContainerHeight,
         hasExplicitContainerWidth,
+        hasMaxHeightBound,
+        hasMaxWidthBound,
         maxHeight,
         maxWidth,
         needsShellViewport,
@@ -827,6 +886,7 @@ const useVars = (p) => {
 
     const containerGridStyle = useMemo(() => {
         if (!needsShellViewport) return undefined;
+
         return {
             gridTemplateRows: "minmax(0, 1fr)",
             gridTemplateColumns: "minmax(0, 1fr)",
@@ -840,17 +900,111 @@ const useVars = (p) => {
         [scrollBarExportedData, scrollBarProps],
     );
 
+    const organizedFlexProps = useMemo(() => {
+        const explicitContainerHeight = getContainerHeight({ height });
+        const hasFlexContentHeight = flexProps.height != null && flexProps.height !== "";
+        const hasFlexContentWidth = flexProps.width != null && flexProps.width !== "";
+
+        const resolvedHeight = explicitContainerHeight ?? measuredHeight;
+
+        const shouldRender =
+            intrinsicWidth ||
+            explicitContainerHeight != null ||
+            measuredHeight != null ||
+            !hasMeasuredHeight ||
+            (hasMeasuredHeight &&
+                explicitContainerHeight == null &&
+                measuredHeight == null);
+
+        const style = {
+            ...(restPropsWithoutShellPadding.style || {}),
+            ...(flexProps.style || {}),
+            ...(explicitContainerHeight != null ? { maxHeight: "100vh" } : {}),
+        };
+
+        if (
+            explicitContainerWidthValue != null &&
+            !hasFlexContentWidth &&
+            style.width == null
+        ) {
+            style.width = getLayoutSizeCss(explicitContainerWidthValue);
+        }
+
+        const mergedFlexProps = {
+            ...restPropsWithoutShellPadding,
+            ...flexProps,
+            ...(shouldRender &&
+            resolvedHeight != null &&
+            resolvedHeight !== "" &&
+            !hasFlexContentHeight
+                ? { height: resolvedHeight }
+                : {}),
+            style,
+        };
+
+        const alignedFlexProps = mergeDefaultAlignment(mergedFlexProps);
+
+        const shellHeightBounded =
+            hasExplicitContainerHeight ||
+            hasMaxHeightBound ||
+            (autoHeightEnabled && measuredHeight != null && measuredHeight !== "");
+
+        const hasBoundedScrollHeight = shouldRender && shellHeightBounded;
+
+        if (!hasBoundedScrollHeight || hasFlexContentHeight) {
+            return {
+                shouldRender,
+                flexProps: applyContentFlexProps(alignedFlexProps),
+            };
+        }
+
+        const {
+            height: _height,
+            maxHeight: _maxHeight,
+            style: alignedStyle,
+            ...restAligned
+        } = alignedFlexProps;
+
+        const nextStyle = { ...(alignedStyle || {}) };
+
+        delete nextStyle.height;
+        delete nextStyle.maxHeight;
+
+        if (nextStyle.minHeight == null && nextStyle.minBlockSize == null) {
+            nextStyle.minHeight = "100%";
+        }
+
+        return {
+            shouldRender,
+            flexProps: applyContentFlexProps({
+                ...restAligned,
+                style: nextStyle,
+            }),
+        };
+    }, [
+        autoHeightEnabled,
+        explicitContainerWidthValue,
+        flexProps,
+        hasExplicitContainerHeight,
+        hasMaxHeightBound,
+        hasMeasuredHeight,
+        height,
+        intrinsicWidth,
+        measuredHeight,
+        restPropsWithoutShellPadding,
+        width,
+    ]);
+
     useLayoutEffect(() => {
         if (hasExplicitContainerWidth && hasExplicitContainerHeight) return;
 
         const syncContentSize = () => {
             const content = contentRef.current;
             const container = containerRef.current;
+
             if (!content) return;
 
-            const border = container
-                ? getContainerBorderInsetsPx(container)
-                : { x: 0, y: 0 };
+            const border = container ? getContainerBorderInsetsPx(container) : { x: 0, y: 0 };
             const nextW = hasExplicitContainerWidth
                 ? null
                 : measureContentIntrinsicAxisPx(content, "x");
@@ -862,9 +1016,11 @@ const useVars = (p) => {
                 if (nextW != null && s.contentWidthPx !== nextW) {
                     s.contentWidthPx = nextW;
                 }
+
                 if (nextH != null && s.contentHeightPx !== nextH) {
                     s.contentHeightPx = nextH;
                 }
+
                 if (
                     s.containerBorderInsetsPx.x !== border.x ||
                     s.containerBorderInsetsPx.y !== border.y
@@ -875,28 +1031,32 @@ const useVars = (p) => {
         };
 
         syncContentSize();
-        if (typeof ResizeObserver === "undefined") return;
 
-        const ro = new ResizeObserver(syncContentSize);
-        const seen = new Set();
-        const observe = (node) => {
-            if (!node || seen.has(node)) return;
-            seen.add(node);
-            ro.observe(node);
-        };
-        observe(contentRef.current);
+        const ro = createResizeObserver(syncContentSize, [
+            contentRef.current,
+            containerRef.current,
+            shellRef.current,
+        ]);
 
-        return () => ro.disconnect();
-    }, [hasExplicitContainerHeight, hasExplicitContainerWidth, setLocal]);
+        return () => ro?.disconnect();
+    }, [
+        barGutters.gutterX,
+        barGutters.gutterY,
+        hasExplicitContainerHeight,
+        hasExplicitContainerWidth,
+        scrollBarExportedData.left,
+        scrollBarExportedData.right,
+        scrollBarExportedData.top,
+        scrollBarExportedData.bottom,
+        setLocal,
+    ]);
 
     useLayoutEffect(() => {
         if (hasHeightRefOrId) {
-            const refEl = getRefElement(heightByRef);
-            const idEl =
-                typeof document !== "undefined" && heightById
-                    ? document.getElementById(heightById)
-                    : null;
-            const source = refEl || idEl;
+            const source = getTargetByRefOrId({
+                ref: heightByRef,
+                id: heightById,
+            });
 
             const syncRefHeight = () => {
                 const refHeight = getRefSize({ ref: source, axis: "y" });
@@ -907,6 +1067,7 @@ const useVars = (p) => {
                     refHeight || ancestorHeight
                         ? 0
                         : getParentHeightWithoutSelf(containerRef.current);
+
                 const nextHeight =
                     refHeight ||
                     (ancestorHeight > 0 ? `min(${ancestorHeight}px, 100vh)` : null) ||
@@ -915,6 +1076,7 @@ const useVars = (p) => {
 
                 setLocal((s) => {
                     if (s.hasMeasuredHeight && s.measuredHeight === nextHeight) return;
+
                     s.hasMeasuredHeight = true;
                     s.measuredHeight = nextHeight;
                     s.autoHeightCapsToParent = true;
@@ -922,10 +1084,10 @@ const useVars = (p) => {
             };
 
             syncRefHeight();
-            if (!source || typeof ResizeObserver === "undefined") return;
-            const observer = new ResizeObserver(syncRefHeight);
-            observer.observe(source);
-            return () => observer.disconnect();
+
+            const ro = createResizeObserver(syncRefHeight, [source]);
+
+            return () => ro?.disconnect();
         }
 
         if (!autoHeightEnabled) return;
@@ -933,6 +1095,7 @@ const useVars = (p) => {
         const syncAutoHeight = () => {
             const container = containerRef.current;
             const content = contentRef.current;
+
             if (!container || !content) return;
 
             const barGutter = getBarAxisGutterPx(scrollBarExportedData, scrollBarProps);
@@ -941,8 +1104,7 @@ const useVars = (p) => {
             const border = getContainerBorderInsetsPx(container);
             const shellPad = getPaddingInsetsFromElement(shellRef.current);
             const ancestorH = getAncestorAuthoredHeightWithoutSelf(container);
-            const parentH =
-                ancestorH > 0 ? ancestorH : getParentHeightWithoutSelf(container);
+            const parentH = ancestorH > 0 ? ancestorH : getParentHeightWithoutSelf(container);
 
             const { px, capToParentPercent } = resolveAutoAxisPx({
                 contentPx: contentH,
@@ -963,6 +1125,7 @@ const useVars = (p) => {
                 ) {
                     return;
                 }
+
                 s.hasMeasuredHeight = true;
                 s.measuredHeight = nextHeight;
                 s.autoHeightCapsToParent = capToParentPercent;
@@ -970,20 +1133,14 @@ const useVars = (p) => {
         };
 
         syncAutoHeight();
-        if (typeof ResizeObserver === "undefined") return;
 
-        const ro = new ResizeObserver(syncAutoHeight);
-        const seen = new Set();
-        const observe = (node) => {
-            if (!node || seen.has(node)) return;
-            seen.add(node);
-            ro.observe(node);
-        };
-        observe(containerRef.current);
-        observe(contentRef.current);
-        observe(containerRef.current?.parentElement);
+        const ro = createResizeObserver(syncAutoHeight, [
+            containerRef.current,
+            contentRef.current,
+            containerRef.current?.parentElement,
+        ]);
 
-        return () => ro.disconnect();
+        return () => ro?.disconnect();
     }, [
         autoHeightEnabled,
         hasHeightRefOrId,
@@ -996,27 +1153,27 @@ const useVars = (p) => {
 
     useLayoutEffect(() => {
         if (hasWidthRefOrId) {
-            const refEl = getRefElement(widthByRef);
-            const idEl =
-                typeof document !== "undefined" && widthById
-                    ? document.getElementById(widthById)
-                    : null;
-            const source = refEl || idEl;
+            const source = getTargetByRefOrId({
+                ref: widthByRef,
+                id: widthById,
+            });
 
             const syncRefWidth = () => {
                 const nextWidth = getRefSize({ ref: source, axis: "x" });
+
                 setLocal((s) => {
                     if (s.measuredWidth === nextWidth) return;
+
                     s.measuredWidth = nextWidth;
                     s.autoWidthCapsToParent = true;
                 });
             };
 
             syncRefWidth();
-            if (!source || typeof ResizeObserver === "undefined") return;
-            const observer = new ResizeObserver(syncRefWidth);
-            observer.observe(source);
-            return () => observer.disconnect();
+
+            const ro = createResizeObserver(syncRefWidth, [source]);
+
+            return () => ro?.disconnect();
         }
 
         if (!autoWidthEnabled) return;
@@ -1024,7 +1181,23 @@ const useVars = (p) => {
         const syncAutoWidth = () => {
             const container = containerRef.current;
             const content = contentRef.current;
+
             if (!container || !content) return;
+
+            const parent = container.parentElement;
+            const useFlexGrow = isFlexRowParent(parent);
+
+            if (useFlexGrow) {
+                setLocal((s) => {
+                    if (s.autoWidthFlexGrow && s.measuredWidth == null) return;
+
+                    s.autoWidthFlexGrow = true;
+                    s.measuredWidth = null;
+                    s.autoWidthCapsToParent = true;
+                });
+
+                return;
+            }
 
             const barGutter = getBarAxisGutterPx(scrollBarExportedData, scrollBarProps);
             const reserveX = !!(scrollBarExportedData.left || scrollBarExportedData.right);
@@ -1045,29 +1218,29 @@ const useVars = (p) => {
             const nextWidth = `${px}px`;
 
             setLocal((s) => {
-                if (s.measuredWidth === nextWidth && s.autoWidthCapsToParent === capToParentPercent) {
+                if (
+                    s.autoWidthFlexGrow === false &&
+                    s.measuredWidth === nextWidth &&
+                    s.autoWidthCapsToParent === capToParentPercent
+                ) {
                     return;
                 }
+
+                s.autoWidthFlexGrow = false;
                 s.measuredWidth = nextWidth;
                 s.autoWidthCapsToParent = capToParentPercent;
             });
         };
 
         syncAutoWidth();
-        if (typeof ResizeObserver === "undefined") return;
 
-        const ro = new ResizeObserver(syncAutoWidth);
-        const seen = new Set();
-        const observe = (node) => {
-            if (!node || seen.has(node)) return;
-            seen.add(node);
-            ro.observe(node);
-        };
-        observe(containerRef.current);
-        observe(contentRef.current);
-        observe(containerRef.current?.parentElement);
+        const ro = createResizeObserver(syncAutoWidth, [
+            containerRef.current,
+            contentRef.current,
+            containerRef.current?.parentElement,
+        ]);
 
-        return () => ro.disconnect();
+        return () => ro?.disconnect();
     }, [
         autoWidthEnabled,
         hasWidthRefOrId,
@@ -1079,43 +1252,64 @@ const useVars = (p) => {
     ]);
 
     const variantOuterStyle = useMemo(() => {
-        const ew = getExplicitWidth({ width, flexProps, restProps: restPropsWithoutShellPadding });
-        const eh = getExplicitHeight({ height, flexProps });
+        const containerWidthSource = resolveContainerWidthSource({
+            width,
+            restProps: restPropsWithoutShellPadding,
+            measuredWidth,
+            hasWidthRefOrId,
+        });
+
+        const containerHeightSource = resolveContainerHeightSource({
+            height,
+            measuredHeight,
+            hasHeightRefOrId,
+        });
+
         const { gutterX, gutterY } = barGutters;
         const out = {};
 
-        // —— Genişlik: container ——
-        // Durum 1: sabit ölçü (200px, 100%, …) → container = ölçü; shell calc(100% - bar)
-        if (hasExplicitContainerWidth) {
-            const w = getLayoutSizeCss(ew);
+        if (
+            hasExplicitContainerWidth &&
+            containerWidthSource != null &&
+            containerWidthSource !== ""
+        ) {
+            const w = getLayoutSizeCss(containerWidthSource);
+
             out.width = w;
-            if (String(ew).trim() !== "100%") {
+
+            if (String(containerWidthSource).trim() !== "100%") {
                 out.maxWidth = w;
             }
+        } else if (autoWidthEnabled && autoWidthFlexGrow) {
+            out.flex = "1 1 0";
+            out.minWidth = 0;
         } else if (autoWidthEnabled && measuredWidth != null && measuredWidth !== "") {
             out.width = getLayoutSizeCss(measuredWidth);
+
             if (autoWidthCapsToParent) {
                 out.maxWidth = "100%";
             }
         } else if (contentWidthPx > 0) {
-            // Durum 2: container = içerik + bar + shell padding + border
-            out.width = `${Math.round(contentWidthPx + getContainerExtraInsetPx("x"))}px`;
+            out.width = `${Math.ceil(contentWidthPx + getContainerExtraInsetPx("x"))}px`;
         } else if (intrinsicWidth) {
             out.width = "max-content";
         }
 
-        if (maxWidth !== undefined && maxWidth !== null && maxWidth !== "" && !hasExplicitContainerWidth) {
-            // Durum 3: max shell'de; container max = max + bar
+        if (hasMaxWidthBound && !hasExplicitContainerWidth) {
             out.maxWidth = addBarGutterToCssSize(maxWidth, gutterX);
         } else if (maxWidth === null) {
             delete out.maxWidth;
         }
 
-        // —— Yükseklik: container ——
-        if (hasExplicitContainerHeight) {
-            out.height = getLayoutSizeCss(eh);
+        if (
+            hasExplicitContainerHeight &&
+            containerHeightSource != null &&
+            containerHeightSource !== ""
+        ) {
+            out.height = getLayoutSizeCss(containerHeightSource);
         } else if (autoHeightEnabled && measuredHeight != null && measuredHeight !== "") {
             out.height = getLayoutSizeCss(measuredHeight);
+
             if (autoHeightCapsToParent) {
                 out.maxHeight = "100%";
             }
@@ -1123,37 +1317,41 @@ const useVars = (p) => {
             out.height = `${Math.round(contentHeightPx + getContainerExtraInsetPx("y"))}px`;
         }
 
-        if (
-            maxHeight !== undefined &&
-            maxHeight !== null &&
-            maxHeight !== "" &&
-            !hasExplicitContainerHeight
-        ) {
+        if (hasMaxHeightBound && !hasExplicitContainerHeight) {
             out.maxHeight = addBarGutterToCssSize(maxHeight, gutterY);
         }
 
         if (needsShellViewport) {
-            if (!out.display) out.display = "flex";
-            if (!out.flexDirection) out.flexDirection = "column";
-            if (out.minHeight === undefined || out.minHeight === null) out.minHeight = 0;
-            if (out.minWidth === undefined || out.minWidth === null) out.minWidth = 0;
-            if (!out.overflow) out.overflow = "hidden";
+            out.display ??= "flex";
+            out.flexDirection ??= "column";
+            out.minHeight ??= 0;
+            out.minWidth ??= 0;
+            out.overflow ??= "hidden";
         }
 
-        const merged = { ...out, ...(restPropsWithoutShellPadding.style || {}) };
+        const merged = {
+            ...out,
+            ...(restPropsWithoutShellPadding.style || {}),
+        };
+
         return Object.keys(merged).length ? merged : undefined;
     }, [
         autoHeightCapsToParent,
         autoHeightEnabled,
         autoWidthCapsToParent,
         autoWidthEnabled,
+        autoWidthFlexGrow,
         barGutters,
         contentHeightPx,
         contentWidthPx,
-        getContainerExtraInsetPx,
         flexProps,
+        getContainerExtraInsetPx,
         hasExplicitContainerHeight,
         hasExplicitContainerWidth,
+        hasHeightRefOrId,
+        hasMaxHeightBound,
+        hasMaxWidthBound,
+        hasWidthRefOrId,
         height,
         intrinsicWidth,
         maxHeight,
@@ -1168,9 +1366,19 @@ const useVars = (p) => {
     const endShellDrag = useCallback(() => {
         const el = contentRef.current;
         const pid = dragRef.current.pid;
-        dragRef.current = { active: false, x0: 0, y0: 0, s0l: 0, s0t: 0, pid: null };
+
+        dragRef.current = {
+            active: false,
+            x0: 0,
+            y0: 0,
+            s0l: 0,
+            s0t: 0,
+            pid: null,
+        };
+
         setShellDragging(false);
         unlockShellTextSelection(el);
+
         if (el != null && pid != null) {
             try {
                 el.releasePointerCapture(pid);
@@ -1180,28 +1388,25 @@ const useVars = (p) => {
         }
     }, []);
 
-    useEffect(
-        () => () => {
-            endShellDrag();
-        },
-        [endShellDrag],
-    );
+    useEffect(() => () => endShellDrag(), [endShellDrag]);
 
     const shellPointerDown = useCallback(
         (e) => {
             if (!effectiveEnableDragging) return;
             if (e.pointerType === "mouse" && e.button !== 0) return;
+
             const el = shellRef.current;
             const surfaceEl = contentRef.current;
+
             if (!el || !surfaceEl || e.currentTarget !== surfaceEl) return;
-            if (
-                e.target !== surfaceEl &&
-                e.target?.closest?.(
-                    "a,button,input,textarea,select,label,[contenteditable=true],[role=button]",
-                )
-            ) {
+
+            const interactiveSelector =
+                "a,button,input,textarea,select,label,[contenteditable=true],[role=button]";
+
+            if (e.target !== surfaceEl && e.target?.closest?.(interactiveSelector)) {
                 return;
             }
+
             dragRef.current = {
                 active: true,
                 x0: e.clientX,
@@ -1210,11 +1415,14 @@ const useVars = (p) => {
                 s0t: el.scrollTop,
                 pid: e.pointerId,
             };
+
             if (e.cancelable) e.preventDefault();
+
             lockShellTextSelection(surfaceEl);
             setShellDragging(true);
+
             try {
-                surfaceEl?.setPointerCapture(e.pointerId);
+                surfaceEl.setPointerCapture(e.pointerId);
             } catch {
                 /* ignore */
             }
@@ -1225,14 +1433,17 @@ const useVars = (p) => {
     const shellPointerMove = useCallback((e) => {
         if (!dragRef.current.active) return;
         if (e.cancelable) e.preventDefault();
+
         const el = shellRef.current;
         if (!el) return;
+
         const d = dragRef.current;
         const next = computeDragScrollFromPointers(
             { x: d.x0, y: d.y0 },
             { x: e.clientX, y: e.clientY },
             { scrollLeft: d.s0l, scrollTop: d.s0t },
         );
+
         el.scrollLeft = next.scrollLeft;
         el.scrollTop = next.scrollTop;
     }, []);
@@ -1240,11 +1451,14 @@ const useVars = (p) => {
     const shellPointerUp = useCallback(
         (e) => {
             if (!dragRef.current.active) return;
+
             if (e.type === "lostpointercapture" || e.type === "pointercancel") {
                 endShellDrag();
                 return;
             }
+
             if (dragRef.current.pid != null && e.pointerId !== dragRef.current.pid) return;
+
             endShellDrag();
         },
         [endShellDrag],
@@ -1252,6 +1466,7 @@ const useVars = (p) => {
 
     const shellSurfaceStyle = useMemo(() => {
         if (!effectiveEnableDragging) return undefined;
+
         return {
             cursor: shellDragging ? "grabbing" : "grab",
             touchAction: "none",
@@ -1265,6 +1480,7 @@ const useVars = (p) => {
 
     const shellPointerHandlers = useMemo(() => {
         if (!effectiveEnableDragging) return {};
+
         return {
             onPointerDown: shellPointerDown,
             onPointerMove: shellPointerMove,
@@ -1281,7 +1497,6 @@ const useVars = (p) => {
         shellPointerUp,
     ]);
 
-    /* Return */
     return useExportData(
         {
             exportData: scrollBoxExportData,
@@ -1306,4 +1521,5 @@ const useVars = (p) => {
         scrollBarExportedData,
     );
 };
+
 export default useVars;

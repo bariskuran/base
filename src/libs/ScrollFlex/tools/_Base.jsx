@@ -55,6 +55,7 @@ export const Base = ({ children, ...p }) => {
                             ...(flexProps?.style || {}),
                             ...(contentLayoutStyle || {}),
                             ...(shellSurfaceStyle || {}),
+                            ...(flexProps?.flex != null ? { flex: flexProps.flex } : {}),
                         }}
                     >
                         {children}

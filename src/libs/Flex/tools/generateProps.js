@@ -485,6 +485,13 @@ export const FLEX_PROPS_KEBAB_TO_CAMEL = Object.freeze({
     "children-props": "childrenProps",
 });
 
+/** Tek kelimelik kısayollar (flex-shrink → flexShrink ile birlikte; camel zaten varsa dokunulmaz). */
+export const FLEX_PROPS_SHORT_ALIASES = Object.freeze({
+    shrink: "flexShrink",
+    grow: "flexGrow",
+    basis: "flexBasis",
+});
+
 const hasOwn = (o, key) => Object.prototype.hasOwnProperty.call(o, key);
 
 export const mergeFlexKebabPropAliases = (source) => {
@@ -495,6 +502,12 @@ export const mergeFlexKebabPropAliases = (source) => {
     for (const [kebab, camel] of Object.entries(FLEX_PROPS_KEBAB_TO_CAMEL)) {
         if (!hasOwn(source, kebab)) continue;
         if (!hasOwn(source, camel)) out[camel] = source[kebab];
+    }
+
+    for (const [alias, camel] of Object.entries(FLEX_PROPS_SHORT_ALIASES)) {
+        if (!hasOwn(source, alias)) continue;
+        if (!hasOwn(source, camel)) out[camel] = source[alias];
+        delete out[alias];
     }
 
     return out;
@@ -784,4 +797,5 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "aria-label",
     "ariaLabel",
     ...Object.keys(FLEX_PROPS_KEBAB_TO_CAMEL),
+    ...Object.keys(FLEX_PROPS_SHORT_ALIASES),
 ]);

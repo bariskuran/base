@@ -36,7 +36,7 @@ const useVars = (p) => {
         exportData,
     } = p || {};
 
-    const edgeMarginDefault = -4 - thickness;
+    const edgeMarginDefault = -2 - thickness;
     const trackMargin = trackMarginProp ?? 9;
     const edgeMargin = edgeMarginProp ?? edgeMarginDefault;
     const edgeMarginX = edgeMarginXProp ?? edgeMarginDefault;

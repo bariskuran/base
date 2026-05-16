@@ -55,10 +55,16 @@ export const useVars = ({ props, children, content, className, style, forwardedR
             bpOverrideRow?.flex != null ||
             propsNorm?.flexGrow != null ||
             bpOverrideRow?.flexGrow != null ||
+            propsNorm?.grow != null ||
+            bpOverrideRow?.grow != null ||
             propsNorm?.flexShrink != null ||
             bpOverrideRow?.flexShrink != null ||
+            propsNorm?.shrink != null ||
+            bpOverrideRow?.shrink != null ||
             propsNorm?.flexBasis != null ||
-            bpOverrideRow?.flexBasis != null,
+            bpOverrideRow?.flexBasis != null ||
+            propsNorm?.basis != null ||
+            bpOverrideRow?.basis != null,
         [bpOverrideRow, propsNorm],
     );
 
@@ -180,7 +186,20 @@ export const useVars = ({ props, children, content, className, style, forwardedR
                 : generatedProps.flex;
         const widthStr =
             typeof width === "string" ? width.trim() : width != null ? String(width) : "";
+
+        const userProvidedFlex =
+            (propsNorm?.flex != null && String(propsNorm.flex).trim() !== "") ||
+            (bpOverrideRow?.flex != null && String(bpOverrideRow.flex).trim() !== "");
+
+        const userProvidedFlexShrink =
+            propsNorm?.flexShrink != null ||
+            bpOverrideRow?.flexShrink != null ||
+            propsNorm?.shrink != null ||
+            bpOverrideRow?.shrink != null;
+
+        /** width'ten otomatik üretilen `0 0 ${width}` ile width çiftini sade; kullanıcı flex verdiyse silme. */
         const skipAutoWidthFlexBasis =
+            !userProvidedFlex &&
             Boolean(generatedFlexTrimmed) &&
             Boolean(widthStr) &&
             generatedFlexTrimmed === `0 0 ${widthStr}`;
@@ -193,7 +212,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
               ? undefined
               : generatedProps.flex;
         const shellFlexShrink =
-            fullInFlexParent || skipAutoWidthFlexBasis
+            fullInFlexParent || (skipAutoWidthFlexBasis && !userProvidedFlexShrink)
                 ? undefined
                 : generatedProps.flexShrink;
 
@@ -216,7 +235,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
             placeSelf: generatedProps.placeSelf,
             order: generatedProps.order,
         };
-    }, [generatedProps, isFullShorthand, parentIsFlex, propsNorm]);
+    }, [bpOverrideRow, generatedProps, isFullShorthand, parentIsFlex, propsNorm]);
 
     const surfaceFromGeneratedProps = useMemo(() => {
         const s = {};

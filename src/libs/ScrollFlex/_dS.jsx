@@ -5,6 +5,7 @@ import { generateRandom } from "../generateRandom";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { useRef } from "react";
+import im from "./tools/01.jpg"; // 400x400
 
 const longText = generateRandom.loremIpsum(1000);
 const shortText = generateRandom.loremIpsum(50);
@@ -55,16 +56,16 @@ const X = () => {
                 example={
                     <Flex gap={10}>
                         <ScrollFlex width={200} height={100}>
-                            {longText}
+                            <img src={im} alt="image" width={400} height={400} />
                         </ScrollFlex>
                         <ScrollFlex width={200} height={100} padding={10}>
                             {longText}
                         </ScrollFlex>
-                        <ScrollFlex width={200} height={100}>
-                            <Flex full padding={10}>
-                                {longText}
-                            </Flex>
-                        </ScrollFlex>
+                        <Flex width={200} height={100}>
+                            <ScrollFlex enableDragging>
+                                <img src={im} alt="image" width={400} height={400} />
+                            </ScrollFlex>
+                        </Flex>
                     </Flex>
                 }
             />
@@ -181,7 +182,11 @@ const X = () => {
                         </ScrollFlex>`}
                 example={
                     <Flex gap={10}>
-                        <ScrollFlex width={150} height={100} padding={0}>
+                        <ScrollFlex
+                            width={150}
+                            height={100}
+                            scrollBarProps={{ disableOpacityEffect: true }}
+                        >
                             <Content width={1500} />
                         </ScrollFlex>
                         <ScrollFlex width={150} height={100}>
@@ -350,17 +355,13 @@ const X = () => {
                         enableDragging
                         width={180}
                         height={120}
-                        flexProps={{ width: 400, height: 300 }}
+                        flexProps={{
+                            minWidth: 400,
+                            height: 300,
+                            bgColor: "mistyrose",
+                        }}
                     >
-                        <Flex
-                            width={400}
-                            height={300}
-                            bgColor="mistyrose"
-                            justify="center"
-                            yAlign="center"
-                        >
-                            Large content — drag to scroll.
-                        </Flex>
+                        Large content — drag to scroll.
                     </ScrollFlex>
                 }
             />
