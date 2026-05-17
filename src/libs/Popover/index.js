@@ -1,8 +1,8 @@
 import { Base } from "./tools/_Base";
 import { componentCreator } from "../componentCreator/index.jsx";
 
-export const Popover = componentCreator({
-    name: "Popover",
+export const PopOver = componentCreator({
+    name: "PopOver",
     BaseComp: Base,
     variants: {
         error: { bgColor: "error" },

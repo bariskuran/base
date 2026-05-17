@@ -189,7 +189,7 @@ const X = () => {
                             commonButtonProps={{ variant: "plain" }}
                         />
                     </Flex>`}
-                description="No outer Variant, no inner Flex or ScrollFlex: only Button nodes in a fragment so the parent (e.g. Popover ScrollFlex content Flex) owns gap, direction, and scroll."
+                description="No outer Variant, no inner Flex or ScrollFlex: only Button nodes in a fragment so the parent (e.g. PopOver ScrollFlex content Flex) owns gap, direction, and scroll."
                 example={
                     <Flex direction="row" gap={8}>
                         <ButtonList

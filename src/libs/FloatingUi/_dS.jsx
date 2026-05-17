@@ -5,7 +5,7 @@ import { Flex } from "../Flex";
 import { ScrollFlex } from "../ScrollFlex";
 import { Dropdown } from "../Dropdown";
 import { PopTip } from "../PopTip";
-import { Popover } from "../Popover";
+import { PopOver } from "../PopOver";
 import { notifier } from "../notifier";
 
 const alignXOptions = [
@@ -37,7 +37,7 @@ const X = () => {
             title="<FloatingUi>"
             releasedOn="1.0.0"
             description={`FloatingUi renders floating content relative to a trigger element, with
-                    controllable position and style. The open state of FloatingUi is controlled externally; in other words, it is a base component. For Popover, PopTip, PopConfirm, main features are provided by the FloatingUi component.`}
+                    controllable position and style. The open state of FloatingUi is controlled externally; in other words, it is a base component. For PopOver, PopTip, PopConfirm, main features are provided by the FloatingUi component.`}
         >
             <Ds.block
                 title="Basic Usage"
@@ -50,11 +50,11 @@ const X = () => {
                         >
                                 content
                         </FloatingUi>`}
-                example={<Popover content="Default floating content">content</Popover>}
+                example={<PopOver content="Default floating content">content</PopOver>}
             />
             <Ds.block
                 title="Auto Positioning"
-                description="Open the Popover and drag the ScrollFlex area to see auto positioning in action. The Popover will also auto-close when it goes outside the viewport."
+                description="Open the PopOver and drag the ScrollFlex area to see auto positioning in action. The PopOver will also auto-close when it goes outside the viewport."
                 example={
                     <ScrollFlex width={300} height={300} padding={0} enableDragging>
                         <Flex.column
@@ -66,7 +66,7 @@ const X = () => {
                             yAlign="center"
                             gap={10}
                         >
-                            <Popover disableAutoClose>content</Popover>
+                            <PopOver disableAutoClose>content</PopOver>
                         </Flex.column>
                     </ScrollFlex>
                 }
@@ -98,9 +98,9 @@ const X = () => {
                                 }}
                             />
                         </Flex>
-                        <Popover alignX={selectedAlignX} alignY={selectedAlignY} disableAutoClose>
+                        <PopOver alignX={selectedAlignX} alignY={selectedAlignY} disableAutoClose>
                             Manual Positioning
-                        </Popover>
+                        </PopOver>
                     </Flex>
                 }
             />
@@ -135,8 +135,8 @@ const X = () => {
                         <PopTip content="enable escaping" enableEscaping>
                             <Template>enable escaping</Template>
                         </PopTip>
-                        <Popover enableEscaping>enableEscaping</Popover>
-                        <Popover>default behaviour = autoClose and escaping is disabled</Popover>
+                        <PopOver enableEscaping>enableEscaping</PopOver>
+                        <PopOver>default behaviour = autoClose and escaping is disabled</PopOver>
                     </Flex>
                 }
             />
@@ -145,14 +145,14 @@ const X = () => {
                 description="By default, only one FloatingUi instance can be open at a time. You can change this behavior by setting the disableMultipleBlock prop to true."
                 example={
                     <Flex gap={10}>
-                        <Popover content="content1">disableMultipleBlock false1</Popover>
-                        <Popover content="content2">disableMultipleBlock false2</Popover>
-                        <Popover content="content3" disableMultipleBlock>
+                        <PopOver content="content1">disableMultipleBlock false1</PopOver>
+                        <PopOver content="content2">disableMultipleBlock false2</PopOver>
+                        <PopOver content="content3" disableMultipleBlock>
                             disableMultipleBlock true1
-                        </Popover>
-                        <Popover content="content4" disableMultipleBlock>
+                        </PopOver>
+                        <PopOver content="content4" disableMultipleBlock>
                             disableMultipleBlock true2
-                        </Popover>
+                        </PopOver>
                     </Flex>
                 }
             />
@@ -161,21 +161,21 @@ const X = () => {
                 description="Mouse handlers for FloatingUi element."
                 example={
                     <Flex gap={10}>
-                        <Popover content="onClick" onClick={() => notifier.add("onClick")}>
+                        <PopOver content="onClick" onClick={() => notifier.add("onClick")}>
                             onClick
-                        </Popover>
-                        <Popover
+                        </PopOver>
+                        <PopOver
                             content="onMouseEnter"
                             onMouseEnter={() => notifier.add("onMouseEnter")}
                         >
                             onMouseEnter
-                        </Popover>
-                        <Popover
+                        </PopOver>
+                        <PopOver
                             content="onMouseLeave"
                             onMouseLeave={() => notifier.add("onMouseLeave")}
                         >
                             onMouseLeave
-                        </Popover>
+                        </PopOver>
                     </Flex>
                 }
             />
@@ -259,7 +259,7 @@ const X = () => {
                     },
                     disableMultipleBlock: {
                         description:
-                            "When false (default), a global popover id lets only one exclusive instance stay visually open; opening another steals the slot. When true, multiple instances may stay open; combined with popoverTriggerMarker, outside pointerdown skips closing when the target is another marked trigger.",
+                            "When false (default), a global popOver id lets only one exclusive instance stay visually open; opening another steals the slot. When true, multiple instances may stay open; combined with popOverTriggerMarker, outside pointerdown skips closing when the target is another marked trigger.",
                         type: "boolean",
                         defaultValue: "false",
                     },

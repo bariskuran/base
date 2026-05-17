@@ -1,6 +1,6 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { Popover } from ".";
+import { PopOver } from ".";
 import { Flex } from "../Flex";
 import { ButtonList } from "../ButtonList";
 import { Button } from "../Button";
@@ -76,16 +76,16 @@ const commonButtonProps = {
 
 const X = () => (
     <Ds.page
-        title="<Popover>"
+        title="<PopOver>"
         releasedOn="1.0.0"
         description={
             <>
-                Popover is composed of advanced components such as FloatingUi, ScrollFlex, Button,
+                PopOver is composed of advanced components such as FloatingUi, ScrollFlex, Button,
                 and ButtonList. As a result, it does not have many features of its own, but can
                 utilize all the features provided by the aforementioned components. <br />
-                <br />A nice feature of the Popover component: by default the system allows only one
-                exclusive popover at a time (see FloatingUi <code>disableMultipleBlock</code>). Use{" "}
-                <code>disableMultipleBlock</code> on Popover when multiple panels should stay open.
+                <br />A nice feature of the PopOver component: by default the system allows only one
+                exclusive PopOver at a time (see FloatingUi <code>disableMultipleBlock</code>). Use{" "}
+                <code>disableMultipleBlock</code> on PopOver when multiple panels should stay open.
                 <br />
                 <br />
                 <Button.string to="/design-system/floatingUi" label="FloatingUi" />
@@ -98,22 +98,22 @@ const X = () => (
     >
         <Ds.block
             title="Basic Usage"
-            code={`import { Popover } from "${SYS.basePath}";
+            code={`import { PopOver } from "${SYS.basePath}";
 
-                        <Popover>content</Popover>`}
-            example={<Popover>content</Popover>}
+                        <PopOver>content</PopOver>`}
+            example={<PopOver>content</PopOver>}
         />
         <Ds.block
             title="Advanced Usage"
-            code={`import { Popover } from "${SYS.basePath}";
+            code={`import { PopOver } from "${SYS.basePath}";
 
-                    <Popover buttonProps={{ icon: { flat: true } }}>
+                    <PopOver buttonProps={{ icon: { flat: true } }}>
                         <Panel />
-                    </Popover>
-                    <Popover buttonProps={{ label: "Menu", outlined: true }}>
+                    </PopOver>
+                    <PopOver buttonProps={{ label: "Menu", outlined: true }}>
                         <Panel2 />
-                    </Popover>
-                    <Popover
+                    </PopOver>
+                    <PopOver
                         buttonProps={{ label: "Menu", outlined: false }}
                         scrollFlexProps={{
                             enableDragging: true,
@@ -121,17 +121,17 @@ const X = () => (
                         }}
                     >
                         <LargeContent />
-                    </Popover>
+                    </PopOver>
                         `}
             example={
                 <Flex gap={12}>
-                    <Popover buttonProps={{ icon: { flat: true } }}>
+                    <PopOver buttonProps={{ icon: { flat: true } }}>
                         <Panel />
-                    </Popover>
-                    <Popover buttonProps={{ label: "Menu", outlined: true }}>
+                    </PopOver>
+                    <PopOver buttonProps={{ label: "Menu", outlined: true }}>
                         <Panel2 />
-                    </Popover>
-                    <Popover
+                    </PopOver>
+                    <PopOver
                         buttonProps={{ label: "Menu", outlined: false }}
                         scrollFlexProps={{
                             enableDragging: true,
@@ -139,16 +139,16 @@ const X = () => (
                         }}
                     >
                         <LargeContent />
-                    </Popover>
+                    </PopOver>
                 </Flex>
             }
         />
         <Ds.block
-            title="ButtonList with Popover"
-            description='The "flat" prop of ButtonList removes outer wrappers, giving layout control to the Popover. You can manage the UI inside the Popover using scrollFlexProps.'
-            code={`import { Popover, ButtonList } from "${SYS.basePath}";
+            title="ButtonList with PopOver"
+            description='The "flat" prop of ButtonList removes outer wrappers, giving layout control to the PopOver. You can manage the UI inside the PopOver using scrollFlexProps.'
+            code={`import { PopOver, ButtonList } from "${SYS.basePath}";
 
-                <Popover
+                <PopOver
                     buttonProps={{ label: "flat ButtonList usage" }}
                     scrollFlexProps={{
                         flexProps: { gap: 5 },
@@ -159,9 +159,9 @@ const X = () => (
                     }}
                 >
                     <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
-                </Popover>`}
+                </PopOver>`}
             example={
-                <Popover
+                <PopOver
                     buttonProps={{ label: "flat ButtonList usage" }}
                     scrollFlexProps={{
                         flexProps: { gap: 5 },
@@ -172,38 +172,38 @@ const X = () => (
                     }}
                 >
                     <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
-                </Popover>
+                </PopOver>
             }
         />
         <Ds.block
             title="Styling"
-            description="bgColor and color props are used to set the background and text color of the Popover. It can be a theme color, a theme path, or a css color."
-            code={`import { Popover, ButtonList } from "${SYS.basePath}";
+            description="bgColor and color props are used to set the background and text color of the PopOver. It can be a theme color, a theme path, or a css color."
+            code={`import { PopOver, ButtonList } from "${SYS.basePath}";
 
-                <Popover bgColor="lightgrey" color="primary">
+                <PopOver bgColor="lightgrey" color="primary">
                     <Panel />
-                </Popover>`}
+                </PopOver>`}
             example={
-                <Popover bgColor="lightgrey" color="primary">
+                <PopOver bgColor="lightgrey" color="primary">
                     <Panel />
-                </Popover>
+                </PopOver>
             }
         />
         <Ds.block
             title="disableArrow"
-            code={`import { Popover, ButtonList } from "${SYS.basePath}";
+            code={`import { PopOver, ButtonList } from "${SYS.basePath}";
 
-                <Popover disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
+                <PopOver disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
                     <Panel />
-                </Popover>`}
+                </PopOver>`}
             example={
-                <Popover disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
+                <PopOver disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
                     <Panel />
-                </Popover>
+                </PopOver>
             }
         />
         <Ds.api
-            args="<Popover>{React.Node}</Popover>"
+            args="<PopOver>{React.Node}</PopOver>"
             props={{
                 children: {
                     description: "Panel content rendered inside the internal ScrollFlex.",

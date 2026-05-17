@@ -4,25 +4,29 @@ import { resolvePathOrRaw } from "../../Button/tools/generateColors.js";
 import { useExportData } from "../../useExportedData";
 
 const useVars = (p) => {
-    const { exportData, buttonProps = {}, scrollFlexProps = {}, ...rest } = p || {};
+    const { exportData, buttonProps = {}, scrollFlexProps = {}, onClose, ...rest } = p || {};
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
     const { isOpen, setLocal } = baseStore.useLocal({
         isOpen: false,
     });
     const dismissWithoutAnimationRef = useRef(false);
 
-    const onCloseHandler = () => {
+    const onCloseHandler = useCallback(() => {
         setLocal((s) => {
             s.isOpen = false;
         });
-    };
+        onClose?.();
+    }, [onClose, setLocal]);
 
-    const requestClose = useCallback((opts) => {
-        if (opts?.instant) {
-            dismissWithoutAnimationRef.current = true;
-        }
-        onCloseHandler();
-    }, []);
+    const requestClose = useCallback(
+        (opts) => {
+            if (opts?.instant) {
+                dismissWithoutAnimationRef.current = true;
+            }
+            onCloseHandler();
+        },
+        [onCloseHandler],
+    );
 
     const floatingUiPropsResolved = useMemo(() => {
         const next = { ...rest };
@@ -38,11 +42,11 @@ const useVars = (p) => {
             if (r != null) next.color = r;
         }
 
-        if (next.popoverTriggerMarker == null) next.popoverTriggerMarker = true;
+        if (next.popOverTriggerMarker == null) next.popOverTriggerMarker = true;
         if (next.disableAutoClose) {
-            delete next.popoverOutsideDismiss;
+            delete next.popOverOutsideDismiss;
         } else {
-            next.popoverOutsideDismiss = true;
+            next.popOverOutsideDismiss = true;
         }
         return next;
     }, [p, theme]);
@@ -71,6 +75,7 @@ const useVars = (p) => {
         {
             isOpen,
             onCloseHandler,
+            onClose: onCloseHandler,
             requestClose,
         },
     );

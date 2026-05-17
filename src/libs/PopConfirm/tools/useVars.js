@@ -1,55 +1,91 @@
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useExportData } from "../../useExportedData";
 import {
     DEFAULT_CANCEL_BUTTON_PROPS,
     DEFAULT_CONFIRM_BUTTON_PROPS,
     getDefaultConfirmationContent,
 } from "./defaultPopConfirmProps";
-import { mergeActionButtonProps } from "./mergeActionButtonProps";
+import {
+    buildCancelButtonProps,
+    buildConfirmButtonProps,
+    invokeButtonActionProps,
+    splitDeferredTriggerActions,
+} from "./buttonActionProps";
 
 const useVars = (p) => {
+    const navigate = useNavigate();
     const {
         exportData,
-        children,
         confirmButtonProps: confirmButtonPropsProp,
         cancelButtonProps: cancelButtonPropsProp,
         confirmationContent: confirmationContentProp,
-        ...popoverProps
+        contentButtonProps: contentButtonPropsProp,
+        ...popOverRest
     } = p || {};
 
-    const popoverApiRef = useRef({
-        onCloseHandler: null,
+    const popOverApiRef = useRef({
         requestClose: null,
     });
 
+    const closeReasonRef = useRef(null);
+    const cancelDismissActionsRef = useRef({});
+
+    const [deferredTriggerActions, triggerButtonProps] = useMemo(
+        () => splitDeferredTriggerActions(contentButtonPropsProp),
+        [contentButtonPropsProp],
+    );
+
+    useEffect(() => {
+        cancelDismissActionsRef.current = cancelButtonPropsProp || {};
+    }, [cancelButtonPropsProp]);
+
     const closePanel = useCallback((opts) => {
-        popoverApiRef.current?.requestClose?.(opts);
-        popoverApiRef.current?.onCloseHandler?.();
+        popOverApiRef.current?.requestClose?.(opts);
     }, []);
+
+    const setCloseReason = useCallback((reason) => {
+        closeReasonRef.current = reason;
+    }, []);
+
+    const handlePopOverClose = useCallback(() => {
+        const reason = closeReasonRef.current;
+        closeReasonRef.current = null;
+
+        if (reason === "confirm" || reason === "cancel") return;
+
+        invokeButtonActionProps(cancelDismissActionsRef.current, undefined, { navigate });
+    }, [navigate]);
 
     const confirmationContent = confirmationContentProp ?? getDefaultConfirmationContent();
 
     const confirmButtonProps = useMemo(
         () =>
-            mergeActionButtonProps(DEFAULT_CONFIRM_BUTTON_PROPS, confirmButtonPropsProp, () =>
-                closePanel(),
-            ),
-        [closePanel, confirmButtonPropsProp],
+            buildConfirmButtonProps({
+                defaults: DEFAULT_CONFIRM_BUTTON_PROPS,
+                confirmProps: confirmButtonPropsProp,
+                deferredFromTrigger: deferredTriggerActions,
+                onPanelClose: closePanel,
+                setCloseReason,
+            }),
+        [closePanel, confirmButtonPropsProp, deferredTriggerActions, setCloseReason],
     );
 
     const cancelButtonProps = useMemo(
         () =>
-            mergeActionButtonProps(DEFAULT_CANCEL_BUTTON_PROPS, cancelButtonPropsProp, () =>
-                closePanel(),
-            ),
-        [cancelButtonPropsProp, closePanel],
+            buildCancelButtonProps({
+                defaults: DEFAULT_CANCEL_BUTTON_PROPS,
+                cancelProps: cancelButtonPropsProp,
+                onPanelClose: closePanel,
+                setCloseReason,
+            }),
+        [cancelButtonPropsProp, closePanel, setCloseReason],
     );
 
-    const handlePopoverExportData = useCallback(
+    const handlePopOverExportData = useCallback(
         (api) => {
             if (api && typeof api === "object") {
-                popoverApiRef.current = {
-                    onCloseHandler: api.onCloseHandler,
+                popOverApiRef.current = {
                     requestClose: api.requestClose,
                 };
             }
@@ -59,23 +95,24 @@ const useVars = (p) => {
         [exportData],
     );
 
-    const popoverPropsResolved = useMemo(
+    const popOverPropsResolved = useMemo(
         () => ({
-            ...popoverProps,
-            exportData: handlePopoverExportData,
+            ...popOverRest,
+            buttonProps: triggerButtonProps,
+            onClose: handlePopOverClose,
+            exportData: handlePopOverExportData,
         }),
-        [handlePopoverExportData, popoverProps],
+        [handlePopOverClose, handlePopOverExportData, popOverRest, triggerButtonProps],
     );
 
     /* Return */
     return useExportData(
         {
             exportData,
-            children,
             confirmButtonProps,
             cancelButtonProps,
             confirmationContent,
-            popoverProps: popoverPropsResolved,
+            popOverProps: popOverPropsResolved,
         },
         {},
     );

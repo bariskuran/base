@@ -1,28 +1,21 @@
 import useVars from "./useVars";
-import { Popover } from "../../Popover";
+import { PopOver } from "../../PopOver";
 import { Flex } from "../../Flex";
 import { Button } from "../../Button";
 
 export const Base = (p) => {
-    const {
-        confirmButtonProps,
-        cancelButtonProps,
-        confirmationContent,
-        popoverProps,
-        children: panelChildren,
-    } = useVars(p);
+    const { confirmButtonProps, cancelButtonProps, confirmationContent, popOverProps } = useVars(p);
 
     /* Return */
     return (
-        <Popover {...popoverProps}>
-            <Flex.column gap={12} full>
-                {confirmationContent}
-                {panelChildren}
+        <PopOver {...popOverProps}>
+            <Flex gap={12} padding={5} full wrap>
+                <Flex full>{confirmationContent}</Flex>
                 <Flex full xAlign="end" wrap>
                     <Button {...cancelButtonProps} />
                     <Button {...confirmButtonProps} />
                 </Flex>
-            </Flex.column>
-        </Popover>
+            </Flex>
+        </PopOver>
     );
 };

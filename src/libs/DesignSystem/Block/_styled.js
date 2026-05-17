@@ -4,7 +4,6 @@ const S = {
     container: styled.div`
         display: flex;
         align-items: stretch;
-        min-height: 100rem;
         width: 100%;
 
         ${({ $lastBlock }) =>
@@ -51,7 +50,6 @@ const S = {
     `,
 
     mainColumn: styled.div`
-        /* flex: 1 1 0%; */
         flex: 1 1 auto;
         min-width: 0;
         display: flex;
@@ -75,6 +73,7 @@ const S = {
         justify-content: flex-start;
         align-items: flex-start;
         margin-bottom: 20rem;
+        min-height: 125rem;
 
         & > div {
             width: 100%;

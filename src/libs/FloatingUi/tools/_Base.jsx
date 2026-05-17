@@ -32,7 +32,7 @@ export const Base = ({ children, content, ...p }) => {
         delayMs,
         floatingMountHost,
         floatingPadding,
-        popoverTriggerMarker,
+        popOverTriggerMarker,
     } = useVars(p);
 
     /* Return */
@@ -40,7 +40,7 @@ export const Base = ({ children, content, ...p }) => {
         <>
             <S.children
                 ref={childrenRef}
-                {...(popoverTriggerMarker ? { "data-floating-ui-popover-trigger": "" } : {})}
+                {...(popOverTriggerMarker ? { "data-floating-ui-pop-over-trigger": "" } : {})}
             >
                 {children}
             </S.children>

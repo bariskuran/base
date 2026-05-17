@@ -14,11 +14,16 @@ const Page = ({ children, title, releasedOn, description }) => {
                         justifyContent="stretch"
                         borderRight="1px solid greys.shade40"
                     >
-                        <Flex flex="1 1 auto" xAlign="center" yAlign="center" paddingRight={30}>
+                        <Flex.column flex="1 1 auto" yAlign="center" paddingRight={30}>
                             <Typo.h1 alignSelf="center" color="greys.shade40">
                                 {title}
                             </Typo.h1>
-                        </Flex>
+                            {releasedOn && (
+                                <Typo.span size={12} balance>
+                                    (Relased On: {releasedOn})
+                                </Typo.span>
+                            )}
+                        </Flex.column>
                         <Flex height={1} flex="0 0 1px" full>
                             <Flex flex="0 0 175rem" width={175} height={1} />
                             <Flex flex="1 1 auto" height={1} bgColor="greys.shade40" />
@@ -31,7 +36,6 @@ const Page = ({ children, title, releasedOn, description }) => {
                         justify="center"
                         margin="50rem 0"
                     >
-                        {releasedOn && <Typo.span balance>(Relased On: {releasedOn})</Typo.span>}
                         {description && (
                             <Typo as={isJsxDescription(description) ? "div" : "pre"} balance>
                                 {description}

@@ -17,7 +17,7 @@ import { generateRandom } from "../../generateRandom";
 
 const DEFAULT_FLOATING_PADDING = 10;
 
-const POPOVER_TRIGGER_SELECTOR = "[data-floating-ui-popover-trigger]";
+const POP_OVER_TRIGGER_SELECTOR = "[data-floating-ui-pop-over-trigger]";
 
 const useVars = (p) => {
     const {
@@ -33,7 +33,7 @@ const useVars = (p) => {
         color,
         uniqueId,
         enableEscaping: enableEscapingProp,
-        popoverOutsideDismiss: popoverOutsideDismissProp,
+        popOverOutsideDismiss: popOverOutsideDismissProp,
         closeHandler: closeHandlerFromChildComponent,
         exportData,
         dismissWithoutAnimationRef,
@@ -44,12 +44,12 @@ const useVars = (p) => {
         paddingBottom,
         paddingLeft,
         disableMultipleBlock = false,
-        popoverTriggerMarker = false,
+        popOverTriggerMarker = false,
     } = p || {};
 
     const enableEscaping = enableEscapingProp === true;
-    const popoverOutsideDismiss = popoverOutsideDismissProp === true;
-    const listenOutsidePointer = popoverOutsideDismiss;
+    const popOverOutsideDismiss = popOverOutsideDismissProp === true;
+    const listenOutsidePointer = popOverOutsideDismiss;
     const listenEscapeKey = enableEscaping;
 
     const floatingExclusiveId = useMemo(
@@ -130,14 +130,14 @@ const useVars = (p) => {
 
     const delayedCloseRef = useRef(delayedClose);
     delayedCloseRef.current = delayedClose;
-    const [popoverId, setGlobal] = baseStore.useGlobal((s) => [s.popoverId]);
+    const [popOverId, setGlobal] = baseStore.useGlobal((s) => [s.popOverId]);
 
     const exclusiveBlocksOthers = !disableMultipleBlock;
 
     const effectiveOpen = useMemo(() => {
         if (!exclusiveBlocksOthers) return open;
-        return open && (popoverId == null || popoverId === floatingExclusiveId);
-    }, [open, exclusiveBlocksOthers, popoverId, floatingExclusiveId]);
+        return open && (popOverId == null || popOverId === floatingExclusiveId);
+    }, [open, exclusiveBlocksOthers, popOverId, floatingExclusiveId]);
 
     const prevOpenForExclusiveRef = useRef(false);
 
@@ -153,12 +153,12 @@ const useVars = (p) => {
         prevOpenForExclusiveRef.current = open;
         if (open && !was) {
             setGlobal((s) => {
-                s.popoverId = floatingExclusiveId;
+                s.popOverId = floatingExclusiveId;
             });
         }
         if (!open && was) {
             setGlobal((s) => {
-                if (s.popoverId === floatingExclusiveId) s.popoverId = null;
+                if (s.popOverId === floatingExclusiveId) s.popOverId = null;
             });
         }
     }, [open, disableMultipleBlock, floatingExclusiveId, setGlobal]);
@@ -172,7 +172,7 @@ const useVars = (p) => {
         });
         if (!disableMultipleBlock) {
             setGlobal((s) => {
-                if (s.popoverId === floatingExclusiveId) s.popoverId = null;
+                if (s.popOverId === floatingExclusiveId) s.popOverId = null;
             });
         }
     }, [status, delayedClose, setLocal, setGlobal, disableMultipleBlock, floatingExclusiveId]);
@@ -367,7 +367,7 @@ const useVars = (p) => {
                 typeof Element !== "undefined" &&
                 target instanceof Element &&
                 typeof target.closest === "function" &&
-                target.closest(POPOVER_TRIGGER_SELECTOR)
+                target.closest(POP_OVER_TRIGGER_SELECTOR)
             ) {
                 return;
             }
@@ -424,7 +424,7 @@ const useVars = (p) => {
             onMouseLeave,
             onClick,
             closeHandler,
-            popoverTriggerMarker,
+            popOverTriggerMarker,
         },
         {
             isMounted,
