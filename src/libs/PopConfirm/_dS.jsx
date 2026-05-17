@@ -60,10 +60,46 @@ const X = () => (
                 />
             }
         />
+        <Ds.block
+            title="Content example"
+            code={`import { PopConfirm } from "${SYS.basePath}";
+
+                <PopConfirm
+                    contentButtonProps={{
+                        onClick: () => notifier.add("deleted"),
+                    }}
+                    confirmButtonProps={{
+                        onClick: () => notifier.add("confirmed."),
+                    }}
+                    cancelButtonProps={{
+                        onClick: () => notifier.add("cancelled"),
+                    }}
+                />`}
+            example={
+                <PopConfirm
+                    content="Warning: This action is irreversible."
+                    contentButtonProps={{
+                        icon: { icon: "trash", hoverIcon: "warning", activeIcon: "warning" },
+                        bgColor: "error",
+                        hoverBgColor: "foreground",
+                        activeBgColor: "success",
+                        onClick: () => notifier.add("action triggered."),
+                    }}
+                    confirmButtonProps={{
+                        icon: { icon: "check" },
+                        onClick: () => notifier.add("confirmed."),
+                    }}
+                    cancelButtonProps={{
+                        icon: { icon: "close" },
+                        onClick: () => notifier.add("cancelled"),
+                    }}
+                />
+            }
+        />
         <Ds.api
             args="<PopConfirm />"
             props={{
-                confirmationContent: {
+                content: {
                     description: "The confirmation message to be displayed.",
                     type: "React Node",
                     defaultValue: getText("areYouSure"),

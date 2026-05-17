@@ -19,7 +19,7 @@ const useVars = (p) => {
         exportData,
         confirmButtonProps: confirmButtonPropsProp,
         cancelButtonProps: cancelButtonPropsProp,
-        content: contentProp,
+        confirmationContent: confirmationContentProp,
         contentButtonProps: contentButtonPropsProp,
         ...popOverRest
     } = p || {};
@@ -57,7 +57,7 @@ const useVars = (p) => {
         invokeButtonActionProps(cancelDismissActionsRef.current, undefined, { navigate });
     }, [navigate]);
 
-    const content = contentProp ?? getDefaultConfirmationContent();
+    const confirmationContent = confirmationContentProp ?? getDefaultConfirmationContent();
 
     const confirmButtonProps = useMemo(
         () =>
@@ -111,7 +111,7 @@ const useVars = (p) => {
             exportData,
             confirmButtonProps,
             cancelButtonProps,
-            content,
+            confirmationContent,
             popOverProps: popOverPropsResolved,
         },
         {},

@@ -4,18 +4,18 @@ import { Flex } from "../../Flex";
 import { Button } from "../../Button";
 
 export const Base = (p) => {
-    const { confirmButtonProps, cancelButtonProps, content, popOverProps } = useVars(p);
+    const {} = useVars(p);
 
     /* Return */
     return (
-        <PopOver {...popOverProps}>
+        <S.popUp>
             <Flex gap={12} padding={5} full wrap>
-                <Flex full>{content}</Flex>
+                <Flex full>{popUpContent}</Flex>
                 <Flex full xAlign="end" wrap>
                     <Button {...cancelButtonProps} />
                     <Button {...confirmButtonProps} />
                 </Flex>
             </Flex>
-        </PopOver>
+        </S.popUp>
     );
 };
