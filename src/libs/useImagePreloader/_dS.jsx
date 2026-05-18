@@ -26,7 +26,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useImagePreloader(images, options);"
+            args="useImagePreloader(images, { delayAfterLoad })"
             returns="Boolean: all listed images finished loading."
             props={{
                 images: {

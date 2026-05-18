@@ -3,6 +3,7 @@ import { colorGet } from "../../colorGet";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { removeUndefinedDeep } from "../../removeUndefined";
 import { generateFlexBorders } from "./resolveFlexBorder.js";
+import { generateFlexMotion } from "./resolveFlexMotion.js";
 
 export const manageColors = ({ bgColor, color } = {}) => {
     const bg = colorGet(bgColor);
@@ -481,6 +482,11 @@ export const FLEX_PROPS_KEBAB_TO_CAMEL = Object.freeze({
     "bg-color": "bgColor",
     "x-align": "xAlign",
     "y-align": "yAlign",
+    "scale-x": "scaleX",
+    "scale-y": "scaleY",
+    "transition-x": "transitionX",
+    "transition-y": "transitionY",
+    "transform-origin": "transformOrigin",
     "children-common": "childrenCommon",
     "children-props": "childrenProps",
 });
@@ -490,6 +496,7 @@ export const FLEX_PROPS_SHORT_ALIASES = Object.freeze({
     shrink: "flexShrink",
     grow: "flexGrow",
     basis: "flexBasis",
+    origin: "transformOrigin",
 });
 
 const hasOwn = (o, key) => Object.prototype.hasOwnProperty.call(o, key);
@@ -622,6 +629,13 @@ export const generateProps = ({
         overflowY,
         userSelect,
         textAlign,
+        scale,
+        scaleX,
+        scaleY,
+        transformOrigin,
+        transition,
+        transitionX,
+        transitionY,
     } = mergedObj;
 
     const childCommon = childrenCommon;
@@ -713,6 +727,15 @@ export const generateProps = ({
                 ? undefined
                 : String(textAlign).trim() || undefined,
         wrap: normalizeWrap(wrap),
+        ...generateFlexMotion({
+            scale,
+            scaleX,
+            scaleY,
+            transformOrigin,
+            transition,
+            transitionX,
+            transitionY,
+        }),
         inProps: generateInProps({
             childCommon,
             perChildOverrides: childrenProps,
@@ -789,6 +812,13 @@ export const FLEX_PROPS_OMIT_FOR_DOM = new Set([
     "wrap",
     "userSelect",
     "textAlign",
+    "scale",
+    "scaleX",
+    "scaleY",
+    "transformOrigin",
+    "transition",
+    "transitionX",
+    "transitionY",
     "responsive",
     "exportData",
     "typo",

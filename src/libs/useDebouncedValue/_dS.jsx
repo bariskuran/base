@@ -35,7 +35,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useDebouncedValue(initialValue, { delay, isThrottle, enabled });"
+            args="useDebouncedValue(initialValue, { delay, enabled, isThrottle });"
             returns="Tuple: debounced value, setValue, and state helpers."
             props={{
                 initialValue: {

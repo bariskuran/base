@@ -38,7 +38,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useEventListener(event, handler, { enabled, delay, isThrottle, getFirst, source, capture, once, passive, onStart, onEnd });"
+            args="useEventListener(event, handler, { capture, delay, enabled, getFirst, isThrottle, onEnd, onStart, once, passive, source });"
             returns="void."
             props={{
                 event: {

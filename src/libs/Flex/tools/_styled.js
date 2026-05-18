@@ -46,6 +46,9 @@ const cssPropMap = {
     wrap: "flex-wrap",
     userSelect: "user-select",
     textAlign: "text-align",
+    transform: "transform",
+    transformOrigin: "transform-origin",
+    transition: "transition",
 };
 
 const normalizeStyledProps = (props = {}) => {

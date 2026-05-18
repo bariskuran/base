@@ -22,7 +22,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useImagesReady(fn, options);"
+            args="useImagesReady(fn, { includeErrors, selector })"
             returns="Boolean ready state for matched images."
             props={{
                 fn: {

@@ -31,7 +31,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useScrollTopLeft(options);"
+            args="useScrollTopLeft({ delay, source })"
             returns="scrollTop, scrollLeft, direction axes, and calc helper."
             props={{
                 options: {

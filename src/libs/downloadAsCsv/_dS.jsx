@@ -82,7 +82,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="downloadAsCsv(data, fileName, { onSuccess, onError, separator, includeBom, preventExcelInjection });"
+                args="downloadAsCsv(data, fileName, { includeBom, onError, onSuccess, preventExcelInjection, separator });"
                 returns="Boolean indicating whether the download was triggered successfully."
                 props={{
                     data: {

@@ -11,11 +11,54 @@ const X = () => (
             title="Usage"
             code={`import { useDeepEqual } from "${SYS.basePath}";
 
-                        const same = useDeepEqual(valueA, valueB, optionalSettings);`}
+                        const same = useDeepEqual(valueA, valueB, {
+                            treatFalsiesAsEqual,
+                            maxKeys,
+                            maxDepth,
+                            comparePath,
+                            ignoreArrayOrder,
+                        });`}
         />
         <Ds.api
-            args="useDeepEqual(a, b, settings?);"
-            returns="boolean — same result as isDeepEqual(a, b, settings)."
+            args="useDeepEqual(a, b, { comparePath, ignoreArrayOrder, maxDepth, maxKeys, treatFalsiesAsEqual })"
+            returns="boolean — same result as isDeepEqual(a, b, { treatFalsiesAsEqual, maxKeys, maxDepth, comparePath, ignoreArrayOrder })."
+            props={{
+                a: {
+                    description: "First value.",
+                    type: "any",
+                    required: true,
+                },
+                b: {
+                    description: "Second value.",
+                    type: "any",
+                    required: true,
+                },
+                treatFalsiesAsEqual: {
+                    description: "Treats falsy values as equal in comparisons.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                maxKeys: {
+                    description: "Maximum key count guard for deep checks.",
+                    type: "number",
+                    defaultValue: "500",
+                },
+                maxDepth: {
+                    description: "Maximum recursion depth for deep checks.",
+                    type: "number",
+                    defaultValue: "10",
+                },
+                comparePath: {
+                    description:
+                        "Non-empty dot path (same rules as byPath.get). When set, only the values at that path in both roots are compared deeply.",
+                    type: "string",
+                },
+                ignoreArrayOrder: {
+                    description: "When true, array order is ignored in deep comparison.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+            }}
         />
     </Ds.page>
 );

@@ -1,10 +1,13 @@
+import { applyImportToStore } from "./mergeImportIntoStore";
+import { buildQueryKeyWithPrefix, unwrapByPrefix } from "./prefixPath.js";
+
 /**
  * queryConverter
  * --------------
  * Nested object <-> query string converter (bracket notation).
  *
  * - Supports nested objects/arrays: a[b][0]=x
- * - Supports optional prefixing: filters[a]=1
+ * - Supports optional prefixing (dot path): filters.form[a]=1 → filters[form][a]=1
  * - Can skip empty values (default) or preserve them
  * - Can parse booleans/numbers unless you preserve them as strings
  *
@@ -24,17 +27,17 @@
  *
  * @example
  * const qs2 = queryConverter.export(
- *   { page: 2, filter: { q: "test" } },
- *   { prefix: "filters" }
+ *   { obj1: { value: "test" } },
+ *   { prefix: "filters.form" }
  * );
- * // "filters[page]=2&filters[filter][q]=test"
+ * // "?filters[form][obj1][value]=test"
  *
  * @example
  * const onlyFilters = queryConverter.import(
- *   "filters[page]=2&filters[filter][q]=test",
- *   { prefix: "filters" }
+ *   "filters[form][obj1][value]=test&noise=1",
+ *   { prefix: "filters.form" }
  * );
- * // { page: 2, filter: { q: "test" } }
+ * // { obj1: { value: "test" } }
  */
 export const queryConverter = {
     export: (obj, settings = {}) => {
@@ -47,8 +50,6 @@ export const queryConverter = {
         const encode = (v) => (ignoreEncode ? String(v) : encodeURIComponent(String(v)));
 
         const shouldSkip = (v) => !preserveEmpty && (v === null || v === undefined || v === "");
-
-        const buildKey = (base, k) => (base ? `${base}[${k}]` : `${k}`);
 
         const walk = (value, keyPath) => {
             if (shouldSkip(value)) return;
@@ -71,7 +72,7 @@ export const queryConverter = {
         };
 
         for (const k of Object.keys(obj)) {
-            const keyPath = prefix ? buildKey(prefix, k) : `${k}`;
+            const keyPath = prefix ? buildQueryKeyWithPrefix(prefix, k) : `${k}`;
             walk(obj[k], keyPath);
         }
 
@@ -161,17 +162,23 @@ export const queryConverter = {
             setDeep(out, keyParts, decodedVal);
         }
 
-        if (
-            prefix &&
-            out[prefix] &&
-            typeof out[prefix] === "object" &&
-            !Array.isArray(out[prefix])
-        ) {
-            const pref = out[prefix];
-            delete out[prefix];
-            return pref;
+        let incoming = prefix ? unwrapByPrefix(out, prefix) : out;
+
+        const setFn =
+            typeof baseStoreSet === "function"
+                ? baseStoreSet
+                : baseStoreProp && typeof baseStoreProp.set === "function"
+                  ? (updater) => baseStoreProp.set(updater)
+                  : null;
+
+        if (setFn) {
+            applyImportToStore({
+                set: setFn,
+                setPath,
+                incoming,
+            });
         }
 
-        return out;
+        return incoming;
     },
 };

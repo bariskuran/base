@@ -130,7 +130,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="get3DShadow({ depth, hoverDepth, transition, color });"
+                args="get3DShadow({ color, depth, hoverDepth, transition });"
                 returns="styled-components css interpolable fragment."
                 props={{
                     depth: {

@@ -538,6 +538,45 @@ const X = () => (
                         "CSS text-align (e.g. start, end, left, right, center, justify). Kebab-case text-align is accepted.",
                     type: "string",
                 },
+                scale: {
+                    description:
+                        "Uniform scale (transform). Number >3 or % is treated as percent (110 → scale(110%)); smaller numbers are unitless (1.1 → scale(1.1)). Two space-separated values become scale(sx, sy). Ignored when scaleX/scaleY are set. Kebab-case not used; use scaleX/scaleY aliases for axes.",
+                    type: "number | string",
+                },
+                scaleX: {
+                    description:
+                        "Horizontal scale (scaleX). Accepts scale-x kebab alias. Same value rules as scale.",
+                    type: "number | string",
+                },
+                scaleY: {
+                    description:
+                        "Vertical scale (scaleY). Accepts scale-y kebab alias. Same value rules as scale.",
+                    type: "number | string",
+                },
+                transformOrigin: {
+                    description:
+                        "CSS transform-origin. Shorthand: origin. Kebab-case transform-origin is accepted. Keywords (center, top, left, …); 0–100 numbers become % (50 → 50%); larger numbers use rem via cssNormalizeSize.",
+                    type: "number | string",
+                },
+                origin: {
+                    description: "transformOrigin shorthand alias.",
+                    type: "number | string",
+                },
+                transition: {
+                    description:
+                        "CSS transition shorthand (e.g. all 0.3s, opacity 300). Bare numbers: 300 → 300ms, 0.3 → 0.3s.",
+                    type: "number | string",
+                },
+                transitionX: {
+                    description:
+                        "Transform transition shorthand (e.g. 300 → transform 300ms ease). Accepts transition-x kebab alias. Merged with transition / transitionY.",
+                    type: "number | string",
+                },
+                transitionY: {
+                    description:
+                        "Transform transition shorthand. Accepts transition-y kebab alias. Merged with transition / transitionX.",
+                    type: "number | string",
+                },
                 content: {
                     description:
                         "children yerine kullanılabilen içerik (ikisi birlikte verilirse children önceliklidir).",

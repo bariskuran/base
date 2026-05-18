@@ -114,35 +114,90 @@ const X = () => {
                 }
             />
             <Ds.api
-                args={[
-                    "byPath.get(object, path);",
-                    "byPath.set(object, path, value, enableDirectUpdate);",
-                    "byPath.delete(object, path, enableDirectUpdate);",
-                    "byPath.mapping(object, mappingObject);",
-                ]}
+                title="get"
+                disableLastBlock
+                args="byPath.get(object, path)"
+                returns="Value at path, or undefined."
                 props={{
-                    get: {
-                        description: "get(obj, path)",
-                        type: "(object, string) => any",
+                    object: {
+                        description: "Source object.",
+                        type: "object",
                         required: true,
                     },
-                    set: {
-                        description: "set(state, path, value, enableDirectUpdate?)",
-                        type: "(any, string, any, boolean?) => any",
-                        required: true,
-                    },
-                    delete: {
-                        description: "delete(state, path, enableDirectUpdate?)",
-                        type: "(any, string, boolean?) => any",
-                        required: true,
-                    },
-                    mapping: {
-                        description: "mapping(source, mapObject)",
-                        type: "(object, object) => object",
+                    path: {
+                        description: "Dot-separated path.",
+                        type: "string",
                         required: true,
                     },
                 }}
-                returns="Object with get, set, delete, and mapping helpers."
+            />
+            <Ds.api
+                title="set"
+                disableLastBlock
+                args="byPath.set(object, path, value, enableDirectUpdate)"
+                returns="Updated object/state."
+                props={{
+                    object: {
+                        description: "Source object or draft.",
+                        type: "any",
+                        required: true,
+                    },
+                    path: {
+                        description: "Dot-separated path.",
+                        type: "string",
+                        required: true,
+                    },
+                    value: {
+                        description: "Value to write.",
+                        type: "any",
+                        required: true,
+                    },
+                    enableDirectUpdate: {
+                        description: "Mutates object in place when true.",
+                        type: "boolean",
+                        defaultValue: "false",
+                    },
+                }}
+            />
+            <Ds.api
+                title="delete"
+                disableLastBlock
+                args="byPath.delete(object, path, enableDirectUpdate)"
+                returns="Updated object/state."
+                props={{
+                    object: {
+                        description: "Source object or draft.",
+                        type: "any",
+                        required: true,
+                    },
+                    path: {
+                        description: "Dot-separated path.",
+                        type: "string",
+                        required: true,
+                    },
+                    enableDirectUpdate: {
+                        description: "Mutates object in place when true.",
+                        type: "boolean",
+                        defaultValue: "false",
+                    },
+                }}
+            />
+            <Ds.api
+                title="mapping"
+                args="byPath.mapping(object, mappingObject)"
+                returns="Object with picked/renamed values."
+                props={{
+                    object: {
+                        description: "Source object.",
+                        type: "object",
+                        required: true,
+                    },
+                    mappingObject: {
+                        description: "Map of outputKey → sourcePath.",
+                        type: "object",
+                        required: true,
+                    },
+                }}
             />
         </Ds.page>
     );

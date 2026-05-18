@@ -45,17 +45,36 @@ const X = () => {
                 }
             />
             <Ds.api
-                args={["sortBy.asc(a, b);", "sortBy.desc(a, b);"]}
+                title="asc"
+                disableLastBlock
+                args="sortBy.asc(a, b);"
                 returns="Comparator return value (−1, 0, 1 style) for Array.sort."
                 props={{
-                    asc: {
-                        description: "Ascending natural-order comparator (a, b).",
-                        type: "function",
+                    a: {
+                        description: "First value.",
+                        type: "any",
                         required: true,
                     },
-                    desc: {
-                        description: "Descending natural-order comparator (a, b).",
-                        type: "function",
+                    b: {
+                        description: "Second value.",
+                        type: "any",
+                        required: true,
+                    },
+                }}
+            />
+            <Ds.api
+                title="desc"
+                args="sortBy.desc(a, b);"
+                returns="Comparator return value (−1, 0, 1 style) for Array.sort."
+                props={{
+                    a: {
+                        description: "First value.",
+                        type: "any",
+                        required: true,
+                    },
+                    b: {
+                        description: "Second value.",
+                        type: "any",
                         required: true,
                     },
                 }}

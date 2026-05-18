@@ -43,6 +43,11 @@ const useOutputViewer = () => {
         return {
             activeManually: actives[path] === activeLabel,
             onClick: () => {
+                if (actives[path] === activeLabel) {
+                    clearOutput(path);
+                    return;
+                }
+
                 const output = typeof fn === "function" ? fn() : hasValue ? value : fn;
                 const fnString = stripArrowFnPreamble(
                     typeof fn === "function" ? String(fn) : typeof fn === "string" ? fn : "",

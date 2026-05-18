@@ -165,13 +165,16 @@ const X = () => {
                 }
             />
             <Ds.api
-                args={[
-                    "notifier.add(notification, { killAfter, closingDelay, disableAutoKill, bgColor, variant })",
-                    "notifier.remove(queueId)",
-                    "notifier.clear()",
-                ]}
-                returns="notifier.add → queueId | null; notifier.remove / notifier.clear → boolean."
+                title="add"
+                disableLastBlock
+                args="notifier.add(notification, { bgColor, closingDelay, disableAutoKill, killAfter, variant })"
+                returns="queueId | null"
                 props={{
+                    notification: {
+                        description: "Notification.",
+                        type: "string | object",
+                        required: true,
+                    },
                     killAfter: {
                         description: "Kill after (seconds).",
                         type: "number",
@@ -193,23 +196,31 @@ const X = () => {
                             "Notification variant name or custom styled variant. Overrides notifierSettings.variant for that notification.",
                         type: "string | React component",
                     },
-                    notification: {
-                        description: "Notification.",
-                        type: "string | object",
-                    },
-                    queueId: {
-                        description:
-                            "Prepared queueId. (add creates it as return. remove uses it as argument.)",
-                        type: "number",
-                    },
                 }}
                 returnProps={{
                     queueId: {
-                        description:
-                            "Returns the queueId of the added notification. (notifier.add)",
+                        description: "Queue id of the added notification.",
                         type: "number | null",
                     },
                 }}
+            />
+            <Ds.api
+                title="remove"
+                disableLastBlock
+                args="notifier.remove(queueId)"
+                returns="boolean"
+                props={{
+                    queueId: {
+                        description: "Queue id to remove.",
+                        type: "number",
+                        required: true,
+                    },
+                }}
+            />
+            <Ds.api
+                title="clear"
+                args="notifier.clear()"
+                returns="boolean"
             />
         </Ds.page>
     );

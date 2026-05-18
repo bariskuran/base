@@ -78,7 +78,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="const { run, cancel, runNow, isPending } = delayedFunction(fn, { delay, autoCancel });"
+                args="const { run, cancel, runNow, isPending } = delayedFunction(fn, { autoCancel, delay });"
                 returns="Object with run, cancel, runNow, and isPending."
                 props={{
                     fn: {

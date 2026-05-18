@@ -41,6 +41,21 @@ const X = () => (
                     description: "One-line return value summary (functions and hooks).",
                     type: "string",
                 },
+                title: {
+                    description:
+                        'Optional block heading prefix. Renders as "{title} Api" (e.g. "get Api"). Omit for a single "Api" block.',
+                    type: "string",
+                },
+                disableLastBlock: {
+                    description:
+                        "When true, the visual end marker is not drawn on this block (use on every Api block except the last on a page).",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                returnProps: {
+                    description: "Return object fields for API tables.",
+                    type: "object",
+                },
             }}
         />
     </Ds.page>

@@ -227,7 +227,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="debouncedFunction(fn, { delay, isThrottle, getFirst, functionName, onStart, onEnd });"
+                args="debouncedFunction(fn, { delay, functionName, getFirst, isThrottle, onEnd, onStart });"
                 returns="Debounced or throttled wrapper function."
                 props={{
                     fn: {

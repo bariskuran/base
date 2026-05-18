@@ -111,7 +111,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="pushAsSorted(arr, el, { unique, removeDuplicates, direction })"
+                args="pushAsSorted(arr, el, { direction, removeDuplicates, unique })"
                 returns="Object with sorted result, insert index, and neighbor values."
                 props={{
                     arr: {
@@ -121,10 +121,6 @@ const X = () => {
                     el: {
                         description: "Element to push.",
                         type: "any",
-                    },
-                    settings: {
-                        description: "Optional behavior flags.",
-                        type: "object",
                     },
                     unique: {
                         description:

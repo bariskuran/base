@@ -7,9 +7,13 @@ import { Flex } from "../../Flex";
 import { Button } from "../../Button";
 import { Icon } from "../../@Icon";
 
-const Com = ({ arg }) => <Button.withCopyIcon onClick={() => copyToClipboard(arg)} label={arg} />;
+const Com = ({ arg }) => (
+    <Flex scale={1.2} origin="left center">
+        <Button.withCopyIcon onClick={() => copyToClipboard(arg)} label={arg} />
+    </Flex>
+);
 
-const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock }) => {
+const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title }) => {
     const hasProps = props && typeof props === "object" && Object.keys(props).length > 0;
     const hasReturnProps =
         returnProps && typeof returnProps === "object" && Object.keys(returnProps).length > 0;
@@ -37,10 +41,13 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock }) => {
         },
     );
 
+    const blockTitle =
+        title != null && String(title).trim() !== "" ? `${String(title).trim()} Api` : "Api";
+
     return (
         <Block
             lastBlock={!disableLastBlock}
-            title="Api"
+            title={blockTitle}
             example={
                 <Flex.column gap={10} marginTop={5} full>
                     {args && (
@@ -119,7 +126,9 @@ const PropTable = ({ name, item, striped }) => {
             )}
             <div>{type}</div>
             <div>{description}</div>
-            <div style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{defaultValueDisplay}</div>
+            <div style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                {defaultValueDisplay}
+            </div>
         </S.row>
     );
 };

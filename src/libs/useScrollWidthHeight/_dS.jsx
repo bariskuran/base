@@ -31,7 +31,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useScrollWidthHeight(source, options);"
+            args="useScrollWidthHeight(source, { settleDelay, resizeDelay })"
             returns="Tuple [width, height, recalc]."
             props={{
                 source: {

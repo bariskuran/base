@@ -85,6 +85,7 @@ const publicSitemap = [
     ["PopTip", "popTip", l(() => import("../PopTip/_dS"))],
     ["pushAsSorted", "pushAsSorted", l(() => import("../pushAsSorted/_dS"))],
     ["queryConverter", "queryConverter", l(() => import("../queryConverter/_dS"))],
+    ["removeUndefined", "removeUndefined", l(() => import("../removeUndefined/_dS"))],
     ["ScrollBar", "scrollBar", l(() => import("../ScrollBar/_dS"))],
     ["ScrollFlex", "scrollFlex", l(() => import("../ScrollFlex/_dS"))],
     ["scrollLock", "scrollLock", l(() => import("../scrollLock/_dS"))],

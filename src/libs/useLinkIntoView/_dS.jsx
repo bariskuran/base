@@ -11,7 +11,7 @@ const X = () => {
                 `}
         >
             <Ds.api
-                args="useLinkIntoView({ pathname, links, basePath, getPathFromLink, block, inline, behavior, extraDeps });"
+                args="useLinkIntoView({ basePath, behavior, block, extraDeps, getPathFromLink, inline, links, pathname });"
                 returns="Tuple [isActive, activeNavItemRef] for scroll-into-view nav highlighting."
                 props={{
                     pathname: {

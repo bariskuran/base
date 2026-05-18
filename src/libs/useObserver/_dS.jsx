@@ -31,7 +31,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useObserver(options);"
+            args="useObserver({ disable, onEnter, onExit, root, rootMargin, threshold })"
             returns="Object with ref callback and inViewport flag."
             props={{
                 options: {

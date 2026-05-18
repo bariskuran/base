@@ -42,7 +42,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useBaseEffect(fn, deps, { skipEffect, useEffectAfterMount, return: cleanup, useFalsyDeps, executeOnDev, findDifferences });"
+            args="useBaseEffect(fn, deps, { executeOnDev, findDifferences, return: cleanup, skipEffect, useEffectAfterMount, useFalsyDeps });"
             returns="void; effect may return a cleanup from fn."
             props={{
                 fn: {

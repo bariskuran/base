@@ -38,7 +38,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useManageSearchParams(options);"
+            args="useManageSearchParams({ bind, defaults, maxLength, pick, replace })"
             returns="Decoded param fields plus set, clear, and raw query helpers."
             props={{
                 options: {

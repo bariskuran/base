@@ -32,8 +32,22 @@ const OutputArea = ({
     };
 
     const pathValue = outputs?.[path];
+    /** directValue + path: show only after output button opens this path (toggle). directValue alone: live panel. */
+    const gateDirectValue = directValue !== undefined && path != null;
+    const isOpen = gateDirectValue ? pathValue != null : true;
+
     const [outputValue, stringFn] = useMemo(() => {
-        const value = directValue ?? pathValue;
+        if (directValue !== undefined) {
+            if (!isOpen) return [null, ""];
+
+            const value = directValue;
+            if (value == null) return [null, ""];
+
+            if (typeof value === "string") return [value, ""];
+            return [JSON.stringify(value, null, 2), ""];
+        }
+
+        const value = pathValue;
         if (value == null) return [null, ""];
 
         if (
@@ -56,23 +70,23 @@ const OutputArea = ({
 
         if (typeof value === "string") return [value, ""];
         return [JSON.stringify(value, null, 2), ""];
-    }, [directValue, pathValue]);
+    }, [directValue, pathValue, isOpen]);
 
     /* */
     if ((outputValue == null || outputValue === "") && (!stringFn || stringFn === "")) return null;
     return (
         <Flex.column full bgColor="foreground" color="background" padding={20} userSelect="none">
-            {!directValue && (
-                <ButtonArea>
+            <ButtonArea>
+                {stringFn ? (
                     <Button
                         icon={{ icon: "copy", width: 14 }}
                         onClick={() => {
                             copyToClipboard(stringFn);
                         }}
                     />
-                    <Button icon={{ icon: "close", width: 12 }} onClick={handleClose} />
-                </ButtonArea>
-            )}
+                ) : null}
+                <Button icon={{ icon: "close", width: 12 }} onClick={handleClose} />
+            </ButtonArea>
             {stringFn && !disableFnString ? (
                 <>
                     <Typo.bold balance underline>

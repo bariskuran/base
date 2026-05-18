@@ -527,7 +527,9 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="baseDate({ initial, format, initialFormat, timezone, calc }); getNow({ format, timezone });"
+                title="baseDate"
+                disableLastBlock
+                args="baseDate({ calc, format, initial, initialFormat, timezone })"
                 returns='Formatted string, or Unix ms when format is "timestamp" (case-insensitive).'
                 props={{
                     initial: {
@@ -555,10 +557,22 @@ const X = () => {
                             "Must be a plain object (arrays, Date, primitives ignored). Calendar aliases — first finite number wins: year/years/y, month/months/m, day/days/d, hour/hours/h, minute/minutes/min. Summed groups: second/sec/s/seconds/secs; millisecond/milliseconds/milisecond/ms. Calendar-style wall date + clamp; then duration.",
                         type: "object",
                     },
-                    getNow: {
+                }}
+            />
+            <Ds.api
+                title="getNow"
+                args="getNow({ format, timezone })"
+                returns='Formatted string, or Unix ms when format is "timestamp" (case-insensitive).'
+                props={{
+                    format: {
                         description:
-                            "Shorthand for baseDate({ format, timezone }). Without arguments, returns the same current date output as baseDate({}).",
-                        type: "function",
+                            'Output pattern (tokens on this page). Literal "timestamp" returns ms.',
+                        type: "string",
+                    },
+                    timezone: {
+                        description:
+                            "IANA (e.g. Europe/Athens), offset string (+02:00), or finite number as hours offset.",
+                        type: "string | number",
                     },
                 }}
             />

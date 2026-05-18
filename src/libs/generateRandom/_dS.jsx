@@ -88,83 +88,95 @@ const X = () => {
                 }
             />
             <Ds.api
-                args={[
-                    "generateRandom.number(min, max, decimal, disableLocaleString);",
-                    "generateRandom.text(length, { useLowerCase, useUpperCase, useNumbers, useSymbols});",
-                    "generateRandom.loremIpsum(length, { disableDot, paragraphLength, enableParagraph, paragraphComponent });",
-                ]}
+                title="number"
+                disableLastBlock
+                args="generateRandom.number(min, max, decimal, disableLocaleString)"
+                returns="number or locale-formatted string"
                 props={{
-                    length: {
-                        description:
-                            "Length value. Used by text() and loremIpsum() (number() uses min/max).",
-                        type: "number",
-                        defaultValue: "16/50",
-                    },
                     min: {
-                        description: "Minimum number (number() only).",
+                        description: "Minimum number.",
                         type: "number",
-                        defaultValue: 0,
+                        defaultValue: "0",
                     },
                     max: {
-                        description: "Maximum number (number() only).",
+                        description: "Maximum number.",
                         type: "number",
-                        defaultValue: 100,
+                        defaultValue: "100",
                     },
                     decimal: {
-                        description: "Number of decimal places (number() only).",
+                        description: "Decimal places.",
                         type: "number",
-                        defaultValue: 0,
+                        defaultValue: "0",
                     },
                     disableLocaleString: {
-                        description: "Disables locale string formatting (number() only).",
+                        description: "Disables locale string formatting.",
                         type: "boolean",
-                        defaultValue: false,
+                        defaultValue: "false",
+                    },
+                }}
+            />
+            <Ds.api
+                title="text"
+                disableLastBlock
+                args="generateRandom.text(length, { useLowerCase, useNumbers, useSymbols, useUpperCase })"
+                returns="string"
+                props={{
+                    length: {
+                        description: "Character length.",
+                        type: "number",
                     },
                     useLowerCase: {
-                        description: "Uses lower case letters (text() only).",
+                        description: "Uses lower case letters.",
                         type: "boolean",
-                        defaultValue: true,
+                        defaultValue: "true",
                     },
                     useUpperCase: {
-                        description: "Uses upper case letters (text() only).",
+                        description: "Uses upper case letters.",
                         type: "boolean",
-                        defaultValue: false,
+                        defaultValue: "false",
                     },
                     useNumbers: {
-                        description: "Uses numbers (text() only).",
+                        description: "Uses numbers.",
                         type: "boolean",
-                        defaultValue: false,
+                        defaultValue: "false",
                     },
                     useSymbols: {
-                        description: "Uses symbols (text() only).",
+                        description: "Uses symbols.",
                         type: "boolean",
-                        defaultValue: false,
+                        defaultValue: "false",
+                    },
+                }}
+            />
+            <Ds.api
+                title="loremIpsum"
+                args="generateRandom.loremIpsum(length, { disableDot, enableParagraph, paragraphComponent, paragraphLength })"
+                returns="Plain string, or paragraph elements when enableParagraph is true."
+                props={{
+                    length: {
+                        description: "Word count.",
+                        type: "number",
                     },
                     disableDot: {
-                        description: "Disables dot at sentence end (loremIpsum() only).",
+                        description: "Disables dot at sentence end.",
                         type: "boolean",
-                        defaultValue: false,
+                        defaultValue: "false",
                     },
                     paragraphLength: {
-                        description:
-                            "Average words per paragraph (loremIpsum() only). Used only when enableParagraph is true; ignored for plain string output.",
+                        description: "Average words per paragraph when enableParagraph is true.",
                         type: "number",
-                        defaultValue: 0,
+                        defaultValue: "0",
                     },
                     enableParagraph: {
-                        description:
-                            "If true, loremIpsum() returns paragraphComponent elements split by paragraphLength. If false, returns a single plain string with no <p> wrapping.",
+                        description: "Returns paragraphComponent elements when true.",
                         type: "boolean",
-                        defaultValue: false,
+                        defaultValue: "false",
                     },
                     paragraphComponent: {
-                        description:
-                            "Paragraph wrapper for loremIpsum() component mode. Default is 'p' (for example Typo.p).",
+                        description: "Paragraph wrapper component.",
                         type: "component",
                         defaultValue: "'p'",
                     },
                 }}
-                returns="number(), text(): string — loremIpsum(): plain string if enableParagraph is false; array of paragraph elements if true."
             />
         </Ds.page>
     );

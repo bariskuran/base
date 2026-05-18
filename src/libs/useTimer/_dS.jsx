@@ -45,7 +45,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useTimer({ onStart, onEnd, refreshTime, loop, startOnLoad, timerName });"
+            args="useTimer({ loop, onEnd, onStart, refreshTime, startOnLoad, timerName });"
             returns="Timer controls: start, stop, isRunning, timerId, timerName, refreshTime (plus module helpers getTimersSnapshot, subscribeTimers, getTimer)."
             props={{
                 onStart: {

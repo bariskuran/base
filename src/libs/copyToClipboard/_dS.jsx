@@ -143,7 +143,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="copyToClipboard(value, { onSuccess, onError, successMessage, errorMessage, disableNotifier });"
+                args="copyToClipboard(value, { disableNotifier, errorMessage, onError, onSuccess, successMessage });"
                 returns="Promise resolving to true on success, false otherwise."
                 props={{
                     value: {

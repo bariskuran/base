@@ -289,7 +289,7 @@ const X = () => {
             />
             <Ds.api
                 args={[
-                    "isDeepEqual(value1, value2, { treatFalsiesAsEqual, maxKeys, maxDepth, comparePath, ignoreArrayOrder });",
+                    "isDeepEqual(value1, value2, { comparePath, ignoreArrayOrder, maxDepth, maxKeys, treatFalsiesAsEqual });",
                 ]}
                 returns="boolean"
                 props={{
