@@ -1,5 +1,19 @@
 export const BUTTON_ACTION_PROP_KEYS = ["onClick", "href", "to", "url"];
 
+import { DEFAULT_TRIGGER_DELAY_MS } from "./defaultPopConfirmProps";
+
+export const resolveTriggerDelayMs = (value) => {
+    if (value == null || value === "") return DEFAULT_TRIGGER_DELAY_MS;
+    const n = Number(value);
+    if (!Number.isFinite(n) || n < 0) return DEFAULT_TRIGGER_DELAY_MS;
+    return n;
+};
+
+const stampNestedClickEffect = (iconProps, value) => {
+    if (!iconProps || typeof iconProps !== "object") return iconProps;
+    return { ...iconProps, clickEffectManually: value };
+};
+
 export const pickButtonActionProps = (props) => {
     if (!props || typeof props !== "object") return {};
 
@@ -11,6 +25,75 @@ export const pickButtonActionProps = (props) => {
         out[key] = value;
     }
     return out;
+};
+
+export const mergeContentButtonProps = (defaults, userProps) => {
+    const user = userProps || {};
+    const merged = {
+        ...(defaults || {}),
+        ...user,
+    };
+
+    if (defaults?.prefix || user.prefix) {
+        merged.prefix = {
+            ...(defaults?.prefix || {}),
+            ...(user.prefix || {}),
+        };
+    }
+
+    if (user.icon) {
+        merged.icon = { ...user.icon };
+        if (!user.prefix) delete merged.prefix;
+    }
+
+    const [deferred, rest] = splitDeferredTriggerActions(merged);
+    if (!Object.keys(deferred).length) return [deferred, rest];
+
+    const next = { ...rest };
+
+    if (next.clickEffectManually === undefined) {
+        next.clickEffectManually = false;
+    }
+    if (next.activeManually === undefined) {
+        next.activeManually = false;
+    }
+
+    const stampClickEffectControl = (iconProps) => {
+        if (!iconProps || typeof iconProps !== "object") return iconProps;
+        if (iconProps.clickEffectManually !== undefined) return iconProps;
+        return { ...iconProps, clickEffectManually: false };
+    };
+
+    next.icon = stampClickEffectControl(next.icon);
+    next.prefix = stampClickEffectControl(next.prefix);
+
+    return [deferred, next];
+};
+
+export const applyTriggerInteractionState = (
+    triggerProps,
+    { isPanelOpen, playConfirmClickEffect },
+) => {
+    const next = { ...(triggerProps || {}) };
+
+    if (playConfirmClickEffect) {
+        next.disabled = false;
+        next.clickEffectManually = true;
+        next.activeManually = true;
+        next.icon = stampNestedClickEffect(next.icon, true);
+        next.prefix = stampNestedClickEffect(next.prefix, true);
+        return next;
+    }
+
+    if (isPanelOpen) {
+        next.disabled = true;
+        next.clickEffectManually = false;
+        next.activeManually = false;
+        next.icon = stampNestedClickEffect(next.icon, false);
+        next.prefix = stampNestedClickEffect(next.prefix, false);
+    }
+
+    return next;
 };
 
 export const splitDeferredTriggerActions = (contentButtonProps = {}) => {
@@ -68,9 +151,12 @@ export const buildConfirmButtonProps = ({
     deferredFromTrigger,
     onPanelClose,
     setCloseReason,
+    setPlayConfirmClickEffect,
+    navigate,
+    triggerDelayMs,
 }) => {
+    const effectMs = resolveTriggerDelayMs(triggerDelayMs);
     const nav = mergeNavigationActionProps(deferredFromTrigger, confirmProps);
-    const triggerOnClick = deferredFromTrigger?.onClick;
     const confirmOnClick = confirmProps?.onClick;
 
     const restConfirm = { ...(confirmProps || {}) };
@@ -84,9 +170,14 @@ export const buildConfirmButtonProps = ({
         ...nav,
         onClick: (e) => {
             confirmOnClick?.(e);
-            triggerOnClick?.(e);
             setCloseReason?.("confirm");
+            setPlayConfirmClickEffect?.(true);
             onPanelClose?.();
+            invokeButtonActionProps(deferredFromTrigger, e, { navigate });
+
+            window.setTimeout(() => {
+                setPlayConfirmClickEffect?.(false);
+            }, effectMs);
         },
     };
 };
@@ -96,6 +187,7 @@ export const buildCancelButtonProps = ({
     cancelProps,
     onPanelClose,
     setCloseReason,
+    onCancel,
 }) => {
     const userOnClick = cancelProps?.onClick;
 
@@ -108,6 +200,7 @@ export const buildCancelButtonProps = ({
         onClick: (e) => {
             userOnClick?.(e);
             setCloseReason?.("cancel");
+            onCancel?.();
             onPanelClose?.();
         },
     };

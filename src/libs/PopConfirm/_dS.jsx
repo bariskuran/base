@@ -4,6 +4,8 @@ import { PopConfirm } from ".";
 import { Button } from "../Button";
 import { getText } from "../getText";
 import { notifier } from "../notifier";
+import { Flex } from "../Flex";
+import { DEFAULT_TRIGGER_DELAY_MS } from "./tools/defaultPopConfirmProps";
 
 const X = () => (
     <Ds.page
@@ -61,17 +63,28 @@ const X = () => (
             }
         />
         <Ds.block
-            title="Content example"
+            title="Advanced Usage"
             code={`import { PopConfirm } from "${SYS.basePath}";
 
                 <PopConfirm
+                    content="Warning: This action is irreversible."
                     contentButtonProps={{
-                        onClick: () => notifier.add("deleted"),
+                        icon: { icon: "trash", hoverIcon: "warning", activeIcon: "warning" },
+                        bgColor: "error",
+                        hoverBgColor: "foreground",
+                        activeBgColor: "success",
+                        onClick: () => notifier.add("action triggered."),
                     }}
                     confirmButtonProps={{
+                        label: undefined,
+                        prefix: undefined,
+                        icon: { icon: "download" },
                         onClick: () => notifier.add("confirmed."),
                     }}
                     cancelButtonProps={{
+                        label: undefined,
+                        prefix: undefined,
+                        icon: { icon: "arrowLeft" },
                         onClick: () => notifier.add("cancelled"),
                     }}
                 />`}
@@ -86,11 +99,15 @@ const X = () => (
                         onClick: () => notifier.add("action triggered."),
                     }}
                     confirmButtonProps={{
-                        icon: { icon: "check" },
+                        label: undefined,
+                        prefix: undefined,
+                        icon: { icon: "download" },
                         onClick: () => notifier.add("confirmed."),
                     }}
                     cancelButtonProps={{
-                        icon: { icon: "close" },
+                        label: undefined,
+                        prefix: undefined,
+                        icon: { icon: "arrowLeft" },
                         onClick: () => notifier.add("cancelled"),
                     }}
                 />
@@ -120,6 +137,12 @@ const X = () => (
                         "Cancel button. Closes the panel when clicked. When clicking outside, onClick/href/to/url props here are triggered.",
                     type: "object",
                     defaultValue: '{ label: "Cancel", prefix: { icon: "close" } }',
+                },
+                triggerDelayMs: {
+                    description:
+                        "After confirm, how long (ms) the content button plays its click animation before deferred actions run and the panel closes.",
+                    type: "number",
+                    defaultValue: String(DEFAULT_TRIGGER_DELAY_MS),
                 },
                 _rest: {
                     description:

@@ -1,6 +1,14 @@
 import { getText } from "../../getText";
 
-export const getDefaultConfirmationContent = () => getText("areYouSure");
+/** Native overflow on the body by default; enable ScrollFlex for long / measured scroll. */
+export const DEFAULT_USE_SCROLL_FLEX = false;
+
+/** Close row + icon; used in body max-height calc */
+export const POPUP_HEADER_BLOCK_REM = 44;
+
+export const DEFAULT_CLOSE_BUTTON_PROPS = {
+    icon: { icon: "close", width: 10 },
+};
 
 export const DEFAULT_CONFIRM_BUTTON_PROPS = {
     label: getText("confirm"),

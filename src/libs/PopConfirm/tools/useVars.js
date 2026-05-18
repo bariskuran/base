@@ -1,16 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useExportData } from "../../useExportedData";
 import {
     DEFAULT_CANCEL_BUTTON_PROPS,
     DEFAULT_CONFIRM_BUTTON_PROPS,
+    DEFAULT_CONTENT_BUTTON_PROPS,
     getDefaultConfirmationContent,
 } from "./defaultPopConfirmProps";
 import {
+    applyTriggerInteractionState,
     buildCancelButtonProps,
     buildConfirmButtonProps,
     invokeButtonActionProps,
-    splitDeferredTriggerActions,
+    mergeContentButtonProps,
 } from "./buttonActionProps";
 
 const useVars = (p) => {
@@ -21,6 +23,7 @@ const useVars = (p) => {
         cancelButtonProps: cancelButtonPropsProp,
         content: contentProp,
         contentButtonProps: contentButtonPropsProp,
+        triggerDelayMs: triggerDelayMsProp,
         ...popOverRest
     } = p || {};
 
@@ -30,10 +33,21 @@ const useVars = (p) => {
 
     const closeReasonRef = useRef(null);
     const cancelDismissActionsRef = useRef({});
+    const [isPanelOpen, setIsPanelOpen] = useState(false);
+    const [playConfirmClickEffect, setPlayConfirmClickEffect] = useState(false);
 
-    const [deferredTriggerActions, triggerButtonProps] = useMemo(
-        () => splitDeferredTriggerActions(contentButtonPropsProp),
+    const [deferredTriggerActions, baseTriggerButtonProps] = useMemo(
+        () => mergeContentButtonProps(DEFAULT_CONTENT_BUTTON_PROPS, contentButtonPropsProp),
         [contentButtonPropsProp],
+    );
+
+    const triggerButtonProps = useMemo(
+        () =>
+            applyTriggerInteractionState(baseTriggerButtonProps, {
+                isPanelOpen,
+                playConfirmClickEffect,
+            }),
+        [baseTriggerButtonProps, isPanelOpen, playConfirmClickEffect],
     );
 
     useEffect(() => {
@@ -67,8 +81,18 @@ const useVars = (p) => {
                 deferredFromTrigger: deferredTriggerActions,
                 onPanelClose: closePanel,
                 setCloseReason,
+                setPlayConfirmClickEffect,
+                navigate,
+                triggerDelayMs: triggerDelayMsProp,
             }),
-        [closePanel, confirmButtonPropsProp, deferredTriggerActions, setCloseReason],
+        [
+            closePanel,
+            confirmButtonPropsProp,
+            deferredTriggerActions,
+            navigate,
+            setCloseReason,
+            triggerDelayMsProp,
+        ],
     );
 
     const cancelButtonProps = useMemo(
@@ -78,6 +102,7 @@ const useVars = (p) => {
                 cancelProps: cancelButtonPropsProp,
                 onPanelClose: closePanel,
                 setCloseReason,
+                onCancel: () => setPlayConfirmClickEffect(false),
             }),
         [cancelButtonPropsProp, closePanel, setCloseReason],
     );
@@ -88,6 +113,9 @@ const useVars = (p) => {
                 popOverApiRef.current = {
                     requestClose: api.requestClose,
                 };
+                if (api.isOpen !== undefined) {
+                    setIsPanelOpen(!!api.isOpen);
+                }
             }
 
             exportData?.(api);
@@ -99,10 +127,18 @@ const useVars = (p) => {
         () => ({
             ...popOverRest,
             buttonProps: triggerButtonProps,
+            disableTriggerToggle: isPanelOpen || playConfirmClickEffect,
             onClose: handlePopOverClose,
             exportData: handlePopOverExportData,
         }),
-        [handlePopOverClose, handlePopOverExportData, popOverRest, triggerButtonProps],
+        [
+            handlePopOverClose,
+            handlePopOverExportData,
+            isPanelOpen,
+            playConfirmClickEffect,
+            popOverRest,
+            triggerButtonProps,
+        ],
     );
 
     /* Return */

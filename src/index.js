@@ -133,6 +133,7 @@ export { FloatingUi } from "./libs/FloatingUi";
 export { PopTip } from "./libs/PopTip";
 export { PopOver } from "./libs/PopOver";
 export { PopConfirm } from "./libs/PopConfirm";
+export { PopUp } from "./libs/PopUp";
 export { delayedFunction } from "./libs/delayedFunction";
 export { ButtonList } from "./libs/ButtonList";
 export { ScrollFlex } from "./libs/ScrollFlex";

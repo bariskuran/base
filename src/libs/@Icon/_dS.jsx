@@ -12,10 +12,11 @@ const CustomTriangle = () => (
 );
 
 const X = () => {
-    const { isHover, isActive, isPending, setLocalByPath } = baseStore.useLocal({
+    const { isHover, isActive, isPending, isClickEffect, setLocalByPath } = baseStore.useLocal({
         isHover: false,
         isActive: false,
         isPending: false,
+        isClickEffect: false,
     });
 
     /* RETURN */
@@ -236,6 +237,56 @@ const X = () => {
                 }
             />
             <Ds.block
+                title="Click state"
+                description={`Click/press visuals reuse the active layer: activeIcon, activeColor, activeScale, and pulse (unless disablePulseEffect).
+
+                    Icon does not play click feedback on its own. Use clickEffectManually (boolean) from a parent — for example Button with deferred actions, or PopConfirm after confirm.
+
+                    When clickEffectManually is defined, only that boolean controls click-effect visuals (in addition to activeManually for sustained active). Omit the prop when Icon is driven automatically via Button.`}
+                code={`import { Icon } from "${SYS.basePath}";
+
+                    <Flex gap={20}>
+                        <Icon
+                            icon="copy"
+                            activeIcon="check"
+                            activeColor="green"
+                            clickEffectManually={isClickEffect}
+                        />
+                        <Icon
+                            icon="download"
+                            width={14}
+                            activeIcon="loading"
+                            activeColor="blue"
+                            activeScale={1.4}
+                            clickEffectManually={isClickEffect}
+                        />
+                    </Flex>`}
+                example={
+                    <Flex gap={20}>
+                        <Icon
+                            icon="copy"
+                            activeIcon="check"
+                            activeColor="green"
+                            clickEffectManually={isClickEffect}
+                        />
+                        <Icon
+                            icon="download"
+                            width={14}
+                            activeIcon="loading"
+                            activeColor="blue"
+                            activeScale={1.4}
+                            clickEffectManually={isClickEffect}
+                        />
+                        <div
+                            onMouseEnter={() => setLocalByPath("isClickEffect", true)}
+                            onMouseLeave={() => setLocalByPath("isClickEffect", false)}
+                        >
+                            clickEffectManually
+                        </div>
+                    </Flex>
+                }
+            />
+            <Ds.block
                 title="PopTip integration"
                 description={
                     <>
@@ -339,6 +390,11 @@ const X = () => {
                             "Triggers pending visuals manually (e.g. alongside Router loading state).",
                         type: "boolean",
                         defaultValue: "false",
+                    },
+                    clickEffectManually: {
+                        description:
+                            "Click/press state (uses activeIcon, activeColor, activeScale). Icon does not self-trigger; parent sets true/false. When defined, click-effect visuals follow this boolean together with activeManually. Omit when nested in Button for automatic handling.",
+                        type: "boolean",
                     },
                     popTipProps: {
                         description:

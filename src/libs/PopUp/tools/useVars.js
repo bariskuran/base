@@ -1,120 +1,186 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { baseStore } from "../../@baseStore";
 import { useExportData } from "../../useExportedData";
+import { useEventListener } from "../../useEventListener";
+import { scrollLock } from "../../scrollLock";
+import {
+    invokeButtonActionProps,
+    pickButtonActionProps,
+} from "../../PopConfirm/tools/buttonActionProps";
 import {
     DEFAULT_CANCEL_BUTTON_PROPS,
+    DEFAULT_CLOSE_BUTTON_PROPS,
     DEFAULT_CONFIRM_BUTTON_PROPS,
-    getDefaultConfirmationContent,
-} from "./defaultPopConfirmProps";
-import {
-    buildCancelButtonProps,
-    buildConfirmButtonProps,
-    invokeButtonActionProps,
-    splitDeferredTriggerActions,
-} from "./buttonActionProps";
+    DEFAULT_USE_SCROLL_FLEX,
+} from "./defaultPopUpProps";
+import { mergeActionButtonProps } from "./mergeActionButtonProps";
+
+export { PopUpBodyWrapper } from "./popUpBodyWrapper";
 
 const useVars = (p) => {
     const navigate = useNavigate();
-    const {
-        exportData,
-        confirmButtonProps: confirmButtonPropsProp,
-        cancelButtonProps: cancelButtonPropsProp,
-        confirmationContent: confirmationContentProp,
-        contentButtonProps: contentButtonPropsProp,
-        ...popOverRest
-    } = p || {};
-
-    const popOverApiRef = useRef({
-        requestClose: null,
-    });
-
-    const closeReasonRef = useRef(null);
     const cancelDismissActionsRef = useRef({});
 
-    const [deferredTriggerActions, triggerButtonProps] = useMemo(
-        () => splitDeferredTriggerActions(contentButtonPropsProp),
-        [contentButtonPropsProp],
+    const {
+        exportData,
+        forwardedRef,
+        Variant: _Variant,
+        __hasParentUiComponent: _hasParentUiComponent,
+        variant: _variant,
+        open: openProp,
+        defaultOpen = false,
+        onClose,
+        onOpenChange,
+        children,
+        cancelButtonProps: cancelButtonPropsProp,
+        confirmButtonProps: confirmButtonPropsProp,
+        closeButtonProps: closeButtonPropsProp,
+        disableBackdropClose = false,
+        disableEscClose = false,
+        lockScroll = true,
+        zIndex = 100000,
+        useScrollFlex = DEFAULT_USE_SCROLL_FLEX,
+        scrollFlexProps,
+        ...panelRest
+    } = p || {};
+
+    const isControlled = openProp !== undefined;
+    const { isOpen: internalOpen, setLocal } = baseStore.useLocal({
+        isOpen: !!defaultOpen,
+    });
+
+    const isOpen = isControlled ? !!openProp : internalOpen;
+
+    const hasCancelButton = cancelButtonPropsProp != null;
+    const hasConfirmButton = confirmButtonPropsProp != null;
+    const showFooter = hasCancelButton || hasConfirmButton;
+
+    useEffect(() => {
+        if (!hasCancelButton) {
+            cancelDismissActionsRef.current = {};
+            return;
+        }
+        cancelDismissActionsRef.current = cancelButtonPropsProp || {};
+    }, [cancelButtonPropsProp, hasCancelButton]);
+
+    const hasCancelDismissActions = useMemo(() => {
+        if (!hasCancelButton) return false;
+        return (
+            Object.keys(pickButtonActionProps(cancelButtonPropsProp)).length > 0
+        );
+    }, [cancelButtonPropsProp, hasCancelButton]);
+
+    const requestClose = useCallback(
+        (reason, event) => {
+            if (!isOpen) return;
+
+            const shouldRunCancelDismiss =
+                hasCancelDismissActions &&
+                reason !== "cancel" &&
+                reason !== "confirm";
+
+            if (shouldRunCancelDismiss) {
+                invokeButtonActionProps(cancelDismissActionsRef.current, event, {
+                    navigate,
+                });
+            }
+
+            if (!isControlled) {
+                setLocal((s) => {
+                    s.isOpen = false;
+                });
+            }
+
+            onOpenChange?.(false);
+            onClose?.({ reason });
+        },
+        [
+            hasCancelDismissActions,
+            isControlled,
+            isOpen,
+            navigate,
+            onClose,
+            onOpenChange,
+            setLocal,
+        ],
     );
 
     useEffect(() => {
-        cancelDismissActionsRef.current = cancelButtonPropsProp || {};
-    }, [cancelButtonPropsProp]);
+        if (!lockScroll || !isOpen) return undefined;
+        scrollLock(true);
+        return () => scrollLock(false);
+    }, [isOpen, lockScroll]);
 
-    const closePanel = useCallback((opts) => {
-        popOverApiRef.current?.requestClose?.(opts);
-    }, []);
-
-    const setCloseReason = useCallback((reason) => {
-        closeReasonRef.current = reason;
-    }, []);
-
-    const handlePopOverClose = useCallback(() => {
-        const reason = closeReasonRef.current;
-        closeReasonRef.current = null;
-
-        if (reason === "confirm" || reason === "cancel") return;
-
-        invokeButtonActionProps(cancelDismissActionsRef.current, undefined, { navigate });
-    }, [navigate]);
-
-    const confirmationContent = confirmationContentProp ?? getDefaultConfirmationContent();
-
-    const confirmButtonProps = useMemo(
-        () =>
-            buildConfirmButtonProps({
-                defaults: DEFAULT_CONFIRM_BUTTON_PROPS,
-                confirmProps: confirmButtonPropsProp,
-                deferredFromTrigger: deferredTriggerActions,
-                onPanelClose: closePanel,
-                setCloseReason,
-            }),
-        [closePanel, confirmButtonPropsProp, deferredTriggerActions, setCloseReason],
-    );
-
-    const cancelButtonProps = useMemo(
-        () =>
-            buildCancelButtonProps({
-                defaults: DEFAULT_CANCEL_BUTTON_PROPS,
-                cancelProps: cancelButtonPropsProp,
-                onPanelClose: closePanel,
-                setCloseReason,
-            }),
-        [cancelButtonPropsProp, closePanel, setCloseReason],
-    );
-
-    const handlePopOverExportData = useCallback(
-        (api) => {
-            if (api && typeof api === "object") {
-                popOverApiRef.current = {
-                    requestClose: api.requestClose,
-                };
-            }
-
-            exportData?.(api);
+    useEventListener(
+        "keydown",
+        (e) => {
+            if (e.key !== "Escape") return;
+            requestClose("esc");
         },
-        [exportData],
+        {
+            delay: 0,
+            enabled: isOpen && !disableEscClose,
+            source: typeof document !== "undefined" ? document : undefined,
+        },
     );
 
-    const popOverPropsResolved = useMemo(
-        () => ({
-            ...popOverRest,
-            buttonProps: triggerButtonProps,
-            onClose: handlePopOverClose,
-            exportData: handlePopOverExportData,
-        }),
-        [handlePopOverClose, handlePopOverExportData, popOverRest, triggerButtonProps],
+    const handleBackdropClick = useCallback(() => {
+        if (disableBackdropClose) return;
+        requestClose("backdrop");
+    }, [disableBackdropClose, requestClose]);
+
+    const closeButtonProps = useMemo(
+        () =>
+            mergeActionButtonProps(
+                DEFAULT_CLOSE_BUTTON_PROPS,
+                closeButtonPropsProp,
+                () => requestClose("close"),
+            ),
+        [closeButtonPropsProp, requestClose],
     );
+
+    const cancelButtonProps = useMemo(() => {
+        if (!hasCancelButton) return null;
+        return mergeActionButtonProps(
+            DEFAULT_CANCEL_BUTTON_PROPS,
+            cancelButtonPropsProp,
+            () => requestClose("cancel"),
+        );
+    }, [cancelButtonPropsProp, hasCancelButton, requestClose]);
+
+    const confirmButtonProps = useMemo(() => {
+        if (!hasConfirmButton) return null;
+        return mergeActionButtonProps(
+            DEFAULT_CONFIRM_BUTTON_PROPS,
+            confirmButtonPropsProp,
+            () => requestClose("confirm"),
+        );
+    }, [confirmButtonPropsProp, hasConfirmButton, requestClose]);
 
     /* Return */
     return useExportData(
         {
             exportData,
-            confirmButtonProps,
+            isOpen,
+            popUpContent: children,
+            showFooter,
+            hasCancelButton,
+            hasConfirmButton,
             cancelButtonProps,
-            confirmationContent,
-            popOverProps: popOverPropsResolved,
+            confirmButtonProps,
+            closeButtonProps,
+            handleBackdropClick,
+            forwardedRef,
+            zIndex,
+            useScrollFlex,
+            scrollFlexProps,
+            panelRest,
         },
-        {},
+        {
+            isOpen,
+            requestClose,
+        },
     );
 };
 

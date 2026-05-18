@@ -38,6 +38,7 @@ export const Icon = ({
     popTipProps = {},
     hoverManually = false,
     activeManually = false,
+    clickEffectManually,
     pendingManually = false,
     disableScaleEffect = false,
     disablePulseEffect = false,
@@ -54,7 +55,10 @@ export const Icon = ({
     const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
 
     const pendingState = !!pendingManually;
-    const activeState = !!activeManually && !pendingState;
+    const clickEffectControlled = clickEffectManually !== undefined;
+    const activeFromClickEffect = clickEffectControlled ? !!clickEffectManually : false;
+    const activeState =
+        (!!activeManually || activeFromClickEffect) && !pendingState;
     const hoverState =
         !!(hoverManually || isSelfHover) && !activeState && !pendingState;
 

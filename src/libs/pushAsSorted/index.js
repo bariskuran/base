@@ -1,54 +1,52 @@
 import { sortBy } from "../sortBy";
 
-/**
- * Pushes an element into an array, sorts it ascending, and returns:
- * - the sorted array (may include duplicates)
- * - the first index of `el` in the sorted array
- * - the nearest lower unique neighbor of `el`
- * - the nearest upper unique neighbor of `el`
- *
- * Uniqueness is determined via `Set` (works as expected for primitives).
- *
- * @param {any[]} [arr=[]] Input array
- * @param {any} [el=0] Element to push
- * @returns {[any[], number, any | undefined, any | undefined]}
- * Returns `[sortedArray, index, lowerValue, upperValue]`.
- *
- * @example
- * // basic
- * pushAsSorted([5, 1, 3], 4);
- * // => [[1, 3, 4, 5], 2, 3, 5]
- *
- * @example
- * // when el already exists (duplicates allowed in returned array)
- * pushAsSorted([1, 2, 2, 4], 2);
- * // sortedArray => [1, 2, 2, 2, 4]
- * // index => 1 (first occurrence)
- * // lowerValue => 1
- * // upperValue => 4
- *
- * @example
- * // edges
- * pushAsSorted([10, 20], 5);
- * // => [[5, 10, 20], 0, undefined, 10]
- *
- * pushAsSorted([10, 20], 30);
- * // => [[10, 20, 30], 2, 20, undefined]
- */
-export const pushAsSorted = (arr = [], el = 0) => {
-    const arrayCopy = [...arr, el].sort(sortBy.asc);
+const ASC_ALIASES = new Set(["asc", "ascending", "a-z", "z-a", "A-Z"]);
 
-    const uniqueArray = [...new Set(arrayCopy)];
+const DESC_ALIASES = new Set(["desc", "descending", "Z-A"]);
 
-    const index = arrayCopy.indexOf(el);
-    const uniqueIndex = uniqueArray.indexOf(el);
+export const resolvePushAsSortedSortFn = (direction = "asc") => {
+    const raw = String(direction ?? "asc").trim();
+    const lower = raw.toLowerCase();
+
+    if (DESC_ALIASES.has(raw) || lower === "desc" || lower === "descending") {
+        return sortBy.desc;
+    }
+
+    if (ASC_ALIASES.has(raw) || lower === "asc" || lower === "ascending") {
+        return sortBy.asc;
+    }
+
+    return sortBy.asc;
+};
+
+export const pushAsSorted = (arr = [], el = 0, settings = {}) => {
+    const { unique = false, removeDuplicates = false, direction = "asc" } = settings;
+
+    const sortFn = resolvePushAsSortedSortFn(direction);
+    const shouldPush = !unique || !arr.includes(el);
+
+    let working = [...arr];
+    if (shouldPush) working.push(el);
+
+    const sorted = working.sort(sortFn);
+    const result = removeDuplicates ? [...new Set(sorted)] : sorted;
+
+    const neighborSource = removeDuplicates ? result : [...new Set(result)];
+    const pushedIndex = result.indexOf(el);
+    const neighborIndex = neighborSource.indexOf(el);
 
     let lowerValue;
-    let upperValue;
+    let higherValue;
 
-    if (uniqueIndex > 0) lowerValue = uniqueArray[uniqueIndex - 1];
-    if (uniqueIndex >= 0 && uniqueIndex < uniqueArray.length - 1)
-        upperValue = uniqueArray[uniqueIndex + 1];
+    if (neighborIndex > 0) lowerValue = neighborSource[neighborIndex - 1];
+    if (neighborIndex >= 0 && neighborIndex < neighborSource.length - 1) {
+        higherValue = neighborSource[neighborIndex + 1];
+    }
 
-    return [arrayCopy, index, lowerValue, upperValue];
+    return {
+        result,
+        pushedIndex,
+        lowerValue,
+        higherValue,
+    };
 };

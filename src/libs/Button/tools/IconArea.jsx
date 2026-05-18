@@ -16,7 +16,16 @@ const unusableAsIconInk = (c) => {
 };
 
 export const IconArea = (props = {}) => {
-    const { areaName, obj, hoverManually, isActive, pendingManually, iconPalette } = props;
+    const {
+        areaName,
+        obj,
+        hoverManually,
+        isActive,
+        isClickEffectActive,
+        clickEffectManually,
+        pendingManually,
+        iconPalette,
+    } = props;
     const {
         icon,
         color: colorFromItem,
@@ -59,6 +68,13 @@ export const IconArea = (props = {}) => {
 
     const wrapColor = pendingManually ? iconPendingColor : baseIconColor;
 
+    const resolvedClickEffectManually =
+        obj?.clickEffectManually !== undefined ? obj.clickEffectManually : clickEffectManually;
+
+    const iconActiveManually =
+        !!isActive ||
+        (resolvedClickEffectManually === undefined && !!isClickEffectActive);
+
     return (
         <S.icon
             $areaName={areaName}
@@ -72,7 +88,8 @@ export const IconArea = (props = {}) => {
                 {...{
                     width: 18,
                     hoverManually,
-                    activeManually: isActive,
+                    activeManually: iconActiveManually,
+                    clickEffectManually: resolvedClickEffectManually,
                     pendingManually,
                     bgColor: iconBg,
                     hoverBgColor: iconHoverBg,

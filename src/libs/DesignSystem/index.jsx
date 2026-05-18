@@ -81,6 +81,7 @@ const publicSitemap = [
     ["notifier", "notifier", l(() => import("../notifier/_dS"))],
     ["PopOver", "popOver", l(() => import("../PopOver/_dS"))],
     ["PopConfirm", "popConfirm", l(() => import("../PopConfirm/_dS"))],
+    ["PopUp", "popUp", l(() => import("../PopUp/_dS"))],
     ["PopTip", "popTip", l(() => import("../PopTip/_dS"))],
     ["pushAsSorter", "pushAsSorter", l(() => import("../pushAsSorted/_dS"))],
     ["queryConverter", "queryConverter", l(() => import("../queryConverter/_dS"))],

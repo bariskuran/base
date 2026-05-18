@@ -625,6 +625,11 @@ const X = () => {
                         type: "boolean",
                         defaultValue: "false",
                     },
+                    clickEffectManually: {
+                        description:
+                            "Controls press/click visuals (label active layer, icon active scale, pointer isPressed). When defined, automatic click effects are disabled; pass true/false explicitly. Use false on deferred-action triggers (e.g. PopConfirm contentButtonProps).",
+                        type: "boolean",
+                    },
                     pendingManually: {
                         description: "Forces pending state externally.",
                         type: "boolean",

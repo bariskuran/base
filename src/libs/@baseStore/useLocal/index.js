@@ -4,7 +4,9 @@ import { use } from "../use";
 
 /*
 
-const { x, y, setLocal } = useLocal({ x: 0, y: 0 });
+const { x, y, setLocal, setLocalByPath } = useLocal({ x: 0, y: 0 });
+setLocal((s) => { s.x = 1; });
+setLocalByPath("y", 2);
 
 */
 

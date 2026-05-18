@@ -12,9 +12,23 @@ export const Base = ({ children, ...p }) => {
         floatingUiProps,
         scrollFlexProps,
         dismissWithoutAnimationRef,
+        disableTriggerToggle,
     } = useVars(p);
 
     const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollFlexProps || {};
+
+    const {
+        icon: triggerIcon,
+        activeManually: triggerActiveManually,
+        onClick: triggerOnClick,
+        ...triggerRestButtonProps
+    } = buttonProps || {};
+
+    const defaultTriggerIcon = {
+        icon: "threeDotsLarge",
+        activeIcon: "threeDotsLargeHorizontal",
+        width: 16,
+    };
 
     /* Return */
     return (
@@ -39,17 +53,14 @@ export const Base = ({ children, ...p }) => {
             }
         >
             <Button
-                {...buttonProps}
-                activeManually={isOpen}
+                {...triggerRestButtonProps}
+                icon={triggerIcon ?? defaultTriggerIcon}
+                activeManually={triggerActiveManually ?? isOpen}
                 onClick={(e) => {
-                    buttonProps?.onClick?.(e);
-                    onClickHandler(e);
-                }}
-                icon={{
-                    icon: "threeDotsLarge",
-                    activeIcon: "threeDotsLargeHorizontal",
-                    width: 16,
-                    ...(buttonProps?.icon || {}),
+                    triggerOnClick?.(e);
+                    if (!disableTriggerToggle && !triggerRestButtonProps.disabled) {
+                        onClickHandler(e);
+                    }
                 }}
             />
         </FloatingUi>

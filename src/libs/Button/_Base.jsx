@@ -14,6 +14,9 @@ export const Base = (props = {}) => {
         prefix,
         isHovered,
         isActivated,
+        sustainedActive,
+        isClickEffectActive,
+        clickEffectManually,
         label,
         variantProps,
         minWidth,
@@ -50,7 +53,9 @@ export const Base = (props = {}) => {
                         obj={prefix}
                         iconPalette={iconPalette}
                         hoverManually={isHovered}
-                        isActive={isActivated}
+                        isActive={sustainedActive}
+                        isClickEffectActive={isClickEffectActive}
+                        clickEffectManually={prefix?.clickEffectManually ?? clickEffectManually}
                         pendingManually={isPending}
                     />
                     {label != null && (
@@ -92,7 +97,9 @@ export const Base = (props = {}) => {
                             obj={icon}
                             iconPalette={iconPalette}
                             hoverManually={isHovered}
-                            isActive={isActivated}
+                            isActive={sustainedActive}
+                            isClickEffectActive={isClickEffectActive}
+                            clickEffectManually={icon?.clickEffectManually ?? clickEffectManually}
                             pendingManually={isPending}
                         />
                     )}
@@ -101,7 +108,9 @@ export const Base = (props = {}) => {
                         obj={suffix}
                         iconPalette={iconPalette}
                         hoverManually={isHovered}
-                        isActive={isActivated}
+                        isActive={sustainedActive}
+                        isClickEffectActive={isClickEffectActive}
+                        clickEffectManually={suffix?.clickEffectManually ?? clickEffectManually}
                         pendingManually={isPending}
                     />
                 </Variant>

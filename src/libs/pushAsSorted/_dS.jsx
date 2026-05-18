@@ -11,21 +11,21 @@ const X = () => {
         <Ds.page
             title="pushAsSorted()"
             releasedOn="1.0.0"
-            description="Pushes and sorts with neighbor info."
+            description="Pushes an element into a copy of the array, sorts it, and returns the sorted result with neighbor info."
         >
             <Ds.block
                 title="Basic usage"
                 code={`import { pushAsSorted } from "${SYS.basePath}";
 
-                        const [sorted, index, lower, upper] = pushAsSorted([5, 1, 3], 4);`}
+                        const { result, pushedIndex, lowerValue, higherValue } = pushAsSorted([5, 1, 3], 4);`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
                             <Button.plain
-                                label='pushAsSorted([5, 1, 3], 4)'
+                                label="pushAsSorted([5, 1, 3], 4)"
                                 {...outputButtonProps({
                                     path: "basic",
-                                    activeLabel: "but1",
+                                    activeLabel: "basic",
                                     fn: () => pushAsSorted([5, 1, 3], 4),
                                 })}
                             />
@@ -34,19 +34,114 @@ const X = () => {
                     </Flex.column>
                 }
             />
+            <Ds.block
+                title="unique"
+                description="Does not push el when it already exists in arr. Existing duplicates in arr are left unchanged."
+                code="pushAsSorted([1, 2, 2, 3], 2, { unique: true });"
+                example={
+                    <Flex.column gap={10} padding={10} full>
+                        <Button.plain
+                            label="unique: skip existing 2"
+                            {...outputButtonProps({
+                                path: "unique",
+                                activeLabel: "unique",
+                                fn: () => pushAsSorted([1, 2, 2, 3], 2, { unique: true }),
+                            })}
+                        />
+                        <Output path="unique" />
+                    </Flex.column>
+                }
+            />
+            <Ds.block
+                title="removeDuplicates"
+                description="Removes duplicate values from the sorted result."
+                code="pushAsSorted([1, 2, 2, 3], 2, { removeDuplicates: true });"
+                example={
+                    <Flex.column gap={10} padding={10} full>
+                        <Button.plain
+                            label="removeDuplicates"
+                            {...outputButtonProps({
+                                path: "removeDuplicates",
+                                activeLabel: "removeDuplicates",
+                                fn: () => pushAsSorted([1, 2, 2, 3], 2, { removeDuplicates: true }),
+                            })}
+                        />
+                        <Output path="removeDuplicates" />
+                    </Flex.column>
+                }
+            />
+            <Ds.block
+                title="direction"
+                description='Descending via "desc". Also "descending", "Z-A", "z-a" are aliases.'
+                code={`pushAsSorted([5, 1, 3], 4, { direction: "Z-A" });`}
+                example={
+                    <Flex.column gap={10} padding={10} full>
+                        <Flex gap={10} wrap>
+                            <Button.plain
+                                label='direction: "desc"'
+                                {...outputButtonProps({
+                                    path: "directionDesc",
+                                    activeLabel: "Z-A",
+                                    fn: () => pushAsSorted([5, 1, 3], 4, { direction: "desc" }),
+                                })}
+                            />
+                        </Flex>
+                        <Output path="directionDesc" />
+                        <Output path="directionAsc" />
+                    </Flex.column>
+                }
+            />
             <Ds.api
-                args="pushAsSorted(arr, el);"
-                returns="Tuple: sorted array, insert index, lower neighbor, upper neighbor."
+                args="pushAsSorted(arr, el, { unique, removeDuplicates, direction })"
+                returns="Object with sorted result, insert index, and neighbor values."
                 props={{
                     arr: {
                         description: "Input array.",
                         type: "any[]",
-                        defaultValue: "[]",
                     },
                     el: {
                         description: "Element to push.",
                         type: "any",
-                        defaultValue: "0",
+                    },
+                    settings: {
+                        description: "Optional behavior flags.",
+                        type: "object",
+                    },
+                    unique: {
+                        description:
+                            "When true, does not push el if it already exists in arr. Does not dedupe arr itself.",
+                        type: "boolean",
+                        defaultValue: "false",
+                    },
+                    removeDuplicates: {
+                        description: "When true, removes duplicate values from the sorted result.",
+                        type: "boolean",
+                        defaultValue: "false",
+                    },
+                    direction: {
+                        description:
+                            'Sort direction. Desc: desc, descending, "Z-A". Asc: asc, ascending, "A-Z", "a-z", "z-a".',
+                        type: "string",
+                        defaultValue: "asc",
+                    },
+                }}
+                returnProps={{
+                    result: {
+                        description: "Sorted array after push and optional dedupe.",
+                        type: "any[]",
+                    },
+                    pushedIndex: {
+                        description: "Index of el in result (first match if duplicates exist).",
+                        type: "number",
+                    },
+                    lowerValue: {
+                        description:
+                            "Previous distinct value in the sorted unique sequence, if any.",
+                        type: "any",
+                    },
+                    higherValue: {
+                        description: "Next distinct value in the sorted unique sequence, if any.",
+                        type: "any",
                     },
                 }}
             />

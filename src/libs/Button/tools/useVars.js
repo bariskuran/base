@@ -25,6 +25,7 @@ export const useVars = ({
     url: urlProp,
     hoverManually,
     activeManually,
+    clickEffectManually,
     prefix,
     suffix,
     icon,
@@ -93,6 +94,8 @@ export const useVars = ({
     const getTimerBaseName = ({ label, prefix, suffix, icon }) =>
         label || prefix?.icon || suffix?.icon || icon?.icon || icon || "unknown";
 
+    const isClickEffectControlled = clickEffectManually !== undefined;
+
     const runAction = (
         e,
         {
@@ -102,7 +105,13 @@ export const useVars = ({
             clickBlockerStart,
         },
     ) => {
-        if (!skipOnClickHold && !isShowOnClickValuesRunning) showOnClickValuesStart?.();
+        if (
+            !isClickEffectControlled &&
+            !skipOnClickHold &&
+            !isShowOnClickValuesRunning
+        ) {
+            showOnClickValuesStart?.();
+        }
         if (!skipClickCooldown && !isClickBlockerRunning) clickBlockerStart?.();
         onClick?.(e);
 
@@ -157,15 +166,20 @@ export const useVars = ({
         });
     };
 
-    const isActivated =
-        (activeManually ||
-            (skipOnClickHold && isPressed) ||
-            timers.isShowOnClickValuesRunning ||
-            isMatch ||
-            isActive ||
-            timers.isDelayRunning) &&
+    const autoClickEffect =
+        !isClickEffectControlled &&
+        ((skipOnClickHold && isPressed) || timers.isShowOnClickValuesRunning);
+
+    const manualClickEffect = isClickEffectControlled && !!clickEffectManually;
+
+    const isClickEffectActive = autoClickEffect || manualClickEffect;
+
+    const sustainedActive =
+        (activeManually || isMatch || isActive || timers.isDelayRunning) &&
         !disabled &&
         !isPending;
+
+    const isActivated = sustainedActive || isClickEffectActive;
 
     useEffect(() => {
         if (!timers.isShowOnClickValuesRunning) return;
@@ -299,26 +313,30 @@ export const useVars = ({
         $labelPadStartRem: labelPadStartRem,
         $labelPadEndRem: labelPadEndRem,
 
-        onPointerDown: () =>
+        onPointerDown: () => {
+            if (isClickEffectControlled) return;
             setLocal((s) => {
                 s.isPressed = true;
-            }),
+            });
+        },
 
-        onPointerUp: () =>
+        onPointerUp: () => {
+            if (isClickEffectControlled) return;
             setLocal((s) => {
                 s.isPressed = false;
-            }),
+            });
+        },
 
         onPointerLeave: () =>
             setLocal((s) => {
                 s.isHover = false;
-                s.isPressed = false;
+                if (!isClickEffectControlled) s.isPressed = false;
             }),
 
         onPointerCancel: () =>
             setLocal((s) => {
                 s.isHover = false;
-                s.isPressed = false;
+                if (!isClickEffectControlled) s.isPressed = false;
             }),
 
         onPointerEnter: () =>
@@ -350,7 +368,9 @@ export const useVars = ({
 
     const showPendingLabel = isPending && !disabled && pendingLabel != null;
     const showActiveLabel =
-        !showPendingLabel && (showOnClickValues || isActivated) && activeLabel != null;
+        !showPendingLabel &&
+        (showOnClickValues || sustainedActive || isClickEffectActive) &&
+        activeLabel != null;
     const showHoverLabel = !showPendingLabel && !showActiveLabel && isHovered && hoverLabel != null;
     const showDefaultLabel = !showPendingLabel && !showActiveLabel && !showHoverLabel;
 
@@ -363,6 +383,9 @@ export const useVars = ({
             showDefaultLabel,
             popTip,
             isActivated,
+            sustainedActive,
+            isClickEffectActive,
+            clickEffectManually,
             isHovered,
             isJustIcon,
             Variant,
@@ -396,6 +419,7 @@ export const useVars = ({
             urlProp,
             hoverManually,
             activeManually,
+            clickEffectManually,
             prefix,
             suffix,
             icon,
