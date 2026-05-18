@@ -31,17 +31,11 @@ export const pushAsSorted = (arr = [], el = 0, settings = {}) => {
     const sorted = working.sort(sortFn);
     const result = removeDuplicates ? [...new Set(sorted)] : sorted;
 
-    const neighborSource = removeDuplicates ? result : [...new Set(result)];
     const pushedIndex = result.indexOf(el);
-    const neighborIndex = neighborSource.indexOf(el);
+    const lastIndex = result.length - 1;
 
-    let lowerValue;
-    let higherValue;
-
-    if (neighborIndex > 0) lowerValue = neighborSource[neighborIndex - 1];
-    if (neighborIndex >= 0 && neighborIndex < neighborSource.length - 1) {
-        higherValue = neighborSource[neighborIndex + 1];
-    }
+    const lowerValue = lastIndex >= 0 ? result[0] : undefined;
+    const higherValue = lastIndex >= 0 ? result[lastIndex] : undefined;
 
     return {
         result,

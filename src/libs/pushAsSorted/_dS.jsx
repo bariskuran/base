@@ -87,7 +87,26 @@ const X = () => {
                             />
                         </Flex>
                         <Output path="directionDesc" />
-                        <Output path="directionAsc" />
+                    </Flex.column>
+                }
+            />
+            <Ds.block
+                title="String sorting"
+                description='Descending via "desc". Also "descending", "Z-A", "z-a" are aliases.'
+                code={`pushAsSorted([5, 1, 3], 4, { direction: "Z-A" });`}
+                example={
+                    <Flex.column gap={10} padding={10} full>
+                        <Flex gap={10} wrap>
+                            <Button.plain
+                                label="string sorting"
+                                {...outputButtonProps({
+                                    path: "ex1",
+                                    activeLabel: "Z-A",
+                                    fn: () => pushAsSorted(["c", "z", "a"], "b"),
+                                })}
+                            />
+                        </Flex>
+                        <Output path="ex1" />
                     </Flex.column>
                 }
             />
@@ -136,11 +155,12 @@ const X = () => {
                     },
                     lowerValue: {
                         description:
-                            "Previous distinct value in the sorted unique sequence, if any.",
+                            "First item of result (low end when ascending, high end when descending).",
                         type: "any",
                     },
                     higherValue: {
-                        description: "Next distinct value in the sorted unique sequence, if any.",
+                        description:
+                            "Last item of result (high end when ascending, low end when descending).",
                         type: "any",
                     },
                 }}

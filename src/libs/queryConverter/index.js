@@ -79,7 +79,14 @@ export const queryConverter = {
     },
 
     import: (str, settings = {}) => {
-        const { preserveBooleans = false, preserveNumbers = false, prefix } = settings;
+        const {
+            preserveBooleans = false,
+            preserveNumbers = false,
+            prefix,
+            baseStore: baseStoreProp,
+            baseStoreSet,
+            setPath,
+        } = settings;
 
         const out = {};
         if (!str || typeof str !== "string") return out;
