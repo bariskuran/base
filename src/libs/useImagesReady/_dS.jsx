@@ -29,20 +29,15 @@ const X = () => (
                     description: "Called once after images are ready.",
                     type: "function",
                 },
-                options: {
-                    description: "Detection options.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "options.selector": {
-                    description: "CSS selector for image elements.",
-                    type: "string",
-                    defaultValue: '"img"',
-                },
-                "options.includeErrors": {
+                includeErrors: {
                     description: "Treat errored images as ready.",
                     type: "boolean",
                     defaultValue: "true",
+                },
+                selector: {
+                    description: "CSS selector for image elements.",
+                    type: "string",
+                    defaultValue: '"img"',
                 },
             }}
         />

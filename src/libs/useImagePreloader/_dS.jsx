@@ -32,14 +32,9 @@ const X = () => (
                 images: {
                     description: "List of image URLs.",
                     type: "string[]",
-                    defaultValue: "[]",
+                    required: true,
                 },
-                options: {
-                    description: "Preloader options.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "options.delayAfterLoad": {
+                delayAfterLoad: {
                     description: "Extra delay after load completes.",
                     type: "number",
                     defaultValue: "0",

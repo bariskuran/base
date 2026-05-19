@@ -41,33 +41,28 @@ const X = () => (
             args="useManageSearchParams({ bind, defaults, maxLength, pick, replace })"
             returns="Decoded param fields plus set, clear, and raw query helpers."
             props={{
-                options: {
-                    description: "Hook options.",
+                bind: {
+                    description: "Auto-sync object to URL.",
                     type: "object",
-                    defaultValue: "{}",
                 },
-                "options.pick": {
-                    description: "Keeps only selected keys.",
-                    type: "string[]",
-                },
-                "options.defaults": {
+                defaults: {
                     description: "Default values for missing params.",
                     type: "object",
                     defaultValue: "{}",
                 },
-                "options.bind": {
-                    description: "Auto-sync object to URL.",
-                    type: "object",
-                },
-                "options.replace": {
-                    description: "History replace mode.",
-                    type: "boolean",
-                    defaultValue: "true",
-                },
-                "options.maxLength": {
+                maxLength: {
                     description: "Max allowed query payload length.",
                     type: "number",
                     defaultValue: "0",
+                },
+                pick: {
+                    description: "Keeps only selected keys.",
+                    type: "string[]",
+                },
+                replace: {
+                    description: "History replace mode.",
+                    type: "boolean",
+                    defaultValue: "true",
                 },
             }}
         />

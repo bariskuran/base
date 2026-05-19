@@ -1,7 +1,7 @@
 import { deepMerge } from "../../deepMerge";
 import { colorGet } from "../../colorGet";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
-import { removeUndefinedDeep } from "../../removeUndefined";
+import { cleanFalsyValues } from "../../cleanFalsyValues";
 import { generateFlexBorders } from "./resolveFlexBorder.js";
 import { generateFlexMotion } from "./resolveFlexMotion.js";
 
@@ -746,7 +746,7 @@ export const generateProps = ({
         }),
     };
 
-    return removeUndefinedDeep(obj);
+    return cleanFalsyValues(obj, { only: ["undefined"] });
 };
 
 export const FLEX_PROPS_OMIT_FOR_DOM = new Set([

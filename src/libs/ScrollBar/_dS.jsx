@@ -279,9 +279,23 @@ const X = () => {
                     This gives you flexibility with the position of the ScrollBar. When either of these two props is enabled, automatic positioning props such as mirror and opposite, as well as positioning-related props like trackMargin and edgeMargin, are disabled.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
-                        <TwoAxisLargeContent childrenProps={[{ width: 1500 }]}>
-                            <ScrollBar fillMode />
-                        </TwoAxisLargeContent>`}
+                        <Flex {...flexProps} ref={flexRef1}>
+                            {longText}
+                        </Flex>
+                        <Flex {...flexProps} id={SOURCE_BY_ID}>
+                            {longText}
+                        </Flex>
+                        <Flex
+                            width={150}
+                            height={150}
+                            bgColor="aliceblue"
+                            aria-label="source by ref"
+                        >
+                            <ScrollBar sourceByRef={flexRef1} />
+                        </Flex>
+                        <Flex width={20} height={200}>
+                            <ScrollBar sourceById={SOURCE_BY_ID} />
+                        </Flex>`}
                 example={
                     <Flex gap={10}>
                         <Flex {...flexProps} ref={flexRef1}>

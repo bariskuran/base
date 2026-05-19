@@ -1,10 +1,8 @@
 import DsOutput from "../OutputArea";
 import { baseStore } from "../../@baseStore";
+import { formatJsonForDisplay } from "../formatJsonForDisplay";
 
-const formatOutput = (value) => {
-    if (typeof value === "string") return value;
-    return JSON.stringify(value, null, 2);
-};
+const formatOutput = (value) => formatJsonForDisplay(value);
 
 /** `Function#toString` / hand-written snippets: drops leading `(...) =>` (and optional `async`). */
 const stripArrowFnPreamble = (s) => {

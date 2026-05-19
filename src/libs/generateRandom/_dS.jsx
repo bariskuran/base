@@ -124,6 +124,7 @@ const X = () => {
                     length: {
                         description: "Character length.",
                         type: "number",
+                        required: true,
                     },
                     useLowerCase: {
                         description: "Uses lower case letters.",
@@ -155,6 +156,7 @@ const X = () => {
                     length: {
                         description: "Word count.",
                         type: "number",
+                        required: true,
                     },
                     disableDot: {
                         description: "Disables dot at sentence end.",

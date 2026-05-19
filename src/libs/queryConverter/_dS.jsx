@@ -244,6 +244,12 @@ const X = () => {
                 args="queryConverter.export(obj, { ignoreEncode, prefix, preserveEmpty })"
                 returns="Query string (with leading ?)."
                 props={{
+                    obj: {
+                        description:
+                            "Plain object to serialize (nested objects/arrays use bracket notation).",
+                        type: "object",
+                        required: true,
+                    },
                     preserveEmpty: {
                         description: "Keeps null/undefined/empty values.",
                         type: "boolean",
@@ -266,6 +272,12 @@ const X = () => {
                 args="queryConverter.import(str, { baseStore, baseStoreSet, prefix, preserveBooleans, preserveNumbers, setPath })"
                 returns="Parsed nested object. When baseStore or baseStoreSet is passed, state is merged via set; return value is still the parsed payload only."
                 props={{
+                    str: {
+                        description:
+                            'Query string to parse (with or without leading "?").',
+                        type: "string",
+                        required: true,
+                    },
                     preserveBooleans: {
                         description: "Keeps boolean-like values as strings.",
                         type: "boolean",

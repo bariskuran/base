@@ -39,20 +39,15 @@ const X = () => (
                     type: "HTMLElement | null | undefined",
                     defaultValue: "document",
                 },
-                options: {
-                    description: "Measurement options.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "options.settleDelay": {
-                    description: "Delay before each measurement.",
-                    type: "number",
-                    defaultValue: "250",
-                },
-                "options.resizeDelay": {
+                resizeDelay: {
                     description: "Resize throttle delay.",
                     type: "number",
                     defaultValue: "1000",
+                },
+                settleDelay: {
+                    description: "Delay before each measurement.",
+                    type: "number",
+                    defaultValue: "250",
                 },
             }}
         />

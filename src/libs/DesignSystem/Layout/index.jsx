@@ -14,7 +14,6 @@ const Layout = () => {
     const vars = useVars();
     const location = useLocation();
     const showInternalDs = baseStore.useGlobal((s) => !!s._adminSettings?.showInternalDs);
-
     const sorted = useMemo(() => {
         const [first, ...rest] = getSitemap() || [];
         return first ? [first, ...rest.sort((a, b) => sortBy.asc(a[0], b[0]))] : [];
@@ -28,7 +27,7 @@ const Layout = () => {
     /* RETURN */
     return (
         <S.container $vars={vars} aria-label="Design System">
-            <ScrollBar.primary maxLength={40} fillMode disableX />
+            <ScrollBar.primary maxLength={40} fillMode disableX sourceByRef={scrollBarSourceRef} />
             <S.navigation aria-label="Navigation">
                 <Flex.column height="100vh" flex="0 0 300rem" paddingBottom={75}>
                     <ScrollBar disableX trackMargin={0} edgeMargin={-4} />
@@ -66,7 +65,14 @@ const Layout = () => {
                     })}
                 </Flex.column>
             </S.navigation>
-            <Flex.column full flex="1 1 0%" gap={10} padding="30rem" minWidth={0}>
+            <Flex.column
+                full
+                flex="1 1 0%"
+                gap={10}
+                padding="30rem"
+                minWidth={0}
+                ref={scrollBarSourceRef}
+            >
                 <Outlet />
             </Flex.column>
         </S.container>

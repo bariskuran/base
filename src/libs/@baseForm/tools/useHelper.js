@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { baseStore } from "../../@baseStore";
 import { DefaultHelper } from "../DefaultHelper";
-import { clearUndefinedDeep } from "../../clearUndefinedDeep";
+import { cleanFalsyValues } from "../../cleanFalsyValues";
 
 /**
  *
@@ -54,23 +54,26 @@ export const useHelper = ({
                   ? false
                   : !!field?.isMainItem;
 
-        return clearUndefinedDeep({
-            helperMode,
-            shouldUseHelper,
-            storeFile,
-            name: field.name,
-            field,
-            label,
-            componentName,
-            prefix,
-            suffix,
-            disabled,
-            hidden,
-            description,
-            tooltip,
-            flexColumn,
-            rest,
-        });
+        return cleanFalsyValues(
+            {
+                helperMode,
+                shouldUseHelper,
+                storeFile,
+                name: field.name,
+                field,
+                label,
+                componentName,
+                prefix,
+                suffix,
+                disabled,
+                hidden,
+                description,
+                tooltip,
+                flexColumn,
+                rest,
+            },
+            { only: ["undefined"] },
+        );
     }, [label, prefix, suffix, disabled, hidden, description, tooltip, variant, field]);
 
     // const HelperComponent = helperProps.shouldUseHelper

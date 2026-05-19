@@ -117,10 +117,12 @@ const X = () => {
                     arr: {
                         description: "Input array.",
                         type: "any[]",
+                        required: true,
                     },
                     el: {
                         description: "Element to push.",
                         type: "any",
+                        required: true,
                     },
                     unique: {
                         description:

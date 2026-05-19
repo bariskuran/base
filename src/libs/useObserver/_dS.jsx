@@ -34,37 +34,32 @@ const X = () => (
             args="useObserver({ disable, onEnter, onExit, root, rootMargin, threshold })"
             returns="Object with ref callback and inViewport flag."
             props={{
-                options: {
-                    description: "Observer options object.",
-                    type: "object",
-                    defaultValue: "{}",
+                disable: {
+                    description: "Disables observer setup.",
+                    type: "boolean",
+                    defaultValue: "false",
                 },
-                "options.onEnter": {
+                onEnter: {
                     description: "Called when element enters viewport.",
                     type: "function",
                 },
-                "options.onExit": {
+                onExit: {
                     description: "Called when element exits viewport.",
                     type: "function",
                 },
-                "options.threshold": {
-                    description: "Intersection threshold value(s).",
-                    type: "number | number[]",
-                    defaultValue: "0.1",
+                root: {
+                    description: "Custom root element.",
+                    type: "Element | null",
                 },
-                "options.rootMargin": {
+                rootMargin: {
                     description: "Observer root margin.",
                     type: "number | string",
                     defaultValue: "0",
                 },
-                "options.root": {
-                    description: "Custom root element.",
-                    type: "Element | null",
-                },
-                "options.disable": {
-                    description: "Disables observer setup.",
-                    type: "boolean",
-                    defaultValue: "false",
+                threshold: {
+                    description: "Intersection threshold value(s).",
+                    type: "number | number[]",
+                    defaultValue: "0.1",
                 },
             }}
         />

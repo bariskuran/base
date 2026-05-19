@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Flex } from "../../Flex";
 import { useMemo } from "react";
 import { copyToClipboard } from "../../copyToClipboard";
+import { formatJsonForDisplay } from "../formatJsonForDisplay";
 
 const ButtonArea = styled.div`
     position: absolute;
@@ -44,7 +45,7 @@ const OutputArea = ({
             if (value == null) return [null, ""];
 
             if (typeof value === "string") return [value, ""];
-            return [JSON.stringify(value, null, 2), ""];
+            return [formatJsonForDisplay(value), ""];
         }
 
         const value = pathValue;
@@ -63,13 +64,13 @@ const OutputArea = ({
                     ? null
                     : typeof rawOut === "string"
                       ? rawOut
-                      : JSON.stringify(rawOut, null, 2);
+                      : formatJsonForDisplay(rawOut);
             const f = typeof value.fn === "string" ? value.fn : "";
             return [out, f];
         }
 
         if (typeof value === "string") return [value, ""];
-        return [JSON.stringify(value, null, 2), ""];
+        return [formatJsonForDisplay(value), ""];
     }, [directValue, pathValue, isOpen]);
 
     /* */

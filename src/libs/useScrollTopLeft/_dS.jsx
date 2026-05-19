@@ -34,17 +34,12 @@ const X = () => (
             args="useScrollTopLeft({ delay, source })"
             returns="scrollTop, scrollLeft, direction axes, and calc helper."
             props={{
-                options: {
-                    description: "Configuration object.",
-                    type: "object",
-                    defaultValue: "{}",
-                },
-                "options.source": {
+                source: {
                     description: "Window or scrollable element source.",
                     type: "Window | HTMLElement",
                     defaultValue: "window",
                 },
-                "options.delay": {
+                delay: {
                     description: "Throttle delay in milliseconds.",
                     type: "number",
                     defaultValue: "0",
