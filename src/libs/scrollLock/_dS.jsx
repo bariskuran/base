@@ -11,7 +11,11 @@ const X = () => {
     const { status, setLocal } = baseStore.useLocal({ status: "idle" });
 
     return (
-        <Ds.page title="scrollLock()" releasedOn="1.0.0" description="Locks/unlocks document scrolling.">
+        <Ds.page
+            title="scrollLock()"
+            releasedOn="1.0.0"
+            description="Locks/unlocks document scrolling."
+        >
             <Ds.block
                 title="Basic usage"
                 code={`import { scrollLock } from "${SYS.basePath}";
@@ -57,6 +61,7 @@ const X = () => {
                     },
                 }}
             />
+            <Space size={2000} />
         </Ds.page>
     );
 };

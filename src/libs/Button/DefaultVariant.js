@@ -39,7 +39,11 @@ export const DefaultVariant = styled.span`
         top: 0;
         transition:
             top 0.2s,
-            box-shadow 0.2s;
+            box-shadow 0.2s,
+            background 0.2s ease,
+            background-color 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease;
         border-radius: 5rem;
         will-change: top, box-shadow;
 

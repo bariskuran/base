@@ -2,7 +2,6 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { useCheckOverflow } from ".";
 import { useRef } from "react";
-import { Card } from "../Card";
 import { Typo } from "../Typo";
 import { Flex } from "../Flex";
 
@@ -12,9 +11,9 @@ const Demo = () => {
 
     return (
         <Flex.column gap={8}>
-            <Card ref={ref} width={220} height={80} overflow="auto" padding={8}>
+            <Flex ref={ref} width={220} height={80} overflow="auto" padding={8}>
                 Very long very long very long very long very long content for overflow checks.
-            </Card>
+            </Flex>
             <Typo.span>{`overflow: ${String(isOverflowing)}`}</Typo.span>
             <Typo.span>{`x: ${String(isOverflowingX)} y: ${String(isOverflowingY)}`}</Typo.span>
         </Flex.column>

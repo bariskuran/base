@@ -5,6 +5,7 @@ import { Button } from "../../Button";
 import { Flex } from "../../Flex";
 import CodeViewer from "../CodeViewer";
 import { isJsxDescription } from "../isJsxDescription";
+import { templateLiteralTo } from "../../templateLiteralTo";
 
 const Block = ({ title, description, code, example, lastBlock }) => {
     const { ajax, setLocal } = baseStore.useLocal({
@@ -58,9 +59,11 @@ const Block = ({ title, description, code, example, lastBlock }) => {
                 <Flex.column full minWidth={0}>
                     {(example || description) && ajax === 0 && (
                         <S.contentArea area-title="Block Content">
-                            <Typo as={isJsxDescription(description) ? "div" : "pre"} balance>
-                                {description}
-                            </Typo>
+                            {isJsxDescription(description) ? (
+                                <Typo as="div">{description}</Typo>
+                            ) : (
+                                <Typo as="div">{templateLiteralTo.p(description)}</Typo>
+                            )}
                             <Flex.row full minWidth={0}>
                                 {example}
                             </Flex.row>

@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { Space } from ".";
-import { Card } from "../Card";
+import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 
 const X = () => (
@@ -14,11 +14,17 @@ const X = () => (
                         <Space size="xl" />
                         <Typo>Bottom</Typo>`}
             example={
-                <Card padding={12}>
-                    <Typo.span children="Top" />
-                    <Space size="xl" />
-                    <Typo.span children="Bottom" />
-                </Card>
+                <Flex wrap gap={10} padding={10} full>
+                    <Ex size="xs" />
+                    <Ex size="s" />
+                    <Ex size="m" />
+                    <Ex size="l" />
+                    <Ex size="xl" />
+                    <Ex size="xxl" />
+                    <Ex size="xxxl" />
+                    <Ex size="xxxxl" />
+                    <Ex size={100} description="number" />
+                </Flex>
             }
         />
         <Ds.api
@@ -35,3 +41,14 @@ const X = () => (
 );
 
 export default X;
+
+const Ex = ({ size, description }) => (
+    <Flex.column>
+        <Typo.span>
+            {size} {description}
+        </Typo.span>
+        <Flex bgColor="greys.shade20" width={50}>
+            <Space size={size} />
+        </Flex>
+    </Flex.column>
+);

@@ -15,22 +15,24 @@ const X = () => {
                 title="Basic usage"
                 code={`import { sleep } from "${SYS.basePath}";
 
-                        await sleep(500);`}
+                        await sleep(200);`}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Button
                             label={label}
                             onClick={async () => {
                                 setLocal((s) => {
-                                    s.label = "Waiting 500ms...";
+                                    s.label = "Waiting 2000ms...";
                                 });
-                                await sleep(500);
+                                await sleep(2000);
                                 setLocal((s) => {
                                     s.label = "Done";
                                 });
                             }}
                         />
-                        <Typo.span balance>State is driven by baseStore for demo visibility.</Typo.span>
+                        <Typo.span balance>
+                            State is driven by baseStore for demo visibility.
+                        </Typo.span>
                     </Flex.column>
                 }
             />

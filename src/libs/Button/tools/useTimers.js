@@ -1,5 +1,5 @@
 import { useTimer } from "../../useTimer";
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 
 const normalizeTimerMs = (value, fallback) => {
     if (value == null || value === "") return fallback;
@@ -10,16 +10,11 @@ const normalizeTimerMs = (value, fallback) => {
 
 export const useTimers = (p) => {
     const {
-        label,
-        prefix,
-        suffix,
-        icon,
         delay,
         setLocal,
         onDelayStart,
         onDelayEnd,
         runAction,
-        getTimerBaseName,
         clickCooldownMs,
         onClickHoldMs,
     } = p || {};
@@ -27,10 +22,9 @@ export const useTimers = (p) => {
     const cooldownMs = normalizeTimerMs(clickCooldownMs, 1000);
     const showOnClickHoldDurationMs = normalizeTimerMs(onClickHoldMs, 2000);
 
-    const timerBaseName = useMemo(
-        () => getTimerBaseName({ label, prefix, suffix, icon }),
-        [label, prefix, suffix, icon],
-    );
+    // Label değişince timer adı değişmemeli; aksi halde stop cleanup onEnd çağırmadan clickBlocker'da kalır
+    const instanceId = useId();
+    const timerBaseName = useMemo(() => instanceId.replace(/:/g, "_"), [instanceId]);
 
     const {
         start: showOnClickValuesStart,

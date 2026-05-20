@@ -1,6 +1,7 @@
 import { Typo } from "../../Typo";
 import { Flex } from "../../Flex";
 import { isJsxDescription } from "../isJsxDescription";
+import { templateLiteralTo } from "../../templateLiteralTo";
 
 const Page = ({ children, title, releasedOn, description }) => {
     /* */
@@ -36,11 +37,12 @@ const Page = ({ children, title, releasedOn, description }) => {
                         justify="center"
                         margin="50rem 0"
                     >
-                        {description && (
-                            <Typo as={isJsxDescription(description) ? "div" : "pre"} balance>
-                                {description}
-                            </Typo>
-                        )}
+                        {description &&
+                            (isJsxDescription(description) ? (
+                                <Typo as="div">{description}</Typo>
+                            ) : (
+                                <Typo as="div">{templateLiteralTo.p(description)}</Typo>
+                            ))}
                     </Flex.column>
                 </Flex>
             </Flex.column>

@@ -26,7 +26,6 @@ const sharedStyles = ({
     $lowercase,
     $capitalize,
     $disabled,
-    $hasOverlayCopy,
     $isManuallyHover,
     $lineHeight,
     $letterSpacing,
@@ -35,10 +34,26 @@ const sharedStyles = ({
     $enableQuoteMarks,
     $fitContent,
     $balance,
+    $inlineCopy,
+    $overlayCopyLayout,
 }) => {
     return css`
         box-sizing: border-box;
         position: relative;
+
+        ${$overlayCopyLayout &&
+        css`
+            margin: 0;
+            align-self: flex-start;
+            flex: 1 1 auto;
+            min-width: 0;
+        `}
+
+        ${as === "pre" &&
+        css`
+            margin: 0;
+            display: block;
+        `}
         ${$maxWidth != null
             ? `max-width: ${$maxWidth};`
             : !as?.includes("h") && !$disableMaxWidthLock
@@ -75,13 +90,19 @@ const sharedStyles = ({
             text-transform: ${$uppercase ? "uppercase" : $lowercase ? "lowercase" : "capitalize"};
         `}
 
-    ${$hasOverlayCopy ? `padding-right: 20rem;` : ""}
+    ${$inlineCopy &&
+        css`
+            display: inline-flex;
+            align-items: stretch;
+            width: fit-content;
+            max-width: 100%;
+        `}
 
     ${$fitContent &&
         css`
             width: fit-content;
         `}
-    
+
     ${$balance &&
         css`
             text-wrap: balance;
@@ -117,16 +138,28 @@ const sharedStyles = ({
             text-align: right;
         `}
 
-    ${($ellipsis || $clamp) &&
+    ${$clamp != null &&
         $ellipsis !== "base" &&
         css`
             overflow: hidden;
             text-overflow: ellipsis;
-            width: ${$width ? $width : "100%"};
-
+            width: ${$width ?? "100%"};
+            min-width: 0;
             display: -webkit-box;
-            -webkit-line-clamp: ${$clamp ?? 1};
+            -webkit-line-clamp: ${$clamp};
             -webkit-box-orient: vertical;
+        `}
+
+    ${$ellipsis &&
+        $clamp == null &&
+        $ellipsis !== "base" &&
+        css`
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+            width: ${$width ?? "100%"};
+            min-width: 0;
         `}
 
     ${$ellipsis === "base" &&
@@ -177,28 +210,69 @@ const sharedStyles = ({
     `;
 };
 
+const OVERLAY_COPY_HOSTS = new Set(["pre", "code"]);
+
+const wrapperWidth = ({ $width, $maxWidth, $fitContent, $disableMaxWidthLock, $overlayCopy, $as }) => {
+    if (!$overlayCopy) return "auto";
+    if ($width != null) return $width;
+    if ($fitContent) return "fit-content";
+    if ($maxWidth != null) return $maxWidth;
+    if (OVERLAY_COPY_HOSTS.has($as)) return "fit-content";
+    if (!$disableMaxWidthLock) return "min(100%, 600px)";
+    return "fit-content";
+};
+
 const S = {
     wrapper: styled.div`
-        ${({ $overlayCopy }) => css`
-            display: ${$overlayCopy ? "grid" : "inline-block"};
-            ${$overlayCopy ? "grid-template-columns: minmax(0, 1fr) 20rem;" : ""}
-            ${$overlayCopy ? "align-items: start;" : ""}
+        ${({ $overlayCopy, $maxWidth, $width, $fitContent, $disableMaxWidthLock, $as }) => css`
+            display: ${$overlayCopy ? "inline-flex" : "inline-block"};
             position: relative;
-            width: ${$overlayCopy ? "100%" : "auto"};
-            max-width: 100%;
+
+            ${$overlayCopy &&
+            css`
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 0;
+                width: ${wrapperWidth({
+                    $width,
+                    $maxWidth,
+                    $fitContent,
+                    $disableMaxWidthLock,
+                    $overlayCopy,
+                    $as,
+                })};
+                max-width: ${$maxWidth != null ? $maxWidth : $disableMaxWidthLock ? "none" : "min(100%, 600px)"};
+            `}
         `}
     `,
     overlayCopy: styled.div`
         display: flex;
         align-items: flex-start;
-        justify-content: flex-end;
+        justify-content: flex-start;
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 0;
+        line-height: 0;
         pointer-events: auto;
         user-select: none;
+
+        & > * {
+            margin: 0;
+            vertical-align: top;
+        }
+    `,
+
+    inlineContent: styled.span`
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        flex: 1 1 auto;
     `,
 
     inlineCopy: styled.span`
         display: inline-flex;
-        vertical-align: middle;
+        align-items: center;
+        flex-shrink: 0;
         margin-left: 6rem;
         position: relative;
         z-index: 2;

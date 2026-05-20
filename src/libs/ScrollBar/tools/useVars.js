@@ -38,9 +38,18 @@ const useVars = (p) => {
 
     const edgeMarginDefault = -2 - thickness;
     const trackMargin = trackMarginProp ?? 9;
-    const edgeMargin = edgeMarginProp ?? edgeMarginDefault;
-    const edgeMarginX = edgeMarginXProp ?? edgeMarginDefault;
-    const edgeMarginY = edgeMarginYProp ?? edgeMarginDefault;
+
+    const toBodyEdgeMargin = (value) => (value < 0 ? Math.abs(value) : value);
+
+    let edgeMargin = edgeMarginProp ?? edgeMarginDefault;
+    let edgeMarginX = edgeMarginXProp ?? edgeMarginDefault;
+    let edgeMarginY = edgeMarginYProp ?? edgeMarginDefault;
+
+    if (body) {
+        edgeMargin = toBodyEdgeMargin(edgeMargin);
+        edgeMarginX = toBodyEdgeMargin(edgeMarginX);
+        edgeMarginY = toBodyEdgeMargin(edgeMarginY);
+    }
     const hasExternalSource =
         sourceByRef != null || (typeof sourceById === "string" && sourceById.trim() !== "");
     const hasExternalPositionSource = positionSourceByRef != null;

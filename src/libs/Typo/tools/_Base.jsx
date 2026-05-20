@@ -15,6 +15,16 @@ export const Base = (props) => {
     const { isHover: isManuallyHover, exportData } = useExportedData();
     const vars = useVars({ children, content, contentArray, ...p });
 
+    if (contentArray?.length) {
+        return (
+            <>
+                {contentArray.map((item, index) => (
+                    <Base key={index} {...p} content={item} contentArray={undefined} />
+                ))}
+            </>
+        );
+    }
+
     if (vars.hasNoContent) return null;
 
     const commonProps = {
@@ -34,7 +44,6 @@ export const Base = (props) => {
         $letterSpacing: vars.letterSpacing,
         $lineHeight: vars.lineHeight,
         $unselectable: vars.unselectable,
-        $copyable: vars.copyable,
         $italic: vars.italic,
         $bold: vars.bold,
         $underline: vars.underline,
@@ -48,6 +57,8 @@ export const Base = (props) => {
         $enableQuoteMarks: vars.enableQuoteMarks,
         $fitContent: vars.fitContent,
         $balance: vars.balance,
+        $inlineCopy: vars.canUseInlineCopy,
+        $overlayCopyLayout: vars.shouldUseOverlayCopy,
     };
 
     const CopyButton = (
@@ -61,6 +72,7 @@ export const Base = (props) => {
             outlined
             bgColor={colorAlpha(vars.color, 0.3)}
             hoverBgColor={colorAlpha(vars.color, 0)}
+            activeBgColor="transparent"
             popTip={getText("copyContent")}
             icon={{
                 icon: "copy",
@@ -72,16 +84,22 @@ export const Base = (props) => {
         />
     );
 
-    const innerFlow = (
+    const innerFlow = vars.canUseInlineCopy ? (
         <>
-            {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
-            {vars.canUseInlineCopy && <S.inlineCopy>{CopyButton}</S.inlineCopy>}
+            <S.inlineContent>
+                {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
+            </S.inlineContent>
+            <S.inlineCopy>{CopyButton}</S.inlineCopy>
         </>
+    ) : (
+        <>{vars.shouldRenderChildren ? vars.finalVisibleContent : null}</>
     );
 
     const innerMarked =
         isTypoPhrasingOnlyHostTag(vars.as) && !vars.shouldUseInnerHtml ? (
-            <NestedBaseUi value={{ [NESTED_UI_TYPO_PHRASING_HOST]: true }}>{innerFlow}</NestedBaseUi>
+            <NestedBaseUi value={{ [NESTED_UI_TYPO_PHRASING_HOST]: true }}>
+                {innerFlow}
+            </NestedBaseUi>
         ) : (
             innerFlow
         );
@@ -107,10 +125,17 @@ export const Base = (props) => {
         </S.container>
     );
 
-    if (!vars.copyable) return Main;
+    if (!vars.copy) return Main;
 
     return (
-        <S.wrapper $overlayCopy={vars.shouldUseOverlayCopy}>
+        <S.wrapper
+            $overlayCopy={vars.shouldUseOverlayCopy}
+            $as={vars.as}
+            $maxWidth={vars.maxWidth}
+            $width={vars.width}
+            $fitContent={vars.fitContent}
+            $disableMaxWidthLock={vars.disableMaxWidthLock}
+        >
             {Main}
             {vars.shouldUseOverlayCopy && <S.overlayCopy>{CopyButton}</S.overlayCopy>}
         </S.wrapper>

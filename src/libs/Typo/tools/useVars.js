@@ -5,8 +5,8 @@ import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { baseStore } from "../../@baseStore";
 import { getTruncatedHtml } from "./getTruncatedHtml";
 import { cssSpacingResolver } from "../../cssSpacingResolver";
+import { dedent } from "../../templateLiteralTo/dedent";
 import {
-    dedent,
     formatFnCallSnippetForViewer,
     formatJsxPropsForViewer,
 } from "../../DesignSystem/CodeViewer/tools/codeFormatters.jsx";
@@ -158,13 +158,20 @@ const useVars = ({ children, content, contentArray, ...p }) => {
 
     const shouldRenderChildren = !isEllipsisBaseFinal || truncatedHtml == null;
     const shouldUseInnerHtml = isEllipsisBaseFinal && truncatedHtml != null;
+    const isOverlayCopyHost = displayProps.as === "pre" || displayProps.as === "code";
+    const hasCopy = !!p.copy;
     const shouldUseOverlayCopy =
-        p.copyable && (controlledProps.ellipsis || controlledProps.clamp || shouldUseInnerHtml);
-    const canUseInlineCopy = p.copyable && !shouldUseOverlayCopy && !shouldUseInnerHtml;
+        hasCopy &&
+        (controlledProps.ellipsis ||
+            controlledProps.clamp != null ||
+            shouldUseInnerHtml ||
+            isOverlayCopyHost);
+    const canUseInlineCopy = hasCopy && !shouldUseOverlayCopy && !shouldUseInnerHtml;
 
     return useExportData(
         {
             ...displayProps,
+            copy: hasCopy,
             margin,
             padding,
             shouldUseOverlayCopy,

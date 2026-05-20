@@ -7,10 +7,15 @@ import { Flex } from "../../Flex";
 import { Button } from "../../Button";
 import { Icon } from "../../@Icon";
 
-const Com = ({ arg }) => (
-    <Flex scale={1.2} origin="left center">
-        <Button.withCopyIcon onClick={() => copyToClipboard(arg)} label={arg} />
-    </Flex>
+const SignatureLine = ({ arg }) => (
+    <S.argsLine>
+        <Button.plain
+            onClick={() => copyToClipboard(arg, { addToNotifier: true })}
+            icon={{ icon: "copy", width: 10 }}
+            popTip="Copy"
+        />
+        <S.argsText>{arg}</S.argsText>
+    </S.argsLine>
 );
 
 const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title }) => {
@@ -51,11 +56,11 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title 
             example={
                 <Flex.column gap={10} marginTop={5} full>
                     {args && (
-                        <Flex.column gap={10} marginBottom={40} aria-label="Arguments">
+                        <Flex.column gap={10} marginBottom={40} full minWidth={0} aria-label="Arguments">
                             {typeof args === "string" ? (
-                                <Com arg={args} />
+                                <SignatureLine arg={args} />
                             ) : Array.isArray(args) ? (
-                                args.map((arg, i) => <Com arg={arg} key={i} />)
+                                args.map((arg, i) => <SignatureLine arg={arg} key={i} />)
                             ) : null}
                         </Flex.column>
                     )}

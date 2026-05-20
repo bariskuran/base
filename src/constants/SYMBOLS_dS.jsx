@@ -7,7 +7,7 @@ const X = () => {
         <Ds.page
             title="SYMBOLS"
             releasedOn="1.0.0"
-            description="Şifre ve rastgele metin için sembol kümesi (tek string). &, tek tırnak ve küçük/büyük işaretleri yok; çoğu policy ile uyumlu olacak şekilde seçildi."
+            description="Symbol set (single string) for passwords and random text. Excludes &, single quotes, and angle brackets; selected to be compatible with most policies."
         >
             <Ds.block
                 title="Export"

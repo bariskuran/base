@@ -3,10 +3,6 @@ import { DEFAULT_MAX_ASP_RATIO } from "../../constants/DEFAULT_MAX_ASP_RATIO";
 import { DEFAULT_MIN_ASP_RATIO } from "../../constants/DEFAULT_MIN_ASP_RATIO";
 
 /**
- *  * @example
- * const client = getClientData();
- * console.log(client.currentBreakpoint, client.isMobile, client.timeZone);
- *
  * @example
  * const client = getClientData({
  *   breakpoints: { sm: [0, 640], md: [640, 1024], lg: [1024, 99999] },
@@ -15,68 +11,6 @@ import { DEFAULT_MIN_ASP_RATIO } from "../../constants/DEFAULT_MIN_ASP_RATIO";
  * });
  */
 
-/**
- * Collects lightweight client/environment data (viewport, breakpoints, timezone, UA hints, media prefs, connectivity)
- * with SSR safety.
- *
- * - In SSR / non-browser environments it returns a fully shaped object with safe defaults.
- * - In the browser it reads from `window`, `document`, `navigator`, `Intl`, and `matchMedia` when available.
- *
- * @param {Object} [options]
- * @param {Record<string, [number, number]>} [options.breakpoints=DEFAULT_BREAKPOINTS]
- *        Breakpoint map in the form:
- *        `{ sm: [0, 640], md: [640, 1024], ... }` where `min` is inclusive and `max` is exclusive.
- * @param {number} [options.maxAspRatio=DEFAULT_MAX_ASP_RATIO]
- *        Lower bound for allowed aspect ratio. (Note: naming kept for backward compatibility.)
- * @param {number} [options.minAspRatio=DEFAULT_MIN_ASP_RATIO]
- *        Upper bound for allowed aspect ratio. (Note: naming kept for backward compatibility.)
- *
- * @returns {{
- *   winW: number,
- *   winH: number,
- *   aspectRatio: number,
- *   language: string,
- *
- *   timeZone: string,
- *   utcOffsetMinutes: number,
- *   utcOffsetHours: number,
- *
- *   MAX_ASP_RATIO: number,
- *   MIN_ASP_RATIO: number,
- *   isOutOfRatio: boolean,
- *   isSafeSize: boolean,
- *   currentBreakpoint: string,
- *   isMobile: boolean,
- *
- *   device: "mobile"|"tablet"|"mac"|"windows"|"linux"|"unknown",
- *   os: "windows"|"android"|"ios"|"macOsX"|"linux"|"unknown",
- *   browser: "edge"|"chrome"|"safari"|"firefox"|"unknown",
- *
- *   dpr: number,
- *   isRetina: boolean,
- *   orientation: string,
- *
- *   prefersDark: boolean,
- *   prefersReducedMotion: boolean,
- *   prefersContrastMore: boolean,
- *
- *   online: boolean,
- *   connection: null | {
- *     effectiveType: string | null,
- *     downlink: number | null,
- *     rtt: number | null,
- *     saveData: boolean | null,
- *   },
- *
- *   deviceMemory: number | null,
- *   hardwareConcurrency: number | null,
- *
- *   maxTouchPoints: number,
- *   hasTouch: boolean,
- *   pointerCoarse: boolean,
- * }}
- *
- */
 export const getClientData = ({
     breakpoints = DEFAULT_BREAKPOINTS,
     maxAspRatio = DEFAULT_MAX_ASP_RATIO,

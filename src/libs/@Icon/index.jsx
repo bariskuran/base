@@ -174,7 +174,7 @@ export const Icon = ({
                 style={{
                     background: finalBg || "transparent",
                     borderRadius: "999px",
-                    transition: "background 0.2s ease",
+                    transition: "background 0.2s ease, background-color 0.2s ease, color 0.2s ease",
                 }}
             >
                 <IconLayer

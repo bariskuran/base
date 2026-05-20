@@ -8,7 +8,11 @@ const X = () => {
     const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
-        <Ds.page title="typeOf()" releasedOn="1.0.0" description="Extended type detector helper.">
+        <Ds.page
+            title="typeOf()"
+            releasedOn="1.0.0"
+            description="Extended type detector helper. Supports multiple arguments. Detects 'number', 'string', 'boolean', 'undefined', 'function', 'object', 'null', 'array', 'date', 'regexp', 'map', 'set', 'error', 'promise'."
+        >
             <Ds.block
                 title="Single and multi input"
                 code={`import { typeOf } from "${SYS.basePath}";
@@ -41,13 +45,12 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="typeOf(...args);"
+                args={["typeOf(arg);", "typeOf(arg1, arg2, ...argN);"]}
                 returns="undefined with no args; string for one arg; string[] for multiple."
                 props={{
                     "...args": {
                         description: "One or more values to inspect.",
-                        type: "any[]",
-                        defaultValue: "[]",
+                        type: "any || any[]",
                     },
                 }}
             />

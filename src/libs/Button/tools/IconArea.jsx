@@ -80,7 +80,6 @@ export const IconArea = (props = {}) => {
             $areaName={areaName}
             data-slot={areaName}
             style={{
-                background: iconBg,
                 ...(wrapColor != null && wrapColor !== "" ? { color: wrapColor } : {}),
             }}
         >

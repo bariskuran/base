@@ -351,6 +351,12 @@ export const useVars = ({
             background: bg,
             color: c,
             cursor,
+            ...(!disabled
+                ? {
+                      transition:
+                          "background 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease",
+                  }
+                : {}),
             ...(fullWidth ? { width: "100%" } : {}),
             ...(fullWidth ? { justifyContent: fullWidthJustifyContent } : {}),
             ...(minHeight ? { minHeight: `${minHeight}rem` } : {}),

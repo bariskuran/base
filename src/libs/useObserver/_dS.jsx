@@ -2,7 +2,6 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { useObserver } from ".";
 import { Typo } from "../Typo";
-import { Card } from "../Card";
 import { Flex } from "../Flex";
 
 const Demo = () => {
@@ -10,9 +9,9 @@ const Demo = () => {
     return (
         <Flex.column gap={8}>
             <Typo.span>{`inViewport: ${String(inViewport)}`}</Typo.span>
-            <Card ref={ref} padding={10}>
+            <Flex ref={ref} padding={10} bgColor="greys.shade10">
                 Observed element
-            </Card>
+            </Flex>
         </Flex.column>
     );
 };

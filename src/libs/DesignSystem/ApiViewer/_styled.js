@@ -34,5 +34,24 @@ const S = {
             }
         `}
     `,
+
+    argsLine: styled.div`
+        display: flex;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        align-items: flex-start;
+    `,
+
+    argsText: styled.code`
+        flex: 1 1 auto;
+        min-width: 0;
+        display: block;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        font-size: inherit;
+        line-height: 1.45;
+    `,
 };
 export default S;
