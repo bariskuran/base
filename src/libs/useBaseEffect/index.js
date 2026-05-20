@@ -16,6 +16,7 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
     } = settings || {};
 
     const prevRef = useRef([]);
+    const diffPrevRef = useRef([]);
     const firstRef = useRef(true);
 
     const hasChanged = () => {
@@ -23,6 +24,7 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
 
         if (firstRef.current) {
             firstRef.current = false;
+            diffPrevRef.current = [];
             prevRef.current = Array.isArray(deps) ? deps.slice() : [];
             return !useEffectAfterMount;
         }
@@ -33,12 +35,14 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
         const next = Array.isArray(deps) ? deps : [];
 
         if (prev.length !== next.length) {
+            diffPrevRef.current = prev.slice();
             prevRef.current = next.slice();
             return true;
         }
 
         for (let i = 0; i < next.length; i++) {
             if (!isDeepEqual(prev[i], next[i])) {
+                diffPrevRef.current = prev.slice();
                 prevRef.current = next.slice();
                 return true;
             }
@@ -55,7 +59,18 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
             if (!changed) return;
 
             if (findDifferences) {
-                const differences = findDifferencesFn(prevRef.current, deps);
+                const prevDeps = diffPrevRef.current;
+                const nextDeps = deps;
+                const prevArr = Array.isArray(prevDeps) ? prevDeps : [];
+                const nextArr = Array.isArray(nextDeps) ? nextDeps : [];
+
+                // Single dep: compare the value, not the deps array (paths: "name" not "0.name")
+                const oldData =
+                    prevArr.length === 1 && nextArr.length === 1 ? prevArr[0] : prevDeps;
+                const newData =
+                    prevArr.length === 1 && nextArr.length === 1 ? nextArr[0] : nextDeps;
+
+                const differences = findDifferencesFn(oldData, newData);
                 fn({ differences });
             } else {
                 fn();
