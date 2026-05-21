@@ -128,8 +128,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="cleanFalsyValues(arg, { deep, except, only })"
-                returns="New object or array with matching keys/items removed."
+                args="const cleaned = cleanFalsyValues(arg, { deep, except, only });"
                 props={{
                     arg: {
                         description: "Plain object or array to clean.",
@@ -152,6 +151,12 @@ const X = () => {
                             "Types to strip (allowlist). Non-empty only overrides except. Values: " +
                             FALSY_TYPES.join(", "),
                         type: "string[]",
+                    },
+                }}
+                returnProps={{
+                    cleaned: {
+                        description: "New object or array with matching keys or items removed.",
+                        type: "object | array",
                     },
                 }}
             />

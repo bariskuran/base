@@ -90,8 +90,7 @@ const X = () => {
             <Ds.api
                 title="number"
                 disableLastBlock
-                args="generateRandom.number(min, max, decimal, disableLocaleString)"
-                returns="number or locale-formatted string"
+                args="const num = generateRandom.number(min, max, decimal, disableLocaleString);"
                 props={{
                     min: {
                         description: "Minimum number.",
@@ -114,12 +113,17 @@ const X = () => {
                         defaultValue: "false",
                     },
                 }}
+                returnProps={{
+                    num: {
+                        description: "Random number, or locale-formatted string when formatting is enabled.",
+                        type: "number | string",
+                    },
+                }}
             />
             <Ds.api
                 title="text"
                 disableLastBlock
-                args="generateRandom.text(length, { useLowerCase, useNumbers, useSymbols, useUpperCase })"
-                returns="string"
+                args="const text = generateRandom.text(length, { useLowerCase, useNumbers, useSymbols, useUpperCase });"
                 props={{
                     length: {
                         description: "Character length.",
@@ -147,11 +151,13 @@ const X = () => {
                         defaultValue: "false",
                     },
                 }}
+                returnProps={{
+                    text: { description: "Random text string.", type: "string" },
+                }}
             />
             <Ds.api
                 title="loremIpsum"
-                args="generateRandom.loremIpsum(length, { disableDot, enableParagraph, paragraphComponent, paragraphLength })"
-                returns="Plain string, or paragraph elements when enableParagraph is true."
+                args="const lorem = generateRandom.loremIpsum(length, { disableDot, enableParagraph, paragraphComponent, paragraphLength });"
                 props={{
                     length: {
                         description: "Word count.",
@@ -177,6 +183,12 @@ const X = () => {
                         description: "Paragraph wrapper component.",
                         type: "component",
                         defaultValue: "'p'",
+                    },
+                }}
+                returnProps={{
+                    lorem: {
+                        description: "Lorem text string, or React paragraph elements when enableParagraph is true.",
+                        type: "string | ReactNode[]",
                     },
                 }}
             />

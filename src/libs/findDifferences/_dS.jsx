@@ -61,7 +61,6 @@ const { changedPaths, differences } = findDifferences(oldData, newData);`}
                     defaultValue: "{}",
                 },
             }}
-            returns="Object with changedPaths and differences tree."
             returnProps={{
                 changedPaths: {
                     description: "Array of changed paths.",

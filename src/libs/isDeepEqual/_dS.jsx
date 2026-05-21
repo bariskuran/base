@@ -289,9 +289,8 @@ const X = () => {
             />
             <Ds.api
                 args={[
-                    "isDeepEqual(value1, value2, { comparePath, ignoreArrayOrder, maxDepth, maxKeys, treatFalsiesAsEqual });",
+                    "const equal = isDeepEqual(value1, value2, { comparePath, ignoreArrayOrder, maxDepth, maxKeys, treatFalsiesAsEqual });",
                 ]}
-                returns="boolean"
                 props={{
                     value1: {
                         description: "First value.",
@@ -328,6 +327,12 @@ const X = () => {
                             "When true, arrays are equal if lengths match and elements form the same multiset (each item pairs once by deep equality; order ignored). Nested arrays use the same rule.",
                         type: "boolean",
                         defaultValue: "false",
+                    },
+                }}
+                returnProps={{
+                    equal: {
+                        description: "True when both values are deeply equal under the given options.",
+                        type: "boolean",
                     },
                 }}
             />

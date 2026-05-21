@@ -22,8 +22,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useImagesReady(fn, { includeErrors, selector })"
-            returns="Boolean ready state for matched images."
+            args="const isReady = useImagesReady(fn, { includeErrors, selector });"
             props={{
                 fn: {
                     description: "Called once after images are ready.",
@@ -38,6 +37,12 @@ const X = () => (
                     description: "CSS selector for image elements.",
                     type: "string",
                     defaultValue: '"img"',
+                },
+            }}
+            returnProps={{
+                isReady: {
+                    description: "True once all matched images are considered ready.",
+                    type: "boolean",
                 },
             }}
         />

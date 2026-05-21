@@ -20,8 +20,7 @@ const X = () => (
                         });`}
         />
         <Ds.api
-            args="useDeepEqual(a, b, { comparePath, ignoreArrayOrder, maxDepth, maxKeys, treatFalsiesAsEqual })"
-            returns="boolean — same result as isDeepEqual(a, b, { treatFalsiesAsEqual, maxKeys, maxDepth, comparePath, ignoreArrayOrder })."
+            args="const equal = useDeepEqual(a, b, { comparePath, ignoreArrayOrder, maxDepth, maxKeys, treatFalsiesAsEqual });"
             props={{
                 a: {
                     description: "First value.",
@@ -57,6 +56,12 @@ const X = () => (
                     description: "When true, array order is ignored in deep comparison.",
                     type: "boolean",
                     defaultValue: "false",
+                },
+            }}
+            returnProps={{
+                equal: {
+                    description: "Memoized deep equality result (same rules as isDeepEqual).",
+                    type: "boolean",
                 },
             }}
         />

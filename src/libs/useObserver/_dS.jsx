@@ -30,8 +30,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useObserver({ disable, onEnter, onExit, root, rootMargin, threshold })"
-            returns="Object with ref callback and inViewport flag."
+            args="const { ref, inViewport } = useObserver({ disable, onEnter, onExit, root, rootMargin, threshold });"
             props={{
                 disable: {
                     description: "Disables observer setup.",
@@ -59,6 +58,16 @@ const X = () => (
                     description: "Intersection threshold value(s).",
                     type: "number | number[]",
                     defaultValue: "0.1",
+                },
+            }}
+            returnProps={{
+                ref: {
+                    description: "Ref callback to attach to the observed element.",
+                    type: "function",
+                },
+                inViewport: {
+                    description: "True when the element intersects the root/viewport.",
+                    type: "boolean",
                 },
             }}
         />

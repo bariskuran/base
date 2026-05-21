@@ -81,8 +81,7 @@ colorTinter("#4f46e5", 20);`}
                 }
             />
             <Ds.api
-                args="colorTinter(color, percent);"
-                returns="Tinted color string (hex6 or hex8 depending on source)."
+                args="const tinted = colorTinter(color, percent);"
                 props={{
                     color: {
                         description: "Input color (hex/rgb/css name/theme token/path).",
@@ -92,6 +91,12 @@ colorTinter("#4f46e5", 20);`}
                         description: "Tint amount (0..100). 100 is equal to white.",
                         type: "number",
                         defaultValue: "0",
+                    },
+                }}
+                returnProps={{
+                    tinted: {
+                        description: "Tinted color string (hex6 or hex8 depending on source).",
+                        type: "string",
                     },
                 }}
             />

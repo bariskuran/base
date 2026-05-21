@@ -57,7 +57,7 @@ const X = () => (
         />
 
         <Ds.api
-            args="templateLiteralTo(text, mode?)"
+            args="const result = templateLiteralTo(text, mode);"
             props={{
                 text: { description: "Template literal string (or any string).", type: "string" },
                 mode: {
@@ -66,7 +66,12 @@ const X = () => (
                     defaultValue: '"pre"',
                 },
             }}
-            returns="string (.pre) or React nodes (.p / .span)"
+            returnProps={{
+                result: {
+                    description: 'Dedented string for "pre", or React nodes for "p" / "span".',
+                    type: "string | ReactNode",
+                },
+            }}
         />
     </Ds.page>
 );

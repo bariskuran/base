@@ -37,8 +37,8 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="sleep(ms);"
-                returns="Promise that resolves after the delay."
+                args="await sleep(ms);"
+                returns="void"
                 props={{
                     ms: {
                         description: "Delay duration in milliseconds.",

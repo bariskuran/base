@@ -22,14 +22,17 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useMouseXY(delay);"
-            returns="Tuple [x, y] of latest mouse coordinates."
+            args="const [x, y] = useMouseXY(delay);"
             props={{
                 delay: {
                     description: "Throttle delay in milliseconds.",
                     type: "number",
                     defaultValue: "100",
                 },
+            }}
+            returnProps={{
+                x: { description: "Latest mouse X coordinate (clientX).", type: "number" },
+                y: { description: "Latest mouse Y coordinate (clientY).", type: "number" },
             }}
         />
     </Ds.page>

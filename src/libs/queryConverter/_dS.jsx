@@ -241,8 +241,7 @@ const X = () => {
             <Ds.api
                 title="export"
                 disableLastBlock
-                args="queryConverter.export(obj, { ignoreEncode, prefix, preserveEmpty })"
-                returns="Query string (with leading ?)."
+                args="const query = queryConverter.export(obj, { ignoreEncode, prefix, preserveEmpty });"
                 props={{
                     obj: {
                         description:
@@ -266,11 +265,16 @@ const X = () => {
                         defaultValue: "false",
                     },
                 }}
+                returnProps={{
+                    query: {
+                        description: "Serialized query string with leading ?.",
+                        type: "string",
+                    },
+                }}
             />
             <Ds.api
                 title="import"
-                args="queryConverter.import(str, { baseStore, baseStoreSet, prefix, preserveBooleans, preserveNumbers, setPath })"
-                returns="Parsed nested object. When baseStore or baseStoreSet is passed, state is merged via set; return value is still the parsed payload only."
+                args="const parsed = queryConverter.import(str, { baseStore, baseStoreSet, prefix, preserveBooleans, preserveNumbers, setPath });"
                 props={{
                     str: {
                         description:
@@ -307,6 +311,13 @@ const X = () => {
                         description:
                             'Dot path in the store object for merge (e.g. "form.currentForm"). Only with baseStore / baseStoreSet. Omit to merge at store root.',
                         type: "string",
+                    },
+                }}
+                returnProps={{
+                    parsed: {
+                        description:
+                            "Parsed nested object (store is updated separately when baseStore or baseStoreSet is passed).",
+                        type: "object",
                     },
                 }}
             />

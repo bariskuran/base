@@ -66,13 +66,35 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="colorConverter(colorInput);"
-                returns="Object with hex/rgb/hsl/hsb variants, luminance, and linearRgbaArray ({} for invalid input)."
+                args="const formats = colorConverter(colorInput);"
                 props={{
                     colorInput: {
                         description: "Color input string or supported object payload.",
                         type: "string | object",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    hex6: { description: "Hex6 color.", type: "string" },
+                    hex8: { description: "Hex8 color with alpha.", type: "string" },
+                    rgbArray: { description: "RGB array [r, g, b].", type: "number[]" },
+                    rgbString: { description: "RGB css string.", type: "string" },
+                    rgbaArray: { description: "RGBA array [r, g, b, a].", type: "number[]" },
+                    rgbaString: { description: "RGBA css string.", type: "string" },
+                    hslArray: { description: "HSL array [h, s, l].", type: "number[]" },
+                    hslString: { description: "HSL css string.", type: "string" },
+                    hslaArray: { description: "HSLA array [h, s, l, a].", type: "number[]" },
+                    hslaString: { description: "HSLA css string.", type: "string" },
+                    hsbArray: { description: "HSB array [h, s, b].", type: "number[]" },
+                    hsbString: { description: "HSB css string.", type: "string" },
+                    hsbaArray: { description: "HSBA array [h, s, b, a].", type: "number[]" },
+                    hsbaString: { description: "HSBA css string.", type: "string" },
+                    luminance: { description: "Relative luminance (0–1).", type: "number" },
+                    isLight: { description: "True when luminance >= 0.5.", type: "boolean" },
+                    isDark: { description: "True when luminance < 0.5.", type: "boolean" },
+                    linearRgbaArray: {
+                        description: "Linear RGBA array for WCAG math.",
+                        type: "number[]",
                     },
                 }}
             />

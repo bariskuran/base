@@ -99,8 +99,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="colorAlpha(color, alpha);"
-                returns="Hex8 color string."
+                args="const hex8 = colorAlpha(color, alpha);"
                 props={{
                     color: {
                         description: "Input color (hex/rgb/rgba/css name/theme token/path).",
@@ -112,6 +111,9 @@ const X = () => {
                         type: "number",
                         defaultValue: "50",
                     },
+                }}
+                returnProps={{
+                    hex8: { description: "Hex8 color string with alpha.", type: "string" },
                 }}
             />
         </Ds.page>

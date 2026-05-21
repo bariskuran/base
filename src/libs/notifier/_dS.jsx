@@ -167,8 +167,7 @@ const X = () => {
             <Ds.api
                 title="add"
                 disableLastBlock
-                args="notifier.add(notification, { bgColor, closingDelay, disableAutoKill, killAfter, variant })"
-                returns="queueId | null"
+                args="const queueId = notifier.add(notification, { bgColor, closingDelay, disableAutoKill, killAfter, variant });"
                 props={{
                     notification: {
                         description: "Notification.",
@@ -207,8 +206,7 @@ const X = () => {
             <Ds.api
                 title="remove"
                 disableLastBlock
-                args="notifier.remove(queueId)"
-                returns="boolean"
+                args="const removed = notifier.remove(queueId);"
                 props={{
                     queueId: {
                         description: "Queue id to remove.",
@@ -216,11 +214,22 @@ const X = () => {
                         required: true,
                     },
                 }}
+                returnProps={{
+                    removed: {
+                        description: "True when a notification was removed.",
+                        type: "boolean",
+                    },
+                }}
             />
             <Ds.api
                 title="clear"
-                args="notifier.clear()"
-                returns="boolean"
+                args="const cleared = notifier.clear();"
+                returnProps={{
+                    cleared: {
+                        description: "True when the queue was cleared.",
+                        type: "boolean",
+                    },
+                }}
             />
         </Ds.page>
     );

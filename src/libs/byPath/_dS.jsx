@@ -116,8 +116,7 @@ const X = () => {
             <Ds.api
                 title="get"
                 disableLastBlock
-                args="byPath.get(object, path)"
-                returns="Value at path, or undefined."
+                args="const value = byPath.get(object, path);"
                 props={{
                     object: {
                         description: "Source object.",
@@ -130,12 +129,17 @@ const X = () => {
                         required: true,
                     },
                 }}
+                returnProps={{
+                    value: {
+                        description: "Value at path, or undefined when missing.",
+                        type: "any",
+                    },
+                }}
             />
             <Ds.api
                 title="set"
                 disableLastBlock
-                args="byPath.set(object, path, value, enableDirectUpdate)"
-                returns="Updated object/state."
+                args="const next = byPath.set(object, path, value, enableDirectUpdate);"
                 props={{
                     object: {
                         description: "Source object or draft.",
@@ -158,12 +162,17 @@ const X = () => {
                         defaultValue: "false",
                     },
                 }}
+                returnProps={{
+                    next: {
+                        description: "Updated object or state after the write.",
+                        type: "any",
+                    },
+                }}
             />
             <Ds.api
                 title="delete"
                 disableLastBlock
-                args="byPath.delete(object, path, enableDirectUpdate)"
-                returns="Updated object/state."
+                args="const next = byPath.delete(object, path, enableDirectUpdate);"
                 props={{
                     object: {
                         description: "Source object or draft.",
@@ -181,11 +190,16 @@ const X = () => {
                         defaultValue: "false",
                     },
                 }}
+                returnProps={{
+                    next: {
+                        description: "Updated object or state after delete.",
+                        type: "any",
+                    },
+                }}
             />
             <Ds.api
                 title="mapping"
-                args="byPath.mapping(object, mappingObject)"
-                returns="Object with picked/renamed values."
+                args="const picked = byPath.mapping(object, mappingObject);"
                 props={{
                     object: {
                         description: "Source object.",
@@ -196,6 +210,12 @@ const X = () => {
                         description: "Map of outputKey → sourcePath.",
                         type: "object",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    picked: {
+                        description: "Object with values picked and renamed by mapping paths.",
+                        type: "object",
                     },
                 }}
             />

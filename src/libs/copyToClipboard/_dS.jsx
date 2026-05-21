@@ -143,8 +143,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="copyToClipboard(value, { disableNotifier, errorMessage, onError, onSuccess, successMessage });"
-                returns="Promise resolving to true on success, false otherwise."
+                args="const copied = await copyToClipboard(value, { disableNotifier, errorMessage, onError, onSuccess, successMessage });"
                 props={{
                     value: {
                         description: "Value to copy.",
@@ -178,6 +177,12 @@ const X = () => {
                         description:
                             "Props to pass to the notifier. Check the notifier documentation for available props.",
                         type: "object",
+                    },
+                }}
+                returnProps={{
+                    copied: {
+                        description: "True when the value was copied successfully.",
+                        type: "boolean",
                     },
                 }}
             />

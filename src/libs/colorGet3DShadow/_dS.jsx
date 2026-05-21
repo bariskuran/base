@@ -130,8 +130,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="get3DShadow({ color, depth, hoverDepth, transition });"
-                returns="styled-components css interpolable fragment."
+                args="const shadowCss = get3DShadow({ color, depth, hoverDepth, transition });"
                 props={{
                     depth: {
                         description: "Base shadow depth level.",
@@ -151,6 +150,12 @@ const X = () => {
                         description: "Shadow source color (defaults theme.foreground).",
                         type: "string",
                         defaultValue: "theme.foreground",
+                    },
+                }}
+                returnProps={{
+                    shadowCss: {
+                        description: "styled-components css fragment for box-shadow layers.",
+                        type: "css",
                     },
                 }}
             />

@@ -31,8 +31,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useScrollWidthHeight(source, { settleDelay, resizeDelay })"
-            returns="Tuple [width, height, recalc]."
+            args="const [width, height, recalc] = useScrollWidthHeight(source, { settleDelay, resizeDelay });"
             props={{
                 source: {
                     description: "Optional element source to measure.",
@@ -48,6 +47,14 @@ const X = () => (
                     description: "Delay before each measurement.",
                     type: "number",
                     defaultValue: "250",
+                },
+            }}
+            returnProps={{
+                width: { description: "Measured width in pixels.", type: "number" },
+                height: { description: "Measured height in pixels.", type: "number" },
+                recalc: {
+                    description: "Schedules a fresh width/height measurement.",
+                    type: "function",
                 },
             }}
         />

@@ -53,13 +53,18 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="isArrayOrPlainObject(v);"
-                returns="True if v is a non-null array or plain object."
+                args="const ok = isArrayOrPlainObject(v);"
                 props={{
                     v: {
                         description: "Value to test.",
                         type: "any",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    ok: {
+                        description: "True if v is a non-null array or plain object.",
+                        type: "boolean",
                     },
                 }}
             />

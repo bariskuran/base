@@ -53,13 +53,18 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="isPlainObject(v);"
-                returns="True for plain object or null-prototype object."
+                args="const ok = isPlainObject(v);"
                 props={{
                     v: {
                         description: "Value to test.",
                         type: "any",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    ok: {
+                        description: "True for plain object or null-prototype object.",
+                        type: "boolean",
                     },
                 }}
             />

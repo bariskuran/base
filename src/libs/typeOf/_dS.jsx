@@ -45,12 +45,21 @@ const X = () => {
                 }
             />
             <Ds.api
-                args={["typeOf(arg);", "typeOf(arg1, arg2, ...argN);"]}
-                returns="undefined with no args; string for one arg; string[] for multiple."
+                args={["const type = typeOf(arg);", "const types = typeOf(arg1, arg2, ...argN);"]}
                 props={{
                     "...args": {
                         description: "One or more values to inspect.",
                         type: "any || any[]",
+                    },
+                }}
+                returnProps={{
+                    type: {
+                        description: "Detected type string for a single argument.",
+                        type: "string",
+                    },
+                    types: {
+                        description: "Array of type strings when multiple arguments are passed.",
+                        type: "string[]",
                     },
                 }}
             />

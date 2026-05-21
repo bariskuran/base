@@ -57,8 +57,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="getClientData({ breakpoints, maxAspRatio, minAspRatio })"
-                returns="Client/environment snapshot object (SSR-safe defaults when window is unavailable)."
+                args="const data = getClientData({ breakpoints, maxAspRatio, minAspRatio });"
                 props={{
                     breakpoints: {
                         description:

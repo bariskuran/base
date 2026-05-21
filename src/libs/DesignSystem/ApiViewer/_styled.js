@@ -40,7 +40,7 @@ const S = {
         gap: 8px;
         width: 100%;
         min-width: 0;
-        align-items: flex-start;
+        align-items: center;
     `,
 
     argsText: styled.code`

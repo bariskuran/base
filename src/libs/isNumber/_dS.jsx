@@ -49,13 +49,18 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="isNumber(data);"
-                returns="True for finite numeric-like values."
+                args="const ok = isNumber(data);"
                 props={{
                     data: {
                         description: "Value to check.",
                         type: "any",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    ok: {
+                        description: "True for finite numeric-like values.",
+                        type: "boolean",
                     },
                 }}
             />

@@ -26,8 +26,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useImagePreloader(images, { delayAfterLoad })"
-            returns="Boolean: all listed images finished loading."
+            args="const isLoaded = useImagePreloader(images, { delayAfterLoad });"
             props={{
                 images: {
                     description: "List of image URLs.",
@@ -38,6 +37,12 @@ const X = () => (
                     description: "Extra delay after load completes.",
                     type: "number",
                     defaultValue: "0",
+                },
+            }}
+            returnProps={{
+                isLoaded: {
+                    description: "True when all images finished loading (or preload completed).",
+                    type: "boolean",
                 },
             }}
         />

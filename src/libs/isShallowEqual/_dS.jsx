@@ -55,8 +55,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="isShallowEqual(a, b);"
-                returns="Boolean shallow equality result."
+                args="const equal = isShallowEqual(a, b);"
                 props={{
                     a: {
                         description: "First value.",
@@ -67,6 +66,12 @@ const X = () => {
                         description: "Second value.",
                         type: "any",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    equal: {
+                        description: "True when values are shallow-equal.",
+                        type: "boolean",
                     },
                 }}
             />

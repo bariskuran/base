@@ -93,8 +93,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="colorWcagValue(colorA, colorB);"
-                returns="WCAG contrast ratio number (0 if input missing/invalid)."
+                args="const ratio = colorWcagValue(colorA, colorB);"
                 props={{
                     colorA: {
                         description: "First color input.",
@@ -105,6 +104,12 @@ const X = () => {
                         description: "Second color input.",
                         type: "string | object",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    ratio: {
+                        description: "WCAG contrast ratio (0 if input missing or invalid).",
+                        type: "number",
                     },
                 }}
             />

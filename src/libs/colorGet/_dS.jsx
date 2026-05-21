@@ -73,13 +73,24 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="colorGet(color);"
-                returns="Object with color, opposite, colorApi, oppositeApi (or undefined)."
+                args="const result = colorGet(color);"
                 props={{
                     color: {
                         description: "Input color token/path/css color.",
                         type: "string",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    color: { description: "Resolved color string.", type: "string" },
+                    colorApi: {
+                        description: "Helper API for the resolved color (tint, shade, etc.).",
+                        type: "object",
+                    },
+                    opposite: { description: "Accessible opposite color string.", type: "string" },
+                    oppositeApi: {
+                        description: "Helper API for the opposite color.",
+                        type: "object",
                     },
                 }}
             />

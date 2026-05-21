@@ -529,8 +529,7 @@ const X = () => {
             <Ds.api
                 title="baseDate"
                 disableLastBlock
-                args="baseDate({ calc, format, initial, initialFormat, timezone })"
-                returns='Formatted string, or Unix ms when format is "timestamp" (case-insensitive).'
+                args="const formatted = baseDate({ calc, format, initial, initialFormat, timezone });"
                 props={{
                     initial: {
                         description:
@@ -558,11 +557,17 @@ const X = () => {
                         type: "object",
                     },
                 }}
+                returnProps={{
+                    formatted: {
+                        description:
+                            'Formatted date string, or Unix ms when format is "timestamp" (case-insensitive).',
+                        type: "string | number",
+                    },
+                }}
             />
             <Ds.api
                 title="getNow"
-                args="getNow({ format, timezone })"
-                returns='Formatted string, or Unix ms when format is "timestamp" (case-insensitive).'
+                args="const formatted = getNow({ format, timezone });"
                 props={{
                     format: {
                         description:
@@ -572,6 +577,13 @@ const X = () => {
                     timezone: {
                         description:
                             "IANA (e.g. Europe/Athens), offset string (+02:00), or finite number as hours offset.",
+                        type: "string | number",
+                    },
+                }}
+                returnProps={{
+                    formatted: {
+                        description:
+                            'Formatted date string for now, or Unix ms when format is "timestamp".',
                         type: "string | number",
                     },
                 }}

@@ -83,8 +83,7 @@ colorFind("#07f", { output: "hex8" });`}
             />
 
             <Ds.api
-                args='colorFind(input, { output: "hex6" | "hex8", theme });'
-                returns="Resolved hex color string or undefined."
+                args='const hex = colorFind(input, { output, theme });'
                 props={{
                     input: {
                         description:
@@ -100,6 +99,12 @@ colorFind("#07f", { output: "hex8" });`}
                     theme: {
                         description: "Optional theme override object for lookup.",
                         type: "object",
+                    },
+                }}
+                returnProps={{
+                    hex: {
+                        description: "Resolved hex color string, or undefined when not found.",
+                        type: "string | undefined",
                     },
                 }}
             />

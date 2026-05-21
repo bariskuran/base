@@ -11,8 +11,7 @@ const X = () => {
                 `}
         >
             <Ds.api
-                args="useLinkIntoView({ basePath, behavior, block, extraDeps, getPathFromLink, inline, links, pathname });"
-                returns="Tuple [isActive, activeNavItemRef] for scroll-into-view nav highlighting."
+                args="const [isActive, activeNavItemRef] = useLinkIntoView({ basePath, behavior, block, extraDeps, getPathFromLink, inline, links, pathname });"
                 props={{
                     pathname: {
                         description: "Current location pathname (e.g. useLocation().pathname).",
@@ -53,6 +52,16 @@ const X = () => {
                         description: "Extra useLayoutEffect dependency values.",
                         type: "array",
                         defaultValue: "[]",
+                    },
+                }}
+                returnProps={{
+                    isActive: {
+                        description: "Returns true when the nav item matches the current pathname.",
+                        type: "function",
+                    },
+                    activeNavItemRef: {
+                        description: "Ref for the active nav item element (scrollIntoView target).",
+                        type: "ref",
                     },
                 }}
             />

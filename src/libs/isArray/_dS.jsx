@@ -49,14 +49,16 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="isArray(v);"
-                returns="True if v is an array."
+                args="const ok = isArray(v);"
                 props={{
                     v: {
                         description: "Value to test.",
                         type: "any",
                         required: true,
                     },
+                }}
+                returnProps={{
+                    ok: { description: "True when v is an array.", type: "boolean" },
                 }}
             />
         </Ds.page>

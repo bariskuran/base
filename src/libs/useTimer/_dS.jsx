@@ -45,8 +45,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useTimer({ loop, onEnd, onStart, refreshTime, startOnLoad, timerName });"
-            returns="Timer controls: start, stop, isRunning, timerId, timerName, refreshTime (plus module helpers getTimersSnapshot, subscribeTimers, getTimer)."
+            args="const { start, stop, isRunning, timerId, timerName, refreshTime } = useTimer({ loop, onEnd, onStart, refreshTime, startOnLoad, timerName });"
             props={{
                 onStart: {
                     description: "Called when timer starts.",
@@ -76,6 +75,14 @@ const X = () => (
                     type: "string",
                     defaultValue: "generated",
                 },
+            }}
+            returnProps={{
+                start: { description: "Starts or restarts the timer.", type: "function" },
+                stop: { description: "Stops the timer.", type: "function" },
+                isRunning: { description: "True while the timer is active.", type: "boolean" },
+                timerId: { description: "Stable timer id ref.", type: "ref" },
+                timerName: { description: "Timer name or id ref.", type: "ref | string" },
+                refreshTime: { description: "Current refresh interval ref (ms).", type: "ref" },
             }}
         />
     </Ds.page>

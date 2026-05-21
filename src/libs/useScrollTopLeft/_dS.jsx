@@ -31,8 +31,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useScrollTopLeft({ delay, source })"
-            returns="scrollTop, scrollLeft, direction axes, and calc helper."
+            args="const { scrollTop, scrollLeft, directionX, directionY, calc } = useScrollTopLeft({ delay, source });"
             props={{
                 source: {
                     description: "Window or scrollable element source.",
@@ -43,6 +42,22 @@ const X = () => (
                     description: "Throttle delay in milliseconds.",
                     type: "number",
                     defaultValue: "0",
+                },
+            }}
+            returnProps={{
+                scrollTop: { description: "Current scroll top position.", type: "number" },
+                scrollLeft: { description: "Current scroll left position.", type: "number" },
+                directionX: {
+                    description: 'Last horizontal scroll direction: "left", "right", or "none".',
+                    type: "string",
+                },
+                directionY: {
+                    description: 'Last vertical scroll direction: "top", "bottom", or "none".',
+                    type: "string",
+                },
+                calc: {
+                    description: "Re-reads scroll position and updates direction state.",
+                    type: "function",
                 },
             }}
         />

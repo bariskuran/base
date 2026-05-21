@@ -280,8 +280,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="colorWcagMatch(background, targetColor, wcagRatio, { tolerance, step });"
-                returns="Object with color, colorFormats, finalRatio, lightness."
+                args="const { color, colorFormats, finalRatio, lightness } = colorWcagMatch(background, targetColor, wcagRatio, { tolerance, step });"
                 props={{
                     background: {
                         description: "Background color.",
@@ -310,6 +309,15 @@ const X = () => {
                         type: "number",
                         defaultValue: "1",
                     },
+                }}
+                returnProps={{
+                    color: { description: "Matched hex6 color.", type: "string" },
+                    colorFormats: {
+                        description: "Full colorConverter output for the match.",
+                        type: "object",
+                    },
+                    finalRatio: { description: "Achieved contrast ratio.", type: "number" },
+                    lightness: { description: "Matched HSL lightness (0–100).", type: "number" },
                 }}
             />
         </Ds.page>

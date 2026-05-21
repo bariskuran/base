@@ -59,8 +59,7 @@ const X = () => (
             }
         />
         <Ds.api
-            args="deepMerge(oldData, newData);"
-            returns="Deep-merged plain object/array result."
+            args="const merged = deepMerge(oldData, newData);"
             props={{
                 oldData: {
                     description: "Base value.",
@@ -71,6 +70,12 @@ const X = () => (
                     description: "Incoming value to merge.",
                     type: "any",
                     required: true,
+                },
+            }}
+            returnProps={{
+                merged: {
+                    description: "Deep-merged plain object or array result.",
+                    type: "any",
                 },
             }}
         />

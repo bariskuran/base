@@ -95,8 +95,7 @@ const X = () => (
             example={<CaseConverterDemo />}
         />
         <Ds.api
-            args="stringCaseConverter(string, outputType);"
-            returns="Converted string."
+            args='const converted = stringCaseConverter(string, outputType);'
             props={{
                 string: {
                     description: "Input text.",
@@ -108,6 +107,12 @@ const X = () => (
                         "Target format (camel, pascal, kebab, snake, constant, dot, path, lower, sentence, title, spaced).",
                     type: "string",
                     defaultValue: '"camel"',
+                },
+            }}
+            returnProps={{
+                converted: {
+                    description: "Input string in the requested case format.",
+                    type: "string",
                 },
             }}
         />

@@ -61,8 +61,7 @@ const columns = [
             />
 
             <Ds.api
-                args="columnTypes"
-                returns="Dictionary object for planned Table column behavior presets."
+                args='import { columnTypes, COLUMN_SIZES } from "@bariskuran/base";'
                 props={{
                     COLUMN_SIZES: {
                         description: "Shared width size map for column presets.",
@@ -72,6 +71,16 @@ const columns = [
                         description: "Type-based column preset map used by future Table implementation.",
                         type: "object",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    columnTypes: {
+                        description: "Dictionary of column behavior presets for Table.",
+                        type: "object",
+                    },
+                    COLUMN_SIZES: {
+                        description: "Named width tokens for column presets.",
+                        type: "object",
                     },
                 }}
             />

@@ -1,48 +1,140 @@
+import { useCallback, useState } from "react";
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
+import { useDebouncedFunction } from ".";
 import { Button } from "../Button";
+import { Flex } from "../Flex";
+import { Typo } from "../Typo";
 
-const X = () => {
+const BasicUsageDemo = () => {
+    const [count, setCount] = useState(0);
+    const [throttleCount, setThrottleCount] = useState(0);
+
+    const runDebounced = useDebouncedFunction(
+        useCallback(() => setCount((c) => c + 1), []),
+        { delay: 1000 },
+    );
+
+    const runThrottle = useDebouncedFunction(
+        useCallback(() => setThrottleCount((c) => c + 1), []),
+        { delay: 1000, isThrottle: true },
+    );
+
     return (
-        <Ds.page
-            title="useDebouncedFunction()"
-            releasedOn="1.0.0"
-            description={
-                <>
-                    This is a hook version of the 'debouncedFunction', designed for use in React
-                    components. Its core functionality is contained within the debouncedFunction
-                    itself.
-                    <br />
-                    <br />
-                    Check out{" "}
-                    <Button.string
-                        to="/design-system/debouncedFunction"
-                        label="debouncedFunction"
-                    />{" "}
-                    to see core props and tests.
-                </>
-            }
-        >
-            <Ds.block
-                title="Basic Usage"
-                lastBlock
-                code={`import { useDebouncedFunction } from "${SYS.basePath}";
-
-                        const debuncedFunction = useDebouncedFunction(fn, 
-                        { 
-                        delay,
-                        isThrottle,
-                        getFirst,
-                        functionName,
-                        onStart,
-                        onEnd,
-                        },
-                        );
-
-                        debuncedFunction();`}
-            />
-        </Ds.page>
+        <Flex gap={10}>
+            <Flex.column gap={10}>
+                <Button.plain
+                    label="Debounced"
+                    onClick={runDebounced}
+                    skipClickCooldown
+                    skipOnClickHold
+                />
+                <Typo.span>{`Count: ${count}`}</Typo.span>
+                <Typo.span color="greys.shade60" size="s">
+                    Increments 1000ms after you stop clicking.
+                </Typo.span>
+            </Flex.column>
+            <Flex.column gap={10}>
+                <Button.plain
+                    label="Throttled"
+                    onClick={runThrottle}
+                    skipClickCooldown
+                    skipOnClickHold
+                />
+                <Typo.span>{`Count: ${throttleCount}`}</Typo.span>
+                <Typo.span color="greys.shade60" size="s">
+                    Increments at most once per 1000ms while clicking.
+                </Typo.span>
+            </Flex.column>
+        </Flex>
     );
 };
+
+const X = () => (
+    <Ds.page
+        title="useDebouncedFunction()"
+        releasedOn="1.0.0"
+        description={
+            <>
+                React hook wrapper around debouncedFunction. Returns a stable debounced function
+                for the lifetime of the same fn and settings references.
+                <br />
+                <br />
+                See{" "}
+                <Button.string
+                    to="/design-system/debouncedFunction"
+                    label="debouncedFunction"
+                />{" "}
+                for all options and advanced examples.
+            </>
+        }
+    >
+        <Ds.block
+            title="Basic Debounce & Throttle"
+            code={`import { useDebouncedFunction } from "${SYS.basePath}";
+import { useCallback } from "react";
+
+const runDebounced = useDebouncedFunction(
+    useCallback(() => setCount((c) => c + 1), []),
+    { delay: 1000 },
+);
+
+const runThrottle = useDebouncedFunction(
+    useCallback(() => setCount((c) => c + 1), []),
+    { delay: 1000, isThrottle: true },
+);
+
+runDebounced();
+runThrottle();`}
+            example={<BasicUsageDemo />}
+        />
+        <Ds.api
+            args="const debouncedFn = useDebouncedFunction(fn, { delay, isThrottle, getFirst, functionName, onStart, onEnd });"
+            props={{
+                fn: {
+                    description: "Function to wrap. Keep stable with useCallback when possible.",
+                    type: "function",
+                    required: true,
+                },
+                delay: {
+                    description: "Wait duration in milliseconds.",
+                    type: "number",
+                    defaultValue: "500",
+                },
+                isThrottle: {
+                    description: "Switches to throttle behavior.",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                getFirst: {
+                    description:
+                        "Runs fn on the first call in a window (debounce only; ignored when isThrottle).",
+                    type: "boolean",
+                    defaultValue: "false",
+                },
+                functionName: {
+                    description: "Shared key for internal debounce state.",
+                    type: "string",
+                    defaultValue: "auto-generated per function reference",
+                },
+                onStart: {
+                    description: "Called when a wait window starts.",
+                    type: "function",
+                },
+                onEnd: {
+                    description: "Called when a wait window ends.",
+                    type: "function",
+                },
+            }}
+            returnProps={{
+                debouncedFn: {
+                    description:
+                        "Debounced or throttled wrapper. Call with the same arguments as fn.",
+                    type: "function",
+                },
+            }}
+        />
+    </Ds.page>
+);
 
 export default X;

@@ -84,8 +84,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="colorShader(color, percent);"
-                returns="Shaded color string (hex6 or hex8 depending on source)."
+                args="const shaded = colorShader(color, percent);"
                 props={{
                     color: {
                         description: "Input color (hex/rgb/css name/theme token/path).",
@@ -95,6 +94,12 @@ const X = () => {
                         description: "Shade amount (0..100). 100 is equal to black.",
                         type: "number",
                         defaultValue: "0",
+                    },
+                }}
+                returnProps={{
+                    shaded: {
+                        description: "Shaded color string (hex6 or hex8 depending on source).",
+                        type: "string",
                     },
                 }}
             />

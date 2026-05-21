@@ -56,7 +56,18 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title 
             example={
                 <Flex.column gap={10} marginTop={5} full>
                     {args && (
-                        <Flex.column gap={10} marginBottom={40} full minWidth={0} aria-label="Arguments">
+                        <Flex.column
+                            gap={10}
+                            marginBottom={
+                                hasReturnProps ||
+                                (returns && !hasReturnProps) ||
+                                hasProps
+                                    ? 40
+                                    : 0
+                            }
+                            full
+                            minWidth={0}
+                        >
                             {typeof args === "string" ? (
                                 <SignatureLine arg={args} />
                             ) : Array.isArray(args) ? (
@@ -64,16 +75,25 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title 
                             ) : null}
                         </Flex.column>
                     )}
-                    {hasProps && <PropContainer obj={sortedEntries} />}
-                    {returns && (
-                        <Flex marginTop={20} gap={10} alignItems="baseline">
-                            <span>
-                                <b>Returns:</b>
-                            </span>
-                            {returns}
-                        </Flex>
+                    {(hasReturnProps || (returns && !hasReturnProps)) && (
+                        <Flex.column
+                            gap={10}
+                            marginBottom={hasProps ? 40 : 0}
+                            full
+                        >
+                            <Typo.span weight="bold">Return Arguments</Typo.span>
+                            {hasReturnProps && <PropContainer obj={sortedReturnProps} />}
+                            {returns && !hasReturnProps && (
+                                <Typo.span>{returns}</Typo.span>
+                            )}
+                        </Flex.column>
                     )}
-                    {hasReturnProps && <PropContainer obj={sortedReturnProps} />}
+                    {hasProps && (
+                        <Flex.column gap={10} full minWidth={0}>
+                            <Typo.span weight="bold">Arguments</Typo.span>
+                            <PropContainer obj={sortedEntries} />
+                        </Flex.column>
+                    )}
                 </Flex.column>
             }
         />

@@ -27,13 +27,22 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="usePrevious(value);"
-            returns="Tuple [previousValue, setPreviousValue]."
+            args="const [previousValue, setPreviousValue] = usePrevious(value);"
             props={{
                 value: {
                     description: "Current value to track.",
                     type: "any",
                     required: true,
+                },
+            }}
+            returnProps={{
+                previousValue: {
+                    description: "Value from the previous render.",
+                    type: "any",
+                },
+                setPreviousValue: {
+                    description: "Manually sets the stored previous value.",
+                    type: "function",
                 },
             }}
         />

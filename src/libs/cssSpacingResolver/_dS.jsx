@@ -30,8 +30,7 @@ const X = () => (
                     - if all sides are missing, returns null`}
         />
         <Ds.api
-            args='cssSpacingResolver(props, key = "margin")'
-            returns='A normalized "top right bottom left" css spacing string or null.'
+            args='const spacing = cssSpacingResolver(props, key);'
             props={{
                 props: {
                     description: "Object that may contain shorthand + side spacing fields.",
@@ -42,6 +41,13 @@ const X = () => (
                     description: 'Base key to resolve ("margin" or "padding", etc.).',
                     type: "string",
                     defaultValue: '"margin"',
+                },
+            }}
+            returnProps={{
+                spacing: {
+                    description:
+                        'Normalized "top right bottom left" CSS spacing string, or null when all sides are missing.',
+                    type: "string | null",
                 },
             }}
         />

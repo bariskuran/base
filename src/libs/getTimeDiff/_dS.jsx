@@ -297,8 +297,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="getTimeDiff(time1, time2);"
-                returns="Compare result with snapshots, absolute ms gap (tsDiff), fractional spans (in), and UTC calendar breakdown."
+                args="const diff = getTimeDiff(time1, time2);"
                 props={{
                     time1: {
                         description:

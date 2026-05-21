@@ -82,8 +82,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="downloadAsCsv(data, fileName, { includeBom, onError, onSuccess, preventExcelInjection, separator });"
-                returns="Boolean indicating whether the download was triggered successfully."
+                args="const ok = downloadAsCsv(data, fileName, { includeBom, onError, onSuccess, preventExcelInjection, separator });"
                 props={{
                     data: {
                         description: "2D array rows/columns.",
@@ -117,6 +116,12 @@ const X = () => {
                         description: "Prevents Excel injection.",
                         type: "boolean",
                         defaultValue: true,
+                    },
+                }}
+                returnProps={{
+                    ok: {
+                        description: "True when the CSV download was triggered successfully.",
+                        type: "boolean",
                     },
                 }}
             />

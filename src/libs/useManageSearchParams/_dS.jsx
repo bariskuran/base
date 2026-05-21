@@ -38,8 +38,7 @@ const X = () => (
             example={<Demo />}
         />
         <Ds.api
-            args="useManageSearchParams({ bind, defaults, maxLength, pick, replace })"
-            returns="Decoded param fields plus set, clear, and raw query helpers."
+            args="const { set, clear, raw, ...searchParams } = useManageSearchParams({ bind, defaults, maxLength, pick, replace });"
             props={{
                 bind: {
                     description: "Auto-sync object to URL.",
@@ -63,6 +62,24 @@ const X = () => (
                     description: "History replace mode.",
                     type: "boolean",
                     defaultValue: "true",
+                },
+            }}
+            returnProps={{
+                searchParams: {
+                    description: "Decoded URL param fields (spread on the return object).",
+                    type: "object",
+                },
+                set: {
+                    description: "Merges values into the URL query string.",
+                    type: "function",
+                },
+                clear: {
+                    description: "Clears URL search params.",
+                    type: "function",
+                },
+                raw: {
+                    description: "Current raw query string from the location.",
+                    type: "string",
                 },
             }}
         />

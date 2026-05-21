@@ -47,8 +47,7 @@ const X = () => {
             <Ds.api
                 title="asc"
                 disableLastBlock
-                args="sortBy.asc(a, b);"
-                returns="Comparator return value (−1, 0, 1 style) for Array.sort."
+                args="const cmp = sortBy.asc(a, b);"
                 props={{
                     a: {
                         description: "First value.",
@@ -61,11 +60,16 @@ const X = () => {
                         required: true,
                     },
                 }}
+                returnProps={{
+                    cmp: {
+                        description: "Comparator result for Array.sort (−1, 0, or 1 style).",
+                        type: "number",
+                    },
+                }}
             />
             <Ds.api
                 title="desc"
-                args="sortBy.desc(a, b);"
-                returns="Comparator return value (−1, 0, 1 style) for Array.sort."
+                args="const cmp = sortBy.desc(a, b);"
                 props={{
                     a: {
                         description: "First value.",
@@ -76,6 +80,12 @@ const X = () => {
                         description: "Second value.",
                         type: "any",
                         required: true,
+                    },
+                }}
+                returnProps={{
+                    cmp: {
+                        description: "Comparator result for Array.sort (−1, 0, or 1 style).",
+                        type: "number",
                     },
                 }}
             />

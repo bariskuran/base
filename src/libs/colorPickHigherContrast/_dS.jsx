@@ -105,8 +105,7 @@ colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                 }
             />
             <Ds.api
-                args="colorPickHigherContrast(optionA, optionB, background);"
-                returns="Object with winner color and ratioA, ratioB."
+                args="const { winner, ratioA, ratioB } = colorPickHigherContrast(optionA, optionB, background);"
                 props={{
                     optionA: {
                         description: "First candidate color.",
@@ -123,6 +122,11 @@ colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                         type: "string | object",
                         required: true,
                     },
+                }}
+                returnProps={{
+                    winner: { description: "Winning candidate color string.", type: "string" },
+                    ratioA: { description: "Contrast ratio for optionA.", type: "number" },
+                    ratioB: { description: "Contrast ratio for optionB.", type: "number" },
                 }}
             />
         </Ds.page>

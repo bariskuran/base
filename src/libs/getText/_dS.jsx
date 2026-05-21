@@ -150,8 +150,7 @@ const X = () => {
             />
             <Ds.api
                 disableLastBlock
-                args="getText(keyOrEntry, overrideLibrary);"
-                returns="Resolved localized string."
+                args="const text = getText(keyOrEntry, overrideLibrary);"
                 props={{
                     keyOrEntry: {
                         description: "Text key string or language object.",
@@ -161,6 +160,12 @@ const X = () => {
                     overrideLibrary: {
                         description: "Optional text library override.",
                         type: "object",
+                    },
+                }}
+                returnProps={{
+                    text: {
+                        description: "Resolved localized string for the current language.",
+                        type: "string",
                     },
                 }}
             />

@@ -28,13 +28,18 @@ const X = () => (
                     - unknown strings are returned after trimming whitespace`}
         />
         <Ds.api
-            args="cssNormalizeSize(value)"
-            returns="Normalized CSS size value (or undefined for missing input)."
+            args="const size = cssNormalizeSize(value);"
             props={{
                 value: {
                     description: "Any potential css size input.",
                     type: "any",
                     required: true,
+                },
+            }}
+            returnProps={{
+                size: {
+                    description: "Normalized CSS size value, or undefined for missing input.",
+                    type: "string | number | undefined",
                 },
             }}
         />

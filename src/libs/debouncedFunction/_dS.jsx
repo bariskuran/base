@@ -227,8 +227,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="debouncedFunction(fn, { delay, functionName, getFirst, isThrottle, onEnd, onStart });"
-                returns="Debounced or throttled wrapper function."
+                args="const debounced = debouncedFunction(fn, { delay, functionName, getFirst, isThrottle, onEnd, onStart });"
                 props={{
                     fn: {
                         description: "Function to wrap.",
@@ -262,6 +261,12 @@ const X = () => {
                     },
                     onEnd: {
                         description: "Called when wait window ends.",
+                        type: "function",
+                    },
+                }}
+                returnProps={{
+                    debounced: {
+                        description: "Debounced or throttled wrapper; call with the same args as fn.",
                         type: "function",
                     },
                 }}
