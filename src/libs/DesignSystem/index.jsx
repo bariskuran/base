@@ -127,7 +127,7 @@ const publicSitemap = [
         l(() => import("../useScrollWidthHeight/_dS")),
     ],
     ["useTimer", "useTimer", l(() => import("../useTimer/_dS"))],
-    ["useLinkIntoView", "useLinkIntoView", l(() => import("../useLinkIntoView/_dS"))],
+    ["useRevealNavItem", "useRevealNavItem", l(() => import("../useRevealNavItem/_dS"))],
     ["useDelayedFunction", "useDelayedFunction", l(() => import("../useDelayedFunction/_dS"))],
     [
         "COUNTRY_INFORMATION",

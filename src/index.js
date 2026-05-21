@@ -150,7 +150,7 @@ export { useEventListener } from "./libs/useEventListener";
 export { useExportData, useExportedData } from "./libs/useExportedData";
 export { useImagePreloader } from "./libs/useImagePreloader";
 export { useImagesReady } from "./libs/useImagesReady";
-export { useLinkIntoView } from "./libs/useLinkIntoView";
+export { useRevealNavItem } from "./libs/useRevealNavItem";
 export { useManageSearchParams } from "./libs/useManageSearchParams";
 export { useMouseXY } from "./libs/useMouseXY";
 export { useObserver } from "./libs/useObserver";

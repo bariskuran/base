@@ -1,22 +1,28 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { baseStore } from "../@baseStore";
 import { delayedFunction } from "../delayedFunction";
 
 export const useDelayedFunction = (fn, settings = {}) => {
+    const { delay = 500, autoCancel = true } = settings;
+    const fnRef = useRef(fn);
+    fnRef.current = fn;
+
     const { isPending, setLocal } = baseStore.useLocal({ isPending: false });
+
+    const stableSettings = useMemo(() => ({ delay, autoCancel }), [delay, autoCancel]);
 
     const delayed = useMemo(
         () =>
             delayedFunction(
                 (...args) => {
-                    fn?.(...args);
+                    fnRef.current?.(...args);
                     setLocal((s) => {
                         s.isPending = false;
                     });
                 },
-                settings,
+                stableSettings,
             ),
-        [fn, settings, setLocal],
+        [stableSettings, setLocal],
     );
 
     const run = useCallback(

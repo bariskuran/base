@@ -44,9 +44,10 @@ const sharedStyles = ({
         ${$overlayCopyLayout &&
         css`
             margin: 0;
-            align-self: flex-start;
-            flex: 1 1 auto;
+            width: 100%;
             min-width: 0;
+            padding-right: 34rem;
+            box-sizing: border-box;
         `}
 
         ${as === "pre" &&
@@ -92,9 +93,11 @@ const sharedStyles = ({
 
     ${$inlineCopy &&
         css`
-            display: inline-flex;
+            display: grid;
+            grid-template-columns: 1fr auto;
             align-items: stretch;
-            width: fit-content;
+            column-gap: 6rem;
+            width: 100%;
             max-width: 100%;
         `}
 
@@ -230,9 +233,6 @@ const S = {
 
             ${$overlayCopy &&
             css`
-                flex-direction: row;
-                align-items: flex-start;
-                gap: 0;
                 width: ${wrapperWidth({
                     $width,
                     $maxWidth,
@@ -246,15 +246,18 @@ const S = {
         `}
     `,
     overlayCopy: styled.div`
+        position: absolute;
+        top: 0;
+        right: 0;
         display: flex;
         align-items: flex-start;
-        justify-content: flex-start;
-        flex: 0 0 auto;
+        justify-content: flex-end;
         margin: 0;
         padding: 0;
         line-height: 0;
         pointer-events: auto;
         user-select: none;
+        z-index: 2;
 
         & > * {
             margin: 0;
@@ -265,15 +268,16 @@ const S = {
     inlineContent: styled.span`
         display: flex;
         align-items: center;
+        align-self: stretch;
         min-width: 0;
-        flex: 1 1 auto;
+        min-height: 100%;
     `,
 
     inlineCopy: styled.span`
-        display: inline-flex;
-        align-items: center;
+        display: flex;
+        align-items: flex-start;
+        align-self: start;
         flex-shrink: 0;
-        margin-left: 6rem;
         position: relative;
         z-index: 2;
         user-select: none;

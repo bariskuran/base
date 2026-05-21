@@ -18,6 +18,10 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
     const prevRef = useRef([]);
     const diffPrevRef = useRef([]);
     const firstRef = useRef(true);
+    const fnRef = useRef(fn);
+    const returnFnRef = useRef(returnFn);
+    fnRef.current = fn;
+    returnFnRef.current = returnFn;
 
     const hasChanged = () => {
         if (skipEffect) return false;
@@ -71,12 +75,12 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
                     prevArr.length === 1 && nextArr.length === 1 ? nextArr[0] : nextDeps;
 
                 const differences = findDifferencesFn(oldData, newData);
-                fn({ differences });
+                fnRef.current?.({ differences });
             } else {
-                fn();
+                fnRef.current?.();
             }
 
-            if (typeof returnFn === "function") return returnFn;
+            if (typeof returnFnRef.current === "function") return returnFnRef.current();
         },
         useFalsyDeps ? undefined : deps,
     );

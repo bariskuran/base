@@ -21,19 +21,21 @@ useScrollThrottle(()=>{console.log("scrolling...")}, 100);
  */
 export const useScrollThrottle = (callback, delay = 100) => {
     const lastCall = useRef(0);
+    const callbackRef = useRef(callback);
+    callbackRef.current = callback;
 
     useEffect(() => {
         const handleScroll = () => {
             const now = Date.now();
             if (now - lastCall.current >= delay) {
-                callback();
+                callbackRef.current?.();
                 lastCall.current = now;
             }
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [callback, delay]);
+    }, [delay]);
 
     return null;
 };

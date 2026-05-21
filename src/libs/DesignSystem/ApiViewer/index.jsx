@@ -7,17 +7,6 @@ import { Flex } from "../../Flex";
 import { Button } from "../../Button";
 import { Icon } from "../../@Icon";
 
-const SignatureLine = ({ arg }) => (
-    <S.argsLine>
-        <Button.plain
-            onClick={() => copyToClipboard(arg, { addToNotifier: true })}
-            icon={{ icon: "copy", width: 10 }}
-            popTip="Copy"
-        />
-        <S.argsText>{arg}</S.argsText>
-    </S.argsLine>
-);
-
 const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title }) => {
     const hasProps = props && typeof props === "object" && Object.keys(props).length > 0;
     const hasReturnProps =
@@ -58,40 +47,48 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title 
                     {args && (
                         <Flex.column
                             gap={10}
-                            marginBottom={
-                                hasReturnProps ||
-                                (returns && !hasReturnProps) ||
-                                hasProps
-                                    ? 40
-                                    : 0
-                            }
+                            marginBottom={hasProps || hasReturnProps || returns ? 40 : 0}
                             full
                             minWidth={0}
                         >
                             {typeof args === "string" ? (
-                                <SignatureLine arg={args} />
+                                <Typo.h6
+                                    lineHeight={1.5}
+                                    balance
+                                    copy
+                                    content={args}
+                                    padding={10}
+                                />
                             ) : Array.isArray(args) ? (
-                                args.map((arg, i) => <SignatureLine arg={arg} key={i} />)
+                                args.map((arg, i) => (
+                                    <Typo.h6
+                                        lineHeight={1.5}
+                                        balance
+                                        copy
+                                        content={arg}
+                                        key={i}
+                                        padding={10}
+                                    />
+                                ))
                             ) : null}
                         </Flex.column>
                     )}
-                    {(hasReturnProps || (returns && !hasReturnProps)) && (
+                    {hasProps && (
                         <Flex.column
                             gap={10}
-                            marginBottom={hasProps ? 40 : 0}
+                            marginBottom={hasReturnProps || returns ? 40 : 0}
                             full
+                            minWidth={0}
                         >
-                            <Typo.span weight="bold">Return Arguments</Typo.span>
-                            {hasReturnProps && <PropContainer obj={sortedReturnProps} />}
-                            {returns && !hasReturnProps && (
-                                <Typo.span>{returns}</Typo.span>
-                            )}
-                        </Flex.column>
-                    )}
-                    {hasProps && (
-                        <Flex.column gap={10} full minWidth={0}>
                             <Typo.span weight="bold">Arguments</Typo.span>
                             <PropContainer obj={sortedEntries} />
+                        </Flex.column>
+                    )}
+                    {(hasReturnProps || (returns && !hasReturnProps)) && (
+                        <Flex.column gap={10} full>
+                            <Typo.span weight="bold">Return Arguments</Typo.span>
+                            {hasReturnProps && <PropContainer obj={sortedReturnProps} />}
+                            {returns && !hasReturnProps && <Typo.span>{returns}</Typo.span>}
                         </Flex.column>
                     )}
                 </Flex.column>

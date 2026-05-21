@@ -1,59 +1,78 @@
+import { useEffect } from "react";
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { useEffectAfterMount } from ".";
-import { useState } from "react";
 import { Button } from "../Button";
 import { Typo } from "../Typo";
 import { Flex } from "../Flex";
+import { baseStore } from "../@baseStore";
 
-const Demo = () => {
-    const [count, setCount] = useState(0);
-    const [effectCount, setEffectCount] = useState(0);
+const X = () => {
+    const { count, effectCount, useEffectCount, setLocal } = baseStore.useLocal({
+        count: 0,
+        effectCount: 0,
+        useEffectCount: 0,
+    });
 
     useEffectAfterMount(() => {
-        setEffectCount((v) => v + 1);
+        setLocal((s) => {
+            s.effectCount += 1;
+        });
+    }, [count]);
+
+    useEffect(() => {
+        setLocal((s) => {
+            s.useEffectCount += 1;
+        });
     }, [count]);
 
     return (
-        <Flex.column gap={8}>
-            <Button label={`count: ${count}`} onClick={() => setCount((v) => v + 1)} />
-            <Typo.span>{`effect runs(after first render): ${effectCount}`}</Typo.span>
-        </Flex.column>
+        <Ds.page
+            title="useEffectAfterMount()"
+            releasedOn="1.0.0"
+            description="Runs effect only after first mount render."
+        >
+            <Ds.block
+                title="Skip First Render"
+                code={`import { useEffectAfterMount } from "${SYS.basePath}";
+
+                    useEffectAfterMount(() => {
+                        // runs after mount on dependency updates
+                    }, [deps]);`}
+                example={
+                    <Flex.column gap={8}>
+                        <Button
+                            label={`count: ${count}`}
+                            onClick={() =>
+                                setLocal((s) => {
+                                    s.count += 1;
+                                })
+                            }
+                            skipClickCooldown
+                            skipOnClickHold
+                        />
+                        <Typo.span>{`effect runs (after first render): ${effectCount}`}</Typo.span>
+                        <Typo.span>{`useEffect runs: ${useEffectCount}`}</Typo.span>
+                    </Flex.column>
+                }
+            />
+            <Ds.api
+                args="useEffectAfterMount(effect, deps);"
+                props={{
+                    effect: {
+                        description: "Effect callback.",
+                        type: "function",
+                        required: true,
+                    },
+                    deps: {
+                        description: "Dependency array.",
+                        type: "any[]",
+                        defaultValue: "[]",
+                    },
+                }}
+            />
+        </Ds.page>
     );
 };
-
-const X = () => (
-    <Ds.page
-        title="useEffectAfterMount()"
-        releasedOn="1.0.0"
-        description="Runs effect only after first mount render."
-    >
-        <Ds.block
-            title="Skip First Render"
-            code={`import { useEffectAfterMount } from "${SYS.basePath}";
-
-                        useEffectAfterMount(() => {
-                        // runs after mount on dependency updates
-                        }, [value]);`}
-            example={<Demo />}
-        />
-        <Ds.api
-            args="useEffectAfterMount(effect, deps);"
-            returns="void."
-            props={{
-                effect: {
-                    description: "Effect callback.",
-                    type: "function",
-                    required: true,
-                },
-                deps: {
-                    description: "Dependency array.",
-                    type: "any[]",
-                    defaultValue: "[]",
-                },
-            }}
-        />
-    </Ds.page>
-);
 
 export default X;

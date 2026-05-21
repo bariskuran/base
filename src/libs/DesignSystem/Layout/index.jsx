@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { S } from "./_styled";
 import { formatDsNavLabel, getSitemap } from "../index";
 import { baseStore } from "../../@baseStore";
@@ -8,20 +8,20 @@ import { sortBy } from "../../sortBy";
 import { useMemo } from "react";
 import { ScrollBar } from "../../ScrollBar";
 import { Flex } from "../../Flex";
-import { useLinkIntoView } from "../../useLinkIntoView";
+import { useRevealNavItem } from "../../useRevealNavItem";
 
 const Layout = () => {
     const vars = useVars();
-    const location = useLocation();
     const showInternalDs = baseStore.useGlobal((s) => !!s._adminSettings?.showInternalDs);
     const sorted = useMemo(() => {
         const [first, ...rest] = getSitemap() || [];
         return first ? [first, ...rest.sort((a, b) => sortBy.asc(a[0], b[0]))] : [];
     }, [showInternalDs]);
 
-    const [isActive, activeNavItemRef] = useLinkIntoView({
-        pathname: location.pathname,
+    const [isActive, activeNavItemRef] = useRevealNavItem({
         links: sorted,
+        basePath: "/design-system",
+        getPathFromLink: (link) => link[1],
     });
 
     /* RETURN */

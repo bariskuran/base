@@ -1,4 +1,5 @@
 import { useCallback, useLayoutEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 const normalizePathname = (pathname) =>
     pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
@@ -10,30 +11,18 @@ const hrefUnderBase = (basePath, pathSegment) => {
     return `${base}/${seg}`;
 };
 
-const defaultGetPathFromLink = (link) => link[1];
-
-/**
- * @param {object} options
- * @param {string} options.pathname — genelde useLocation().pathname
- * @param {unknown[]} options.links — eşleşme ve effect bağımlılığı (örn. sıralı nav listesi)
- * @param {string} [options.basePath="/design-system"] — pathSegment boşsa yalnızca base (index)
- * @param {(link: unknown) => unknown} [options.getPathFromLink] — varsayılan `link[1]` (sitemap satırı)
- * @param {ScrollLogicalPosition} [options.block="center"]
- * @param {ScrollLogicalPosition} [options.inline="nearest"]
- * @param {ScrollBehavior} [options.behavior="smooth"]
- * @param {unknown[]} [options.extraDeps=[]] — ek useLayoutEffect bağımlılıkları
- * @returns {[ (item: unknown) => boolean, React.MutableRefObject<HTMLElement | null> ]}
- */
-export const useLinkIntoView = ({
-    pathname,
+export const useRevealNavItem = ({
+    pathname: pathnameOverride,
     links = [],
-    basePath = "/design-system",
-    getPathFromLink = defaultGetPathFromLink,
+    basePath = "/",
+    getPathFromLink = (link) => link[1],
     block = "center",
     inline = "nearest",
     behavior = "smooth",
     extraDeps = [],
 }) => {
+    const { pathname: routePathname } = useLocation();
+    const pathname = pathnameOverride ?? routePathname;
     const activeNavItemRef = useRef(null);
 
     const isActive = useCallback(
