@@ -5,7 +5,7 @@ const X = () => (
     <Ds.page
         title="DSCodeViewer"
         releasedOn="1.0.0"
-        description="DSCodeViewer renders formatted code content inside a scrollable area and includes a built-in copy button."
+        description="Renders formatted code via Typo.code (dedent, JSX/call formatting, copy). Shell adds monospace font, tab size, and optional max height."
     >
         <Ds.block
             title="Usage"

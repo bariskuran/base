@@ -20,20 +20,20 @@ const normalizeScrollFlexVariant = (variant) => {
     return SCROLL_FLEX_VARIANT_ALIAS_MAP[key];
 };
 
-const ButtonListCore = componentCreator({
-    name: "ButtonList",
+const ButtonGroupCore = componentCreator({
+    name: "ButtonGroup",
     BaseComp: Base,
     DefaultVariant,
     PlainVariant,
     variants: {},
 });
 
-export const ButtonList = forwardRef(function ButtonList(props, forwardedRef) {
+export const ButtonGroup = forwardRef(function ButtonGroup(props, forwardedRef) {
     const { variant, ...rest } = props || {};
     const scrollFlexVariant = normalizeScrollFlexVariant(variant);
 
     return (
-        <ButtonListCore
+        <ButtonGroupCore
             ref={forwardedRef}
             {...rest}
             {...(scrollFlexVariant != null
@@ -45,12 +45,12 @@ export const ButtonList = forwardRef(function ButtonList(props, forwardedRef) {
     );
 });
 
-ButtonList.displayName = "ButtonList";
+ButtonGroup.displayName = "ButtonGroup";
 
-ButtonList.column = forwardRef(function ButtonListColumn(props, forwardedRef) {
+ButtonGroup.column = forwardRef(function ButtonGroupColumn(props, forwardedRef) {
     const { flexProps, ...rest } = props || {};
     return (
-        <ButtonList
+        <ButtonGroup
             ref={forwardedRef}
             {...rest}
             flexProps={{ direction: "column", ...(flexProps || {}) }}
@@ -58,4 +58,4 @@ ButtonList.column = forwardRef(function ButtonListColumn(props, forwardedRef) {
     );
 });
 
-ButtonList.column.displayName = "ButtonList.column";
+ButtonGroup.column.displayName = "ButtonGroup.column";

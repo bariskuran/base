@@ -140,7 +140,11 @@ export const useScrollFlexMeasureEffects = ({
             if (!container || !content) return;
 
             const barGutter = getBarAxisGutterPx(scrollBarExportedData, scrollBarProps);
-            const reserveY = !!(scrollBarExportedData.top || scrollBarExportedData.bottom);
+            const reserveY = !!(
+                scrollBarExportedData.showX ||
+                scrollBarExportedData.top ||
+                scrollBarExportedData.bottom
+            );
             const contentH = measureContentIntrinsicAxisPx(content, "y");
             const border = getContainerBorderInsetsPx(container);
             const shellPad = getPaddingInsetsFromElement(shellRef.current);
@@ -244,7 +248,11 @@ export const useScrollFlexMeasureEffects = ({
             }
 
             const barGutter = getBarAxisGutterPx(scrollBarExportedData, scrollBarProps);
-            const reserveX = !!(scrollBarExportedData.left || scrollBarExportedData.right);
+            const reserveX = !!(
+                scrollBarExportedData.showY ||
+                scrollBarExportedData.left ||
+                scrollBarExportedData.right
+            );
             const contentW = measureContentIntrinsicAxisPx(content, "x");
             const border = getContainerBorderInsetsPx(container);
             const shellPad = getPaddingInsetsFromElement(shellRef.current);

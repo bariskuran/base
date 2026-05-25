@@ -10,7 +10,7 @@ const X = () => {
             releasedOn="1.0.0"
             description={`NestedBaseUi is an internal UI-layer context provider used to prevent variant conflicts in nested UI components.
 
-When UI components are deeply nested (for example PopOver > ButtonList > ScrollFlex), each one may have its own default variant. Even if they do not technically override each other, combining all default variants creates visual noise. NestedBaseUi marks nested components so inner components can switch to plain behavior instead of applying another full variant style stack.
+When UI components are deeply nested (for example PopOver > ButtonGroup > ScrollFlex), each one may have its own default variant. Even if they do not technically override each other, combining all default variants creates visual noise. NestedBaseUi marks nested components so inner components can switch to plain behavior instead of applying another full variant style stack.
 
 In short: outer UI component keeps the main variant, inner UI components fall back to plain-like behavior to avoid design collisions.
 
@@ -22,11 +22,11 @@ At this stage, this is mainly architectural documentation. Usage examples will b
 
 // conceptual nesting example
 <PopOver>
-  <ButtonList>
+  <ButtonGroup>
     <ScrollFlex>
       ...
     </ScrollFlex>
-  </ButtonList>
+  </ButtonGroup>
 </PopOver>`}
                 example={
                     <Flex.column gap={10}>

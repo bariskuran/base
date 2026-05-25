@@ -52,6 +52,12 @@ const X = () => (
                     type: "boolean",
                     defaultValue: "false",
                 },
+                full: {
+                    description:
+                        'Passes full to signature Typo lines (width="100%" shorthand when width is omitted).',
+                    type: "boolean",
+                    defaultValue: "false",
+                },
                 returnProps: {
                     description: "Return object fields for API tables.",
                     type: "object",

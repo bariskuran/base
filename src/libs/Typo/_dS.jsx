@@ -18,10 +18,15 @@ const codeFormatSample = `const obj = {
 const apiProps = {
     children: { description: "Text content.", type: "ReactNode", defaultValue: "null" },
     content: { description: "Alternative text content.", type: "ReactNode", defaultValue: "null" },
-    contentArray: {
+    contentGroup: {
         description: "Renders one host element per item (e.g. multiple <p> when as is p).",
         type: "any[]",
         defaultValue: "[]",
+    },
+    full: {
+        description: 'Shorthand for width="100%" when width is omitted.',
+        type: "boolean",
+        defaultValue: "false",
     },
     as: { description: "HTML tag override.", type: "string", defaultValue: '"span"' },
     responsive: {
@@ -38,7 +43,11 @@ const apiProps = {
     weight: { description: "Font weight.", type: "number | string", defaultValue: "400" },
     color: { description: "Text color.", type: "string", defaultValue: "inherit" },
     highlight: { description: "Highlight background color.", type: "string" },
-    width: { description: "Component width.", type: "string | number", defaultValue: "auto" },
+    width: {
+        description: 'Component width. Ignored when full is true and width is omitted.',
+        type: "string | number",
+        defaultValue: "auto",
+    },
     maxWidth: { description: "Maximum width.", type: "string | number", defaultValue: "none" },
     disableMaxWidthLock: { description: "Disables default max-width lock.", type: "boolean" },
     ellipsis: {
@@ -244,22 +253,22 @@ const X = () => (
         />
 
         <Ds.block
-            title="content & contentArray"
-            description="Use content for a single value. contentArray renders multiple block hosts (e.g. several <p> elements)."
+            title="content & contentGroup"
+            description="Use content for a single value. contentGroup renders multiple block hosts (e.g. several <p> elements)."
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo.p content="Paragraph one." />
                     <Typo.p
-                        contentArray={["Paragraph one.", "Paragraph two."]}
+                        contentGroup={["Paragraph one.", "Paragraph two."]}
                     />`}
             example={
                 <Flex.column gap={8}>
                     <Typo.p content="Single content." />
                     <Typo.p
-                        contentArray={[
-                            "contentArray p one.",
-                            "contentArray p two.",
-                            "contentArray p three.",
+                        contentGroup={[
+                            "contentGroup p one.",
+                            "contentGroup p two.",
+                            "contentGroup p three.",
                         ]}
                     />
                 </Flex.column>

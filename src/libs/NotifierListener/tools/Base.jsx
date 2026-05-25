@@ -29,7 +29,7 @@ export const Base = (p = {}) => {
             aria-label="NotifierListener container"
         >
             {!isEmpty && (
-                <ScrollFlex.plain padding={10} width="100%" height="100%">
+                <ScrollFlex.plain padding={10} full height="100%">
                     <Flex.column full paddingBottom={10}>
                         {queue.map(
                             (item) =>

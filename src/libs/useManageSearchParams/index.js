@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useCallback, useRef } from "react";
 import { baseStore } from "../@baseStore";
-import { manageSearchParams } from "./manageSearchParams";
+import { manageSearchParams } from "../manageSearchParams";
 import { isShallowEqual } from "../isShallowEqual";
 
 /**
@@ -41,8 +41,7 @@ import { isShallowEqual } from "../isShallowEqual";
 export const useManageSearchParams = (options = {}) => {
     const { pick, defaults, bind, replace = true, maxLength = 0 } = options;
 
-    const rrd = baseStore.useReactRouterDom() || {};
-    const searchKey = rrd.location?.search || "";
+    const searchKey = baseStore.useGlobal((s) => s._reactRouterDom?.location?.search ?? "");
 
     const [decodedAll, raw] = useMemo(() => {
         return manageSearchParams.get();
@@ -59,13 +58,17 @@ export const useManageSearchParams = (options = {}) => {
 
     const set = useCallback(
         (objOrUpdater, settings) => {
-            return manageSearchParams.set(objOrUpdater, {
+            const next =
+                typeof objOrUpdater === "function"
+                    ? objOrUpdater({ ...(decoded || {}) })
+                    : objOrUpdater;
+            return manageSearchParams.set(next, {
                 replace,
                 maxLength,
                 ...settings,
             });
         },
-        [replace, maxLength],
+        [replace, maxLength, decoded],
     );
 
     const clear = useCallback(

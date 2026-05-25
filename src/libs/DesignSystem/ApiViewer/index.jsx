@@ -7,7 +7,7 @@ import { Flex } from "../../Flex";
 import { Button } from "../../Button";
 import { Icon } from "../../@Icon";
 
-const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title }) => {
+const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title, full }) => {
     const hasProps = props && typeof props === "object" && Object.keys(props).length > 0;
     const hasReturnProps =
         returnProps && typeof returnProps === "object" && Object.keys(returnProps).length > 0;
@@ -58,6 +58,7 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title 
                                     copy
                                     content={args}
                                     padding={10}
+                                    {...(full ? { full: true } : {})}
                                 />
                             ) : Array.isArray(args) ? (
                                 args.map((arg, i) => (
@@ -68,6 +69,7 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title 
                                         content={arg}
                                         key={i}
                                         padding={10}
+                                        {...(full ? { full: true } : {})}
                                     />
                                 ))
                             ) : null}

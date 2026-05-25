@@ -40,7 +40,7 @@ export const PopUpBodyWrapper = ({
                     <ScrollFlex
                         variant="plain"
                         autoWidth={false}
-                        width="100%"
+                        full
                         padding={10}
                         paddingTop={0}
                         {...restScrollFlexProps}

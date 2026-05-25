@@ -220,7 +220,10 @@ const wrapperWidth = ({ $width, $maxWidth, $fitContent, $disableMaxWidthLock, $o
     if ($width != null) return $width;
     if ($fitContent) return "fit-content";
     if ($maxWidth != null) return $maxWidth;
-    if (OVERLAY_COPY_HOSTS.has($as)) return "fit-content";
+    if (OVERLAY_COPY_HOSTS.has($as)) {
+        if ($disableMaxWidthLock) return "100%";
+        return "fit-content";
+    }
     if (!$disableMaxWidthLock) return "min(100%, 600px)";
     return "fit-content";
 };

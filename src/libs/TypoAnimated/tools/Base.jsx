@@ -11,7 +11,7 @@ export const TypoAnimatedBase = (props = {}) => {
         useTimerProps = {},
         children,
         content,
-        contentArray,
+        contentGroup,
         color,
         ...typoProps
     } = props;
@@ -38,10 +38,10 @@ export const TypoAnimatedBase = (props = {}) => {
         typoProps: typoCommon,
     });
 
-    if (contentArray?.length) {
+    if (contentGroup?.length) {
         return (
             <>
-                {contentArray.map((item, index) => (
+                {contentGroup.map((item, index) => (
                     <TypoAnimatedBase
                         key={index}
                         variant={variant}

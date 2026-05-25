@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { PopOver } from ".";
 import { Flex } from "../Flex";
-import { ButtonList } from "../ButtonList";
+import { ButtonGroup } from "../ButtonGroup";
 import { Button } from "../Button";
 
 const Panel = () => (
@@ -40,7 +40,7 @@ const LargeContent = () => {
     );
 };
 
-const buttons = [
+const items = [
     {
         bgColor: "error",
         label: "test",
@@ -68,7 +68,7 @@ const buttons = [
     { label: "test2", onClick: () => console.log("click2") },
 ];
 
-const commonButtonProps = {
+const groupProps = {
     bgColor: "success",
     prefix: { icon: "user" },
     size: 100,
@@ -81,7 +81,7 @@ const X = () => (
         description={
             <>
                 PopOver is composed of advanced components such as FloatingUi, ScrollFlex, Button,
-                and ButtonList. As a result, it does not have many features of its own, but can
+                and ButtonGroup. As a result, it does not have many features of its own, but can
                 utilize all the features provided by the aforementioned components. <br />
                 <br />A nice feature of the PopOver component: by default the system allows only one
                 exclusive PopOver at a time (see FloatingUi <code>disableMultipleBlock</code>). Use{" "}
@@ -144,12 +144,12 @@ const X = () => (
             }
         />
         <Ds.block
-            title="ButtonList with PopOver"
-            description='The "flat" prop of ButtonList removes outer wrappers, giving layout control to the PopOver. You can manage the UI inside the PopOver using scrollFlexProps.'
-            code={`import { PopOver, ButtonList } from "${SYS.basePath}";
+            title="ButtonGroup with PopOver"
+            description='The "flat" prop of ButtonGroup removes outer wrappers, giving layout control to the PopOver. You can manage the UI inside the PopOver using scrollFlexProps.'
+            code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
                 <PopOver
-                    buttonProps={{ label: "flat ButtonList usage" }}
+                    buttonProps={{ label: "flat ButtonGroup usage" }}
                     scrollFlexProps={{
                         flexProps: { gap: 5 },
                         scrollBarProps: {
@@ -158,11 +158,11 @@ const X = () => (
                         },
                     }}
                 >
-                    <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
+                    <ButtonGroup items={items} groupProps={groupProps} flat />
                 </PopOver>`}
             example={
                 <PopOver
-                    buttonProps={{ label: "flat ButtonList usage" }}
+                    buttonProps={{ label: "flat ButtonGroup usage" }}
                     scrollFlexProps={{
                         flexProps: { gap: 5 },
                         scrollBarProps: {
@@ -171,14 +171,14 @@ const X = () => (
                         },
                     }}
                 >
-                    <ButtonList buttons={buttons} commonButtonProps={commonButtonProps} flat />
+                    <ButtonGroup items={items} groupProps={groupProps} flat />
                 </PopOver>
             }
         />
         <Ds.block
             title="Styling"
             description="bgColor and color props are used to set the background and text color of the PopOver. It can be a theme color, a theme path, or a css color."
-            code={`import { PopOver, ButtonList } from "${SYS.basePath}";
+            code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
                 <PopOver bgColor="lightgrey" color="primary">
                     <Panel />
@@ -191,7 +191,7 @@ const X = () => (
         />
         <Ds.block
             title="disableArrow"
-            code={`import { PopOver, ButtonList } from "${SYS.basePath}";
+            code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
                 <PopOver disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
                     <Panel />

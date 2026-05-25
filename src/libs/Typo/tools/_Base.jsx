@@ -11,15 +11,15 @@ import NestedBaseUi, { NESTED_UI_TYPO_PHRASING_HOST } from "../../NestedBaseUi";
 import { isTypoPhrasingOnlyHostTag } from "./isTypoPhrasingOnlyHostTag";
 
 export const Base = (props) => {
-    const { children, content, contentArray, ...p } = props;
+    const { children, content, contentGroup, ...p } = props;
     const { isHover: isManuallyHover, exportData } = useExportedData();
-    const vars = useVars({ children, content, contentArray, ...p });
+    const vars = useVars({ children, content, contentGroup, ...p });
 
-    if (contentArray?.length) {
+    if (contentGroup?.length) {
         return (
             <>
-                {contentArray.map((item, index) => (
-                    <Base key={index} {...p} content={item} contentArray={undefined} />
+                {contentGroup.map((item, index) => (
+                    <Base key={index} {...p} content={item} contentGroup={undefined} />
                 ))}
             </>
         );

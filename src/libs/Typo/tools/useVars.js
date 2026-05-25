@@ -23,7 +23,7 @@ const sysDefaults = {
 
 // useVars.js
 
-const useVars = ({ children, content, contentArray, ...p }) => {
+const useVars = ({ children, content, contentGroup, ...p }) => {
     const [theme, currentBreakpoint] = baseStore.useGlobal((s) => [
         s.theme,
         s._clientData.currentBreakpoint,
@@ -41,18 +41,21 @@ const useVars = ({ children, content, contentArray, ...p }) => {
         const responsiveProps = p.responsive?.[currentBreakpoint] || {};
         const mergedProps = { ...sysDefaults, ...p, ...responsiveProps };
 
-        const { maxWidth, size, color, highlight, width } = mergedProps || {};
+        const { maxWidth, size, color, highlight, width, full, ...restMerged } = mergedProps || {};
 
         const clr = colorGet(color || theme.foreground);
         const highlightClr = colorGet(highlight || clr.opposite);
 
-        const enableQuoteMarks = !!mergedProps.enableQuoteMarks;
+        const enableQuoteMarks = !!restMerged.enableQuoteMarks;
+
+        const resolvedWidth =
+            full === true && (width == null || width === undefined) ? "100%" : width;
 
         return {
-            ...mergedProps,
-            ellipsis: enableQuoteMarks ? false : mergedProps.ellipsis,
-            clamp: enableQuoteMarks ? false : mergedProps.clamp,
-            width: cssNormalizeSize(width),
+            ...restMerged,
+            ellipsis: enableQuoteMarks ? false : restMerged.ellipsis,
+            clamp: enableQuoteMarks ? false : restMerged.clamp,
+            width: cssNormalizeSize(resolvedWidth),
             maxWidth: cssNormalizeSize(maxWidth),
             size: cssNormalizeSize(size),
             color: color ? clr.color : highlight ? highlightClr.opposite : undefined,
@@ -154,7 +157,7 @@ const useVars = ({ children, content, contentArray, ...p }) => {
     const hasNoContent =
         truncatedHtml == null &&
         !finalVisibleContent &&
-        (!contentArray || contentArray.length === 0);
+        (!contentGroup || contentGroup.length === 0);
 
     const shouldRenderChildren = !isEllipsisBaseFinal || truncatedHtml == null;
     const shouldUseInnerHtml = isEllipsisBaseFinal && truncatedHtml != null;

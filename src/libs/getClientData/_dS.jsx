@@ -21,7 +21,10 @@ const X = () => {
                     up to date in Base. You do not need to call it manually.
                     <br />
                     <br />
-                    <Button.string to="/design-system/base-store" label="baseStore" />
+                    <Button.string
+                        to="/design-system/baseStore.globalData"
+                        label="baseStore.globalData"
+                    />
                     <br />
                     <Button.string to="/design-system/base" label="<Base>" />
                 </>

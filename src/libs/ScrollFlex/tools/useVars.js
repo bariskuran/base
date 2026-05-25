@@ -4,7 +4,12 @@ import { useExportData } from "../../useExportedData";
 import { isShallowEqual } from "../../isShallowEqual";
 import { EMPTY_FLEX_PROPS, EMPTY_SCROLL_BAR_PROPS, CONTENT_SIZE_MEASURE_SLACK_PX } from "./constants";
 import { getLayoutSizeCss } from "./cssSizeUtils";
-import { getBarGutterInsets, getShellLayoutStyle, pickScrollBarLayoutData } from "./scrollBarLayout";
+import {
+    getBarGutterInsets,
+    getShellLayoutStyle,
+    pickScrollBarLayoutData,
+    resolveScrollBarPropsForContentSizedLayout,
+} from "./scrollBarLayout";
 import { splitShellPaddingFromRestProps, getShellPaddingInsetsPx } from "./shellPadding";
 import { getContainerWidth } from "./containerDimensions";
 import { buildOrganizedFlexProps } from "./organizedFlexProps";
@@ -115,30 +120,47 @@ const useVars = (p) => {
         [setLocal, userScrollBarExportData],
     );
 
-    const mergedScrollBarProps = useMemo(
+    const hasMaxWidthBound = maxWidth !== undefined && maxWidth !== null && maxWidth !== "";
+    const hasMaxHeightBound = maxHeight !== undefined && maxHeight !== null && maxHeight !== "";
+
+    const contentSizedHeight =
+        !hasExplicitContainerHeight && !autoHeightEnabled && contentHeightPx > 0;
+
+    const contentSizedWidth =
+        !hasExplicitContainerWidth && !autoWidthEnabled && contentWidthPx > 0;
+
+    const layoutScrollBarProps = useMemo(
         () => ({
             ...scrollBarProps,
+            ...resolveScrollBarPropsForContentSizedLayout(scrollBarProps, {
+                contentSizedHeight,
+                contentSizedWidth,
+            }),
+        }),
+        [scrollBarProps, contentSizedHeight, contentSizedWidth],
+    );
+
+    const mergedScrollBarProps = useMemo(
+        () => ({
+            ...layoutScrollBarProps,
             exportData,
             sourceByRef: scrollBarProps.sourceByRef ?? shellRef,
             positionSourceByRef: scrollBarProps.positionSourceByRef ?? containerRef,
         }),
-        [scrollBarProps, exportData],
+        [containerRef, exportData, layoutScrollBarProps, scrollBarProps.sourceByRef],
     );
 
     const effectiveEnableDragging = enableDragging && !mergedScrollBarProps.fillMode;
 
     const barGutters = useMemo(
-        () => getBarGutterInsets(scrollBarExportedData, scrollBarProps),
-        [scrollBarExportedData, scrollBarProps],
+        () => getBarGutterInsets(scrollBarExportedData, layoutScrollBarProps),
+        [layoutScrollBarProps, scrollBarExportedData],
     );
 
     const shellPaddingInsetsPx = useMemo(
         () => getShellPaddingInsetsPx(shellPaddingStyle),
         [shellPaddingStyle],
     );
-
-    const hasMaxWidthBound = maxWidth !== undefined && maxWidth !== null && maxWidth !== "";
-    const hasMaxHeightBound = maxHeight !== undefined && maxHeight !== null && maxHeight !== "";
 
     const contentFillsShellWidth =
         hasExplicitContainerWidth || autoWidthEnabled || hasMaxWidthBound;
@@ -249,8 +271,12 @@ const useVars = (p) => {
     }, [needsShellViewport]);
 
     const shellLayoutStyle = useMemo(
-        () => getShellLayoutStyle(scrollBarExportedData, scrollBarProps),
-        [scrollBarExportedData, scrollBarProps],
+        () =>
+            getShellLayoutStyle(scrollBarExportedData, layoutScrollBarProps, {
+                contentSizedHeight,
+                contentSizedWidth,
+            }),
+        [contentSizedHeight, contentSizedWidth, layoutScrollBarProps, scrollBarExportedData],
     );
 
     const organizedFlexProps = useMemo(
@@ -299,7 +325,7 @@ const useVars = (p) => {
         heightByRef,
         heightById,
         scrollBarExportedData,
-        scrollBarProps,
+        scrollBarProps: layoutScrollBarProps,
         barGutters,
     });
 
@@ -342,6 +368,8 @@ const useVars = (p) => {
             barGutters,
             contentHeightPx,
             contentWidthPx,
+            scrollBarExportedData.showX,
+            scrollBarExportedData.showY,
             getContainerExtraInsetPx,
             hasExplicitContainerHeight,
             hasExplicitContainerWidth,

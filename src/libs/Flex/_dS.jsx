@@ -224,7 +224,7 @@ const X = () => (
                     <Item>Responsive 1</Item>
                     <Item>Responsive 2</Item>
                 </Flex>
-                <Flex gap={5} padding={5} childrenProps={[{ width: 10, bgColor: "#ffd6d6" }, { bgColor: "#d6ffd6" }]} responsive={{ phone: { direction: "column", childrenProps: [ { width: "100%", bgColor: "#red" }, { width: "100%", bgColor: "#green" }, ], }, }} >
+                <Flex gap={5} padding={5} childrenProps={[{ width: 10, bgColor: "#ffd6d6" }, { bgColor: "#d6ffd6" }]} responsive={{ phone: { direction: "column", childrenProps: [ { full: true, bgColor: "#red" }, { full: true, bgColor: "#green" }, ], }, }} >
                     <div>Responsive child 1</div>
                     <div>Responsive child 2</div>
                 </Flex>`}
@@ -249,8 +249,8 @@ const X = () => (
                             phone: {
                                 direction: "column",
                                 childrenProps: [
-                                    { width: "100%", bgColor: "#red" },
-                                    { width: "100%", bgColor: "#green" },
+                                    { full: true, bgColor: "#red" },
+                                    { full: true, bgColor: "#green" },
                                 ],
                             },
                         }}

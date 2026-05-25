@@ -92,13 +92,13 @@ import { typeOf } from "../typeOf";
  * ------------------------------------------------------------------
  * NOTES
  * ------------------------------------------------------------------
- * - Designed to work with baseStore.reactRouterDomData
+ * - Designed to work with baseStore.globalData `_reactRouterDom` (GlobalDataProvider)
  * - Intended for application state, filters, flags, UI config
  * - NOT meant for SEO-visible query parameters
  */
 export const manageSearchParams = {
     get: () => {
-        const { location } = baseStore?.reactRouterDomData?.get?.() || {};
+        const { location } = baseStore.globalData.get()?._reactRouterDom || {};
         const empty = {};
         let qs = location?.search;
 
@@ -179,7 +179,7 @@ export const manageSearchParams = {
             replace = true,
         } = settings || {};
 
-        const { navigate, location } = baseStore?.reactRouterDomData?.get?.() || {};
+        const { navigate, location } = baseStore.globalData.get()?._reactRouterDom || {};
 
         if (!obj || Object.keys(obj).length < 1) {
             if (!skipSetAndReturnEncoded && typeof navigate === "function") {
@@ -221,7 +221,7 @@ export const manageSearchParams = {
     },
     clear: (settings) => {
         const { skipSetAndReturnEncoded, replace = true } = settings || {};
-        const { navigate, location } = baseStore?.reactRouterDomData?.get?.() || {};
+        const { navigate, location } = baseStore.globalData.get()?._reactRouterDom || {};
 
         if (!skipSetAndReturnEncoded && typeof navigate === "function") {
             navigate(`${location?.pathname || ""}`, { replace });

@@ -193,8 +193,8 @@ export const FlexTestPage = () => {
                     phone: {
                         direction: "column",
                         childrenProps: [
-                            { width: "100%", bgColor: "#ffcccc" },
-                            { width: "100%", bgColor: "#ccffcc" },
+                            { full: true, bgColor: "#ffcccc" },
+                            { full: true, bgColor: "#ccffcc" },
                         ],
                     },
                 }}

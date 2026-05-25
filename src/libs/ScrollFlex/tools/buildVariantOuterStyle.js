@@ -66,6 +66,10 @@ export const buildVariantOuterStyle = ({
         if (autoWidthCapsToParent) {
             out.maxWidth = "100%";
         }
+    } else if (autoWidthEnabled) {
+        out.width = "100%";
+        out.maxWidth = "100%";
+        out.minWidth = 0;
     } else if (contentWidthPx > 0) {
         out.width = `${Math.ceil(contentWidthPx + getContainerExtraInsetPx("x"))}px`;
     } else if (intrinsicWidth) {
@@ -92,6 +96,12 @@ export const buildVariantOuterStyle = ({
         }
     } else if (contentHeightPx > 0) {
         out.height = `${Math.round(contentHeightPx + getContainerExtraInsetPx("y"))}px`;
+
+        if (!hasExplicitContainerWidth) {
+            out.width = out.width ?? "100%";
+            out.maxWidth = out.maxWidth ?? "100%";
+            out.minWidth = out.minWidth ?? 0;
+        }
     }
 
     if (hasMaxHeightBound && !hasExplicitContainerHeight) {

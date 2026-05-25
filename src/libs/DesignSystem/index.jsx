@@ -36,7 +36,7 @@ export const formatDsNavLabel = (name) => {
 const publicSitemap = [
     ["How To Setup", undefined, l(() => import("./_dS")), { index: true }],
     ["Button", "button", l(() => import("../Button/_dS"))],
-    ["ButtonList", "buttonList", l(() => import("../ButtonList/_dS"))],
+    ["ButtonGroup", "buttonGroup", l(() => import("../ButtonGroup/_dS"))],
     ["byPath", "byPath", l(() => import("../byPath/_dS"))],
     ["cleanFalsyValues", "cleanFalsyValues", l(() => import("../cleanFalsyValues/_dS"))],
     ["colorAlpha", "colorAlpha", l(() => import("../colorAlpha/_dS"))],
@@ -64,6 +64,7 @@ const publicSitemap = [
     ["FloatingUi", "floatingUi", l(() => import("../FloatingUi/_dS"))],
     ["Flex", "flex", l(() => import("../Flex/_dS"))],
     ["generateRandom", "generateRandom", l(() => import("../generateRandom/_dS"))],
+    ["Group", "group", l(() => import("../Group/_dS"))],
     ["getText", "getText", l(() => import("../getText/_dS"))],
     ["getClientData", "getClientData", l(() => import("../getClientData/_dS"))],
     ["getTimeDiff", "getTimeDiff", l(() => import("../getTimeDiff/_dS"))],
@@ -111,11 +112,7 @@ const publicSitemap = [
     ["useEventListener", "useEventListener", l(() => import("../useEventListener/_dS"))],
     ["useImagePreloader", "useImagePreloader", l(() => import("../useImagePreloader/_dS"))],
     ["useImagesReady", "useImagesReady", l(() => import("../useImagesReady/_dS"))],
-    [
-        "useManageSearchParams",
-        "useManageSearchParams",
-        l(() => import("../useManageSearchParams/_dS")),
-    ],
+    ["manageSearchParams", "manageSearchParams", l(() => import("../manageSearchParams/_dS"))],
     ["useMouseXY", "useMouseXY", l(() => import("../useMouseXY/_dS"))],
     ["useObserver", "useObserver", l(() => import("../useObserver/_dS"))],
     ["usePrevious", "usePrevious", l(() => import("../usePrevious/_dS"))],
@@ -148,6 +145,9 @@ const publicSitemap = [
         l(() => import("../../constants/UPPER_CASE_ALPHABET_dS")),
     ],
     ["baseDate", "baseDate", l(() => import("../@baseDate/_dS"))],
+    ["baseStore.external", "baseStore.external", l(() => import("../@baseStore/_dS_useAndCreate"))],
+    ["baseStore.local", "baseStore.local", l(() => import("../@baseStore/_dS_useLocal"))],
+    ["baseStore.globalData", "baseStore.globalData", l(() => import("../@baseStore/_dS_useGlobal"))],
 ];
 
 const internalSitemap = [

@@ -1,24 +1,20 @@
 import { useMemo } from "react";
-import { deepMerge } from "../../deepMerge";
 import { useExportData } from "../../useExportedData";
+import { useScrollEdgeShadow } from "./useScrollEdgeShadow";
 
 const useVars = (p = {}) => {
     const {
         Variant,
         forwardedRef,
-        buttons = [],
-        commonButtonProps = {},
+        items = [],
+        groupProps = {},
         flexProps = {},
         scrollBarProps = {},
         scrollFlexVariant,
         exportData,
         flat = false,
+        scrollEdgeShadow = false,
     } = p;
-
-    const preparedItems = useMemo(
-        () => buttons.map((item) => deepMerge(commonButtonProps, item)),
-        [buttons, commonButtonProps],
-    );
 
     const resolvedFlexProps = useMemo(() => ({ ...(flexProps || {}) }), [flexProps]);
 
@@ -29,22 +25,27 @@ const useVars = (p = {}) => {
         return !(s === "column" || s === "column-reverse" || s === "y" || s === "y-reverse");
     }, [resolvedFlexProps]);
 
-    const mergedScrollBarProps = useMemo(() => ({ ...scrollBarProps }), [scrollBarProps]);
+    const { scrollBarPropsWithEdgeShadow } = useScrollEdgeShadow({
+        enabled: scrollEdgeShadow && !flat,
+        isRowLayout,
+        scrollBarProps,
+        scrollEdgeWrapRef: p.scrollEdgeWrapRef,
+    });
 
     return useExportData(
         {
             exportData,
             Variant,
             forwardedRef,
+            items,
+            groupProps,
             resolvedFlexProps,
-            mergedScrollBarProps,
+            mergedScrollBarProps: scrollBarPropsWithEdgeShadow,
             scrollFlexVariant,
-            buttons,
-            commonButtonProps,
             flat,
+            scrollEdgeShadow: scrollEdgeShadow && !flat,
         },
         {
-            preparedItems,
             isRowLayout,
         },
     );
