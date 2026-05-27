@@ -48,4 +48,11 @@ export const TEXT_LIBRARY = {
         de: "Abbrechen",
         es: "Cancelar",
     },
+    searchParamsExceededMaxLength: {
+        tr: "SearchParams'da maksimum uzunluk aşıldı",
+        en: "Maximum length exceeded in SearchParams",
+        fr: "Longueur maximale dépassée dans SearchParams",
+        de: "Maximale Länge überschritten in SearchParams",
+        es: "Longitud máxima excedida en SearchParams",
+    },
 };

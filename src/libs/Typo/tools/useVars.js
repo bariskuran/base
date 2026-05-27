@@ -1,4 +1,4 @@
-import { useMemo, useRef, useCallback, useLayoutEffect, useEffect } from "react";
+import { isValidElement, useMemo, useRef, useCallback, useLayoutEffect, useEffect } from "react";
 import { useExportData } from "../../useExportedData";
 import { colorGet } from "../../colorGet";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
@@ -10,6 +10,7 @@ import {
     formatFnCallSnippetForViewer,
     formatJsxPropsForViewer,
 } from "../../DesignSystem/CodeViewer/tools/codeFormatters.jsx";
+import { coerceToCodeText } from "../../DesignSystem/formatJsonForDisplay";
 import { useNestedBaseUiContext, NESTED_UI_TYPO_PHRASING_HOST } from "../../NestedBaseUi";
 
 const sysDefaults = {
@@ -82,17 +83,30 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
 
     const rawFinalVisibleContent = children ?? content;
     const finalVisibleContent = useMemo(() => {
-        if (!controlledProps.codeFormat || typeof rawFinalVisibleContent !== "string") {
-            return rawFinalVisibleContent;
+        const isCodeHost = displayProps.as === "pre" || displayProps.as === "code";
+        const shouldCoerce =
+            isCodeHost &&
+            rawFinalVisibleContent != null &&
+            typeof rawFinalVisibleContent !== "string" &&
+            !isValidElement(rawFinalVisibleContent) &&
+            !(Array.isArray(rawFinalVisibleContent) && rawFinalVisibleContent.some(isValidElement));
+
+        const workingContent = shouldCoerce
+            ? coerceToCodeText(rawFinalVisibleContent)
+            : rawFinalVisibleContent;
+
+        if (!controlledProps.codeFormat || typeof workingContent !== "string") {
+            return workingContent;
         }
 
-        const base = dedent(rawFinalVisibleContent);
+        const base = dedent(workingContent);
         const jsxDone =
             controlledProps.codeFormatJsxProps === false ? base : formatJsxPropsForViewer(base);
         if (controlledProps.codeFormatCalls === false) return jsxDone;
         return formatFnCallSnippetForViewer(jsxDone);
     }, [
         rawFinalVisibleContent,
+        displayProps.as,
         controlledProps.codeFormat,
         controlledProps.codeFormatJsxProps,
         controlledProps.codeFormatCalls,

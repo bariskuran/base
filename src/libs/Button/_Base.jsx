@@ -35,6 +35,8 @@ export const Base = (props = {}) => {
         iconPalette,
         isPending,
         disabled,
+        scaleWrapperProps,
+        useLiftHitSlop,
     } = useVars(propsRest);
 
     /* RETURN */
@@ -46,6 +48,9 @@ export const Base = (props = {}) => {
                 fullWidth={fullWidth}
                 disabled={disabled}
                 isActivated={isActivated}
+                isHovered={isHovered}
+                useLiftHitSlop={useLiftHitSlop}
+                scaleWrapperProps={scaleWrapperProps}
             >
                 <Variant ref={forwardedRef} {...variantProps}>
                     <IconArea

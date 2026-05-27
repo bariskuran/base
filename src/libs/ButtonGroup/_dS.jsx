@@ -59,7 +59,16 @@ const X = () => {
         <Ds.page
             title="<ButtonGroup>"
             releasedOn="1.0.0"
-            description="Button list on Group: shared groupProps per item, ScrollFlex + ScrollBar when not flat."
+            description={
+                <>
+                    This is a version of the 'Group' component specialized for 'Button', so the
+                    'items' and 'groupProps' behavior is the same. Instead of a 'Flex' wrapper, it
+                    uses 'ScrollFlex'.
+                    <br />
+                    <br />
+                    The 'scrollEdgeShadow' prop is unique to this component.
+                </>
+            }
         >
             <Ds.block
                 title="Vertical Usage"
@@ -213,7 +222,7 @@ const X = () => {
                 }
             />
             <Ds.api
-                args="<ButtonGroup items={[]} />"
+                args="<ButtonGroup items={[]} groupProps={{}} />"
                 props={{
                     items: {
                         description: "Array of prop objects; each entry is spread onto a Button.",
@@ -251,10 +260,6 @@ const X = () => {
                             "Optional inward edge shadows over the scroll area. Row layout: left/right; column layout: top/bottom. Start edge (left/top) appears only after scrolling; end edge (right/bottom) hides when scrolled to the end. Opacity transitions over 0.25s.",
                         type: "boolean",
                         defaultValue: "false",
-                    },
-                    exportData: {
-                        description: "Debug / export-data passthrough for underlying hooks.",
-                        type: "boolean | function | object",
                     },
                 }}
             />

@@ -52,23 +52,31 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title,
                             minWidth={0}
                         >
                             {typeof args === "string" ? (
-                                <Typo.h6
+                                <Typo.code
                                     lineHeight={1.5}
                                     balance
                                     copy
                                     content={args}
+                                    codeFormat={false}
+                                    codeFormatJsxProps={false}
+                                    codeFormatCalls={false}
                                     padding={10}
+                                    whiteSpace="pre-wrap"
                                     {...(full ? { full: true } : {})}
                                 />
                             ) : Array.isArray(args) ? (
                                 args.map((arg, i) => (
-                                    <Typo.h6
+                                    <Typo.code
                                         lineHeight={1.5}
                                         balance
                                         copy
                                         content={arg}
+                                        codeFormat={false}
+                                        codeFormatJsxProps={false}
+                                        codeFormatCalls={false}
                                         key={i}
                                         padding={10}
+                                        whiteSpace="pre-wrap"
                                         {...(full ? { full: true } : {})}
                                     />
                                 ))
@@ -121,6 +129,7 @@ const PropContainer = ({ obj = [] }) => {
 
 const formatDefaultValue = (value) => {
     if (value == null || value === "") return "—";
+    if (typeof value === "function") return value.toString();
     if (typeof value === "object") {
         try {
             return JSON.stringify(value, null, 2);

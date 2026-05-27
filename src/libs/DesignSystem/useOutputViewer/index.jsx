@@ -1,15 +1,24 @@
 import DsOutput from "../OutputArea";
 import { baseStore } from "../../@baseStore";
 import { formatJsonForDisplay } from "../formatJsonForDisplay";
+import { dedent } from "../../templateLiteralTo/dedent";
 
-const formatOutput = (value) => formatJsonForDisplay(value);
+const formatOutput = (value) => {
+    const formatted = formatJsonForDisplay(value);
+    return typeof formatted === "string" ? formatted : value == null ? null : String(formatted);
+};
 
-/** `Function#toString` / hand-written snippets: drops leading `(...) =>` (and optional `async`). */
 const stripArrowFnPreamble = (s) => {
     if (typeof s !== "string" || !s.trim()) return s;
     let t = s.trim().replace(/^async\s+/, "");
     const m = t.match(/^\([^)]*\)\s*=>\s*([\s\S]+)$/);
     return m ? m[1].trim() : s.trim();
+};
+
+const formatFnSnippet = (fn) => {
+    const raw = typeof fn === "function" ? String(fn) : typeof fn === "string" ? fn : "";
+    if (!raw.trim()) return "";
+    return dedent(stripArrowFnPreamble(raw));
 };
 
 const useOutputViewer = () => {
@@ -47,9 +56,7 @@ const useOutputViewer = () => {
                 }
 
                 const output = typeof fn === "function" ? fn() : hasValue ? value : fn;
-                const fnString = stripArrowFnPreamble(
-                    typeof fn === "function" ? String(fn) : typeof fn === "string" ? fn : "",
-                );
+                const fnString = formatFnSnippet(fn);
                 setOutput({ path, activeLabel, output, fnString });
             },
         };

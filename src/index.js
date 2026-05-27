@@ -152,7 +152,7 @@ export { useExportData, useExportedData } from "./libs/useExportedData";
 export { useImagePreloader } from "./libs/useImagePreloader";
 export { useImagesReady } from "./libs/useImagesReady";
 export { useRevealNavItem } from "./libs/useRevealNavItem";
-export { useManageSearchParams } from "./libs/useManageSearchParams";
+export { useManageSearchParams } from "./libs/useSearchParams";
 export { useMouseXY } from "./libs/useMouseXY";
 export { useObserver } from "./libs/useObserver";
 export { usePrevious } from "./libs/usePrevious";

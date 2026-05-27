@@ -1,14 +1,5 @@
 import styled, { css } from "styled-components";
-
-// export const DefaultVariant = styled.span`
-//     ${({ theme, $hoverManually, $disabled, $bgColor, $hoverBgColor, $activeBgColor, $color  }) => css`
-//         #prefix,
-//         #suffix {}
-//         & > #container > #href-to-button {
-//             &:hover {}
-//         }
-//     `}
-// `;
+export const DEFAULT_VARIANT_LIFT_REM = 2;
 
 export const DefaultVariant = styled.span`
     ${({
@@ -35,27 +26,27 @@ export const DefaultVariant = styled.span`
     }) => css`
         all: unset;
         display: flex;
-        position: relative;
-        top: 0;
+        transform: translateY(0);
         transition:
-            top 0.2s,
+            transform 0.2s,
             box-shadow 0.2s,
             background 0.2s ease,
             background-color 0.2s ease,
             color 0.2s ease,
             border-color 0.2s ease;
         border-radius: 5rem;
-        will-change: top, box-shadow;
+        will-change: transform, box-shadow;
 
         ${$isHovered &&
+        !$isActivated &&
         css`
-            top: -2rem;
+            transform: translateY(-${DEFAULT_VARIANT_LIFT_REM}rem);
             box-shadow: 0 4px 12rem rgba(0, 0, 0, 0.18);
         `}
 
         ${$isActivated &&
         css`
-            top: 2rem;
+            transform: translateY(${DEFAULT_VARIANT_LIFT_REM}rem);
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) inset;
         `}
 

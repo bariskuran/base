@@ -113,6 +113,7 @@ const publicSitemap = [
     ["useImagePreloader", "useImagePreloader", l(() => import("../useImagePreloader/_dS"))],
     ["useImagesReady", "useImagesReady", l(() => import("../useImagesReady/_dS"))],
     ["manageSearchParams", "manageSearchParams", l(() => import("../manageSearchParams/_dS"))],
+    ["useSearchParams", "useSearchParams", l(() => import("../useSearchParams/_dS"))],
     ["useMouseXY", "useMouseXY", l(() => import("../useMouseXY/_dS"))],
     ["useObserver", "useObserver", l(() => import("../useObserver/_dS"))],
     ["usePrevious", "usePrevious", l(() => import("../usePrevious/_dS"))],

@@ -4,6 +4,7 @@ import { baseStore } from "../../@baseStore";
 import { useTimers } from "./useTimers.js";
 import { getButtonColorPalette } from "./generateColors.js";
 import { useExportData } from "../../useExportedData";
+import { DefaultVariant } from "../DefaultVariant.js";
 
 /** Prop-level background intent (stable); avoids losing padding when resolved `bg` is transparent on hover. */
 const isNonTransparentBgProp = (value) => {
@@ -327,23 +328,6 @@ export const useVars = ({
             });
         },
 
-        onPointerLeave: () =>
-            setLocal((s) => {
-                s.isHover = false;
-                if (!isClickEffectControlled) s.isPressed = false;
-            }),
-
-        onPointerCancel: () =>
-            setLocal((s) => {
-                s.isHover = false;
-                if (!isClickEffectControlled) s.isPressed = false;
-            }),
-
-        onPointerEnter: () =>
-            setLocal((s) => {
-                s.isHover = true;
-            }),
-
         as,
         ...(as === "a" || as === Link ? linkAProps : buttonProps),
 
@@ -370,6 +354,27 @@ export const useVars = ({
                   }
                 : {}),
         },
+    };
+
+    const useLiftHitSlop = Variant === DefaultVariant;
+
+    const scaleWrapperProps = {
+        onPointerLeave: () =>
+            setLocal((s) => {
+                s.isHover = false;
+                if (!isClickEffectControlled) s.isPressed = false;
+            }),
+
+        onPointerCancel: () =>
+            setLocal((s) => {
+                s.isHover = false;
+                if (!isClickEffectControlled) s.isPressed = false;
+            }),
+
+        onPointerEnter: () =>
+            setLocal((s) => {
+                s.isHover = true;
+            }),
     };
 
     const showPendingLabel = isPending && !disabled && pendingLabel != null;
@@ -407,6 +412,8 @@ export const useVars = ({
             linkAProps,
             buttonProps,
             variantProps,
+            scaleWrapperProps,
+            useLiftHitSlop,
             ...timers,
             navigate,
             getTimerBaseName,

@@ -37,6 +37,7 @@ export const getClientData = ({
             device: "unknown",
             os: "unknown",
             browser: "unknown",
+            urlMaxLength: 2048,
 
             // extras
             dpr: 1,
@@ -108,6 +109,16 @@ export const getClientData = ({
             : /Firefox\//i.test(userAgent)
               ? "firefox"
               : "unknown";
+
+    /** Conservative max full-URL length (origin + path + query + hash) per browser. */
+    const urlMaxLength =
+        browser === "safari"
+            ? 1024
+            : browser === "firefox"
+              ? 2048
+              : browser === "chrome" || browser === "edge"
+                ? 2048
+                : 2048;
 
     /** Define currentBP */
     const currentBreakpoint = (() => {
@@ -182,6 +193,7 @@ export const getClientData = ({
         device,
         os,
         browser,
+        urlMaxLength,
 
         // extras
         dpr,

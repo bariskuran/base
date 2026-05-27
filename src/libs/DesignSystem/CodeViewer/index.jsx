@@ -1,4 +1,5 @@
 import { Typo } from "../../Typo";
+import { coerceToCodeText } from "../formatJsonForDisplay";
 import S from "./_styled";
 
 const CodeViewer = ({
@@ -14,7 +15,7 @@ const CodeViewer = ({
     formatJsxProps = true,
     ...rest
 }) => {
-    const rawContent = code ?? (typeof children === "string" ? children : "");
+    const rawContent = coerceToCodeText(code ?? children) ?? "";
     if (!rawContent) return null;
 
     return (

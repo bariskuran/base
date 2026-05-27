@@ -12,7 +12,7 @@ const S = {
     row: styled.div`
         ${({ theme, $striped }) => css`
             display: grid;
-            grid-template-columns: 10px 3fr 1fr 5fr 2fr;
+            grid-template-columns: 10px 3fr 2fr 5fr 2fr;
             width: 100%;
             min-width: 0;
             align-items: center;
@@ -26,6 +26,7 @@ const S = {
                 width: 100%;
                 min-width: 0;
                 padding: 5rem;
+                line-height: 1.2;
             }
 
             & > *:nth-child(2) {

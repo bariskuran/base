@@ -4,12 +4,29 @@ import styled from "styled-components";
 import { Flex } from "../../Flex";
 import { useMemo } from "react";
 import { copyToClipboard } from "../../copyToClipboard";
-import { formatJsonForDisplay } from "../formatJsonForDisplay";
+import { coerceToCodeText } from "../formatJsonForDisplay";
 
 const ButtonArea = styled.div`
     position: absolute;
     right: 10rem;
     top: 10rem;
+    z-index: 2;
+`;
+
+const OutputCodeBlock = styled.div`
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    pre {
+        margin: 0;
+        max-width: 100%;
+        white-space: pre-wrap !important;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
 `;
 
 const OutputArea = ({
@@ -33,7 +50,6 @@ const OutputArea = ({
     };
 
     const pathValue = outputs?.[path];
-    /** directValue + path: show only after output button opens this path (toggle). directValue alone: live panel. */
     const gateDirectValue = directValue !== undefined && path != null;
     const isOpen = gateDirectValue ? pathValue != null : true;
 
@@ -44,8 +60,8 @@ const OutputArea = ({
             const value = directValue;
             if (value == null) return [null, ""];
 
-            if (typeof value === "string") return [value, ""];
-            return [formatJsonForDisplay(value), ""];
+            if (typeof value === "string") return [coerceToCodeText(value), ""];
+            return [coerceToCodeText(value), ""];
         }
 
         const value = pathValue;
@@ -59,24 +75,36 @@ const OutputArea = ({
             Object.prototype.hasOwnProperty.call(value, "output")
         ) {
             const rawOut = value.output;
-            const out =
-                rawOut == null || rawOut === ""
-                    ? null
-                    : typeof rawOut === "string"
-                      ? rawOut
-                      : formatJsonForDisplay(rawOut);
+            const out = coerceToCodeText(rawOut);
             const f = typeof value.fn === "string" ? value.fn : "";
             return [out, f];
         }
 
-        if (typeof value === "string") return [value, ""];
-        return [formatJsonForDisplay(value), ""];
+        if (typeof value === "string") return [coerceToCodeText(value), ""];
+        return [coerceToCodeText(value), ""];
     }, [directValue, pathValue, isOpen]);
 
-    /* */
     if ((outputValue == null || outputValue === "") && (!stringFn || stringFn === "")) return null;
+    const codeBlockProps = {
+        codeFormat: true,
+        codeFormatJsxProps: false,
+        full: true,
+        disableMaxWidthLock: true,
+        whiteSpace: "pre-wrap",
+        width: "100%",
+        margin: 0,
+        padding: 0,
+    };
+
     return (
-        <Flex.column full bgColor="foreground" color="background" padding={20} userSelect="none">
+        <Flex.column
+            full
+            minWidth={0}
+            bgColor="foreground"
+            color="background"
+            padding={20}
+            userSelect="none"
+        >
             <ButtonArea>
                 {stringFn ? (
                     <Button
@@ -89,17 +117,32 @@ const OutputArea = ({
                 <Button icon={{ icon: "close", width: 12 }} onClick={handleClose} />
             </ButtonArea>
             {stringFn && !disableFnString ? (
-                <>
+                <Flex.column full minWidth={0} gap={6}>
                     <Typo.bold balance underline>
                         fn
                     </Typo.bold>
-                    <Typo.code>{stringFn}</Typo.code>
-                </>
+                    <OutputCodeBlock>
+                        <Typo.code content={stringFn} {...codeBlockProps} codeFormatCalls />
+                    </OutputCodeBlock>
+                </Flex.column>
             ) : null}
-            <Typo.bold balance underline>
-                {label}
-            </Typo.bold>
-            <Typo.code>{outputValue}</Typo.code>
+            <Flex.column
+                full
+                minWidth={0}
+                gap={6}
+                marginTop={stringFn && !disableFnString ? 12 : 0}
+            >
+                <Typo.bold balance underline>
+                    {label}
+                </Typo.bold>
+                <OutputCodeBlock>
+                    <Typo.code
+                        content={outputValue ?? ""}
+                        {...codeBlockProps}
+                        codeFormatCalls={false}
+                    />
+                </OutputCodeBlock>
+            </Flex.column>
         </Flex.column>
     );
 };

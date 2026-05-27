@@ -29,10 +29,14 @@ const X = () => (
         releasedOn="1.0.0"
         description={
             <>
-                Generic list renderer: pick any component, pass <Typo.code>items</Typo.code> and
-                shared <Typo.code>groupProps</Typo.code>. Per-item props override group defaults via{" "}
-                <Typo.code>deepMerge</Typo.code>. Use <Typo.code>flat</Typo.code> when the parent
-                owns layout (Flex, ScrollFlex, etc.).
+                If you need to use the same component multiple times and your items share common
+                properties, the 'Group' component can be useful. Group allows you to specify shared
+                item properties via the 'items' and 'groupProps' parameters. By default, it renders
+                with a 'Flex' wrapper. If you set 'flat', Flex is removed and it returns only the
+                mapped components in a fragment.
+                <br />
+                <br />
+                For more advanced usage, see 'ButtonGroup'.
             </>
         }
     >
@@ -40,17 +44,17 @@ const X = () => (
             title="With Flex wrapper"
             code={`import { Group, Button } from "${SYS.basePath}";
 
-const items = [
-    { bgColor: "error", label: "Lead", onClick: () => {} },
-    { label: "Item 2", onClick: () => {} },
-];
+                const items = [
+                    { bgColor: "error", label: "Lead", onClick: () => {} },
+                    { label: "Item 2", onClick: () => {} },
+                ];
 
-<Group
-    component={Button}
-    items={items}
-    groupProps={{ bgColor: "success", prefix: { icon: "user" } }}
-    flexProps={{ gap: 5, wrap: true }}
-/>`}
+                <Group
+                    component={Button}
+                    items={items}
+                    groupProps={{ bgColor: "success", prefix: { icon: "user" } }}
+                    flexProps={{ gap: 5, wrap: true }}
+                />`}
             example={
                 <Group
                     component={Button}
@@ -65,17 +69,17 @@ const items = [
             description="When flat is true, Group returns only the mapped components in a fragment. Wrap with Flex or ScrollFlex yourself."
             code={`import { Group, Button, Flex } from "${SYS.basePath}";
 
-<Flex gap={8}>
-    <Group
-        flat
-        component={Button.plain}
-        items={[
-            { label: "One", onClick: () => {} },
-            { label: "Two", onClick: () => {} },
-        ]}
-        groupProps={{ variant: "plain" }}
-    />
-</Flex>`}
+                    <Flex gap={8}>
+                        <Group
+                            flat
+                            component={Button.plain}
+                            items={[
+                                { label: "One", onClick: () => {} },
+                                { label: "Two", onClick: () => {} },
+                            ]}
+                            groupProps={{ variant: "plain" }}
+                        />
+                    </Flex>`}
             example={
                 <Flex gap={8}>
                     <Group
@@ -95,12 +99,12 @@ const items = [
             title="Column layout"
             code={`import { Group, Button } from "${SYS.basePath}";
 
-<Group
-    component={Button}
-    items={items}
-    groupProps={groupProps}
-    flexProps={{ direction: "column", gap: 5 }}
-/>`}
+                <Group
+                    component={Button}
+                    items={items}
+                    groupProps={groupProps}
+                    flexProps={{ direction: "column", gap: 5 }}
+                />`}
             example={
                 <Group
                     component={Button}
@@ -114,17 +118,20 @@ const items = [
             args="<Group component={Component} items={[]} />"
             props={{
                 component: {
-                    description: "Component constructor to render for each item (e.g. Button, Button.plain).",
+                    description:
+                        "Component constructor to render for each item (e.g. Button, Button.plain).",
                     type: "component",
                     required: true,
                 },
                 items: {
-                    description: "Array of prop objects; each entry is merged with groupProps and passed to component.",
+                    description:
+                        "Array of prop objects; each entry is merged with groupProps and passed to component.",
                     type: "array",
                     required: true,
                 },
                 groupProps: {
-                    description: "Deep-merged into every item; per-item keys override these defaults.",
+                    description:
+                        "Deep-merged into every item; per-item keys override these defaults.",
                     type: "object",
                     defaultValue: "{}",
                 },

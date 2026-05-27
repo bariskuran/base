@@ -14,7 +14,7 @@ const S = {
             z-index: 9999999;
             padding: ${$isEmpty ? 0 : "10rem"};
             box-sizing: border-box;
-            pointer-events: ${$isEmpty ? "none" : "auto"};
+            pointer-events: none;
             overflow: hidden;
             transition:
                 height 0.2s ease,
@@ -29,6 +29,7 @@ const S = {
             overflow: hidden;
             width: 100%;
             box-sizing: border-box;
+            pointer-events: auto;
 
             max-height: ${$isEntered && !$isClosing ? `${$height}px` : 0};
             opacity: ${$isEntered && !$isClosing ? 1 : 0};
