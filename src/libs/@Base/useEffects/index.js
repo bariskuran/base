@@ -5,7 +5,7 @@ import { baseStore } from "../../@baseStore";
 import { useTimer } from "../../useTimer";
 
 export const useEffects = () => {
-    const [_baseDate = {}, set] = baseStore.useGlobal((s) => [s._baseDate]);
+    const [_baseDate = {}, set] = baseStore.useGlobal((s) => [s._baseDate, s.set]);
 
     /* Add console.ref into window */
     useEffect(() => {

@@ -36,7 +36,7 @@ const X = () => {
 
                     const language = baseStore.useGlobal((s) => s.language);
                     const isLoading = baseStore.useGlobal((s) => s.isLoading);
-                            
+
                     // selector vermezsen tüm globalData + set döner
                     const global = baseStore.useGlobal();`}
                 example={

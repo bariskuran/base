@@ -11,7 +11,8 @@ const PATH_EXTERNAL = "baseStore-external";
 const testStore = baseStore.create({ test: 1 });
 
 const TestCompoent = () => {
-    const [test, set] = baseStore.use(testStore, (s) => [s.test, s.set]);
+    // const test = baseStore.use(testStore, (s) => s.test);
+    const [test, set] = baseStore.use(testStore, (s) => [s.test]);
 
     const up = () => {
         testStore.set((s) => {
@@ -44,7 +45,7 @@ const X = () => {
     );
 
     const { counter, profile, set } = baseStore.use(sharedStore);
-    const [onlyCounter, setCounter] = baseStore.use(sharedStore, (s) => s.counter);
+    const [onlyCounter, setCounter] = baseStore.use(sharedStore, (s) => [s.counter, s.set]);
 
     return (
         <Ds.page

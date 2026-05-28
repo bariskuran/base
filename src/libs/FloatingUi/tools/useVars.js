@@ -130,7 +130,7 @@ const useVars = (p) => {
 
     const delayedCloseRef = useRef(delayedClose);
     delayedCloseRef.current = delayedClose;
-    const [popOverId, setGlobal] = baseStore.useGlobal((s) => [s.popOverId]);
+    const [popOverId, setGlobal] = baseStore.useGlobal((s) => [s.popOverId, s.set]);
 
     const exclusiveBlocksOthers = !disableMultipleBlock;
 

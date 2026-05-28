@@ -18,10 +18,12 @@ export const use = (store, selector, equalityFn) => {
     const attachSet = (selected) => {
         const set = store.set;
 
-        if (Array.isArray(selected)) return [...selected, set];
+        if (Array.isArray(selected)) {
+            if (selected.includes(set)) return selected;
+            return [...selected, set];
+        }
 
         if (selected && typeof selected === "object") {
-            if ("set" in selected) return selected;
             return { ...selected, set };
         }
 
@@ -31,6 +33,7 @@ export const use = (store, selector, equalityFn) => {
     const getSnapshot = useMemo(() => {
         return () => {
             const state = store.get();
+            const stateWithSet = attachSet(state);
             const currentVersion = getStoreVersion();
 
             const isEqual =
@@ -50,8 +53,8 @@ export const use = (store, selector, equalityFn) => {
                     return cacheRef.current.value;
                 }
 
-                const base = state;
-                const value = attachSet(base);
+                const base = stateWithSet;
+                const value = base;
 
                 cacheRef.current.has = true;
                 cacheRef.current.base = base;
@@ -61,7 +64,7 @@ export const use = (store, selector, equalityFn) => {
                 return value;
             }
 
-            const baseSelected = selector(state);
+            const baseSelected = selector(stateWithSet);
 
             if (cacheRef.current.has) {
                 if (isEqual(cacheRef.current.base, baseSelected)) {
@@ -69,7 +72,7 @@ export const use = (store, selector, equalityFn) => {
                 }
             }
 
-            const value = attachSet(baseSelected);
+            const value = baseSelected;
 
             cacheRef.current.has = true;
             cacheRef.current.base = baseSelected;
