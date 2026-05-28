@@ -40,7 +40,7 @@ export const useImagesReady = (fn, options = {}) => {
         includeErrors = true, // true: error olsa bile "ready" say
     } = options;
 
-    const { isLoaded, setLocal } = baseStore.useLocal({ isLoaded: false });
+    const { isLoaded, set } = baseStore.useLocal({ isLoaded: false });
     const fnRef = useRef(fn);
 
     useEffect(() => {
@@ -61,7 +61,7 @@ export const useImagesReady = (fn, options = {}) => {
         const finishOnce = () => {
             if (!active) return;
             active = false;
-            setLocal?.({ isLoaded: true });
+            set?.({ isLoaded: true });
             fnRef.current?.();
             cleanup();
         };

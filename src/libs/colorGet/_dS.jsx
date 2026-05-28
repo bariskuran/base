@@ -6,7 +6,7 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { input, setLocal } = baseStore.useLocal({ input: "primary" });
+    const { input, set } = baseStore.useLocal({ input: "primary" });
     const out = colorGet(input);
 
     return (
@@ -37,7 +37,7 @@ const X = () => {
                                         type="text"
                                         value={input}
                                         onChange={(e) =>
-                                            setLocal((s) => {
+                                            set((s) => {
                                                 s.input = e.target.value;
                                             })
                                         }

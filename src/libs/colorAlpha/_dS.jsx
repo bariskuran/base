@@ -6,7 +6,7 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { color, alpha, setLocal } = baseStore.useLocal({
+    const { color, alpha, set } = baseStore.useLocal({
         color: "#0077ff",
         alpha: 50,
     });
@@ -36,7 +36,7 @@ const X = () => {
                                     type="text"
                                     value={color}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.color = e.target.value;
                                         })
                                     }
@@ -52,7 +52,7 @@ const X = () => {
                                     step={0.05}
                                     value={alpha}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.alpha = Number(e.target.value);
                                         })
                                     }
@@ -67,7 +67,7 @@ const X = () => {
                                     step={1}
                                     value={alpha}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.alpha = Number(e.target.value);
                                         })
                                     }

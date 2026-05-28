@@ -32,7 +32,7 @@ const outputTypeOptions = Object.keys(CASE_SAMPLES).map((value) => ({
 }));
 
 const CaseConverterDemo = () => {
-    const { sampleKey, outputType, setLocal } = baseStore.useLocal({
+    const { sampleKey, outputType, set } = baseStore.useLocal({
         sampleKey: "camel",
         outputType: "kebab",
     });
@@ -50,7 +50,7 @@ const CaseConverterDemo = () => {
                         value={sampleKey}
                         sortBy="none"
                         onChange={(value) => {
-                            setLocal((s) => {
+                            set((s) => {
                                 s.sampleKey = value;
                             });
                         }}
@@ -63,7 +63,7 @@ const CaseConverterDemo = () => {
                         value={outputType}
                         sortBy="none"
                         onChange={(value) => {
-                            setLocal((s) => {
+                            set((s) => {
                                 s.outputType = value;
                             });
                         }}

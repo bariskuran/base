@@ -11,7 +11,7 @@ const normalizeTimerMs = (value, fallback) => {
 export const useTimers = (p) => {
     const {
         delay,
-        setLocal,
+        set,
         onDelayStart,
         onDelayEnd,
         runAction,
@@ -35,11 +35,11 @@ export const useTimers = (p) => {
         refreshTime: showOnClickHoldDurationMs,
         loop: false,
         onStart: () =>
-            setLocal?.((s) => {
+            set?.((s) => {
                 s.showOnClickValues = true;
             }),
         onEnd: () =>
-            setLocal?.((s) => {
+            set?.((s) => {
                 s.showOnClickValues = false;
             }),
         startOnLoad: false,
@@ -50,11 +50,11 @@ export const useTimers = (p) => {
         refreshTime: cooldownMs,
         loop: false,
         onStart: () =>
-            setLocal?.((s) => {
+            set?.((s) => {
                 s.clickBlocker = true;
             }),
         onEnd: () =>
-            setLocal?.((s) => {
+            set?.((s) => {
                 s.clickBlocker = false;
             }),
         startOnLoad: false,

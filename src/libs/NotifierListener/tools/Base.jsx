@@ -58,7 +58,7 @@ const Box = ({ item, Variant, theme }) => {
     const shellRef = useRef(null);
     const contentRef = useRef(null);
 
-    const { height, isEntered, setLocal } = baseStore.useLocal({
+    const { height, isEntered, set } = baseStore.useLocal({
         height: 0,
         isEntered: false,
     });
@@ -73,7 +73,7 @@ const Box = ({ item, Variant, theme }) => {
         const el = contentRef.current;
 
         const updateHeight = () => {
-            setLocal((s) => {
+            set((s) => {
                 s.height = el.scrollHeight;
             });
         };
@@ -88,7 +88,7 @@ const Box = ({ item, Variant, theme }) => {
 
     useEffect(() => {
         const raf = requestAnimationFrame(() => {
-            setLocal((s) => {
+            set((s) => {
                 s.isEntered = true;
             });
         });

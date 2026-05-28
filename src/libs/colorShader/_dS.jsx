@@ -7,7 +7,7 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { color, percent, setLocal } = baseStore.useLocal({
+    const { color, percent, set } = baseStore.useLocal({
         color: "#4f46e5",
         percent: 20,
     });
@@ -39,7 +39,7 @@ const X = () => {
                                     type="text"
                                     value={color}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.color = e.target.value;
                                         })
                                     }
@@ -54,7 +54,7 @@ const X = () => {
                                     max={100}
                                     value={percent}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.percent = Number(e.target.value);
                                         })
                                     }

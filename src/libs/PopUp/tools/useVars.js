@@ -46,7 +46,7 @@ const useVars = (p) => {
     } = p || {};
 
     const isControlled = openProp !== undefined;
-    const { isOpen: internalOpen, setLocal } = baseStore.useLocal({
+    const { isOpen: internalOpen, set } = baseStore.useLocal({
         isOpen: !!defaultOpen,
     });
 
@@ -87,7 +87,7 @@ const useVars = (p) => {
             }
 
             if (!isControlled) {
-                setLocal((s) => {
+                set((s) => {
                     s.isOpen = false;
                 });
             }
@@ -102,7 +102,7 @@ const useVars = (p) => {
             navigate,
             onClose,
             onOpenChange,
-            setLocal,
+            set,
         ],
     );
 

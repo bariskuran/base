@@ -53,7 +53,7 @@ const PAGE_TARGETS = {
 };
 
 const X = () => {
-    const { targetKey, setLocal } = baseStore.useLocal({ targetKey: "window" });
+    const { targetKey, set } = baseStore.useLocal({ targetKey: "window" });
     const refOnly = useRef(null);
     const {
         isOverflowingX: refX,
@@ -192,7 +192,7 @@ const X = () => {
                             <Button
                                 label="window"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.targetKey = "window";
                                     })
                                 }
@@ -201,7 +201,7 @@ const X = () => {
                             <Button
                                 label="documentElement"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.targetKey = "documentElement";
                                     })
                                 }
@@ -210,7 +210,7 @@ const X = () => {
                             <Button
                                 label="body"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.targetKey = "body";
                                     })
                                 }

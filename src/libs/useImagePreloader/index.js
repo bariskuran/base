@@ -29,18 +29,18 @@ const isLoaded = useImagePreloader([ image1, image2, image3, ]);
  */
 export const useImagePreloader = (images = [], options = {}) => {
     const { delayAfterLoad = 0 } = options;
-    const { isLoaded, setLocal } = baseStore.useLocal({ isLoaded: false });
+    const { isLoaded, set } = baseStore.useLocal({ isLoaded: false });
 
     useEffect(() => {
         let cancelled = false;
 
         if (typeof window === "undefined") {
-            setLocal?.({ isLoaded: true });
+            set?.({ isLoaded: true });
             return;
         }
 
         if (!Array.isArray(images) || images.length === 0) {
-            setLocal?.({ isLoaded: true });
+            set?.({ isLoaded: true });
             return;
         }
 
@@ -62,17 +62,17 @@ export const useImagePreloader = (images = [], options = {}) => {
 
                 if (delayAfterLoad > 0) {
                     const t = setTimeout(() => {
-                        if (!cancelled) setLocal?.({ isLoaded: true });
+                        if (!cancelled) set?.({ isLoaded: true });
                     }, delayAfterLoad);
 
                     return () => clearTimeout(t);
                 }
 
-                setLocal?.({ isLoaded: true });
+                set?.({ isLoaded: true });
             } catch (error) {
                 if (cancelled) return;
                 console.error("Error preloading images:", error);
-                setLocal?.({ isLoaded: true });
+                set?.({ isLoaded: true });
             }
         };
 
@@ -85,7 +85,7 @@ export const useImagePreloader = (images = [], options = {}) => {
             cancelled = true;
             if (cleanupDelay) cleanupDelay();
         };
-    }, [setLocal, delayAfterLoad, JSON.stringify(images)]);
+    }, [set, delayAfterLoad, JSON.stringify(images)]);
 
     return isLoaded;
 };

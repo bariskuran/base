@@ -8,7 +8,7 @@ import { Space } from "../Space";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { status, setLocal } = baseStore.useLocal({ status: "idle" });
+    const { status, set } = baseStore.useLocal({ status: "idle" });
 
     return (
         <Ds.page
@@ -30,7 +30,7 @@ const X = () => {
                                 label="Lock scroll"
                                 onClick={() => {
                                     scrollLock(true);
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.status = "locked";
                                     });
                                 }}
@@ -39,7 +39,7 @@ const X = () => {
                                 label="Unlock scroll"
                                 onClick={() => {
                                     scrollLock(false);
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.status = "unlocked";
                                     });
                                 }}

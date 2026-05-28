@@ -41,10 +41,10 @@ export const useExportData = ({ exportData, ...returnedData }, exportedData = {}
 };
 
 export const useExportedData = () => {
-    const { exportedData, setLocal } = baseStore.useLocal({ exportedData: null });
+    const { exportedData, set } = baseStore.useLocal({ exportedData: null });
 
     const exportData = useCallback((data) => {
-        setLocal((s) => {
+        set((s) => {
             if (isShallowEqual(s.exportedData, data)) return;
             s.exportedData = data;
         });

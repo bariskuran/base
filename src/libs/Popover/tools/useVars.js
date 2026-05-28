@@ -6,17 +6,17 @@ import { useExportData } from "../../useExportedData";
 const useVars = (p) => {
     const { exportData, buttonProps = {}, scrollFlexProps = {}, onClose, ...rest } = p || {};
     const [theme] = baseStore.useGlobal((s) => [s.theme]);
-    const { isOpen, setLocal } = baseStore.useLocal({
+    const { isOpen, set } = baseStore.useLocal({
         isOpen: false,
     });
     const dismissWithoutAnimationRef = useRef(false);
 
     const onCloseHandler = useCallback(() => {
-        setLocal((s) => {
+        set((s) => {
             s.isOpen = false;
         });
         onClose?.();
-    }, [onClose, setLocal]);
+    }, [onClose, set]);
 
     const requestClose = useCallback(
         (opts) => {
@@ -52,7 +52,7 @@ const useVars = (p) => {
     }, [p, theme]);
 
     const onClickHandler = () => {
-        setLocal((s) => {
+        set((s) => {
             s.isOpen = !s.isOpen;
         });
     };

@@ -11,7 +11,7 @@ import { generateRandom } from "../generateRandom";
 const longText = generateRandom.loremIpsum(1000);
 
 const X = () => {
-    const { open, open2, open3, open4, open5, setLocalByPath } = baseStore.useLocal({});
+    const { open, open2, open3, open4, open5, setByPath } = baseStore.useLocal({});
 
     return (
         <Ds.page
@@ -41,14 +41,14 @@ const X = () => {
                 description="Keep isOpen in parent state. PopUp only renders the overlay when open is true."
                 code={`import { PopUp, Button, baseStore } from "${SYS.basePath}";
 
-                        const { isOpen, setLocal } = baseStore.useLocal({
+                        const { isOpen, set } = baseStore.useLocal({
                             isOpen: false,
                         });
                         
-                        <Button label="Open modal" onClick={() => setLocal((s) => { s.isOpen = true; })} />
+                        <Button label="Open modal" onClick={() => set((s) => { s.isOpen = true; })} />
                         <PopUp
                             open={isOpen}
-                            onClose={() => setLocal((s) => { s.isOpen = false; })}
+                            onClose={() => set((s) => { s.isOpen = false; })}
                             cancelButtonProps={{ onClick: () => console.log("cancel") }}
                             confirmButtonProps={{ onClick: () => console.log("confirm") }}
                         >
@@ -56,10 +56,10 @@ const X = () => {
                         </PopUp>`}
                 example={
                     <>
-                        <Button label="Open modal" onClick={() => setLocalByPath("open", true)} />
+                        <Button label="Open modal" onClick={() => setByPath("open", true)} />
                         <PopUp
                             open={open}
-                            onClose={() => setLocalByPath("open", false)}
+                            onClose={() => setByPath("open", false)}
                             cancelButtonProps={{
                                 onClick: () => notifier.add("cancelled"),
                             }}
@@ -75,16 +75,16 @@ const X = () => {
             <Ds.block
                 title="Content only"
                 description="Omit cancelButtonProps and confirmButtonProps — only the close icon closes the modal (plus backdrop / Escape)."
-                code={`<PopUp open={open} onClose={() => setLocal((s) => { s.open = false; })}>
+                code={`<PopUp open={open} onClose={() => set((s) => { s.open = false; })}>
                             <Typo>Informational content</Typo>
                         </PopUp>`}
                 example={
                     <>
                         <Button
                             label="Open minimal"
-                            onClick={() => setLocalByPath("open2", true)}
+                            onClick={() => setByPath("open2", true)}
                         />
-                        <PopUp open={open2} onClose={() => setLocalByPath("open2", false)}>
+                        <PopUp open={open2} onClose={() => setByPath("open2", false)}>
                             <Flex.column gap={8}>
                                 <Typo weight={600}>Notice</Typo>
                                 <Typo size="sm" color="foregrounds.tint60">
@@ -98,7 +98,7 @@ const X = () => {
             <Ds.block
                 title="disable backdrop close & esc close"
                 description="When true, clicking the backdrop and pressing Escape does not close."
-                code={`<PopUp open={open} onClose={() => setLocal((s) => { s.open = false; })} disableBackdropClose disableEscClose>
+                code={`<PopUp open={open} onClose={() => set((s) => { s.open = false; })} disableBackdropClose disableEscClose>
                             <Typo>Informational content</Typo>
                         </PopUp>`}
                 example={
@@ -107,13 +107,13 @@ const X = () => {
                             label={undefined}
                             secondary
                             icon={{ icon: "duplicate" }}
-                            onClick={() => setLocalByPath("open3", true)}
+                            onClick={() => setByPath("open3", true)}
                         />
                         <PopUp
                             open={open3}
                             disableBackdropClose
                             disableEscClose
-                            onClose={() => setLocalByPath("open3", false)}
+                            onClose={() => setByPath("open3", false)}
                         >
                             <Flex>
                                 Backdrop close disabled.
@@ -132,7 +132,7 @@ const X = () => {
                 code={`<PopUp
                             open={open}
                             useScrollFlex
-                            onClose={() => setLocal((s) => { s.open = false; })}
+                            onClose={() => set((s) => { s.open = false; })}
                         >
                             {longText}
                         </PopUp>`}
@@ -143,12 +143,12 @@ const X = () => {
                             outlined
                             color="error"
                             prefix={{ icon: "description" }}
-                            onClick={() => setLocalByPath("open4", true)}
+                            onClick={() => setByPath("open4", true)}
                         />
                         <PopUp
                             open={open4}
                             useScrollFlex
-                            onClose={() => setLocalByPath("open4", false)}
+                            onClose={() => setByPath("open4", false)}
                         >
                             <Flex>{longText}</Flex>
                         </PopUp>

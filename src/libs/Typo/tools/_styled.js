@@ -36,12 +36,14 @@ const sharedStyles = ({
     $balance,
     $inlineCopy,
     $overlayCopyLayout,
+    $stackedOverlayCopy,
 }) => {
     return css`
         box-sizing: border-box;
         position: relative;
 
         ${$overlayCopyLayout &&
+        !$stackedOverlayCopy &&
         css`
             margin: 0;
             width: 100%;
@@ -50,10 +52,26 @@ const sharedStyles = ({
             box-sizing: border-box;
         `}
 
+        ${$overlayCopyLayout &&
+        $stackedOverlayCopy &&
+        css`
+            margin: 0;
+            grid-area: 1 / 1;
+            align-self: stretch;
+            width: auto;
+            min-width: 0;
+            max-width: 100%;
+            padding-right: 34rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        `}
+
         ${as === "pre" &&
         css`
             margin: 0;
-            display: block;
+            ${$stackedOverlayCopy ? "" : "display: block;"}
         `}
         ${$maxWidth != null
             ? `max-width: ${$maxWidth};`
@@ -215,7 +233,14 @@ const sharedStyles = ({
 
 const OVERLAY_COPY_HOSTS = new Set(["pre", "code"]);
 
-const wrapperWidth = ({ $width, $maxWidth, $fitContent, $disableMaxWidthLock, $overlayCopy, $as }) => {
+const wrapperWidth = ({
+    $width,
+    $maxWidth,
+    $fitContent,
+    $disableMaxWidthLock,
+    $overlayCopy,
+    $as,
+}) => {
     if (!$overlayCopy) return "auto";
     if ($width != null) return $width;
     if ($fitContent) return "fit-content";
@@ -230,9 +255,15 @@ const wrapperWidth = ({ $width, $maxWidth, $fitContent, $disableMaxWidthLock, $o
 
 const S = {
     wrapper: styled.div`
-        ${({ $overlayCopy, $maxWidth, $width, $fitContent, $disableMaxWidthLock, $as }) => css`
-            display: ${$overlayCopy ? "inline-flex" : "inline-block"};
+        ${({ $overlayCopy, $stackedOverlayCopy, $maxWidth, $width, $fitContent, $disableMaxWidthLock, $as }) => css`
+            display: ${$overlayCopy ? ($stackedOverlayCopy ? "inline-grid" : "inline-flex") : "inline-block"};
             position: relative;
+
+            ${$stackedOverlayCopy &&
+            css`
+                grid-template-columns: minmax(0, max-content);
+                align-items: stretch;
+            `}
 
             ${$overlayCopy &&
             css`
@@ -244,28 +275,58 @@ const S = {
                     $overlayCopy,
                     $as,
                 })};
-                max-width: ${$maxWidth != null ? $maxWidth : $disableMaxWidthLock ? "none" : "min(100%, 600px)"};
+                max-width: ${$maxWidth != null
+                    ? $maxWidth
+                    : $disableMaxWidthLock
+                      ? "none"
+                      : "min(100%, 600px)"};
             `}
         `}
     `,
     overlayCopy: styled.div`
-        position: absolute;
-        top: 0;
-        right: 0;
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-end;
-        margin: 0;
-        padding: 0;
-        line-height: 0;
-        pointer-events: auto;
-        user-select: none;
-        z-index: 2;
+        ${({ $stackedOverlayCopy }) =>
+            $stackedOverlayCopy
+                ? css`
+                      grid-area: 1 / 1;
+                      justify-self: end;
+                      align-self: stretch;
+                      position: relative;
+                      display: flex;
+                      align-items: center;
+                      justify-content: flex-end;
+                      margin: 0;
+                      padding: 0;
+                      line-height: 0;
+                      pointer-events: none;
+                      user-select: none;
+                      z-index: 2;
 
-        & > * {
-            margin: 0;
-            vertical-align: top;
-        }
+                      & > * {
+                          margin: 0;
+                          pointer-events: auto;
+                          align-self: stretch;
+                          height: auto;
+                      }
+                  `
+                : css`
+                      position: absolute;
+                      top: 0;
+                      right: 0;
+                      display: flex;
+                      align-items: flex-start;
+                      justify-content: flex-end;
+                      margin: 0;
+                      padding: 0;
+                      line-height: 0;
+                      pointer-events: auto;
+                      user-select: none;
+                      z-index: 2;
+
+                      & > * {
+                          margin: 0;
+                          vertical-align: top;
+                      }
+                  `}
     `,
 
     inlineContent: styled.span`
@@ -278,8 +339,8 @@ const S = {
 
     inlineCopy: styled.span`
         display: flex;
-        align-items: flex-start;
-        align-self: start;
+        align-items: center;
+        align-self: stretch;
         flex-shrink: 0;
         position: relative;
         z-index: 2;

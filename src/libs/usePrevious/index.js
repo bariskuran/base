@@ -21,13 +21,13 @@ useEffect(() => {
  * @returns {T | undefined}
  */
 export const usePrevious = (value) => {
-    const { previousValue, setLocal } = baseStore.useLocal({ previousValue: null });
+    const { previousValue, set } = baseStore.useLocal({ previousValue: null });
 
     const setPreviousValue = useCallback(
         (value) => {
-            setLocal?.({ previousValue: value });
+            set?.({ previousValue: value });
         },
-        [setLocal],
+        [set],
     );
 
     useEffect(() => {

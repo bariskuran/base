@@ -30,13 +30,13 @@ vi.mock("../../@baseStore", async () => {
 
     const useLocal = (initial = {}) => {
         const [state, setState] = ReactActual.useState(initial || {});
-        const setLocal = (patch) => {
+        const set = (patch) => {
             setState((prev) => {
                 const next = typeof patch === "function" ? patch(prev) : patch;
                 return { ...prev, ...(next || {}) };
             });
         };
-        return { ...state, setLocal };
+        return { ...state, set };
     };
 
     return { baseStore: { globalData, useLocal } };

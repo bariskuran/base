@@ -22,6 +22,8 @@ import { useLocal } from "./useLocal";
  *     id: string,
  *     get: () => T,
  *     set: (updater: ((draft: T) => void) | Partial<T> | T) => T,
+ *     setByPath: (path: string, value: any) => T,
+ *     remove: (path: string) => T,
  *     subscribe: (listener: (next: T, prev: T) => void) => () => void,
  *     getVersion: () => number,
  *   },
@@ -56,8 +58,8 @@ import { useLocal } from "./useLocal";
  * const { count } = baseStore.use(counterStore, optionalSelector);
  *
  * @example for LOCAL - creating a store and selector doesn't necessery.
- * const { setLocal, localStore, ...allValues } = baseStore.useLocal(initialValues || {});
- * setLocal... // set method is the same.
+ * const { set, localStore, ...allValues } = baseStore.useLocal(initialValues || {});
+ * set... // set method is the same.
  *
  * @example
  * const global = baseStore.useGlobal();

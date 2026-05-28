@@ -8,20 +8,20 @@ import { Flex } from "../Flex";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { count, effectCount, useEffectCount, setLocal } = baseStore.useLocal({
+    const { count, effectCount, useEffectCount, set } = baseStore.useLocal({
         count: 0,
         effectCount: 0,
         useEffectCount: 0,
     });
 
     useEffectAfterMount(() => {
-        setLocal((s) => {
+        set((s) => {
             s.effectCount += 1;
         });
     }, [count]);
 
     useEffect(() => {
-        setLocal((s) => {
+        set((s) => {
             s.useEffectCount += 1;
         });
     }, [count]);
@@ -44,7 +44,7 @@ const X = () => {
                         <Button
                             label={`count: ${count}`}
                             onClick={() =>
-                                setLocal((s) => {
+                                set((s) => {
                                     s.count += 1;
                                 })
                             }

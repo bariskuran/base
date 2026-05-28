@@ -12,7 +12,7 @@ const CustomTriangle = () => (
 );
 
 const X = () => {
-    const { isHover, isActive, isPending, isClickEffect, setLocalByPath } = baseStore.useLocal({
+    const { isHover, isActive, isPending, isClickEffect, setByPath } = baseStore.useLocal({
         isHover: false,
         isActive: false,
         isPending: false,
@@ -148,8 +148,8 @@ const X = () => {
                             disableScaleEffect
                         />
                         <div
-                            onMouseEnter={() => setLocalByPath("isHover", true)}
-                            onMouseLeave={() => setLocalByPath("isHover", false)}
+                            onMouseEnter={() => setByPath("isHover", true)}
+                            onMouseLeave={() => setByPath("isHover", false)}
                         >
                             hoverManually
                         </div>
@@ -192,8 +192,8 @@ const X = () => {
                             disablePulseEffect
                         />
                         <div
-                            onMouseEnter={() => setLocalByPath("isActive", true)}
-                            onMouseLeave={() => setLocalByPath("isActive", false)}
+                            onMouseEnter={() => setByPath("isActive", true)}
+                            onMouseLeave={() => setByPath("isActive", false)}
                         >
                             activeManually
                         </div>
@@ -228,8 +228,8 @@ const X = () => {
                             pendingManually={isPending}
                         />
                         <div
-                            onMouseEnter={() => setLocalByPath("isPending", true)}
-                            onMouseLeave={() => setLocalByPath("isPending", false)}
+                            onMouseEnter={() => setByPath("isPending", true)}
+                            onMouseLeave={() => setByPath("isPending", false)}
                         >
                             pendingManually
                         </div>
@@ -278,8 +278,8 @@ const X = () => {
                             clickEffectManually={isClickEffect}
                         />
                         <div
-                            onMouseEnter={() => setLocalByPath("isClickEffect", true)}
-                            onMouseLeave={() => setLocalByPath("isClickEffect", false)}
+                            onMouseEnter={() => setByPath("isClickEffect", true)}
+                            onMouseLeave={() => setByPath("isClickEffect", false)}
                         >
                             clickEffectManually
                         </div>

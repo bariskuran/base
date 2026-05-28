@@ -146,9 +146,9 @@ const publicSitemap = [
         l(() => import("../../constants/UPPER_CASE_ALPHABET_dS")),
     ],
     ["baseDate", "baseDate", l(() => import("../@baseDate/_dS"))],
-    ["baseStore.external", "baseStore.external", l(() => import("../@baseStore/_dS_useAndCreate"))],
-    ["baseStore.local", "baseStore.local", l(() => import("../@baseStore/_dS_useLocal"))],
-    ["baseStore.globalData", "baseStore.globalData", l(() => import("../@baseStore/_dS_useGlobal"))],
+    ["baseStore.use", "baseStore_use", l(() => import("../@baseStore/_dS_useAndCreate"))],
+    ["baseStore.useLocal", "baseStore_useLocal", l(() => import("../@baseStore/_dS_useLocal"))],
+    ["baseStore.useGlobal", "baseStore_useGlobal", l(() => import("../@baseStore/_dS_useGlobal"))],
 ];
 
 const internalSitemap = [

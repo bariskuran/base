@@ -160,7 +160,7 @@ import { useTimer } from "../../useTimer";
 export const useBaseFetch = (callOrCalls, joint = {}) => {
     const { refreshTime = 0, disableAutoStart = false, ...jointSettings } = joint || {};
 
-    const { status, isOk, response, responses, errors, setLocal } = baseStore.useLocal({
+    const { status, isOk, response, responses, errors, set } = baseStore.useLocal({
         status: "idle",
         isOk: null,
         response: undefined,
@@ -228,7 +228,7 @@ export const useBaseFetch = (callOrCalls, joint = {}) => {
 
             cancelFetch("replaced");
 
-            setLocal?.((s) => {
+            set?.((s) => {
                 s.status = "loading";
                 s.isOk = null;
                 s.errors = undefined;
@@ -243,7 +243,7 @@ export const useBaseFetch = (callOrCalls, joint = {}) => {
             const wrappedJoint = {
                 ...joint,
                 onSuccess: (res) => {
-                    setLocal?.((s) => {
+                    set?.((s) => {
                         s.status = "success";
                         s.isOk = true;
                         s.errors = undefined;
@@ -266,7 +266,7 @@ export const useBaseFetch = (callOrCalls, joint = {}) => {
                     scheduleNext();
                 },
                 onError: (res) => {
-                    setLocal?.((s) => {
+                    set?.((s) => {
                         s.status = "error";
                         s.isOk = false;
                         s.errors = res?.errors?.length ? res.errors : undefined;
@@ -289,7 +289,7 @@ export const useBaseFetch = (callOrCalls, joint = {}) => {
                     scheduleNext();
                 },
                 onCancel: (info) => {
-                    setLocal?.((s) => {
+                    set?.((s) => {
                         s.status = "canceled";
                         s.isOk = false;
                         s.errors = undefined;
@@ -310,7 +310,7 @@ export const useBaseFetch = (callOrCalls, joint = {}) => {
 
             return { promise, cancelFetch: cancelInner, meta: options };
         },
-        [cancelFetch, scheduleNext, setLocal],
+        [cancelFetch, scheduleNext, set],
     );
 
     const runRef = useRef(null);

@@ -8,7 +8,7 @@ import { isJsxDescription } from "../isJsxDescription";
 import { templateLiteralTo } from "../../templateLiteralTo";
 
 const Block = ({ title, description, code, example, lastBlock }) => {
-    const { ajax, setLocal } = baseStore.useLocal({
+    const { ajax, set } = baseStore.useLocal({
         ajax: 0,
     });
 
@@ -25,7 +25,7 @@ const Block = ({ title, description, code, example, lastBlock }) => {
                     <S.ajaxArea>
                         <Button.underline
                             onClick={() =>
-                                setLocal((s) => {
+                                set((s) => {
                                     s.ajax = 0;
                                 })
                             }
@@ -45,7 +45,7 @@ const Block = ({ title, description, code, example, lastBlock }) => {
                                 disablePulseEffect: true,
                             }}
                             onClick={() =>
-                                setLocal((s) => {
+                                set((s) => {
                                     s.ajax = 1;
                                 })
                             }

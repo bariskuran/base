@@ -7,10 +7,10 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { count, setLocal } = baseStore.useLocal({ count: 0 });
+    const { count, set } = baseStore.useLocal({ count: 0 });
     const { run, cancel, runNow, isPending } = useDelayedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.count += 1;
             }),
         { delay: 1500, autoCancel: true },
@@ -41,7 +41,7 @@ const X = () => {
                 code={`import { useDelayedFunction } from "${SYS.basePath}";
 
                     const { run, cancel, runNow, isPending } = useDelayedFunction(() => {
-                        setLocal((s) => { s.count += 1; });
+                        set((s) => { s.count += 1; });
                     }, { delay: 1500, autoCancel: true });
 
                     run();

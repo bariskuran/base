@@ -33,7 +33,7 @@ const OutputArea = ({
     outputs,
     path,
     onClose,
-    setLocal,
+    set,
     directValue,
     label = "Output",
     disableFnString = false,
@@ -44,7 +44,7 @@ const OutputArea = ({
             return;
         }
 
-        setLocal?.((s) => {
+        set?.((s) => {
             s.outputs[path] = null;
         });
     };

@@ -6,16 +6,16 @@ export const useDefineStore = (props) => {
     const isExternal = !!store;
 
     /* Local Store */
-    const { setLocal, localStore: storeLocal, ...stateLocal } = baseStore.useLocal();
+    const { set: setFromLocal, localStore: storeLocal, ...stateLocal } = baseStore.useLocal();
 
     /* Injected Store (always call, but always pass a valid store) */
     const safeExternalStore = store || storeLocal;
-    const { set: setUse, ...stateUse } = baseStore.use(safeExternalStore);
+    const { set: setFromUse, ...stateUse } = baseStore.use(safeExternalStore);
 
     /* Define and Return */
     return useMemo(() => {
         const state = isExternal ? stateUse : stateLocal;
-        const set = isExternal ? setUse : setLocal;
+        const set = isExternal ? setFromUse : setFromLocal;
         const activeStore = isExternal ? store : storeLocal;
 
         return {
@@ -23,5 +23,5 @@ export const useDefineStore = (props) => {
             set,
             store: activeStore,
         };
-    }, [isExternal, stateUse, stateLocal, setUse, setLocal, store, storeLocal]);
+    }, [isExternal, stateUse, stateLocal, setFromUse, setFromLocal, store, storeLocal]);
 };

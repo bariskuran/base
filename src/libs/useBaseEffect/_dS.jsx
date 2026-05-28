@@ -23,7 +23,7 @@ const EffectCompareStats = ({ title, effectRuns, renders, useEffect }) => (
 
 const UseEffectColumn = ({ syncKey }) => {
     const runsRef = useRef(0);
-    const { effectRuns, setLocal } = baseStore.useLocal({ effectRuns: 0 });
+    const { effectRuns, set } = baseStore.useLocal({ effectRuns: 0 });
     const renders = useRenderCount();
     const config = { value: 1 };
 
@@ -32,10 +32,10 @@ const UseEffectColumn = ({ syncKey }) => {
     }, [config]);
 
     useEffect(() => {
-        setLocal((s) => {
+        set((s) => {
             s.effectRuns = runsRef.current;
         });
-    }, [syncKey, setLocal]);
+    }, [syncKey, set]);
 
     return (
         <EffectCompareStats title="useEffect" effectRuns={effectRuns} renders={renders} useEffect />
@@ -44,7 +44,7 @@ const UseEffectColumn = ({ syncKey }) => {
 
 const UseBaseEffectColumn = ({ syncKey }) => {
     const runsRef = useRef(0);
-    const { effectRuns, setLocal } = baseStore.useLocal({ effectRuns: 0 });
+    const { effectRuns, set } = baseStore.useLocal({ effectRuns: 0 });
     const renders = useRenderCount();
     const config = { value: 1 };
 
@@ -53,17 +53,17 @@ const UseBaseEffectColumn = ({ syncKey }) => {
     }, [config]);
 
     useEffect(() => {
-        setLocal((s) => {
+        set((s) => {
             s.effectRuns = runsRef.current;
         });
-    }, [syncKey, setLocal]);
+    }, [syncKey, set]);
 
     return <EffectCompareStats title="useBaseEffect" effectRuns={effectRuns} renders={renders} />;
 };
 
 const UseFalsyDepsColumn = ({ useFalsyDeps, label, syncKey }) => {
     const runsRef = useRef(0);
-    const { runs, setLocal } = baseStore.useLocal({ runs: 0 });
+    const { runs, set } = baseStore.useLocal({ runs: 0 });
     const renders = useRenderCount();
     const config = { value: 1 };
 
@@ -76,16 +76,16 @@ const UseFalsyDepsColumn = ({ useFalsyDeps, label, syncKey }) => {
     );
 
     useEffect(() => {
-        setLocal((s) => {
+        set((s) => {
             s.runs = runsRef.current;
         });
-    }, [syncKey, setLocal]);
+    }, [syncKey, set]);
 
     return <EffectCompareStats title={label} effectRuns={runs} renders={renders} />;
 };
 
 const X = () => {
-    const { tick, demoKey, skipEffect, version, skipRuns, user, payload, setLocal } =
+    const { tick, demoKey, skipEffect, version, skipRuns, user, payload, set } =
         baseStore.useLocal({
             tick: 0,
             demoKey: 0,
@@ -100,7 +100,7 @@ const X = () => {
 
     useBaseEffect(
         () => {
-            setLocal((s) => {
+            set((s) => {
                 s.skipRuns += 1;
             });
         },
@@ -110,7 +110,7 @@ const X = () => {
 
     useBaseEffect(
         ({ differences }) => {
-            setLocal((s) => {
+            set((s) => {
                 s.payload = differences;
             });
         },
@@ -151,7 +151,7 @@ const X = () => {
                             <Button
                                 label="Parent re-render"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.tick += 1;
                                     })
                                 }
@@ -164,7 +164,7 @@ const X = () => {
                             <Button.plain
                                 label="Reset"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.tick = 0;
                                         s.demoKey += 1;
                                     })
@@ -195,7 +195,7 @@ const X = () => {
                             <Button
                                 label={`skipEffect: ${skipEffect}`}
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.skipEffect = !s.skipEffect;
                                     })
                                 }
@@ -204,7 +204,7 @@ const X = () => {
                             <Button
                                 label={`Change dep (${version})`}
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.version += 1;
                                     })
                                 }
@@ -238,7 +238,7 @@ const X = () => {
                             <Button
                                 label="Parent re-render"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.tick += 1;
                                     })
                                 }
@@ -249,7 +249,7 @@ const X = () => {
                             <Button.plain
                                 label="Reset"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.tick = 0;
                                         s.demoKey += 1;
                                     })
@@ -291,7 +291,7 @@ const X = () => {
                             <Button
                                 label="age +1"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.user = { ...s.user, age: s.user.age + 1 };
                                     })
                                 }
@@ -299,7 +299,7 @@ const X = () => {
                             <Button
                                 label="toggle name"
                                 onClick={() =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.user = {
                                             ...s.user,
                                             name: s.user.name === "Baris" ? "Barış" : "Baris",

@@ -6,7 +6,7 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { input, output, setLocal } = baseStore.useLocal({
+    const { input, output, set } = baseStore.useLocal({
         input: "primary",
         output: "hex6",
     });
@@ -39,7 +39,7 @@ colorFind("#07f", { output: "hex8" });`}
                                     type="text"
                                     value={input}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.input = e.target.value;
                                         })
                                     }
@@ -52,7 +52,7 @@ colorFind("#07f", { output: "hex8" });`}
                                 <select
                                     value={output}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.output = e.target.value;
                                         })
                                     }

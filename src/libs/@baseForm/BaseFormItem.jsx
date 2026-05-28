@@ -67,7 +67,7 @@ export const BaseFormItem = (itemProps = {}) => {
      *
      * -------------------------------------------------
      */
-    const { isFocused, isBlured, setLocal } = baseStore.useLocal({});
+    const { isFocused, isBlured, set } = baseStore.useLocal({});
     /**
      * -------------------------------------------------
      *
@@ -210,7 +210,7 @@ onDropdownStatusChange
     const handleOnFocus = (e) => {
         onFocus?.({ ...generateHandlerPack(), event: e });
         parentOnFocus?.(e);
-        setLocal((s) => {
+        set((s) => {
             s.isFocused = true;
             s.isBlured = false;
         });
@@ -218,7 +218,7 @@ onDropdownStatusChange
     const handleOnBlur = (e) => {
         onBlur?.({ ...generateHandlerPack(), event: e });
         parentOnBlur?.(e);
-        setLocal((s) => {
+        set((s) => {
             s.isFocused = false;
             s.isBlured = true;
         });

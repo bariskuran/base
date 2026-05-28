@@ -83,7 +83,7 @@ export const useVars = ({
     const navigation = useNavigation();
     const isPending = navigation.state === "loading" || !!pendingManually;
 
-    const { setLocal, showOnClickValues, isHover, clickBlocker, isActive, isPressed } =
+    const { set, showOnClickValues, isHover, clickBlocker, isActive, isPressed } =
         baseStore.useLocal({
             showOnClickValues: false,
             isHover: false,
@@ -136,7 +136,7 @@ export const useVars = ({
         suffix,
         icon,
         delay,
-        setLocal,
+        set,
         onDelayStart,
         onDelayEnd,
         runAction,
@@ -316,14 +316,14 @@ export const useVars = ({
 
         onPointerDown: () => {
             if (isClickEffectControlled) return;
-            setLocal((s) => {
+            set((s) => {
                 s.isPressed = true;
             });
         },
 
         onPointerUp: () => {
             if (isClickEffectControlled) return;
-            setLocal((s) => {
+            set((s) => {
                 s.isPressed = false;
             });
         },
@@ -360,19 +360,19 @@ export const useVars = ({
 
     const scaleWrapperProps = {
         onPointerLeave: () =>
-            setLocal((s) => {
+            set((s) => {
                 s.isHover = false;
                 if (!isClickEffectControlled) s.isPressed = false;
             }),
 
         onPointerCancel: () =>
-            setLocal((s) => {
+            set((s) => {
                 s.isHover = false;
                 if (!isClickEffectControlled) s.isPressed = false;
             }),
 
         onPointerEnter: () =>
-            setLocal((s) => {
+            set((s) => {
                 s.isHover = true;
             }),
     };
@@ -417,7 +417,7 @@ export const useVars = ({
             ...timers,
             navigate,
             getTimerBaseName,
-            setLocal,
+            set,
             url,
             isExternalUrl,
             isMatch,

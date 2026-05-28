@@ -15,7 +15,7 @@ import { getRefSize, getTargetByRefOrId } from "./refUtils";
 import { isFlexRowParent } from "./containerDimensions";
 
 export const useScrollFlexMeasureEffects = ({
-    setLocal,
+    set,
     containerRef,
     shellRef,
     contentRef,
@@ -50,7 +50,7 @@ export const useScrollFlexMeasureEffects = ({
                 ? null
                 : measureContentIntrinsicAxisPx(content, "y");
 
-            setLocal((s) => {
+            set((s) => {
                 if (nextW != null && s.contentWidthPx !== nextW) {
                     s.contentWidthPx = nextW;
                 }
@@ -86,7 +86,7 @@ export const useScrollFlexMeasureEffects = ({
         scrollBarExportedData.right,
         scrollBarExportedData.top,
         scrollBarExportedData.bottom,
-        setLocal,
+        set,
         containerRef,
         contentRef,
         shellRef,
@@ -115,7 +115,7 @@ export const useScrollFlexMeasureEffects = ({
                     (parentHeight > 0 ? `min(${parentHeight}px, 100vh)` : null) ||
                     "200px";
 
-                setLocal((s) => {
+                set((s) => {
                     if (s.hasMeasuredHeight && s.measuredHeight === nextHeight) return;
 
                     s.hasMeasuredHeight = true;
@@ -162,7 +162,7 @@ export const useScrollFlexMeasureEffects = ({
 
             const nextHeight = `${px}px`;
 
-            setLocal((s) => {
+            set((s) => {
                 if (
                     s.hasMeasuredHeight &&
                     s.measuredHeight === nextHeight &&
@@ -195,7 +195,7 @@ export const useScrollFlexMeasureEffects = ({
         heightByRef,
         scrollBarExportedData,
         scrollBarProps,
-        setLocal,
+        set,
         shellRef,
     ]);
 
@@ -209,7 +209,7 @@ export const useScrollFlexMeasureEffects = ({
             const syncRefWidth = () => {
                 const nextWidth = getRefSize({ ref: source, axis: "x" });
 
-                setLocal((s) => {
+                set((s) => {
                     if (s.measuredWidth === nextWidth) return;
 
                     s.measuredWidth = nextWidth;
@@ -236,7 +236,7 @@ export const useScrollFlexMeasureEffects = ({
             const useFlexGrow = isFlexRowParent(parent);
 
             if (useFlexGrow) {
-                setLocal((s) => {
+                set((s) => {
                     if (s.autoWidthFlexGrow && s.measuredWidth == null) return;
 
                     s.autoWidthFlexGrow = true;
@@ -269,7 +269,7 @@ export const useScrollFlexMeasureEffects = ({
 
             const nextWidth = `${px}px`;
 
-            setLocal((s) => {
+            set((s) => {
                 if (
                     s.autoWidthFlexGrow === false &&
                     s.measuredWidth === nextWidth &&
@@ -300,7 +300,7 @@ export const useScrollFlexMeasureEffects = ({
         hasWidthRefOrId,
         scrollBarExportedData,
         scrollBarProps,
-        setLocal,
+        set,
         shellRef,
         widthById,
         widthByRef,

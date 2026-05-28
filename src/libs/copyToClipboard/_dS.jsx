@@ -8,7 +8,7 @@ import { Space } from "../Space";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { lastBasic, setLocal } = baseStore.useLocal({ lastBasic: null });
+    const { lastBasic, set } = baseStore.useLocal({ lastBasic: null });
 
     return (
         <Ds.page
@@ -37,7 +37,7 @@ const X = () => {
                             label="Copy text"
                             onClick={() => {
                                 const ok = copyToClipboard("Hello world");
-                                setLocal((s) => {
+                                set((s) => {
                                     s.lastBasic = ok ? "success" : "failed";
                                 });
                             }}

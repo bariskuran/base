@@ -15,25 +15,29 @@ export const use = (store, selector, equalityFn) => {
 
     const getStoreVersion = store.getVersion || (() => undefined);
 
-    const attachSet = (selected) => {
-        const set = store.set;
+    const getStoreAPI = () => ({
+        get: store.get,
+        set: store.set,
+        setByPath: store.setByPath,
+        remove: store.remove,
+    });
 
-        if (Array.isArray(selected)) {
-            if (selected.includes(set)) return selected;
-            return [...selected, set];
+    const withStoreAPI = (value) => {
+        const api = getStoreAPI();
+
+        if (Array.isArray(value)) return value;
+
+        if (value && typeof value === "object") {
+            return { ...value, ...api };
         }
 
-        if (selected && typeof selected === "object") {
-            return { ...selected, set };
-        }
-
-        return [selected, set];
+        return value;
     };
 
     const getSnapshot = useMemo(() => {
         return () => {
             const state = store.get();
-            const stateWithSet = attachSet(state);
+            const stateWithAPI = withStoreAPI(state);
             const currentVersion = getStoreVersion();
 
             const isEqual =
@@ -53,18 +57,17 @@ export const use = (store, selector, equalityFn) => {
                     return cacheRef.current.value;
                 }
 
-                const base = stateWithSet;
-                const value = base;
+                const value = stateWithAPI;
 
                 cacheRef.current.has = true;
-                cacheRef.current.base = base;
+                cacheRef.current.base = stateWithAPI;
                 cacheRef.current.value = value;
                 cacheRef.current.stateVersion = currentVersion;
 
                 return value;
             }
 
-            const baseSelected = selector(stateWithSet);
+            const baseSelected = selector(stateWithAPI);
 
             if (cacheRef.current.has) {
                 if (isEqual(cacheRef.current.base, baseSelected)) {

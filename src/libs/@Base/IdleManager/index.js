@@ -22,7 +22,7 @@ export const IdleManager = () => {
         return allowedIdleMinutes * 60 * 1000;
     }, [allowedIdleMinutes]);
 
-    const { isIdle, setLocal } = baseStore.useLocal({ isIdle: false });
+    const { isIdle, set } = baseStore.useLocal({ isIdle: false });
     const { set: setGlobal } = baseStore.useGlobal();
 
     useEffect(() => {
@@ -47,7 +47,7 @@ export const IdleManager = () => {
         if (isIdleRef.current) return;
 
         isIdleRef.current = true;
-        setLocal?.({ isIdle: true });
+        set?.({ isIdle: true });
 
         const nowTs = Date.now();
         const idleForMs = nowTs - (lastActiveAtRef.current || nowTs);
@@ -66,7 +66,7 @@ export const IdleManager = () => {
         } catch (err) {
             console.error("[baseIdleManager] onIdle callback error:", err);
         }
-    }, [enabled, allowedIdleMs, setLocal, allowedIdleMinutes]);
+    }, [enabled, allowedIdleMs, set, allowedIdleMinutes]);
 
     const { start, stop } = useTimer({
         timerName: "idleManager",
@@ -93,7 +93,7 @@ export const IdleManager = () => {
 
             if (isIdleRef.current) {
                 isIdleRef.current = false;
-                setLocal?.({ isIdle: false });
+                set?.({ isIdle: false });
 
                 console.log(`[baseIdleManager] User is active again (${reason}). System resumed.`);
 
@@ -106,7 +106,7 @@ export const IdleManager = () => {
 
             restartTimer(reason);
         },
-        [enabled, allowedIdleMs, restartTimer, setLocal],
+        [enabled, allowedIdleMs, restartTimer, set],
     );
 
     const onVisibilityChange = useCallback(() => {
@@ -121,7 +121,7 @@ export const IdleManager = () => {
             startedOnceRef.current = false;
             stop?.();
             isIdleRef.current = false;
-            setLocal?.({ isIdle: false });
+            set?.({ isIdle: false });
             return;
         }
 
@@ -132,7 +132,7 @@ export const IdleManager = () => {
         // enabled + süre hazır: init
         lastActiveAtRef.current = Date.now();
         isIdleRef.current = false;
-        setLocal?.({ isIdle: false });
+        set?.({ isIdle: false });
 
         startedOnceRef.current = true;
         restartTimer("init");
@@ -141,7 +141,7 @@ export const IdleManager = () => {
             // unmount
             stop?.();
         };
-    }, [enabled, allowedIdleMs, allowedIdleMinutes, restartTimer, stop, setLocal]);
+    }, [enabled, allowedIdleMs, allowedIdleMinutes, restartTimer, stop, set]);
 
     const eventListenerProps = useMemo(
         () => [

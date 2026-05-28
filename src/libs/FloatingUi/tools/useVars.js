@@ -59,8 +59,8 @@ const useVars = (p) => {
 
     const {
         isMounted,
-        setLocal,
-        setLocalByPath,
+        set,
+        setByPath,
         positionX,
         positionY,
         alignX,
@@ -94,11 +94,11 @@ const useVars = (p) => {
     }, []);
 
     useEffect(() => {
-        setLocalByPath("isMounted", true);
-    }, [setLocalByPath]);
+        setByPath("isMounted", true);
+    }, [setByPath]);
 
-    const setLocalByPathRef = useRef(setLocalByPath);
-    setLocalByPathRef.current = setLocalByPath;
+    const setByPathRef = useRef(setByPath);
+    setByPathRef.current = setByPath;
 
     const getPos = useCallback(() => {
         if (status !== "opened") return;
@@ -106,7 +106,7 @@ const useVars = (p) => {
         getPosition({
             childrenRef,
             floatingRef,
-            setLocal,
+            set,
             alignXFromUser,
             alignYFromUser,
             currentAlignX: alignX,
@@ -114,14 +114,14 @@ const useVars = (p) => {
             resolveFloatingMount,
             floatingLayerEl: floatingMountHostRef.current,
         });
-    }, [status, setLocal, alignXFromUser, alignYFromUser, alignX, alignY, resolveFloatingMount]);
+    }, [status, set, alignXFromUser, alignYFromUser, alignX, alignY, resolveFloatingMount]);
 
     const delayMs = 500;
     const delayedClose = useMemo(
         () =>
             delayedFunction(
                 () => {
-                    setLocalByPathRef.current("status", "closed");
+                    setByPathRef.current("status", "closed");
                 },
                 { delay: delayMs },
             ),
@@ -166,7 +166,7 @@ const useVars = (p) => {
     const dismissInstant = useCallback(() => {
         if (status === "closing" || status === "closed") return;
         delayedClose.cancel();
-        setLocal((s) => {
+        set((s) => {
             s.status = "closed";
             s.blockVisibility = true;
         });
@@ -175,18 +175,18 @@ const useVars = (p) => {
                 if (s.popOverId === floatingExclusiveId) s.popOverId = null;
             });
         }
-    }, [status, delayedClose, setLocal, setGlobal, disableMultipleBlock, floatingExclusiveId]);
+    }, [status, delayedClose, set, setGlobal, disableMultipleBlock, floatingExclusiveId]);
 
     const openHandler = useCallback(() => {
         if (status === "opened") return;
         delayedClose.cancel();
-        setLocal((s) => {
+        set((s) => {
             s.status = "opened";
             s.blockVisibility = true;
             s.alignX = alignXFromUser || "center";
             s.alignY = alignYFromUser || "top";
         });
-    }, [status, setLocal, alignXFromUser, alignYFromUser, delayedClose]);
+    }, [status, set, alignXFromUser, alignYFromUser, delayedClose]);
 
     const closeHandler = useCallback((options) => {
         if (options?.instant) {
@@ -210,13 +210,13 @@ const useVars = (p) => {
             return;
         }
         delayedClose.cancel();
-        setLocalByPath("status", "closing");
+        setByPath("status", "closing");
         delayedClose.run();
     }, [
         status,
         dismissWithoutAnimationRef,
         delayedClose,
-        setLocalByPath,
+        setByPath,
         dismissInstant,
     ]);
 
@@ -411,8 +411,8 @@ const useVars = (p) => {
             status,
             colors,
             Variant,
-            setLocal,
-            setLocalByPath,
+            set,
+            setByPath,
             childrenRef: setChildrenNode,
             floatingRef: setFloatingNode,
             open,

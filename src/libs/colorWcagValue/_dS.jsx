@@ -43,7 +43,7 @@ const ColorPicker = ({ value, onChange, label }) => {
 };
 
 const X = () => {
-    const { colorA, colorB, setLocal } = baseStore.useLocal({
+    const { colorA, colorB, set } = baseStore.useLocal({
         colorA: "#ffffff",
         colorB: "#111111",
     });
@@ -68,7 +68,7 @@ const X = () => {
                             <ColorPicker
                                 value={colorA}
                                 onChange={(newValue) =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.colorA = newValue;
                                     })
                                 }
@@ -77,7 +77,7 @@ const X = () => {
                             <ColorPicker
                                 value={colorB}
                                 onChange={(newValue) =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.colorB = newValue;
                                     })
                                 }

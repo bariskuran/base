@@ -59,6 +59,7 @@ export const Base = (props) => {
         $balance: vars.balance,
         $inlineCopy: vars.canUseInlineCopy,
         $overlayCopyLayout: vars.shouldUseOverlayCopy,
+        $stackedOverlayCopy: vars.shouldUseStackedOverlayCopy,
     };
 
     const CopyButton = (
@@ -130,6 +131,7 @@ export const Base = (props) => {
     return (
         <S.wrapper
             $overlayCopy={vars.shouldUseOverlayCopy}
+            $stackedOverlayCopy={vars.shouldUseStackedOverlayCopy}
             $as={vars.as}
             $maxWidth={vars.maxWidth}
             $width={vars.width}
@@ -137,7 +139,11 @@ export const Base = (props) => {
             $disableMaxWidthLock={vars.disableMaxWidthLock}
         >
             {Main}
-            {vars.shouldUseOverlayCopy && <S.overlayCopy>{CopyButton}</S.overlayCopy>}
+            {vars.shouldUseOverlayCopy && (
+                <S.overlayCopy $stackedOverlayCopy={vars.shouldUseStackedOverlayCopy}>
+                    {CopyButton}
+                </S.overlayCopy>
+            )}
         </S.wrapper>
     );
 };

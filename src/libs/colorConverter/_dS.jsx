@@ -16,7 +16,7 @@ const stringifyInlineArrays = (value) =>
     });
 
 const X = () => {
-    const { colorInput, setLocal } = baseStore.useLocal({ colorInput: "#3498db" });
+    const { colorInput, set } = baseStore.useLocal({ colorInput: "#3498db" });
     const outStr = colorConverter(colorInput);
     const outStrText =
         outStr && Object.keys(outStr).length > 0
@@ -49,7 +49,7 @@ const X = () => {
                                 type="text"
                                 value={colorInput}
                                 onChange={(e) =>
-                                    setLocal((state) => {
+                                    set((state) => {
                                         state.colorInput = e.target.value;
                                     })
                                 }

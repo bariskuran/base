@@ -304,7 +304,7 @@ const X = () => {
                     },
                     baseStoreSet: {
                         description:
-                            "set from baseStore.use (or setLocal from useLocal). Draft merge at setPath. Takes precedence over baseStore.",
+                            "set from baseStore.use (or set from useLocal). Draft merge at setPath. Takes precedence over baseStore.",
                         type: "function",
                     },
                     setPath: {

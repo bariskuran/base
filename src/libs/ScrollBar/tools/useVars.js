@@ -83,7 +83,7 @@ const useVars = (p) => {
         dragStartClient,
         dragStartScroll,
         isScrollbarActive,
-        setLocal,
+        set,
     } = baseStore.useLocal({
         resolvedHost: null,
         resolvedSource: null,
@@ -171,14 +171,14 @@ const useVars = (p) => {
         const explicitPositionEl = resolvePositionSource();
         const layoutHostEl = host;
 
-        setLocal((s) => {
+        set((s) => {
             /* Bar / hostRect geometrisi: positionSourceByRef varsa o; yoksa scrollbar'ın bağlı olduğu host.
                Kaydırılan içerik her zaman `source` (resolvedSource / normalizedScrollSource). */
             s.resolvedHost = explicitPositionEl || layoutHostEl || source;
             s.resolvedSource = source;
             s.overlayHost = (explicitPositionEl || layoutHostEl)?.parentElement || null;
         });
-    }, [body, setLocal, sourceByRef, sourceById, positionSourceByRef]);
+    }, [body, set, sourceByRef, sourceById, positionSourceByRef]);
 
     const normalizedScrollSource =
         typeof document === "undefined" ||
@@ -197,18 +197,18 @@ const useVars = (p) => {
         () =>
             delayedFunction(
                 () => {
-                    setLocal((s) => {
+                    set((s) => {
                         s.isScrollbarActive = false;
                     });
                 },
                 { delay: 500 },
             ),
-        [setLocal],
+        [set],
     );
 
     const activateScrollbar = () => {
         deactivateScrollbar.cancel();
-        setLocal((s) => {
+        set((s) => {
             s.isScrollbarActive = true;
         });
     };
@@ -222,7 +222,7 @@ const useVars = (p) => {
             isWindowLike,
         });
 
-        setLocal((s) => {
+        set((s) => {
             s.hostRect = rect;
         });
     };
@@ -262,7 +262,7 @@ const useVars = (p) => {
             visualSource: visualHost,
         });
 
-        setLocal((s) => {
+        set((s) => {
             s.x = {
                 ...xProps,
                 isOverflowing: overflow.isOverflowingX,
@@ -698,7 +698,7 @@ const useVars = (p) => {
         const client = getClientValueForAxis(axis, e);
         const axisState = axis === "y" ? y : x;
 
-        setLocal((s) => {
+        set((s) => {
             s.dragAxis = axis;
             s.dragStartClient = client;
             s.dragStartScroll = axisState.scrollPos;
@@ -728,7 +728,7 @@ const useVars = (p) => {
     const onDragEnd = () => {
         if (!dragAxis) return;
 
-        setLocal((s) => {
+        set((s) => {
             s.dragAxis = null;
         });
     };

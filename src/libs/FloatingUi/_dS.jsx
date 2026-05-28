@@ -26,7 +26,7 @@ const Template = ({ children }) => (
 );
 
 const X = () => {
-    const { selectedAlignX, selectedAlignY, setLocal } = baseStore.useLocal({
+    const { selectedAlignX, selectedAlignY, set } = baseStore.useLocal({
         selectedAlignX: "center",
         selectedAlignY: "top",
     });
@@ -82,7 +82,7 @@ const X = () => {
                                 options={alignXOptions}
                                 value={selectedAlignX}
                                 onChange={(value) => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.selectedAlignX = value;
                                     });
                                 }}
@@ -92,7 +92,7 @@ const X = () => {
                                 options={alignYOptions}
                                 value={selectedAlignY}
                                 onChange={(value) => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.selectedAlignY = value;
                                     });
                                 }}

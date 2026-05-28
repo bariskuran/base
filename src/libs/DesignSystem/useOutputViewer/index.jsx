@@ -22,11 +22,11 @@ const formatFnSnippet = (fn) => {
 };
 
 const useOutputViewer = () => {
-    const { outputs, actives, setLocal } = baseStore.useLocal({ outputs: {}, actives: {} });
+    const { outputs, actives, set } = baseStore.useLocal({ outputs: {}, actives: {} });
 
     const setOutput = ({ path, activeLabel, output, value, fnString = "" }) => {
         const out = output !== undefined ? output : value;
-        setLocal((s) => {
+        set((s) => {
             s.outputs[path] = {
                 fn: fnString,
                 output: formatOutput(out),
@@ -36,7 +36,7 @@ const useOutputViewer = () => {
     };
 
     const clearOutput = (path) =>
-        setLocal((s) => {
+        set((s) => {
             s.outputs[path] = null;
             s.actives[path] = null;
         });

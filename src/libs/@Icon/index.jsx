@@ -47,7 +47,7 @@ export const Icon = ({
 }) => {
     const [iconsLibraryRaw, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
 
-    const { isSelfHover, setLocal } = baseStore.useLocal({
+    const { isSelfHover, set } = baseStore.useLocal({
         isSelfHover: false,
     });
 
@@ -162,12 +162,12 @@ export const Icon = ({
                 $aspectW={flat ? baseMeta.viewW : 1}
                 $aspectH={flat ? baseMeta.viewH : 1}
                 onMouseEnter={() =>
-                    setLocal((s) => {
+                    set((s) => {
                         s.isSelfHover = true;
                     })
                 }
                 onMouseLeave={() =>
-                    setLocal((s) => {
+                    set((s) => {
                         s.isSelfHover = false;
                     })
                 }

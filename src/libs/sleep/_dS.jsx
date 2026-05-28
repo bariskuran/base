@@ -7,7 +7,7 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { label, setLocal } = baseStore.useLocal({ label: "Ready" });
+    const { label, set } = baseStore.useLocal({ label: "Ready" });
 
     return (
         <Ds.page title="sleep()" releasedOn="1.0.0" description="Promise based delay helper.">
@@ -21,11 +21,11 @@ const X = () => {
                         <Button
                             label={label}
                             onClick={async () => {
-                                setLocal((s) => {
+                                set((s) => {
                                     s.label = "Waiting 2000ms...";
                                 });
                                 await sleep(2000);
-                                setLocal((s) => {
+                                set((s) => {
                                     s.label = "Done";
                                 });
                             }}

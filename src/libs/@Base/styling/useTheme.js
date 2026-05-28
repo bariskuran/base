@@ -6,6 +6,17 @@ import { colorShader } from "../../colorShader";
 
 const isString = (v) => typeof v === "string" && v.length > 0;
 
+const THEME_SCALE_KEYS = [
+    ["background", "backgrounds"],
+    ["foreground", "foregrounds"],
+    ["grey", "greys"],
+    ["primary", "primarys"],
+    ["secondary", "secondarys"],
+    ["error", "errors"],
+    ["success", "successs"],
+    ["warning", "warnings"],
+];
+
 const buildGreyScale = () => {
     const out = {};
 
@@ -47,12 +58,24 @@ const buildThemeWithScales = (palette) => {
     return { colors, scales };
 };
 
+const packTheme = ({ colors, scales }) => {
+    const packed = { ...(colors || {}) };
+
+    for (const [scaleKey, packedKey] of THEME_SCALE_KEYS) {
+        if (scales?.[scaleKey]) {
+            packed[packedKey] = scales[scaleKey];
+        }
+    }
+
+    return packed;
+};
+
 export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) => {
     const {
         theme: currentColors,
         currentThemeKey,
         currentThemeLabelObj,
-        setLocal,
+        set,
     } = baseStore.useLocal({
         theme: {},
         currentThemeKey: null,
@@ -65,8 +88,8 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
 
         const pickColorsOnly = (t) => {
             if (!t || typeof t !== "object") return {};
-            const { _props, ...colors } = t;
-            return colors || {};
+            const { _props, ...rest } = t;
+            return rest || {};
         };
 
         const defaultKey = keys.find((k) => input?.[k]?._props?.isDefault) || keys[0] || "default";
@@ -84,24 +107,22 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
             const colorsRaw = pickColorsOnly(t);
 
             const mergedRaw = { ...basePaletteRaw, ...colorsRaw };
-            const { colors, scales } = buildThemeWithScales(mergedRaw);
+            const built = buildThemeWithScales(mergedRaw);
 
             out[k] = {
                 _props: {
                     ...(t._props || {}),
                     ...(k === defaultKey ? { isDefault: true } : {}),
                 },
-                ...colors,
-                _scales: scales,
+                ...packTheme(built),
             };
         }
 
         if (!out[defaultKey]) {
-            const { colors, scales } = buildThemeWithScales(basePaletteRaw);
+            const built = buildThemeWithScales(basePaletteRaw);
             out[defaultKey] = {
                 _props: { isDefault: true, label: { tr: "Varsayılan", en: "Default" } },
-                ...colors,
-                _scales: scales,
+                ...packTheme(built),
             };
         }
 
@@ -121,25 +142,14 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
         const t = preparedThemes?.[selectedKey];
         if (!t) return;
 
-        const { _props, _scales, ...colors } = t;
+        const { _props, ...themePacked } = t;
 
-        setLocal?.({
-            theme: {
-                ...colors,
-                backgrounds: _scales?.background || {},
-                foregrounds: _scales?.foreground || {},
-                greys: _scales?.grey || {},
-                primarys: _scales?.primary || {},
-                secondarys: _scales?.secondary || {},
-                errors: _scales?.error || {},
-                successs: _scales?.success || {},
-                warnings: _scales?.warning || {},
-                _scales: _scales || {},
-            },
+        set?.({
+            theme: themePacked,
             currentThemeKey: selectedKey,
             currentThemeLabelObj: _props?.label || null,
         });
-    }, [preparedThemes, selectedKey, setLocal]);
+    }, [preparedThemes, selectedKey, set]);
 
     const setTheme = useCallback(
         (themeKey) => {
@@ -153,34 +163,21 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
             const chosen = next || preparedThemes?.[fallbackKey];
             if (!chosen) return;
 
-            const { _props, _scales, ...colors } = chosen;
+            const { _props, ...themePacked } = chosen;
 
-            const packed = {
-                ...colors,
-                backgrounds: _scales?.background || {},
-                foregrounds: _scales?.foreground || {},
-                greys: _scales?.grey || {},
-                primarys: _scales?.primary || {},
-                secondarys: _scales?.secondary || {},
-                errors: _scales?.error || {},
-                successs: _scales?.success || {},
-                warnings: _scales?.warning || {},
-                _scales: _scales || {},
-            };
-
-            setLocal?.({
-                theme: packed,
+            set?.({
+                theme: themePacked,
                 currentThemeKey: themeKey,
                 currentThemeLabelObj: _props?.label || null,
             });
 
             baseStore.globalData.set?.({
-                theme: packed,
+                theme: themePacked,
                 currentThemeLabel: themeKey,
                 isThemeReady: true,
             });
         },
-        [preparedThemes, setLocal],
+        [preparedThemes, set],
     );
 
     useEffect(() => {

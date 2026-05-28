@@ -7,7 +7,7 @@ import { Flex } from "../Flex";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { count, setLocal } = baseStore.useLocal({ count: 0 });
+    const { count, set } = baseStore.useLocal({ count: 0 });
     const [previous] = usePrevious(count);
 
     return (
@@ -22,7 +22,7 @@ const [prev, setPrev] = usePrevious(value);`}
                         <Button
                             label={`count: ${count}`}
                             onClick={() =>
-                                setLocal((s) => {
+                                set((s) => {
                                     s.count += 1;
                                 })
                             }

@@ -46,7 +46,7 @@ export const useObserver = (options = {}) => {
 
     const supportsIO = typeof window !== "undefined" && typeof IntersectionObserver !== "undefined";
 
-    const { inViewport, node, setLocal } = baseStore.useLocal({
+    const { inViewport, node, set } = baseStore.useLocal({
         inViewport: supportsIO ? false : true,
         node: null,
     });
@@ -61,9 +61,9 @@ export const useObserver = (options = {}) => {
 
     const ref = useCallback(
         (el) => {
-            setLocal?.({ node: el });
+            set?.({ node: el });
         },
-        [setLocal],
+        [set],
     );
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export const useObserver = (options = {}) => {
             ([entry]) => {
                 const isIn = !!entry.isIntersecting;
 
-                setLocal?.((d) => {
+                set?.((d) => {
                     if (d.inViewport !== isIn) {
                         d.inViewport = isIn;
                     }
@@ -92,7 +92,7 @@ export const useObserver = (options = {}) => {
         observer.observe(node);
 
         return () => observer.disconnect();
-    }, [supportsIO, node, threshold, rootMargin, root, setLocal, disable]);
+    }, [supportsIO, node, threshold, rootMargin, root, set, disable]);
 
     return useMemo(() => ({ ref, inViewport: !!inViewport }), [ref, inViewport]);
 };

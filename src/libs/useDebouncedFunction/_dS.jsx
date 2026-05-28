@@ -7,14 +7,14 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { count, throttleCount, setLocal } = baseStore.useLocal({
+    const { count, throttleCount, set } = baseStore.useLocal({
         count: 0,
         throttleCount: 0,
     });
 
     const runDebounced = useDebouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.count += 1;
             }),
         { delay: 1000 },
@@ -22,7 +22,7 @@ const X = () => {
 
     const runThrottle = useDebouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.throttleCount += 1;
             }),
         { delay: 1000, isThrottle: true },

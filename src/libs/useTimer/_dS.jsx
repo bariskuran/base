@@ -7,13 +7,13 @@ import { Flex } from "../Flex";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { ticks, setLocal } = baseStore.useLocal({ ticks: 0 });
+    const { ticks, set } = baseStore.useLocal({ ticks: 0 });
     const timer = useTimer({
         timerName: "demoTimer",
         refreshTime: 700,
         loop: true,
         onEnd: () =>
-            setLocal((s) => {
+            set((s) => {
                 s.ticks += 1;
             }),
     });

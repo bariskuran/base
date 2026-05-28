@@ -5,10 +5,10 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { count, setLocal } = baseStore.useLocal({ count: 0 });
+    const { count, set } = baseStore.useLocal({ count: 0 });
     useScrollThrottle(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.count += 1;
             }),
         120,

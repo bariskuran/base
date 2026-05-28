@@ -30,7 +30,7 @@ const {scrollTop, scrollLeft, directionX, directionY, calc} = useScrollTopLeft({
 export const useScrollTopLeft = (options = {}) => {
     const { source = typeof window !== "undefined" ? window : undefined, delay = 0 } = options;
 
-    const { top, left, directionX, directionY, setLocal } = baseStore.useLocal({
+    const { top, left, directionX, directionY, set } = baseStore.useLocal({
         top: 0,
         left: 0,
         directionX: "none",
@@ -54,7 +54,7 @@ export const useScrollTopLeft = (options = {}) => {
 
         if (!prevRef.current.inited) {
             prevRef.current = { top: nextTop, left: nextLeft, inited: true };
-            setLocal?.({ top: nextTop, left: nextLeft, directionX: "none", directionY: "none" });
+            set?.({ top: nextTop, left: nextLeft, directionX: "none", directionY: "none" });
             return;
         }
 
@@ -71,13 +71,13 @@ export const useScrollTopLeft = (options = {}) => {
         prevRef.current.top = nextTop;
         prevRef.current.left = nextLeft;
 
-        setLocal?.({
+        set?.({
             top: nextTop,
             left: nextLeft,
             directionX: nextDirectionX,
             directionY: nextDirectionY,
         });
-    }, [source, setLocal]);
+    }, [source, set]);
 
     useEventListener("scroll", calc, {
         source,

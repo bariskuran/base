@@ -20,7 +20,7 @@ const X = () => {
         s.languageList,
         s.textLibrary,
     ]);
-    const { output, output2, output3, setLocal } = baseStore.useLocal({
+    const { output, output2, output3, set } = baseStore.useLocal({
         output: null,
         output2: null,
         output3: null,

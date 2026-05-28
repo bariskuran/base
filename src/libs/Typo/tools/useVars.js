@@ -30,7 +30,7 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
         s._clientData.currentBreakpoint,
     ]);
 
-    const { truncatedHtml, setLocal } = baseStore.useLocal({
+    const { truncatedHtml, set } = baseStore.useLocal({
         truncatedHtml: null,
     });
 
@@ -74,11 +74,11 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
 
     const setTruncatedHtml = useCallback(
         (nextHtml) => {
-            setLocal((s) => {
+            set((s) => {
                 s.truncatedHtml = nextHtml;
             });
         },
-        [setLocal],
+        [set],
     );
 
     const rawFinalVisibleContent = children ?? content;
@@ -184,6 +184,12 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
             shouldUseInnerHtml ||
             isOverlayCopyHost);
     const canUseInlineCopy = hasCopy && !shouldUseOverlayCopy && !shouldUseInnerHtml;
+    const shouldUseStackedOverlayCopy =
+        shouldUseOverlayCopy &&
+        isOverlayCopyHost &&
+        controlledProps.clamp == null &&
+        !controlledProps.ellipsis &&
+        !shouldUseInnerHtml;
 
     return useExportData(
         {
@@ -192,6 +198,7 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
             margin,
             padding,
             shouldUseOverlayCopy,
+            shouldUseStackedOverlayCopy,
             shouldUseInnerHtml,
             isEllipsisBase: isEllipsisBaseFinal,
             canUseInlineCopy,

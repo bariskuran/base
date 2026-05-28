@@ -31,7 +31,7 @@ const measureOverflow = (el) => {
 };
 
 export const useCheckOverflow = ({ ref, target }) => {
-    const { isOverflowingY, isOverflowingX, resolvedTarget, setLocal } = baseStore.useLocal({
+    const { isOverflowingY, isOverflowingX, resolvedTarget, set } = baseStore.useLocal({
         isOverflowingY: false,
         isOverflowingX: false,
         resolvedTarget: null,
@@ -43,16 +43,16 @@ export const useCheckOverflow = ({ ref, target }) => {
 
         const { isOverflowingY: nextY, isOverflowingX: nextX } = measureOverflow(el);
 
-        setLocal((s) => {
+        set((s) => {
             s.isOverflowingY = nextY;
             s.isOverflowingX = nextX;
         });
-    }, [target, ref, resolvedTarget, setLocal]);
+    }, [target, ref, resolvedTarget, set]);
 
     useLayoutEffect(() => {
         const nextTarget = resolveTarget(target, ref);
 
-        setLocal((s) => {
+        set((s) => {
             if (s.resolvedTarget !== nextTarget) {
                 s.resolvedTarget = nextTarget;
             }

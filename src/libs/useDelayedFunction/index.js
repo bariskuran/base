@@ -7,7 +7,7 @@ export const useDelayedFunction = (fn, settings = {}) => {
     const fnRef = useRef(fn);
     fnRef.current = fn;
 
-    const { isPending, setLocal } = baseStore.useLocal({ isPending: false });
+    const { isPending, set } = baseStore.useLocal({ isPending: false });
 
     const stableSettings = useMemo(() => ({ delay, autoCancel }), [delay, autoCancel]);
 
@@ -16,40 +16,40 @@ export const useDelayedFunction = (fn, settings = {}) => {
             delayedFunction(
                 (...args) => {
                     fnRef.current?.(...args);
-                    setLocal((s) => {
+                    set((s) => {
                         s.isPending = false;
                     });
                 },
                 stableSettings,
             ),
-        [stableSettings, setLocal],
+        [stableSettings, set],
     );
 
     const run = useCallback(
         (...args) => {
             delayed.run(...args);
-            setLocal((s) => {
+            set((s) => {
                 s.isPending = true;
             });
         },
-        [delayed, setLocal],
+        [delayed, set],
     );
 
     const cancel = useCallback(() => {
         delayed.cancel();
-        setLocal((s) => {
+        set((s) => {
             s.isPending = false;
         });
-    }, [delayed, setLocal]);
+    }, [delayed, set]);
 
     const runNow = useCallback(
         (...args) => {
             delayed.runNow(...args);
-            setLocal((s) => {
+            set((s) => {
                 s.isPending = false;
             });
         },
-        [delayed, setLocal],
+        [delayed, set],
     );
 
     return {

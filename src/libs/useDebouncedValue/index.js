@@ -44,15 +44,15 @@ export const useDebouncedValue = (initialValue, settings = {}) => {
         [],
     );
 
-    const { value, debouncedValue, isWaiting, setLocal } = baseStore.useLocal(initialState);
+    const { value, debouncedValue, isWaiting, set } = baseStore.useLocal(initialState);
 
     const timerRef = useRef(null);
     const valueRef = useRef(value);
     const prevValueRef = useRef(value);
     const throttleActiveRef = useRef(false);
-    const setLocalRef = useRef(setLocal);
+    const setLocalRef = useRef(set);
 
-    setLocalRef.current = setLocal;
+    setLocalRef.current = set;
     valueRef.current = value;
 
     const clearTimer = () => {
@@ -77,7 +77,7 @@ export const useDebouncedValue = (initialValue, settings = {}) => {
         if (!enabled) {
             clearTimer();
             throttleActiveRef.current = false;
-            setLocal?.({ debouncedValue: value, isWaiting: false });
+            set?.({ debouncedValue: value, isWaiting: false });
             return;
         }
 
@@ -85,7 +85,7 @@ export const useDebouncedValue = (initialValue, settings = {}) => {
             clearTimer();
             throttleActiveRef.current = false;
             timerRef.current = setTimeout(() => {
-                setLocal?.({ debouncedValue: value });
+                set?.({ debouncedValue: value });
             }, delay);
             return;
         }
@@ -96,19 +96,19 @@ export const useDebouncedValue = (initialValue, settings = {}) => {
         if (throttleActiveRef.current) return;
 
         throttleActiveRef.current = true;
-        setLocal?.({ debouncedValue: value, isWaiting: true });
+        set?.({ debouncedValue: value, isWaiting: true });
         timerRef.current = setTimeout(endThrottleCooldown, delay);
-    }, [value, delay, isThrottle, enabled, setLocal]);
+    }, [value, delay, isThrottle, enabled, set]);
 
-    const setValue = (next) => setLocal?.({ value: next });
-    const setDebouncedValue = (next) => setLocal?.({ debouncedValue: next });
+    const setValue = (next) => set?.({ value: next });
+    const setDebouncedValue = (next) => set?.({ debouncedValue: next });
     const reset = (next) => {
         const v = next !== undefined ? next : initialRef.current;
         clearTimer();
         throttleActiveRef.current = false;
         valueRef.current = v;
         prevValueRef.current = v;
-        setLocal?.({ value: v, debouncedValue: v, isWaiting: false });
+        set?.({ value: v, debouncedValue: v, isWaiting: false });
     };
 
     return [debouncedValue, setValue, { value, setDebouncedValue, reset, isWaiting }];

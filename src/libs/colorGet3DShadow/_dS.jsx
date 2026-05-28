@@ -26,7 +26,7 @@ const PreviewCard = styled(Card)`
 `;
 
 const X = () => {
-    const { depth, hoverDepth, transition, color, setLocal } = baseStore.useLocal({
+    const { depth, hoverDepth, transition, color, set } = baseStore.useLocal({
         depth: 1,
         hoverDepth: 3,
         transition: true,
@@ -64,7 +64,7 @@ const X = () => {
                                     max={10}
                                     value={depth}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.depth = Number(e.target.value);
                                         })
                                     }
@@ -78,7 +78,7 @@ const X = () => {
                                     max={15}
                                     value={hoverDepth}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.hoverDepth = Number(e.target.value);
                                         })
                                     }
@@ -90,7 +90,7 @@ const X = () => {
                                     type="color"
                                     value={color}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.color = e.target.value;
                                         })
                                     }
@@ -102,7 +102,7 @@ const X = () => {
                                 type="checkbox"
                                 checked={transition}
                                 onChange={(e) =>
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.transition = e.target.checked;
                                     })
                                 }

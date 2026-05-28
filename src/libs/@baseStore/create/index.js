@@ -2,6 +2,7 @@ import { isShallowEqual } from "../../isShallowEqual";
 import { isPlainObject } from "../../isPlainObject";
 import { isArrayOrPlainObject } from "../../isArrayOrPlainObject";
 import { typeOf } from "../../typeOf";
+import { byPath } from "../../byPath";
 
 let __baseStoreSeq = 0;
 
@@ -117,16 +118,6 @@ const createDraftProxy = (root, markChanged) => {
     return proxify(root);
 };
 
-/**
- * Creates a core store instance with an initial state.
- *
- * The store acts as a centralized data container that can be accessed
- * both from external (non-React) functions and from React components
- * via hooks.
- *
- * @param {Object} [initialState={}] - Initial state of the store
- * @returns {Object} Core store instance
- */
 export const create = (initialState = {}) => {
     const id = `baseStore_${++__baseStoreSeq}`;
 
@@ -177,6 +168,16 @@ export const create = (initialState = {}) => {
         return state;
     };
 
+    const setByPath = (path, value) =>
+        set((draft) => {
+            byPath.set(draft, path, value, true);
+        });
+
+    const remove = (path) =>
+        set((draft) => {
+            byPath.delete(draft, path, true);
+        });
+
     const subscribe = (listener) => {
         listeners.add(listener);
         return () => listeners.delete(listener);
@@ -184,5 +185,5 @@ export const create = (initialState = {}) => {
 
     const getVersion = () => version;
 
-    return { id, get, set, subscribe, getVersion };
+    return { id, get, set, setByPath, remove, subscribe, getVersion };
 };

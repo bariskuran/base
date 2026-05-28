@@ -102,7 +102,7 @@ const getPosition = ({
     viewportOffset = 20,
     childrenRef,
     floatingRef,
-    setLocal,
+    set,
     alignXFromUser,
     alignYFromUser,
     currentAlignX = "center",
@@ -261,7 +261,7 @@ const getPosition = ({
         }
     }
 
-    setLocal((s) => {
+    set((s) => {
         s.positionX = Math.round(positionX - layerRect.left);
         s.positionY = Math.round(positionY - layerRect.top);
         s.alignX = alignX;

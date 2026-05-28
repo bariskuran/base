@@ -106,7 +106,7 @@ export const useTimer = (settings = {}) => {
         timerName,
     } = settings;
 
-    const { isRunning, setLocal } = baseStore.useLocal({ isRunning: false });
+    const { isRunning, set } = baseStore.useLocal({ isRunning: false });
 
     const timerIdRef = useRef(null);
     if (timerIdRef.current == null) {
@@ -155,7 +155,7 @@ export const useTimer = (settings = {}) => {
             clearTimeout(timeoutRef.current);
             timeoutRef.current = null;
         }
-        setLocal?.({ isRunning: false });
+        set?.({ isRunning: false });
 
         _upsertTimer({
             timerId: timerIdRef.current,
@@ -164,7 +164,7 @@ export const useTimer = (settings = {}) => {
             loop: loopRef.current,
             isRunning: false,
         });
-    }, [setLocal, timerName]);
+    }, [set, timerName]);
 
     const start = useCallback(
         (overrides = {}) => {
@@ -175,7 +175,7 @@ export const useTimer = (settings = {}) => {
 
             stop();
 
-            setLocal?.({ isRunning: true });
+            set?.({ isRunning: true });
 
             _upsertTimer({
                 timerId: timerIdRef.current,
@@ -192,7 +192,7 @@ export const useTimer = (settings = {}) => {
 
                 if (loopRef.current) startRef.current?.();
                 else {
-                    setLocal?.({ isRunning: false });
+                    set?.({ isRunning: false });
                     _upsertTimer({
                         timerId: timerIdRef.current,
                         timerName: timerName || timerIdRef.current,
@@ -203,7 +203,7 @@ export const useTimer = (settings = {}) => {
                 }
             }, refreshRef.current);
         },
-        [stop, setLocal, timerName],
+        [stop, set, timerName],
     );
 
     useEffect(() => {

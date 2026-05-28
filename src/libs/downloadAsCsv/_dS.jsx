@@ -14,7 +14,7 @@ const sample = [
 ];
 
 const X = () => {
-    const { lastBasic, lastOpts, setLocal } = baseStore.useLocal({
+    const { lastBasic, lastOpts, set } = baseStore.useLocal({
         lastBasic: null,
         lastOpts: null,
     });
@@ -45,7 +45,7 @@ const X = () => {
                             label="Download CSV"
                             onClick={() => {
                                 const ok = downloadAsCsv(sample, "scores");
-                                setLocal((s) => {
+                                set((s) => {
                                     s.lastBasic = ok ? "download triggered" : "failed";
                                 });
                             }}
@@ -71,7 +71,7 @@ const X = () => {
                             label="Download ; separated"
                             onClick={() => {
                                 const ok = downloadAsCsv(sample, "scores-sc", { separator: ";" });
-                                setLocal((s) => {
+                                set((s) => {
                                     s.lastOpts = ok ? "download (;)" : "failed";
                                 });
                             }}

@@ -7,10 +7,10 @@ import { baseStore } from "../@baseStore";
 import { useDelayedFunction } from "../useDelayedFunction";
 
 const X = () => {
-    const { count, setLocal } = baseStore.useLocal({ count: 0 });
+    const { count, set } = baseStore.useLocal({ count: 0 });
     const { run, cancel, runNow, isPending } = useDelayedFunction(
         () => {
-            setLocal((s) => {
+            set((s) => {
                 s.count += 1;
             });
         },

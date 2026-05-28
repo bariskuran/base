@@ -8,7 +8,7 @@ import { baseStore } from "../@baseStore";
 import { notifier } from "../notifier";
 
 const X = () => {
-    const { count, throttleCount, setLocal, ex2, ex3, ex4, ex5 } = baseStore.useLocal({
+    const { count, throttleCount, set, ex2, ex3, ex4, ex5 } = baseStore.useLocal({
         count: 0,
         throttleCount: 0,
         ex2: 0,
@@ -19,7 +19,7 @@ const X = () => {
 
     const runDebounced = debouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.count += 1;
             }),
         { delay: 1000 },
@@ -27,7 +27,7 @@ const X = () => {
 
     const runThrottle = debouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.throttleCount += 1;
             }),
         {
@@ -38,7 +38,7 @@ const X = () => {
 
     const runEx2 = debouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.ex2 += 1;
             }),
         { delay: 1000, getFirst: true, functionName: "example2" },
@@ -46,7 +46,7 @@ const X = () => {
 
     const runEx3 = debouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.ex3 += 1;
             }),
         { delay: 1000, getFirst: true, functionName: "example3", isThrottle: true },
@@ -54,7 +54,7 @@ const X = () => {
 
     const runEx4 = debouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.ex4 += 1;
             }),
         {
@@ -66,7 +66,7 @@ const X = () => {
 
     const runEx5 = debouncedFunction(
         () =>
-            setLocal((s) => {
+            set((s) => {
                 s.ex5 += 1;
             }),
         {
@@ -178,7 +178,7 @@ const X = () => {
 
                         const example4 = debouncedFunction(
                              () =>
-                                 setLocal((s) => {
+                                 set((s) => {
                                      s.ex4 += 1;
                                  }),
                              {
@@ -190,7 +190,7 @@ const X = () => {
 
                          const example5 = debouncedFunction(
                              () =>
-                                 setLocal((s) => {
+                                 set((s) => {
                                      s.ex5 += 1;
                                  }),
                              {

@@ -6,7 +6,7 @@ import { Typo } from "../Typo";
 import { baseStore } from "../@baseStore";
 
 const X = () => {
-    const { optionA, optionB, background, setLocal } = baseStore.useLocal({
+    const { optionA, optionB, background, set } = baseStore.useLocal({
         optionA: "#ffffff",
         optionB: "#111111",
         background: "#3b82f6",
@@ -35,7 +35,7 @@ colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                                     type="color"
                                     value={background}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.background = e.target.value;
                                         })
                                     }
@@ -47,7 +47,7 @@ colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                                     type="color"
                                     value={optionA}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.optionA = e.target.value;
                                         })
                                     }
@@ -59,7 +59,7 @@ colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                                     type="color"
                                     value={optionB}
                                     onChange={(e) =>
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.optionB = e.target.value;
                                         })
                                     }

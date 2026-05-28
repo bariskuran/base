@@ -67,7 +67,7 @@ const S = {
 };
 
 const Library = () => {
-    const { searchText, setLocal } = baseStore.useLocal({ searchText: "" });
+    const { searchText, set } = baseStore.useLocal({ searchText: "" });
     const q = String(searchText || "")
         .trim()
         .toLowerCase();
@@ -85,7 +85,7 @@ const Library = () => {
                 type="text"
                 placeholder="Search flags..."
                 value={searchText}
-                onChange={(e) => setLocal({ searchText: e.target.value })}
+                onChange={(e) => set({ searchText: e.target.value })}
             />
             {Object.keys(flags)
                 .filter((name) => {

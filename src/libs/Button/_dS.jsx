@@ -26,7 +26,7 @@ const Template = ({ row1, row2 }) => {
 
 const X = () => {
     const [_notifier] = baseStore.useGlobal((s) => [s._notifier]);
-    const { clicked, hoverManually, activeManually, pendingManually, selectedVariant, setLocal } =
+    const { clicked, hoverManually, activeManually, pendingManually, selectedVariant, set } =
         baseStore.useLocal({
             selectedVariant: "default",
             hoverManually: false,
@@ -38,12 +38,12 @@ const X = () => {
         refreshTime: 2000,
         loop: false,
         onStart: () => {
-            setLocal((s) => {
+            set((s) => {
                 s.clicked = true;
             });
         },
         onEnd: () => {
-            setLocal((s) => {
+            set((s) => {
                 s.clicked = false;
             });
         },
@@ -80,7 +80,7 @@ const X = () => {
                             ]}
                             value={selectedVariant}
                             onChange={(value) => {
-                                setLocal((s) => {
+                                set((s) => {
                                     s.selectedVariant = value;
                                 });
                             }}
@@ -278,12 +278,12 @@ const X = () => {
                         <Flex gap={10}>
                             <div
                                 onMouseEnter={() => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.hoverManually = true;
                                     });
                                 }}
                                 onMouseLeave={() => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.hoverManually = false;
                                     });
                                 }}
@@ -292,12 +292,12 @@ const X = () => {
                             </div>
                             <div
                                 onMouseEnter={() => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.activeManually = true;
                                     });
                                 }}
                                 onMouseLeave={() => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.activeManually = false;
                                     });
                                 }}
@@ -306,12 +306,12 @@ const X = () => {
                             </div>
                             <div
                                 onMouseEnter={() => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.pendingManually = true;
                                     });
                                 }}
                                 onMouseLeave={() => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.pendingManually = false;
                                     });
                                 }}

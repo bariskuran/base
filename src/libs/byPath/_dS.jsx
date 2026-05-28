@@ -13,7 +13,7 @@ const PATH_BASIC = "byPath-basic";
 const PATH_MAPPING = "byPath-mapping";
 
 const X = () => {
-    const { data, setLocal } = baseStore.useLocal({
+    const { data, set } = baseStore.useLocal({
         data: dataReset,
     });
     const { outputButtonProps, Output, clearOutput } = Ds.useOutputViewer();
@@ -50,7 +50,7 @@ const X = () => {
                                     activeLabel: "set",
                                     fn: () => {
                                         const next = byPath.set(data, "user.profile.name", "Selin");
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.data = next;
                                         });
                                         return next;
@@ -64,7 +64,7 @@ const X = () => {
                                     activeLabel: "delete",
                                     fn: () => {
                                         const next = byPath.delete(data, "user.profile.name");
-                                        setLocal((s) => {
+                                        set((s) => {
                                             s.data = next;
                                         });
                                         return next;
@@ -75,7 +75,7 @@ const X = () => {
                         <Button.plain
                             label="Reset"
                             onClick={() => {
-                                setLocal((s) => {
+                                set((s) => {
                                     s.data = dataReset;
                                 });
                                 clearOutput(PATH_BASIC);

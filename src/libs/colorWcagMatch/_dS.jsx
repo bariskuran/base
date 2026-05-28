@@ -159,7 +159,7 @@ const ColorPicker = ({ value, onChange, label }) => {
 };
 
 const X = () => {
-    const { wcag, tolerance, step, setLocal, background, targetColor } = baseStore.useLocal({
+    const { wcag, tolerance, step, set, background, targetColor } = baseStore.useLocal({
         outBasic: null,
         outOpts: null,
         wcag: 4.5,
@@ -218,7 +218,7 @@ const X = () => {
                                 max={21}
                                 step={0.1}
                                 onChange={(newValue) => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.wcag = newValue;
                                     });
                                 }}
@@ -230,7 +230,7 @@ const X = () => {
                                 max={1}
                                 step={0.01}
                                 onChange={(newValue) => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.tolerance = newValue;
                                     });
                                 }}
@@ -242,7 +242,7 @@ const X = () => {
                                 max={10}
                                 step={0.5}
                                 onChange={(newValue) => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.step = newValue;
                                     });
                                 }}
@@ -252,7 +252,7 @@ const X = () => {
                             <ColorPicker
                                 value={background}
                                 onChange={(newValue) => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.background = newValue;
                                     });
                                 }}
@@ -261,7 +261,7 @@ const X = () => {
                             <ColorPicker
                                 value={targetColor}
                                 onChange={(newValue) => {
-                                    setLocal((s) => {
+                                    set((s) => {
                                         s.targetColor = newValue;
                                     });
                                 }}

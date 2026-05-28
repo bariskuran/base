@@ -88,7 +88,7 @@ const useVars = (p) => {
         autoWidthCapsToParent,
         autoWidthFlexGrow,
         scrollBarExportedData,
-        setLocal,
+        set,
     } = baseStore.useLocal({
         measuredWidth: null,
         measuredHeight: null,
@@ -108,7 +108,7 @@ const useVars = (p) => {
         (data) => {
             const nextLayoutData = pickScrollBarLayoutData(data);
 
-            setLocal((s) => {
+            set((s) => {
                 if (isShallowEqual(s.scrollBarExportedData, nextLayoutData)) return;
                 s.scrollBarExportedData = nextLayoutData;
             });
@@ -117,7 +117,7 @@ const useVars = (p) => {
                 userScrollBarExportData(data);
             }
         },
-        [setLocal, userScrollBarExportData],
+        [set, userScrollBarExportData],
     );
 
     const hasMaxWidthBound = maxWidth !== undefined && maxWidth !== null && maxWidth !== "";
@@ -310,7 +310,7 @@ const useVars = (p) => {
     );
 
     useScrollFlexMeasureEffects({
-        setLocal,
+        set,
         containerRef,
         shellRef,
         contentRef,

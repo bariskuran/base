@@ -90,7 +90,7 @@ const S = {
 
 export const Library = () => {
     const [iconsLibrary] = baseStore.useGlobal((s) => [s._iconsLibrary]);
-    const { searchText, setLocal } = baseStore.useLocal({ searchText: "" });
+    const { searchText, set } = baseStore.useLocal({ searchText: "" });
 
     /* Return */
     return (
@@ -99,7 +99,7 @@ export const Library = () => {
                 type="text"
                 placeholder="Search icons..."
                 value={searchText}
-                onChange={(e) => setLocal({ searchText: e.target.value })}
+                onChange={(e) => set({ searchText: e.target.value })}
             />
             {Object.entries({ ...icons, ...iconsLibrary })
                 .filter(([iconName, iconArr]) => {

@@ -21,12 +21,12 @@ const [x, y] = useMouseXY(50);
  * Returns the current mouse coordinates as `[x, y]`
  */
 export const useMouseXY = (delay = 100) => {
-    const { x, y, setLocal } = baseStore.useLocal();
+    const { x, y, set } = baseStore.useLocal();
 
     useEventListener(
         "mousemove",
         ({ clientX, clientY }) => {
-            setLocal?.({ x: clientX, y: clientY });
+            set?.({ x: clientX, y: clientY });
         },
         { delay, isThrottle: true, passive: true },
     );
