@@ -34,11 +34,11 @@ const X = () => {
                 title="React Component içinde useGlobal"
                 code={`import { baseStore } from "${SYS.basePath}";
 
-const language = baseStore.useGlobal((s) => s.language);
-const isLoading = baseStore.useGlobal((s) => s.isLoading);
-
-// selector vermezsen tüm globalData + set döner
-const global = baseStore.useGlobal();`}
+                    const language = baseStore.useGlobal((s) => s.language);
+                    const isLoading = baseStore.useGlobal((s) => s.isLoading);
+                            
+                    // selector vermezsen tüm globalData + set döner
+                    const global = baseStore.useGlobal();`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Typo.span>

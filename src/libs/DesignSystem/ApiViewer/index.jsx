@@ -52,28 +52,22 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title,
                             minWidth={0}
                         >
                             {typeof args === "string" ? (
-                                <Typo.code
+                                <Typo.h6
                                     lineHeight={1.5}
                                     balance
                                     copy
                                     content={args}
-                                    codeFormat={false}
-                                    codeFormatJsxProps={false}
-                                    codeFormatCalls={false}
                                     padding={10}
                                     whiteSpace="pre-wrap"
                                     {...(full ? { full: true } : {})}
                                 />
                             ) : Array.isArray(args) ? (
                                 args.map((arg, i) => (
-                                    <Typo.code
+                                    <Typo.h6
                                         lineHeight={1.5}
                                         balance
                                         copy
                                         content={arg}
-                                        codeFormat={false}
-                                        codeFormatJsxProps={false}
-                                        codeFormatCalls={false}
                                         key={i}
                                         padding={10}
                                         whiteSpace="pre-wrap"

@@ -8,6 +8,28 @@ import { Button } from "../Button";
 
 const PATH_EXTERNAL = "baseStore-external";
 
+const testStore = baseStore.create({ test: 1 });
+
+const TestCompoent = () => {
+    const [test, set] = baseStore.use(testStore, (s) => [s.test, s.set]);
+
+    const up = () => {
+        testStore.set((s) => {
+            s.test += 1;
+        });
+        // set((s) => {
+        //     s.test += 1;
+        // });
+    };
+
+    return (
+        <Flex.column gap={10}>
+            <Typo.span>Test: {test}</Typo.span>
+            <Button label="Up" onClick={up} skipClickCooldown skipOnClickHold />
+        </Flex.column>
+    );
+};
+
 const X = () => {
     const { outputButtonProps, Output } = Ds.useOutputViewer();
     const sharedStore = useMemo(
@@ -26,7 +48,7 @@ const X = () => {
 
     return (
         <Ds.page
-            title="baseStore.external"
+            title="baseStore.use"
             releasedOn="1.0.0"
             description={
                 <>
@@ -41,115 +63,7 @@ const X = () => {
                 </>
             }
         >
-            <Ds.block
-                title="Create + Use (React Component)"
-                code={`import { baseStore } from "${SYS.basePath}";
-
-const userStore = baseStore.create({
-    counter: 0,
-    profile: { name: "Base User" },
-});
-
-const UserCounter = () => {
-    const { counter, profile, set } = baseStore.use(userStore);
-    const [onlyCounter, setCounter] = baseStore.use(userStore, (s) => s.counter);
-
-    return (
-        <>
-            <p>{profile.name}: {counter}</p>
-            <button onClick={() => set((s) => { s.counter += 1; })}>+1</button>
-            <button onClick={() => setCounter((s) => { s.counter += 5; })}>+5</button>
-            <p>Selector onlyCounter: {onlyCounter}</p>
-        </>
-    );
-};`}
-                example={
-                    <Flex.column gap={10} padding={10} full>
-                        <Typo.span>
-                            {profile?.name}: <Typo.code>{counter}</Typo.code> (selector:{" "}
-                            <Typo.code>{onlyCounter}</Typo.code>)
-                        </Typo.span>
-                        <Flex wrap gap={10}>
-                            <Button.plain
-                                label="+1 (set)"
-                                onClick={() =>
-                                    set((s) => {
-                                        s.counter += 1;
-                                    })
-                                }
-                            />
-                            <Button.plain
-                                label="+5 (set from selector)"
-                                onClick={() =>
-                                    setCounter((s) => {
-                                        s.counter += 5;
-                                    })
-                                }
-                            />
-                            <Button.plain
-                                label='set profile.name = "Baris"'
-                                onClick={() =>
-                                    set((s) => {
-                                        s.profile.name = "Baris";
-                                    })
-                                }
-                            />
-                        </Flex>
-                    </Flex.column>
-                }
-            />
-            <Ds.block
-                title="Isolated Function (Non-React)"
-                description="Aynı store instance'ı izole utility/fonksiyonlarda da kullanılabilir."
-                code={`import { baseStore } from "${SYS.basePath}";
-
-const userStore = baseStore.create({ counter: 0 });
-
-const increaseFromService = (step = 1) => {
-    userStore.set((s) => {
-        s.counter += step;
-    });
-    return userStore.get();
-};
-
-increaseFromService(3); // { counter: 3 }`}
-                example={
-                    <Flex.column gap={10} padding={10} full>
-                        <Flex wrap gap={10}>
-                            <Button.plain
-                                label="sharedStore.get()"
-                                {...outputButtonProps({
-                                    path: PATH_EXTERNAL,
-                                    activeLabel: "get",
-                                    fn: () => sharedStore.get(),
-                                })}
-                            />
-                            <Button.plain
-                                label="increaseFromService(3)"
-                                {...outputButtonProps({
-                                    path: PATH_EXTERNAL,
-                                    activeLabel: "service",
-                                    fn: () => {
-                                        sharedStore.set((s) => {
-                                            s.counter += 3;
-                                        });
-                                        return sharedStore.get();
-                                    },
-                                })}
-                            />
-                            <Button.plain
-                                label='sharedStore.set({ counter: 0 })'
-                                {...outputButtonProps({
-                                    path: PATH_EXTERNAL,
-                                    activeLabel: "reset",
-                                    fn: () => sharedStore.set({ counter: 0 }),
-                                })}
-                            />
-                        </Flex>
-                        <Output path={PATH_EXTERNAL} />
-                    </Flex.column>
-                }
-            />
+            <Ds.block title="Create + Use (React Component)" example={<TestCompoent />} />
             <Ds.api
                 title="create"
                 disableLastBlock
