@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { baseStore } from "../../@baseStore";
-import { useEventListener } from "../../useEventListener";
-import { useTimer } from "../../useTimer";
+import { baseStore } from "../@baseStore";
+import { useEventListener } from "../useEventListener";
+import { useTimer } from "../useTimer";
 
 const clampMinutes = (v, { allowedIdleTime = 30 } = {}) => {
     const n = Number(v);
@@ -72,7 +72,7 @@ export const IdleManager = () => {
         timerName: "idleManager",
         loop: false,
         startOnLoad: false,
-        refreshTime: 0, // override ile set edeceğiz
+        refreshTime: 0,
         onEnd: handleGoIdle,
     });
 
@@ -129,7 +129,6 @@ export const IdleManager = () => {
             return;
         }
 
-        // enabled + süre hazır: init
         lastActiveAtRef.current = Date.now();
         isIdleRef.current = false;
         set?.({ isIdle: false });
@@ -152,7 +151,6 @@ export const IdleManager = () => {
         [],
     );
 
-    // Hooks koşulsuz (eslint rule OK). Handler zaten enabled değilse noop.
     useEventListener("mousemove", () => handleActivity("mousemove"), eventListenerProps[0]);
     useEventListener("scroll", () => handleActivity("scroll"), eventListenerProps[0]);
     useEventListener("pointerdown", () => handleActivity("pointerdown"), eventListenerProps[1]);

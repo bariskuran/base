@@ -4,20 +4,20 @@ import { useMouseXY } from ".";
 import { Typo } from "../Typo";
 
 const X = () => {
-    const [x, y] = useMouseXY(80);
+    const [x, y] = useMouseXY();
 
     return (
         <Ds.page
             title="useMouseXY()"
             releasedOn="1.0.0"
-            description="Tracks mouse coordinates with throttle."
+            description="Tracks mouse coordinates; updates are coalesced with requestAnimationFrame and an optional minimum interval (delay)."
         >
             <Ds.block
                 title="Track Mouse Position"
                 code={`import { useMouseXY } from "${SYS.basePath}";
 
 const [x, y] = useMouseXY(80);`}
-                example={<Typo.span>{`x: ${Math.round(x || 0)} y: ${Math.round(y || 0)}`}</Typo.span>}
+                example={<Typo.span>{`x: ${x} y: ${y}`}</Typo.span>}
             />
             <Ds.api
                 args="const [x, y] = useMouseXY(delay);"

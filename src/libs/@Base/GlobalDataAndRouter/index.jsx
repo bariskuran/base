@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { getDesignSystemRoutes } from "../../DesignSystem";
 import { baseStore } from "../../@baseStore";
 import { GlobalDataProvider } from "../GlobalDataProvider";
-import { IdleManager } from "../IdleManager";
+import { IdleManager } from "../../IdleManager";
 import { ErrorPage } from "../ErrorPage";
 import { LanguageManager } from "../LanguageManager";
 import { PageLoadingManager } from "../loadingQueueManager";

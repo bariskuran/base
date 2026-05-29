@@ -306,7 +306,7 @@ const useVars = (p) => {
     const { ref: observedChildrenRef } = useObserver({
         disable: !isFloatingActive,
         threshold: 0,
-        rootMargin: 0,
+        customViewportMargin: 0,
         onExit: () => {
             closeHandler({ instant: true });
         },

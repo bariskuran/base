@@ -69,6 +69,7 @@ const publicSitemap = [
     ["getClientData", "getClientData", l(() => import("../getClientData/_dS"))],
     ["getTimeDiff", "getTimeDiff", l(() => import("../getTimeDiff/_dS"))],
     ["Icon", "icon", l(() => import("../@Icon/_dS"))],
+    ["IdleManager", "idleManager", l(() => import("../IdleManager/_dS"))],
     ["iconLibrary", "iconLibrary", l(() => import("../@Icon/_dSLibrary"))],
     ["isArray", "isArray", l(() => import("../isArray/_dS"))],
     [
