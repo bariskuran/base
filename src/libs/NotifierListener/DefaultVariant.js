@@ -1,39 +1,19 @@
 import styled, { css } from "styled-components";
 
 export const DefaultVariant = styled.div`
-    ${({ theme, $bgColor, $colors, $closingDelay, $isClosing, $boxHeight }) => css`
+    ${({ theme, $bgColor, $colors }) => css`
         position: relative;
         display: grid;
         grid-template-columns: 1fr 30rem;
         grid-template-rows: 3rem 1fr;
         width: 100%;
-        background: ${$bgColor};
-        box-shadow: 0rem 3px 5px ${theme.colorAlpha(theme.foreground, 0.3)};
+        background: ${$bgColor || theme.background};
         border-radius: 0 0 10rem 10rem;
         overflow: hidden;
-        opacity: 1;
-        transform: translateY(0);
-        transition:
-            max-height ${$closingDelay}ms ease,
-            opacity ${$closingDelay}ms ease,
-            transform ${$closingDelay}ms ease;
 
-        ${$boxHeight &&
-        !$isClosing &&
+        ${($bgColor || theme.background) &&
         css`
-            max-height: ${$boxHeight};
-        `}
-
-        ${$isClosing &&
-        css`
-            opacity: 0;
-            transform: translateY(-20rem);
-            max-height: 0 !important;
-        `}
-
-        ${$bgColor &&
-        css`
-            color: ${$colors?.opposite};
+            color: ${$colors?.opposite || theme.foreground};
         `}
 
         & > [data-slot="timeBar"] {

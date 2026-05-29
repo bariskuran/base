@@ -1,18 +1,33 @@
+import { useMemo } from "react";
 import { baseStore } from "../../@baseStore";
+import { DefaultVariant } from "../DefaultVariant";
+import { useDisplayQueue } from "./useDisplayQueue";
 
-export const useVars = (p) => {
-    const { variant: layoutVariant } = p || {};
+export const OPENING_MS = 500;
 
-    const [_notifier, theme] = baseStore.useGlobal((s) => [s._notifier, s.theme]);
+export const useVars = () => {
+    const [_notifier, theme, projectSettings] = baseStore.useGlobal((s) => [
+        s._notifier,
+        s.theme,
+        s._projectSettings,
+    ]);
+
     const { queue = [] } = _notifier || {};
 
-    const isEmpty = (queue || []).length === 0;
+    const visibleQueue = useMemo(
+        () => (queue || []).filter((item) => item?.value),
+        [queue],
+    );
+
+    const { displayQueue, onExitComplete } = useDisplayQueue(visibleQueue);
+
+    const BoxComponent = projectSettings?.notifierSettings?.Box || DefaultVariant;
 
     return {
-        ..._notifier,
-        layoutVariant: typeof layoutVariant === "string" ? layoutVariant : null,
-        isEmpty,
-        queue,
+        displayQueue,
+        onExitComplete,
         theme,
+        BoxComponent,
+        openingMs: OPENING_MS,
     };
 };

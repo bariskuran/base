@@ -41,7 +41,7 @@ const X = () => {
                             disableNotifier: true, // default is false
                             disableAutoKill: true, // default is false
                             closingDelay: 0.5, // secs, default is 0.5
-                            variant: "plain", // default notification variant
+                            Box: MyNotifierBox, // styled component, optional
                         },`}
                     </Typo.code>
                     <QueuePeek />
@@ -136,8 +136,7 @@ const X = () => {
                 title="Multiple calls"
                 code={`import { NotifierListener } from "${SYS.basePath}/libs/NotifierListener";
 
-                        <NotifierListener />
-                        <NotifierListener.plain />`}
+                        <NotifierListener />`}
                 example={
                     <Flex gap={8} wrap>
                         <Button.plain
@@ -151,29 +150,10 @@ const X = () => {
                     </Flex>
                 }
             />
-            <Ds.block
-                title="NotifierListener variants"
-                code={`import { NotifierListener } from "${SYS.basePath}/libs/NotifierListener";
-
-                        <NotifierListener />
-                        <NotifierListener.plain />`}
-                example={
-                    <Flex gap={8} wrap>
-                        <Button.plain
-                            label="variant usage"
-                            onClick={() =>
-                                notifier.add("variant usage", {
-                                    variant: "test",
-                                })
-                            }
-                        />
-                    </Flex>
-                }
-            />
             <Ds.api
                 title="add"
                 disableLastBlock
-                args="const queueId = notifier.add(notification, { bgColor, closingDelay, disableAutoKill, killAfter, variant });"
+                args="const queueId = notifier.add(notification, { bgColor, closingDelay, disableAutoKill, killAfter });"
                 props={{
                     notification: {
                         description: "Notification.",
@@ -195,11 +175,6 @@ const X = () => {
                     bgColor: {
                         description: "Background color.",
                         type: "string",
-                    },
-                    variant: {
-                        description:
-                            "Notification variant name or custom styled variant. Overrides notifierSettings.variant for that notification.",
-                        type: "string | React component",
                     },
                 }}
                 returnProps={{
