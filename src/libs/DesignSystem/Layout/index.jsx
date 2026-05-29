@@ -5,23 +5,52 @@ import { baseStore } from "../../@baseStore";
 import { Button } from "../../Button";
 import useVars from "./useVars";
 import { sortBy } from "../../sortBy";
-import { useMemo } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { ScrollBar } from "../../ScrollBar";
 import { Flex } from "../../Flex";
 import { useRevealNavItem } from "../../useRevealNavItem";
 
+const resetDocumentScroll = () => {
+    if (typeof window === "undefined") return;
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+};
+
 const Layout = () => {
     const vars = useVars();
+    const { pathname } = useLocation();
+    const navScrollRef = useRef(null);
     const showInternalDs = baseStore.useGlobal((s) => !!s._adminSettings?.showInternalDs);
     const sorted = useMemo(() => {
         const [first, ...rest] = getSitemap() || [];
         return first ? [first, ...rest.sort((a, b) => sortBy.asc(a[0], b[0]))] : [];
     }, [showInternalDs]);
 
+    useLayoutEffect(() => {
+        if (typeof history !== "undefined" && "scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+        }
+    }, []);
+
+    const resetContentScroll = useCallback(() => {
+        resetDocumentScroll();
+    }, []);
+
+    useLayoutEffect(() => {
+        resetContentScroll();
+    }, [pathname, resetContentScroll]);
+
+    useEffect(() => {
+        resetContentScroll();
+    }, [pathname, resetContentScroll]);
+
     const [isActive, activeNavItemRef] = useRevealNavItem({
         links: sorted,
         basePath: "/design-system",
         getPathFromLink: (link) => link[1],
+        scrollRootRef: navScrollRef,
     });
 
     /* RETURN */
@@ -29,7 +58,7 @@ const Layout = () => {
         <S.container $vars={vars} aria-label="Design System">
             <ScrollBar.primary body maxLength={40} fillMode />
             <S.navigation aria-label="Navigation">
-                <Flex.column height="100vh" flex="0 0 300rem" paddingBottom={75}>
+                <Flex.column ref={navScrollRef} height="100vh" flex="0 0 300rem" paddingBottom={75}>
                     <ScrollBar disableX trackMargin={0} edgeMargin={-4} />
                     <S.logoArea>
                         <S.logoArea2>

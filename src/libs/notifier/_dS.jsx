@@ -58,8 +58,14 @@ const X = () => {
                 example={
                     <Flex gap={8} wrap full>
                         <Button.plain
-                            label="add (killAfter: 8)"
-                            onClick={() => captureAdd(() => notifier.add("Added with autoKill."))}
+                            label="add"
+                            skipClickCooldown
+                            skipOnClickHold
+                            onClick={() =>
+                                captureAdd(() =>
+                                    notifier.add("Added with autoKill.", { killAfter: 3 }),
+                                )
+                            }
                         />
                         <Button.plain
                             label="remove (last id)"

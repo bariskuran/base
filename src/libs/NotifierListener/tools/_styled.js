@@ -21,35 +21,6 @@ const S = {
                 padding 0.2s ease;
         `}
     `,
-
-    itemShell: styled.div`
-        ${({ $height, $isEntered, $isClosing, $closingDelay }) => css`
-            all: unset;
-            display: block;
-            overflow: hidden;
-            width: 100%;
-            box-sizing: border-box;
-            pointer-events: auto;
-
-            max-height: ${$isEntered && !$isClosing ? `${$height}px` : 0};
-            opacity: ${$isEntered && !$isClosing ? 1 : 0};
-            transform: translateY(${$isEntered && !$isClosing ? "0" : "-12rem"});
-            margin-bottom: ${$isEntered && !$isClosing ? "10rem" : 0};
-
-            transition:
-                max-height ${$closingDelay}ms ease,
-                opacity ${$closingDelay}ms ease,
-                transform ${$closingDelay}ms ease,
-                margin-bottom ${$closingDelay}ms ease;
-        `}
-    `,
-    itemInner: styled.div`
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        padding-bottom: 5rem;
-        padding-right: 5rem;
-    `,
 };
 
 export default S;

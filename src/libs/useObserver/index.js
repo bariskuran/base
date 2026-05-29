@@ -1,15 +1,30 @@
 import { useEffect, useMemo, useRef, useCallback, useState } from "react";
 import { baseStore } from "../@baseStore";
 
+const isRefLike = (value) => value != null && typeof value === "object" && "current" in value;
+
+const resolveElement = (value) => {
+    if (value == null) return null;
+    if (isRefLike(value)) return value.current ?? null;
+    return value;
+};
+
 export const useObserver = (options = {}) => {
+    const wantsCustomViewport = "customViewport" in options || "root" in options;
+
     const {
         onEnter,
         onExit,
         threshold = 0.2,
-        customViewportMargin = 0,
-        customViewport = null,
+        customViewportMargin: customViewportMarginOption,
+        rootMargin: rootMarginOption,
+        customViewport: customViewportOption = null,
+        root: rootOption = null,
         disable = false,
     } = options;
+
+    const customViewport = customViewportOption ?? rootOption ?? null;
+    const customViewportMargin = customViewportMarginOption ?? rootMarginOption ?? 0;
 
     const supportsIO = typeof window !== "undefined" && typeof IntersectionObserver !== "undefined";
 
@@ -40,13 +55,21 @@ export const useObserver = (options = {}) => {
     useEffect(() => {
         if (disable) return;
         if (!supportsIO) return;
+
         const node = observedNode;
         if (!node) return;
+
+        const root = resolveElement(customViewport);
+
+        if (wantsCustomViewport && !root) return;
 
         const margin =
             typeof customViewportMargin === "number"
                 ? `${customViewportMargin}px`
                 : String(customViewportMargin);
+
+        const observerOptions = { threshold, rootMargin: margin };
+        if (root) observerOptions.root = root;
 
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -61,13 +84,21 @@ export const useObserver = (options = {}) => {
                 if (isIn) onEnterRef.current?.(entry);
                 else onExitRef.current?.(entry);
             },
-            { threshold, rootMargin: margin, root: customViewport },
+            observerOptions,
         );
 
         observer.observe(node);
 
         return () => observer.disconnect();
-    }, [supportsIO, observedNode, threshold, customViewportMargin, customViewport, disable]);
+    }, [
+        supportsIO,
+        observedNode,
+        threshold,
+        customViewportMargin,
+        customViewport,
+        wantsCustomViewport,
+        disable,
+    ]);
 
     return useMemo(() => ({ ref, inViewport: !!inViewport }), [ref, inViewport]);
 };

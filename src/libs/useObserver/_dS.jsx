@@ -106,7 +106,7 @@ const X = () => {
                         onExit: () => notifier.add("ref3 exited viewport."),
                     });`}
                 example={
-                    <Flex.column gap={8} minHeight={600} justify="center">
+                    <Flex.column gap={8}>
                         <Flex ref={ref3} padding={10} bgColor="greys.shade20">
                             ref3
                         </Flex>
@@ -150,7 +150,6 @@ const X = () => {
                             }}
                         >
                             <Flex.column gap={8} padding={10} minHeight={520}>
-                                <Typo.span size={12}>↓ scroll down inside the box</Typo.span>
                                 <div style={{ height: 360, flexShrink: 0 }} aria-hidden />
                                 <Flex ref={ref4} padding={10} bgColor="primarys.tint20">
                                     ref4

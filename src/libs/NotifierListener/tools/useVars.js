@@ -1,7 +1,7 @@
 import { baseStore } from "../../@baseStore";
 
 export const useVars = (p) => {
-    const { Variant } = p;
+    const { variant: layoutVariant } = p || {};
 
     const [_notifier, theme] = baseStore.useGlobal((s) => [s._notifier, s.theme]);
     const { queue = [] } = _notifier || {};
@@ -9,8 +9,8 @@ export const useVars = (p) => {
     const isEmpty = (queue || []).length === 0;
 
     return {
-        Variant,
         ..._notifier,
+        layoutVariant: typeof layoutVariant === "string" ? layoutVariant : null,
         isEmpty,
         queue,
         theme,

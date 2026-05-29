@@ -11,11 +11,56 @@ const hrefUnderBase = (basePath, pathSegment) => {
     return `${base}/${seg}`;
 };
 
+const scrollWithinParent = (el, scrollParent, { block, behavior }) => {
+    const elRect = el.getBoundingClientRect();
+    const parentRect = scrollParent.getBoundingClientRect();
+
+    let delta = 0;
+
+    if (block === "center") {
+        delta = elRect.top - parentRect.top - (parentRect.height - elRect.height) / 2;
+    } else if (block === "start") {
+        delta = elRect.top - parentRect.top;
+    } else if (block === "end") {
+        delta = elRect.bottom - parentRect.bottom;
+    } else if (elRect.top < parentRect.top) {
+        delta = elRect.top - parentRect.top;
+    } else if (elRect.bottom > parentRect.bottom) {
+        delta = elRect.bottom - parentRect.bottom;
+    } else {
+        return;
+    }
+
+    if (Math.abs(delta) < 1) return;
+
+    const maxScroll = Math.max(0, scrollParent.scrollHeight - scrollParent.clientHeight);
+    const nextScrollTop = Math.min(maxScroll, Math.max(0, scrollParent.scrollTop + delta));
+
+    if (behavior === "smooth") {
+        scrollParent.scrollTo({ top: nextScrollTop, behavior: "smooth" });
+        return;
+    }
+
+    scrollParent.scrollTop = nextScrollTop;
+};
+
+const revealNavItem = (el, { scrollRootRef, block, inline, behavior }) => {
+    const scrollRoot = scrollRootRef?.current;
+
+    if (scrollRoot) {
+        scrollWithinParent(el, scrollRoot, { block, behavior });
+        return;
+    }
+
+    el.scrollIntoView({ block, inline, behavior });
+};
+
 export const useRevealNavItem = ({
     pathname: pathnameOverride,
     links = [],
     basePath = "/",
     getPathFromLink = (link) => link[1],
+    scrollRootRef,
     block = "center",
     inline = "nearest",
     behavior = "smooth",
@@ -38,23 +83,14 @@ export const useRevealNavItem = ({
         const el = activeNavItemRef.current;
         if (!el) return;
 
-        const scroll = () => {
-            el.scrollIntoView({ block, inline, behavior });
-        };
+        const run = () => revealNavItem(el, { scrollRootRef, block, inline, behavior });
 
-        scroll();
+        run();
 
-        let raf2 = 0;
-        const raf1 = requestAnimationFrame(() => {
-            scroll();
-            raf2 = requestAnimationFrame(scroll);
-        });
+        const raf = requestAnimationFrame(run);
 
-        return () => {
-            cancelAnimationFrame(raf1);
-            if (raf2) cancelAnimationFrame(raf2);
-        };
-    }, [pathname, links, block, inline, behavior, basePath, getPathFromLink, ...extraDeps]);
+        return () => cancelAnimationFrame(raf);
+    }, [pathname, links, scrollRootRef, block, inline, behavior, basePath, getPathFromLink, ...extraDeps]);
 
     return [isActive, activeNavItemRef];
 };

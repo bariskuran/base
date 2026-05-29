@@ -105,7 +105,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                 // notifier
                 _notifier: {
                     killAfter: 5,
-                    closingDelay: 500,
+                    closingDelay: 0.5,
                     disableNotifier: false,
                     disableAutoKill: false,
                     variant: null,

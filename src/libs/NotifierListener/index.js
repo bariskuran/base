@@ -10,8 +10,7 @@ export const NotifierListener = componentCreator({
     DefaultVariant,
     PlainVariant,
     variants: {
-        plain: PlainVariant,
-        test: TestVariant,
-        // opposite: opposite,
+        plain: () => ({ variant: "plain" }),
+        test: () => ({ variant: "test" }),
     },
 });
