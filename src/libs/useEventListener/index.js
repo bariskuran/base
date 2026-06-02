@@ -1,37 +1,6 @@
 import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useDebouncedFunction } from "../useDebouncedFunction";
 
-/*
-
-useEventListener(
-    "scroll",
-    () => {console.log("scrolling...")},
-    {delay: 300},
-);
-
-
-*/
-
-/**
- * @typedef {Object} UseEventListenerSettings
- * @property {boolean} [enabled=true] - Enable or disable the event listener
- * @property {number} [delay=0] - Debounce / throttle delay in milliseconds
- * @property {boolean} [isThrottle=false] - Use throttle instead of debounce
- * @property {boolean} [getFirst=true] - Run the first call immediately
- * @property {EventTarget} [source=window] - Event source (window, document, element, etc.)
- * @property {boolean} [capture] - Whether the event should be captured during the capture phase
- * @property {boolean} [once] - Whether the listener should be invoked at most once
- * @property {boolean} [passive] - Whether the listener is passive
- */
-
-/**
- * React hook for attaching an event listener with optional debounce or throttle behavior.
- *
- * @param {string | string[]} event - Event name(s) (e.g. "scroll", "resize", "click")
- * @param {(event: Event) => void} handler - Event handler function
- * @param {Partial<UseEventListenerSettings>} [settings={}] - Listener configuration
- * @returns {null}
- */
 export const useEventListener = (event, handler, settings = {}) => {
     const {
         enabled = true,

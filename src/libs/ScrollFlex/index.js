@@ -11,7 +11,7 @@ export const ScrollFlex = componentCreator({
     DefaultVariant,
     PlainVariant: Plain,
     variants: {
-        /** Nesne şart: styled bileşenler `function` olduğu için creator bunları fabrika sanmasın. */
+
         plain: { variant: Plain },
         border: { variant: DefaultVariant },
         shadow,

@@ -1,12 +1,11 @@
 import { useMatch, useNavigation, useNavigate, Link, useResolvedPath } from "react-router-dom";
 import { useEffect } from "react";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { useTimers } from "./useTimers.js";
 import { getButtonColorPalette } from "./generateColors.js";
 import { useExportData } from "../../useExportedData";
 import { DefaultVariant } from "../DefaultVariant.js";
 
-/** Prop-level background intent (stable); avoids losing padding when resolved `bg` is transparent on hover. */
 const isNonTransparentBgProp = (value) => {
     if (value == null) return false;
     const s = String(value).trim().toLowerCase();
@@ -38,15 +37,15 @@ export const useVars = ({
     minWidth,
     minLabelWidth,
     outlined,
-    /** When true (e.g. `string` preset), `outlined` still affects palette logic but no box border is applied — underline UX stays clean. */
+
     suppressOutlinedBorder,
     size,
     disableUseMatch,
-    //
+
     delay,
     onDelayStart,
     onDelayEnd,
-    //
+
     bgColor,
     hoverBgColor,
     activeBgColor,
@@ -56,10 +55,10 @@ export const useVars = ({
     pendingBgColor,
     pendingColor,
     alphaRate,
-    //
+
     popTip,
     exportData,
-    fullWidth, // left - right da olabilir.
+    fullWidth,
     pendingManually,
     skipClickCooldown,
     skipOnClickHold,
@@ -240,7 +239,7 @@ export const useVars = ({
         isNonTransparentBgProp(activeBgColor) ||
         isNonTransparentBgProp(pendingBgColor);
 
-    /** Label-only horizontal inset: filled bg, outlined border, or any non-transparent bg-related prop. */
+
     const labelNeedsFullHorizontalPad =
         !!outlined || bgAppearsFilled || anyBgColorPropNonTransparent;
 
@@ -251,7 +250,7 @@ export const useVars = ({
 
     if (hasTextLabel) {
         if (hasPrefixIcon && hasSuffixIcon) {
-            /* gap handles spacing; no extra label padding */
+
         } else if (hasPrefixIcon && !hasSuffixIcon) {
             labelPadEndRem = 12;
         } else if (!hasPrefixIcon && hasSuffixIcon) {

@@ -1,36 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
-/*
-
-const [debouncedVal1, setDebouncedVal1] = useDebouncedValue(val1, { delay: 2000 });
-
-*/
-
-/**
- * Stores a value and provides a debounced/throttled version of it.
- *
- * - Debounce (default): updates `debouncedValue` after no changes happen for `delay` ms.
- * - Throttle: updates `debouncedValue` at most once per `delay` ms (leading edge + trailing flush).
- *
- * @typedef {Object} UseDebouncedValueSettings
- * @property {number} [delay=500] - Delay in milliseconds
- * @property {boolean} [isThrottle=false] - If true, uses throttle instead of debounce
- * @property {boolean} [enabled=true] - If false, disables timing behavior (debouncedValue follows value immediately)
- *
- * @template T
- * @param {T} initialValue - Initial value
- * @param {UseDebouncedValueSettings} [settings={}] - Hook settings
- *
- * @returns {[
- *   T,                                  // debouncedValue
- *   (next: T) => void,                  // setValue
- *   T,                                  // value (raw)
- *   (next: T) => void,                  // setDebouncedValue (manual)
- *   (next?: T) => void,                 // reset (to initial or provided)
- *   boolean                             // isWaiting (throttle cooldown)
- * ]}
- */
 export const useDebouncedValue = (initialValue, settings = {}) => {
     const { delay = 500, isThrottle = false, enabled = true } = settings;
 

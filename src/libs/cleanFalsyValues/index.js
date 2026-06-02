@@ -77,16 +77,6 @@ const cleanShallow = (value, opts) => {
     return value;
 };
 
-/**
- * Removes object keys / array items for enabled falsy value types.
- *
- * Default: deep true, all types stripped.
- * except: opt-out list (ignored when only is non-empty).
- * only: allowlist; any entry enables only-mode and clears except.
- *
- * @param {object | array} arg
- * @param {{ deep?: boolean, except?: string[], only?: string[] }} [settings]
- */
 export const cleanFalsyValues = (arg, settings = {}) => {
     if (!arg || typeof arg !== "object") return arg;
 

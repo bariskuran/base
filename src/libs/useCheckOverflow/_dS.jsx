@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { Button } from "../Button";
 import { Typo } from "../Typo";
 import { Flex } from "../Flex";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const OverflowReadout = ({ isOverflowing, isOverflowingX, isOverflowingY }) => (
     <Flex.column gap={4}>
@@ -82,8 +82,8 @@ const X = () => {
                 description="Four fixed-size boxes: no overflow, vertical only, horizontal only, and both axes. Each uses ref only."
                 code={`import { useCheckOverflow } from "${SYS.basePath}";
 
-                    const ref = useRef(null);
-                    const { isOverflowingX, isOverflowingY, isOverflowing } = useCheckOverflow({ ref });`}
+                       const ref = useRef(null);
+                       const { isOverflowingX, isOverflowingY, isOverflowing } = useCheckOverflow({ ref });`}
                 example={
                     <Flex.column gap={12} full>
                         <Typo.span size="s" color="greys.shade60">
@@ -143,12 +143,12 @@ const X = () => {
                 title="Using ref"
                 description="Default: a ref on your scroll container. No target prop."
                 code={`import { useRef } from "react";
-                    import { useCheckOverflow } from "${SYS.basePath}";
+                       import { useCheckOverflow } from "${SYS.basePath}";
 
-                    const ref = useRef(null);
-                    const { isOverflowing, isOverflowingX, isOverflowingY } = useCheckOverflow({ ref });
+                       const ref = useRef(null);
+                       const { isOverflowing, isOverflowingX, isOverflowingY } = useCheckOverflow({ ref });
 
-                    return <div ref={ref} style={{ overflow: "auto", height: 64 }}>...</div>;`}
+                       return <div ref={ref} style={{ overflow: "auto", height: 64 }}>...</div>;`}
                 example={
                     <Flex.column gap={10} full>
                         <Typo.span size="s" color="greys.shade60">

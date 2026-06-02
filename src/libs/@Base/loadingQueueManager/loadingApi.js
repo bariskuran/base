@@ -1,4 +1,4 @@
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 
 const normalizeUrl = (rawUrl = "") => {
     try {

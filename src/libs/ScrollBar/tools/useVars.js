@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { colorGet } from "../../colorGet";
 import { disableBrowserScrollBar, enableBrowserScrollBar } from "./manageBrowsersScrollBar";
 import getScrollHost from "./getScrollHost";
@@ -172,8 +172,7 @@ const useVars = (p) => {
         const layoutHostEl = host;
 
         set((s) => {
-            /* Bar / hostRect geometrisi: positionSourceByRef varsa o; yoksa scrollbar'ın bağlı olduğu host.
-               Kaydırılan içerik her zaman `source` (resolvedSource / normalizedScrollSource). */
+
             s.resolvedHost = explicitPositionEl || layoutHostEl || source;
             s.resolvedSource = source;
             s.overlayHost = (explicitPositionEl || layoutHostEl)?.parentElement || null;
@@ -364,7 +363,7 @@ const useVars = (p) => {
             if (disableX) target.style.overflowX = "hidden";
             if (disableY) target.style.overflowY = "hidden";
 
-            /* Tek eksende custom bar: diğer eksende native taşmayı kilitleme (ör. Y listesi + disableX). */
+
             if (!disableX && disableY) target.style.overflowY = "visible";
             if (disableX && !disableY) target.style.overflowX = "visible";
         });

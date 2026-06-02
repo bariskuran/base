@@ -1,18 +1,5 @@
 import { cssNormalizeSize } from "../cssNormalizeSize";
 
-/**
- *
- * @example
- * cssSpacingResolver({ margin: "10px 20px" });
- * returns "10px 20px 10px 20px"
- *
- * cssSpacingResolver({ margin: "10px", marginLeft: "5px" });
- * returns "10px 10px 10px 5px"
- *
- * cssSpacingResolver({ padding: "4px 8px", paddingTop: "20px" }, "padding");
- * returns "20px 8px 4px 8px"
- */
-
 const parseSpacing = (value) => {
     if (value == null) return {};
 

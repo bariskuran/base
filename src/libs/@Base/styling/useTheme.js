@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useEffect } from "react";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { DEFAULT_THEME, makeAntdTheme } from "../../../constants/DEFAULT_THEME";
 import { colorTinter } from "../../colorTinter";
 import { colorShader } from "../../colorShader";

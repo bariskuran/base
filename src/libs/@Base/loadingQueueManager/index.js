@@ -2,7 +2,7 @@ export { loadingApi } from "./loadingApi";
 
 import { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import {
     withTimeout,
     waitForImages,

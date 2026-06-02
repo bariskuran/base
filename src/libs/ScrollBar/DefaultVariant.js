@@ -24,7 +24,7 @@ export const DefaultVariant = styled.div`
                   : "right center";
 
         return css`
-            // root is track
+
             background-color: ${theme.colorAlpha(mainColor, 0.2)};
             transition:
                 background-color 1s,

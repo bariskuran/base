@@ -33,13 +33,13 @@ export const TextArea = ({
     onPaste,
     prefix,
     suffix,
-    // onClear, // ignore
-    // isDirty, // ignore
-    // isTouched, // ignore
-    // isFocused, // ignore
-    // isHovered, // ignore
-    // fieldType, // ignore
-    // ...rest
+
+
+
+
+
+
+
 }) => {
     return (
         <S.container>

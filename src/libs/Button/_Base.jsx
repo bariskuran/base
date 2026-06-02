@@ -9,7 +9,7 @@ export const Base = (props = {}) => {
     const { forwardedRef, ...propsRest } = props;
     const {
         size,
-        isMatch, // pointer-events: none;
+        isMatch,
         Variant,
         prefix,
         isHovered,

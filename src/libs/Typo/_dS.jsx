@@ -240,7 +240,7 @@ const X = () => (
                         md: { size: 18, color: "primary" },
                     }}
                     content="Resize the window"
-                />`}
+                   />`}
             example={
                 <Typo.span
                     responsive={{

@@ -43,7 +43,7 @@ const X = () => {
                 description="No settings: deep walk, all types stripped."
                 code={`import { cleanFalsyValues } from "${SYS.basePath}";
 
-                    const cleaned = cleanFalsyValues(sample);`}
+                       const cleaned = cleanFalsyValues(sample);`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Button.plain

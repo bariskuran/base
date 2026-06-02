@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { useEventListener } from "../useEventListener";
 import { useTimer } from "../useTimer";
 
@@ -137,7 +137,7 @@ export const IdleManager = () => {
         restartTimer("init");
 
         return () => {
-            // unmount
+
             stop?.();
         };
     }, [enabled, allowedIdleMs, allowedIdleMinutes, restartTimer, stop, set]);

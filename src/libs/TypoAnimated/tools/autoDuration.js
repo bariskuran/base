@@ -16,7 +16,6 @@ const letterSteps = (text) => {
     return Math.ceil(len / Math.ceil(len / chunkSteps));
 };
 
-/** Per-variant total duration (ms) when `duration` is omitted. */
 const calculators = {
     typewriter: (text) => {
         const steps = letterSteps(text);

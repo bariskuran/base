@@ -1,4 +1,4 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { isValidElement } from "react";
 import { isPlainObject } from "../isPlainObject";
 
@@ -48,9 +48,6 @@ let __notifierSeq = 0;
 const __killTimers = new Map();
 const __removeTimers = new Map();
 
-/**
- * Seconds by default; values >= 20 treated as milliseconds (legacy settings).
- */
 export const toDurationMs = (value, fallbackSeconds) => {
     const n = Number(value ?? fallbackSeconds);
     if (!Number.isFinite(n) || n <= 0) return fallbackSeconds * 1000;

@@ -4,7 +4,7 @@ import { useDebouncedFunction } from ".";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { count, throttleCount, set } = baseStore.useLocal({
@@ -93,12 +93,13 @@ const X = () => {
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const debouncedFn = useDebouncedFunction(fn, { delay, isThrottle, getFirst, functionName, onStart, onEnd });"
                 props={{
                     fn: {
                         description:
                             "Function to wrap. Latest fn is always used; inline arrows are fine. Prefer a stable settings object or module-level constants for delay/options.",
-                        type: "function",
+                        type: "fn",
                         required: true,
                     },
                     delay: {
@@ -124,18 +125,39 @@ const X = () => {
                     },
                     onStart: {
                         description: "Called when a wait window starts.",
-                        type: "function",
+                        type: "fn",
                     },
                     onEnd: {
                         description: "Called when a wait window ends.",
-                        type: "function",
+                        type: "fn",
                     },
                 }}
                 returnProps={{
                     debouncedFn: {
                         description:
                             "Debounced or throttled wrapper. Call with the same arguments as fn.",
-                        type: "function",
+                        type: "fn",
+                    },
+                }}
+            />
+            <Ds.api
+                disableLastBlock
+                title="onStart"
+                args="onStart(...args);"
+                props={{
+                    args: {
+                        description: "Same arguments passed to the debounced/throttled call.",
+                        type: "any[]",
+                    },
+                }}
+            />
+            <Ds.api
+                title="debouncedFn"
+                args="debouncedFn(...args);"
+                props={{
+                    args: {
+                        description: "Forwarded to fn unchanged.",
+                        type: "any[]",
                     },
                 }}
             />

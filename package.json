@@ -23,6 +23,7 @@
     "baseForm",
     "fetch",
     "baseFetch",
+    "table",
     "helpers"
   ],
   "author": "Baris Kuran <bariskuran@gmail.com> (thepxa.co.uk)",

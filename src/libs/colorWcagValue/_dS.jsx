@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { colorWcagValue } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import styled, { css } from "styled-components";
 import { useMemo } from "react";
 

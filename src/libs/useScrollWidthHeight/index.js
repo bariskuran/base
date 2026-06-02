@@ -1,82 +1,56 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useImagesReady } from "../useImagesReady";
 import { useEventListener } from "../useEventListener";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
+import { getDocumentScrollElement, readScrollSize } from "../getScrollParent";
+import { useScrollTarget } from "../getScrollParent/useScrollTarget";
 
-/*
+export const useScrollWidthHeight = (sourceOrOptions, legacyOptions = {}) => {
+    const isOptionsObject =
+        sourceOrOptions != null &&
+        typeof sourceOrOptions === "object" &&
+        !sourceOrOptions.nodeType &&
+        !sourceOrOptions.addEventListener;
 
-const [w, h, recalc] = useScrollWidthHeight();
-
-*/
-
-/**
- * React hook that measures the scrollable document size (width/height),
- * or the size of a provided DOM element, and keeps it updated on image-load
- * and window resize.
- *
- * @typedef {Object} UseScrollWidthHeightOptions
- * @property {number} [settleDelay=250]
- * Delay in milliseconds before reading measurements (helps after layout settles)
- * @property {number} [resizeDelay=1000]
- * Throttle delay for resize recalculations
- */
-
-/**
- * @param {HTMLElement | null | undefined} [source]
- * Optional DOM element to measure. If omitted, the document size is measured.
- *
- * @param {UseScrollWidthHeightOptions} [options={}]
- * Configuration options
- *
- * @returns {[number, number, () => void]}
- * Returns `[width, height, recalc]`
- */
-export const useScrollWidthHeight = (source, options = {}) => {
+    const sourceProp = isOptionsObject ? sourceOrOptions.source : sourceOrOptions;
+    const options = isOptionsObject ? sourceOrOptions : legacyOptions;
     const { settleDelay = 250, resizeDelay = 1000 } = options;
 
-    const { width, height, store: { set } = {} } = baseStore.useLocal({ width: 0, height: 0 });
+    const { width, height, set } = baseStore.useLocal({ width: 0, height: 0 });
     const timeoutRef = useRef(null);
 
-    const recalc = useCallback(() => {
+    const { ref, source: resolvedSource } = useScrollTarget(sourceProp);
+    const source = sourceProp ?? resolvedSource ?? getDocumentScrollElement();
+
+    const manualTrigger = useCallback(() => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
         timeoutRef.current = setTimeout(() => {
-            const next =
-                source && source.getBoundingClientRect
-                    ? (() => {
-                          const rect = source.getBoundingClientRect();
-                          return { width: Math.round(rect.width), height: Math.round(rect.height) };
-                      })()
-                    : {
-                          width: Math.max(
-                              document.body.scrollWidth,
-                              document.documentElement.scrollWidth,
-                              document.body.offsetWidth,
-                              document.documentElement.offsetWidth,
-                              document.body.clientWidth,
-                              document.documentElement.clientWidth,
-                          ),
-                          height: Math.max(
-                              document.body.scrollHeight,
-                              document.documentElement.scrollHeight,
-                              document.body.offsetHeight,
-                              document.documentElement.offsetHeight,
-                              document.body.clientHeight,
-                              document.documentElement.clientHeight,
-                          ),
-                      };
-
-            set(next);
+            set?.(readScrollSize(source));
         }, settleDelay);
     }, [source, settleDelay, set]);
 
-    useImagesReady(recalc);
-    useEventListener("resize", recalc, { delay: resizeDelay, isThrottle: true, passive: true });
+    useImagesReady(manualTrigger);
+    useEventListener("resize", manualTrigger, { delay: resizeDelay, isThrottle: true, passive: true });
+
+    useEffect(() => {
+        manualTrigger();
+    }, [manualTrigger]);
+
+    useEffect(() => {
+        if (!source || typeof ResizeObserver === "undefined") return;
+
+        const ro = new ResizeObserver(() => manualTrigger());
+        ro.observe(source);
+
+        return () => ro.disconnect();
+    }, [source, manualTrigger]);
+
     useEffect(() => {
         return () => {
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
     }, []);
 
-    return [width, height, recalc];
+    return { width, height, manualTrigger, ref, source };
 };

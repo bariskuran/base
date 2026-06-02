@@ -1,32 +1,6 @@
 import { useEffect } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
-/*
-
-const isLoaded = useImagePreloader([ image1, image2, image3, ]);
-
-*/
-
-/**
- * Preloads a list of image URLs and exposes a boolean flag when loading is complete.
- *
- * Notes:
- * - If `imageUrls` is empty, `isLoaded` becomes true immediately.
- * - In case of any error, the hook still resolves `isLoaded` to true (fail-open),
- *   but logs the error for debugging.
- *
- * @typedef {Object} UseIsLoadedOptions
- * @property {number} [delayAfterLoad=0]
- * Optional delay (ms) before setting `isLoaded` to true (useful to avoid flicker)
- *
- * @param {string[]} [imageUrls=[]]
- * List of image URLs to preload
- * @param {UseIsLoadedOptions} [options={}]
- * Hook options
- *
- * @returns {boolean}
- * Whether all images have finished preloading (or the preload phase has completed)
- */
 export const useImagePreloader = (images = [], options = {}) => {
     const { delayAfterLoad = 0 } = options;
     const { isLoaded, set } = baseStore.useLocal({ isLoaded: false });

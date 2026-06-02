@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { manageSearchParams } from ".";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { Button } from "../Button";
 import { Typo } from "../Typo";
 import { Flex } from "../Flex";
@@ -55,9 +55,9 @@ const X = () => {
                 description="Default flow with typed markers + base64."
                 code={`import { manageSearchParams } from "${SYS.basePath}";
 
-                    manageSearchParams.set({ page: 2, active: true });
-                    const [params] = manageSearchParams.get();
-                    manageSearchParams.clear();`}
+                       manageSearchParams.set({ page: 2, active: true });
+                       const [params] = manageSearchParams.get();
+                       manageSearchParams.clear();`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Typo.span>
@@ -253,14 +253,14 @@ const X = () => {
                 title="defaults + setDefaultsOnMount / disableSetDefaults"
                 description="get: URL wins; missing default keys fill the return value. setDefaultsOnMount (default true) syncs them to URL on get. set: by default defaults are merged; disableSetDefaults: true writes only the object you pass."
                 code={`manageSearchParams.set({ page: 5 });
-                    manageSearchParams.get({ defaults: { page: 1, offset: 1 } });
-                    // → { page: 5, offset: 1 } and URL gains offset
+                       manageSearchParams.get({ defaults: { page: 1, offset: 1 } });
+                       // → { page: 5, offset: 1 } and URL gains offset
 
-                    manageSearchParams.get({
-                      defaults: { page: 1, offset: 1 },
-                      setDefaultsOnMount: false,
-                    });
-                    // → read-only defaults, no URL write`}
+                       manageSearchParams.get({
+                       defaults: { page: 1, offset: 1 },
+                       setDefaultsOnMount: false,
+                       });
+                       // → read-only defaults, no URL write`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex wrap gap={10}>

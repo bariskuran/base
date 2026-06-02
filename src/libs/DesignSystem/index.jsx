@@ -7,23 +7,17 @@ import block from "./Block";
 import variant from "./VariantViewer";
 import output from "./OutputArea";
 import useOutputViewer from "./useOutputViewer";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const getShowInternalDs = () => {
     try {
-        // This flag is expected to be set by the consumer app via projectSettings.adminSettings.
+
         return !!baseStore.globalData.get?.()?._adminSettings?.showInternalDs;
     } catch {
         return false;
     }
 };
 
-/**
- * Sol menü / route `pageTitle`.
- * - PascalCase bileşen: `<Button>`
- * - SCREAMING_SNAKE / tamamı büyük harf sabit: `COUNTRY_INFORMATION` (<> yok)
- * - Hook / fonksiyon: `useTimer`, `colorGet`
- */
 export const formatDsNavLabel = (name) => {
     if (name == null || name === "") return "";
     const s = String(name);
@@ -35,6 +29,7 @@ export const formatDsNavLabel = (name) => {
 
 const publicSitemap = [
     ["How To Setup", undefined, l(() => import("./_dS")), { index: true }],
+    ["Base", "base", l(() => import("../@Base/_dS"))],
     ["Button", "button", l(() => import("../Button/_dS"))],
     ["ButtonGroup", "buttonGroup", l(() => import("../ButtonGroup/_dS"))],
     ["byPath", "byPath", l(() => import("../byPath/_dS"))],
@@ -59,8 +54,8 @@ const publicSitemap = [
     ["delayedFunction", "delayedFunction", l(() => import("../delayedFunction/_dS"))],
     ["downloadAsCsv", "downloadAsCsv", l(() => import("../downloadAsCsv/_dS"))],
     ["findDifferences", "findDifferences", l(() => import("../findDifferences/_dS"))],
-    ["Flag", "flag", l(() => import("../@Flag/_dS"))],
-    ["flagLibrary", "flagLibrary", l(() => import("../@Flag/_dSLibrary"))],
+    ["Flag", "flag", l(() => import("../Flag/_dS"))],
+    ["flagLibrary", "flagLibrary", l(() => import("../Flag/_dSLibrary"))],
     ["FloatingUi", "floatingUi", l(() => import("../FloatingUi/_dS"))],
     ["Flex", "flex", l(() => import("../Flex/_dS"))],
     ["generateRandom", "generateRandom", l(() => import("../generateRandom/_dS"))],
@@ -68,9 +63,9 @@ const publicSitemap = [
     ["getText", "getText", l(() => import("../getText/_dS"))],
     ["getClientData", "getClientData", l(() => import("../getClientData/_dS"))],
     ["getTimeDiff", "getTimeDiff", l(() => import("../getTimeDiff/_dS"))],
-    ["Icon", "icon", l(() => import("../@Icon/_dS"))],
+    ["Icon", "icon", l(() => import("../Icon/_dS"))],
     ["IdleManager", "idleManager", l(() => import("../IdleManager/_dS"))],
-    ["iconLibrary", "iconLibrary", l(() => import("../@Icon/_dSLibrary"))],
+    ["iconLibrary", "iconLibrary", l(() => import("../Icon/_dSLibrary"))],
     ["isArray", "isArray", l(() => import("../isArray/_dS"))],
     [
         "isArrayOrPlainObject",
@@ -96,6 +91,7 @@ const publicSitemap = [
     ["sortBy", "sortBy", l(() => import("../sortBy/_dS"))],
     ["Space", "space", l(() => import("../Space/_dS"))],
     ["stringCaseConverter", "stringCaseConverter", l(() => import("../stringCaseConverter/_dS"))],
+    ["Table", "table", l(() => import("../Table/_dS"))],
     ["templateLiteralTo", "templateLiteralTo", l(() => import("../templateLiteralTo/_dS"))],
     ["TemplateLiteral", "templateLiteral", l(() => import("../TemplateLiteral/_dS"))],
     ["typeOf", "typeOf", l(() => import("../typeOf/_dS"))],
@@ -146,10 +142,12 @@ const publicSitemap = [
         "upperCaseAlphabet",
         l(() => import("../../constants/UPPER_CASE_ALPHABET_dS")),
     ],
-    ["baseDate", "baseDate", l(() => import("../@baseDate/_dS"))],
-    ["baseStore.use", "baseStore_use", l(() => import("../@baseStore/_dS_useAndCreate"))],
-    ["baseStore.useLocal", "baseStore_useLocal", l(() => import("../@baseStore/_dS_useLocal"))],
-    ["baseStore.useGlobal", "baseStore_useGlobal", l(() => import("../@baseStore/_dS_useGlobal"))],
+    ["baseDate", "baseDate", l(() => import("../baseDate/_dS"))],
+    ["baseFetch", "baseFetch", l(() => import("../baseFetch/_dS"))],
+    ["baseForm", "baseForm", l(() => import("../baseForm/_dS"))],
+    ["baseStore.use", "baseStore_use", l(() => import("../baseStore/_dS_useAndCreate"))],
+    ["baseStore.useLocal", "baseStore_useLocal", l(() => import("../baseStore/_dS_useLocal"))],
+    ["baseStore.useGlobal", "baseStore_useGlobal", l(() => import("../baseStore/_dS_useGlobal"))],
 ];
 
 const internalSitemap = [
@@ -159,7 +157,6 @@ const internalSitemap = [
     ["NestedBaseUi", "nestedBaseUi", l(() => import("../NestedBaseUi/_dS"))],
 ];
 
-/** Okuma anında `globalData._adminSettings` hazır olmalı — modül import’unda sabitleme yok */
 export const getSitemap = () => [...publicSitemap, ...(getShowInternalDs() ? internalSitemap : [])];
 
 export const getDesignSystemRoutes = () => [

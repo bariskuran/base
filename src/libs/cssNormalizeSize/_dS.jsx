@@ -18,7 +18,7 @@ const X = () => (
                     cssNormalizeSize(0);          // 0
                     cssNormalizeSize(null);       // undefined`}
             description={`This function is used by internal styling utilities.
-                                
+
                     Rules:
                     - null/undefined -> undefined
                     - 0/"0" -> 0 (unitless zero)

@@ -21,6 +21,7 @@ const X = () => {
             }
         >
             <Ds.api
+                disableLastBlock
                 args="const [params, set, clear, raw] = useManageSearchParams({ mapping, defaults, setDefaultsOnMount, disableSetDefaults, replace, maxLength, skipSet, disableBase64, disableTypeControl });"
                 returnProps={{
                     params: {
@@ -30,15 +31,30 @@ const X = () => {
                     set: {
                         description:
                             "Wrapper for manageSearchParams.set(). Hook options.defaults apply on each set() unless disableSetDefaults is true.",
-                        type: "function",
+                        type: "fn",
                     },
                     clear: {
                         description: "Wrapper for manageSearchParams.clear().",
-                        type: "function",
+                        type: "fn",
                     },
                     raw: {
                         description: "Decoded raw query payload string when available.",
                         type: "string | undefined",
+                    },
+                }}
+            />
+            <Ds.api
+                title="set"
+                args="set(objOrUpdater, settings);"
+                props={{
+                    objOrUpdater: {
+                        description: "Params object or (currentParams) => nextParams.",
+                        type: "object | fn",
+                        required: true,
+                    },
+                    settings: {
+                        description: "Per-call settings merged with hook options.",
+                        type: "object",
                     },
                 }}
             />

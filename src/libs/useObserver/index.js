@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useCallback, useState } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const isRefLike = (value) => value != null && typeof value === "object" && "current" in value;
 

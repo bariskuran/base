@@ -18,12 +18,6 @@ export const S = {
         transition: opacity 0.25s;
         opacity: ${({ $visible }) => ($visible ? 1 : 0)};
         width: unset;
-
-        /* ${({ $isJustIcon }) =>
-            $isJustIcon &&
-            css`
-                min-width: 75rem;
-            `} */
     `,
     icon: styled.span`
         ${({ $areaName }) => css`
@@ -58,10 +52,6 @@ export const S = {
         max-width: 100%;
         cursor: ${({ $disabled }) => ($disabled ? "default" : "pointer")};
 
-        /*
-         * DefaultVariant lifts with transform (layout box stays put; hit target follows paint).
-         * Slop on ScaleDiv keeps pointer hover stable at the edge — no extra DOM wrapper.
-         */
         ${({ $useLiftHitSlop, $isHovered, $isActivated }) =>
             $useLiftHitSlop &&
             $isHovered &&

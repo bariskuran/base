@@ -5,7 +5,7 @@ import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { status, set } = baseStore.useLocal({ status: "idle" });

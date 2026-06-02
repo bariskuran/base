@@ -4,7 +4,6 @@ import { componentCreator } from "../componentCreator/index.jsx";
 import { DefaultVariant } from "./DefaultVariant.js";
 import { PlainVariant } from "./PlainVariant.js";
 
-/** Accept both new and legacy variant spellings for ScrollFlex. */
 const SCROLL_FLEX_VARIANT_ALIAS_MAP = {
     plain: "plain",
     border: "border",

@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useEventListener } from "../useEventListener";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 export const useMouseXY = (delay = 100) => {
     const { x, y, set } = baseStore.useLocal({ x: 0, y: 0 });
@@ -9,22 +9,26 @@ export const useMouseXY = (delay = 100) => {
     const trailingRef = useRef(0);
     const lastEmitRef = useRef(0);
 
+    const commit = useCallback(() => {
+        rafRef.current = 0;
+        if (trailingRef.current) {
+            clearTimeout(trailingRef.current);
+            trailingRef.current = 0;
+        }
+        lastEmitRef.current = performance.now();
+        const { x: nx, y: ny } = latestRef.current;
+        set?.({ x: nx, y: ny });
+    }, [set]);
+
+    const manualTrigger = useCallback(() => {
+        commit();
+    }, [commit]);
+
     useEventListener(
         "mousemove",
         ({ clientX, clientY }) => {
             latestRef.current.x = clientX;
             latestRef.current.y = clientY;
-
-            const commit = () => {
-                rafRef.current = 0;
-                if (trailingRef.current) {
-                    clearTimeout(trailingRef.current);
-                    trailingRef.current = 0;
-                }
-                lastEmitRef.current = performance.now();
-                const { x: nx, y: ny } = latestRef.current;
-                set?.({ x: nx, y: ny });
-            };
 
             const scheduleTrailing = (waitMs) => {
                 if (trailingRef.current) return;
@@ -54,5 +58,5 @@ export const useMouseXY = (delay = 100) => {
         [],
     );
 
-    return [x, y];
+    return { x, y, manualTrigger };
 };

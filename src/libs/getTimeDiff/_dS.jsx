@@ -4,7 +4,7 @@ import { getTimeDiff } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
-import { baseDate } from "../@baseDate";
+import { baseDate } from "../baseDate";
 
 const fixedEpoch = 1700000000000;
 const fixedLater = fixedEpoch + 36 * 60 * 60 * 1000;
@@ -46,7 +46,7 @@ const X = () => {
                         getTimeDiff("1700000000000", 1700000000000 + 3600000);
                         getTimeDiff({ initial: "28/03/1982" });
                         getTimeDiff(new Date(1700000000000));
-                    `}
+`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} full wrap>
@@ -99,7 +99,7 @@ const X = () => {
                         const r4 = getTimeDiff(a, d);
 
                         // r1, r2, r3, r4 → same tsDiff
-                        `}
+`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10}>
@@ -110,7 +110,7 @@ const X = () => {
                                     activeLabel: "r1",
                                     fn: () => {
                                         const GAP = 1000 * 60 * 60 * 26 + 3500;
-                                        // eslint-disable-next-line react-hooks/purity
+
                                         const a = Date.now();
                                         const c = a + GAP;
                                         const d = baseDate({

@@ -1,5 +1,5 @@
 import { css } from "styled-components";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { colorConverter } from "../colorConverter";
 
 const getRgbString = (color) => {
@@ -24,8 +24,6 @@ const buildShadowLayers = (depth = 1, rgb = "0, 0, 0") => {
         0 ${d * 3}rem ${d * 6}rem rgba(${rgb}, 0.12)
     `;
 };
-
-// ${get3DShadow({ depth: 1, hoverDepth: 3 })}
 
 export const get3DShadow = ({ depth = 1, hoverDepth = null, transition = true, color } = {}) => {
     const theme = baseStore.globalData.get().theme;

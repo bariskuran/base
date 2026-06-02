@@ -1,13 +1,12 @@
-import { baseDate } from "../@baseDate";
+import { baseDate } from "../baseDate";
 
-/** Only treat strings as raw ms timestamps when they are purely numeric (avoids `parseFloat("31/01/2026") === 31`). */
 const looksLikeNumericTimestampString = (s) => /^-?\d+(\.\d+)?$/.test(s);
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
-/** Average Gregorian year length (accounts for leap years). */
+
 const YEAR = 365.25 * DAY;
 
 const omitZeroNumericProps = (obj) => {
@@ -18,7 +17,6 @@ const omitZeroNumericProps = (obj) => {
     return out;
 };
 
-/** Half-up at `decimals` (e.g. 0.134→0.13, 0.135→0.14). */
 const roundHalfUpDecimals = (x, decimals) => {
     if (!Number.isFinite(x)) return x;
     const p = 10 ** decimals;
@@ -27,7 +25,6 @@ const roundHalfUpDecimals = (x, decimals) => {
     return sign * (Math.round(ax * p) / p);
 };
 
-/** True when the first digit after “.” is `0` (e.g. 0.0134); false for 0.134. */
 const firstFractionalDigitIsZero = (ax) => {
     const s = ax.toFixed(18).replace(/\.?0+$/, "");
     const parts = s.split(".");
@@ -35,7 +32,6 @@ const firstFractionalDigitIsZero = (ax) => {
     return parts[1][0] === "0";
 };
 
-/** `n` meaningful digits in the mantissa (leading fractional zeros skipped), e.g. 0.0000012 → 2 digits. */
 const roundSignificantDigits = (x, n) => {
     if (!Number.isFinite(x) || x === 0) return x;
     const sign = x < 0 ? -1 : 1;
@@ -44,10 +40,8 @@ const roundSignificantDigits = (x, n) => {
     return sign * (Math.round(ax * p) / p);
 };
 
-/** Fixed decimals when |x|≥1 or when 0<|x|<1 but first fractional digit ≠ 0 (half-up). */
 const IN_FIXED_DECIMALS = 2;
 
-/** Display rounding for each `in` field (see DS). */
 const roundInField = (key, raw) => {
     if (key === "inMilliseconds") {
         return Math.round(raw);
@@ -90,13 +84,6 @@ const timelineRel = (selfTs, otherTs) => {
     return "sameInstant";
 };
 
-/**
- * Resolves an argument to `{ ts, dateObj, dateStr }`.
- * Plain objects use `baseDate`: resolution forces `format: "timestamp"`.
- * Optional `format` on the object is only used for the returned `date` string.
- *
- * @param {number | string | Date | Object} arg
- */
 const resolveSide = (arg) => {
     if (arg instanceof Date) {
         const ts = arg.getTime();
@@ -155,9 +142,6 @@ const addYearsUTC = (ts, deltaYears) => {
     return d.getTime();
 };
 
-/**
- * Calendar month step (handles Jan 31 → Feb last day, etc.).
- */
 const addMonthsUTC = (ts, deltaMonths) => {
     const d = new Date(ts);
     const day = d.getUTCDate();
@@ -174,10 +158,6 @@ const addDaysUTC = (ts, deltaDays) => {
     return d.getTime();
 };
 
-/**
- * Walk from `minTs` to `maxTs` in UTC calendar order: full years, then months (0–11 count),
- * then days within month, then clock units. Does not use fixed 24h “days” from raw ms.
- */
 const breakdownCalendarUTC = (minTs, maxTs) => {
     const endTime = maxTs;
     let cursor = minTs;
@@ -235,16 +215,6 @@ const breakdownCalendarUTC = (minTs, maxTs) => {
     return { year, month, day, hour, minute, second, millisecond };
 };
 
-/**
- * Millisecond difference and duration views between two instants.
- * `tsDiff` is always non-negative; order is expressed via `time1.atTimeline` / `time2.atTimeline`.
- *
- * **`breakdown`** walks calendar units in **UTC** between the earlier and later instant (years, then months,
- * days-in-month, then clock fields). It is not the viewer's local (IANA) calendar breakdown.
- *
- * @param {number | string | Date | Object} time1
- * @param {number | string | Date | Object} [time2] — omitted → `Date.now()`
- */
 export const getTimeDiff = (time1, time2) => {
     const r1 = resolveSide(time1);
     const r2 = time2 === undefined ? resolveSide(Date.now()) : resolveSide(time2);

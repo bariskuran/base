@@ -2,21 +2,12 @@ import { DEFAULT_BREAKPOINTS } from "../../constants/DEFAULT_BREAKPOINTS";
 import { DEFAULT_MAX_ASP_RATIO } from "../../constants/DEFAULT_MAX_ASP_RATIO";
 import { DEFAULT_MIN_ASP_RATIO } from "../../constants/DEFAULT_MIN_ASP_RATIO";
 
-/**
- * @example
- * const client = getClientData({
- *   breakpoints: { sm: [0, 640], md: [640, 1024], lg: [1024, 99999] },
- *   maxAspRatio: 0.45,
- *   minAspRatio: 2.5,
- * });
- */
-
 export const getClientData = ({
     breakpoints = DEFAULT_BREAKPOINTS,
     maxAspRatio = DEFAULT_MAX_ASP_RATIO,
     minAspRatio = DEFAULT_MIN_ASP_RATIO,
 } = {}) => {
-    // SSR / non-browser safety
+
     if (typeof window === "undefined" || typeof navigator === "undefined") {
         return {
             winW: 0,
@@ -39,7 +30,7 @@ export const getClientData = ({
             browser: "unknown",
             urlMaxLength: 2048,
 
-            // extras
+
             dpr: 1,
             isRetina: false,
             orientation: "unknown",
@@ -58,7 +49,7 @@ export const getClientData = ({
         };
     }
 
-    /** Vars */
+
     const winW = window.innerWidth || document.documentElement.clientWidth || 0;
     const winH = window.innerHeight || document.documentElement.clientHeight || 0;
 
@@ -67,15 +58,15 @@ export const getClientData = ({
 
     const isMobile = winW < 601;
 
-    // NOTE: Your naming convention:
-    // maxAspRatio = lower bound, minAspRatio = upper bound
+
+
     const isOutOfRatio = aspectRatio < maxAspRatio || aspectRatio > minAspRatio;
     const isSafeSize = !isOutOfRatio;
 
     const language = navigator.language || navigator.userLanguage || "undefined";
     const userAgent = navigator.userAgent || "";
 
-    /** Device / OS / Browser (lightweight UA parsing) */
+
     const device = /iPad|Tablet/i.test(userAgent)
         ? "tablet"
         : /Mobile/i.test(userAgent)
@@ -110,7 +101,7 @@ export const getClientData = ({
               ? "firefox"
               : "unknown";
 
-    /** Conservative max full-URL length (origin + path + query + hash) per browser. */
+
     const urlMaxLength =
         browser === "safari"
             ? 1024
@@ -120,7 +111,7 @@ export const getClientData = ({
                 ? 2048
                 : 2048;
 
-    /** Define currentBP */
+
     const currentBreakpoint = (() => {
         for (const [breakpoint, range] of Object.entries(breakpoints)) {
             const [min, max] = range;
@@ -129,45 +120,45 @@ export const getClientData = ({
         return "Not found";
     })();
 
-    /** Timezone + UTC offset */
+
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const utcOffsetMinutes = -new Date().getTimezoneOffset(); // e.g. 120 or 180
+    const utcOffsetMinutes = -new Date().getTimezoneOffset();
     const utcOffsetHours = utcOffsetMinutes / 60;
 
-    /** "Retina" */
+
     const dpr = window.devicePixelRatio || 1;
     const isRetina = dpr >= 2;
 
-    /** Orientation */
+
     const orientationType =
         window.screen?.orientation?.type ||
         (winW && winH ? (winW > winH ? "landscape" : "portrait") : "unknown");
 
-    /** Media preferences */
+
     const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
     const prefersReducedMotion =
         window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
     const prefersContrastMore = window.matchMedia?.("(prefers-contrast: more)")?.matches ?? false;
 
-    /** Connectivity */
+
     const online = navigator.onLine ?? true;
     const net =
         navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
 
     const connection = net
         ? {
-              effectiveType: net.effectiveType ?? null, // "4g", "3g", ...
-              downlink: typeof net.downlink === "number" ? net.downlink : null, // Mbps
-              rtt: typeof net.rtt === "number" ? net.rtt : null, // ms
+              effectiveType: net.effectiveType ?? null,
+              downlink: typeof net.downlink === "number" ? net.downlink : null,
+              rtt: typeof net.rtt === "number" ? net.rtt : null,
               saveData: net.saveData ?? null,
           }
         : null;
 
-    /** Performance-ish hints */
-    const deviceMemory = navigator.deviceMemory ?? null; // GB (mostly Chromium)
+
+    const deviceMemory = navigator.deviceMemory ?? null;
     const hardwareConcurrency = navigator.hardwareConcurrency ?? null;
 
-    /** Input capabilities */
+
     const maxTouchPoints = navigator.maxTouchPoints ?? 0;
     const hasTouch = maxTouchPoints > 0;
     const pointerCoarse = window.matchMedia?.("(pointer: coarse)")?.matches ?? false;
@@ -195,7 +186,7 @@ export const getClientData = ({
         browser,
         urlMaxLength,
 
-        // extras
+
         dpr,
         isRetina,
         orientation: orientationType,

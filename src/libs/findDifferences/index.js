@@ -2,45 +2,6 @@ import { typeOf } from "../typeOf";
 import { isDeepEqual } from "../isDeepEqual";
 import { isArrayOrPlainObject } from "../isArrayOrPlainObject";
 
-/**
- * Builds a diff tree and a flat list of changed paths between two values.
- *
- * Diff tree shape:
- * - Leaf nodes: { oldValue: X, newValue: Y }
- * - Nested nodes: objects/arrays containing deeper leaf nodes.
- *
- * Paths:
- * - For nested diffs: "a.b.0.c" style paths
- * - If the root itself is a leaf diff: paths = ["$"]
- *
- * @param {*} oldData
- * @param {*} newData
- * @param {Object} [settings]
- * @param {Object} [settings.isDeepEqualSettings] - Settings passed into `isDeepEqual`.
- * @returns {Object} {changedPaths: string[], differences: any}
- *
- * @example
- * // Primitive change (root leaf)
- * const {changedPaths, differences} = findDifferences(1, 2);
- * // paths => ["$"]
- * // tree  => { oldValue: 1, newValue: 2 }
- *
- * @example
- * // Object nested change
- * const a = { user: { name: "Baris", age: 30 }, ok: true };
- * const b = { user: { name: "Barış", age: 30 }, ok: true };
- * const {changedPaths, differences} = findDifferences(a, b);
- * // paths => ["user.name"]
- * // tree  => { user: { name: { oldValue: "Baris", newValue: "Barış" } } }
- *
- * @example
- * // Array change (index paths)
- * const a = { items: [{ title: "A" }, { title: "B" }] };
- * const b = { items: [{ title: "A" }, { title: "C" }] };
- * const {changedPaths, differences} = findDifferences(a, b);
- * // paths => ["items.1.title"]
- * // tree  => { items: [ , { title: { oldValue: "B", newValue: "C" } } ] }
- */
 export const findDifferences = (oldData, newData, settings = {}) => {
     const { isDeepEqualSettings } = settings || {};
 
@@ -96,7 +57,7 @@ const diffTree = (a, b, isDeepEqualSettings, level = 0, maxDepth = 50) => {
 
         if (maxChangedIndex === -1) return {};
 
-        // Keep only up to last changed index; fill gaps with empty objects for readable JSON.
+
         const out = Array.from({ length: maxChangedIndex + 1 }, () => ({}));
         for (const [idx, value] of changedByIndex.entries()) {
             out[idx] = value;

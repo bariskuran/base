@@ -119,7 +119,7 @@ const X = () => {
             <Ds.block
                 title="Disabling Axis"
                 description={`It is possible to disable the scrollbar for a specific axis by using the disableX or disableY props.
-                
+
                 The ScrollBar automatically decides which axis should trigger scrolling. If the Y axis is not present or is disabled, the Y scroll trigger will also scroll the X axis.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
@@ -145,9 +145,9 @@ const X = () => {
             <Ds.block
                 title="Mirror and Opposite Position"
                 description={`The "mirror" and "opposite" props determine the position of the scrollBar. The "mirror" prop mirrors the scrollBar's position — for example, a scrollBar that would normally appear on the left is instead positioned on the right. For the x-axis, a scrollBar that would be at the bottom is instead shown at the top.
-                    
+
                     The "opposite" prop visually swaps the x and y axes. For example, the scrollBar for the y-axis is displayed where the x-axis scrollBar would usually be (at the bottom). This is only a visual change; axis functionality remains the same.
-                    
+
                     Both props can be used together.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
@@ -243,7 +243,7 @@ const X = () => {
             <Ds.block
                 title="Enable Thumb Scale"
                 description={`As default, the thumb scale effect is disabled. You can enable it by using the enableThumbScale prop.
-                
+
                 Keep in mind, a variant can override this prop.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
@@ -259,7 +259,7 @@ const X = () => {
             <Ds.block
                 title="fillMode"
                 description={`You can change the behavior of the thumb. When you enable this prop, the thumb will fill the entire track area. fillMode ignores minThumbLength, exactThumbSize props.
-                    
+
                     fillMode also ignores mouse thumb dragging. Because there is no thumb to drag.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
@@ -275,7 +275,7 @@ const X = () => {
             <Ds.block
                 title="Scrolling an external element"
                 description={`ScrollBar normally scrolls the parent container automatically. However, you can scroll an external element by using the sourceByRef or sourceById props.
-                    
+
                     This gives you flexibility with the position of the ScrollBar. When either of these two props is enabled, automatic positioning props such as mirror and opposite, as well as positioning-related props like trackMargin and edgeMargin, are disabled.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 
@@ -354,7 +354,7 @@ const X = () => {
             <Ds.block
                 title="Custom Variant"
                 description={`As shown in the example code, you can fully style the track and thumb using your own custom CSS. Since some styles are set by the component itself, you may need to use !important to override them.
-                
+
                 I can't fully guarantee all behaviors when using custom variants. Therefore, please be careful and test thoroughly when creating your own variant.`}
                 code={`import { ScrollBar, styled, css } from "${SYS.basePath}";
 
@@ -368,7 +368,7 @@ const X = () => {
                                     transform: scaleX(20);
                                     background: blue;
                                 }
-                            `}
+`}
                         \`};
 
                         <TwoAxisLargeContent>
@@ -386,7 +386,7 @@ const X = () => {
             <Ds.block
                 title="Body Integration"
                 description={`'body' prop can be used to integrate the ScrollBar into the body of the page.
-                    
+
                     You should place it on layout level and enable 'body' prop. It will add a new scrollbar to the body of the page.`}
                 code={`import { ScrollBar } from "${SYS.basePath}";
 

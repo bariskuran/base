@@ -1,6 +1,6 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { Flex } from "../Flex";
 import { ScrollFlex } from "../ScrollFlex";
 import { Dropdown } from "../Dropdown";
@@ -206,7 +206,7 @@ const X = () => {
                     closeHandler: {
                         description:
                             "Called to close the floating layer. Plain calls use the animated closing path; `{ instant: true }` skips transition (exclusive takeover, observer exit, dismissWithoutAnimationRef). Parent must set `open` to false.",
-                        type: "function",
+                        type: "fn",
                         required: true,
                     },
                     padding: {
@@ -271,15 +271,15 @@ const X = () => {
                     },
                     onMouseEnter: {
                         description: "Mouse/pointer enter on the floating panel (variant root).",
-                        type: "function",
+                        type: "fn",
                     },
                     onMouseLeave: {
                         description: "Mouse/pointer leave on the floating panel (variant root).",
-                        type: "function",
+                        type: "fn",
                     },
                     onClick: {
                         description: "Click handler on the floating panel (variant root).",
-                        type: "function",
+                        type: "fn",
                     },
                     exportData: {
                         description: "Debug/export helper passthrough.",

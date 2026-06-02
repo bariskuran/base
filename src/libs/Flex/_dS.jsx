@@ -23,18 +23,18 @@ const X = () => (
             description="Flex supports both helper props and direct CSS-like flex props. Also you can use the shorthands such as 'justify', 'align' and 'xAlign', 'yAlign' to quickly align the content. xAlign and yAlign are aliases for align and justify respectively."
             code={`import { Flex } from "${SYS.basePath}";
 
-            <Flex gap={10} padding={8}>
-                <div>A</div><div>B</div><div>C</div>
-            </Flex>
-            <Flex.column gap={10} padding={8}>
-                <div>A</div><div>B</div><div>C</div>
-            </Flex.column>
-            <Flex gap={5} bgColor="#fff" padding={5} alignSelf="end">
-                <div>A</div><div>B</div><div>C</div>
-            </Flex>
-            <Flex direction="column-reverse gap={10} padding={8} >
-                <div>A</div><div>B</div><div>C</div>
-            </Flex>`}
+                   <Flex gap={10} padding={8}>
+                   <div>A</div><div>B</div><div>C</div>
+                   </Flex>
+                   <Flex.column gap={10} padding={8}>
+                   <div>A</div><div>B</div><div>C</div>
+                   </Flex.column>
+                   <Flex gap={5} bgColor="#fff" padding={5} alignSelf="end">
+                   <div>A</div><div>B</div><div>C</div>
+                   </Flex>
+                   <Flex direction="column-reverse gap={10} padding={8} >
+                   <div>A</div><div>B</div><div>C</div>
+                   </Flex>`}
             example={
                 <Flex direction="row" gap={10} aria-label="Block1" align="start">
                     <Flex gap={10} bgColor="#fff" padding={8}>
@@ -64,12 +64,12 @@ const X = () => (
             title="Props Management"
             description="Flex supports both helper props and direct CSS-like flex props. For ex. 'justify-content' and 'justifyContent' both are supported."
             code={`import { Flex } from "${SYS.basePath}";
-                
-                <Flex direction="row" gap={8}>
+
+                   <Flex direction="row" gap={8}>
                     <Flex height={120} bgColor="#dbeafe" alignItems="end"> A </Flex>
                     <Flex height={120} bgColor="#dbeafe" yAlign="end"> B </Flex>
                     <Flex height={120} bgColor="#dbeafe" align-items="end"> B </Flex>
-                </Flex>`}
+                   </Flex>`}
             example={
                 <Flex direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                     <Flex height={120} bgColor="#dbeafe" alignItems="end">
@@ -88,15 +88,15 @@ const X = () => (
             title="Sizing + Flex Item Props"
             description="The sizing props are exactly the same as CSS flex."
             code={`import { Flex } from "${SYS.basePath}";
-            
-                <Flex width={200} direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
+
+                   <Flex width={200} direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                     <Flex width={50} bgColor="#dbeafe" padding={6}>
                         Fixed
                     </Flex>
                     <Flex flex="1 1 auto" bgColor="#dcfce7" padding={6}>
                         Grow
                     </Flex>
-                </Flex>`}
+                   </Flex>`}
             example={
                 <Flex width={200} direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                     <Flex width={50} bgColor="#dbeafe" padding={6}>
@@ -113,10 +113,10 @@ const X = () => (
             description='Instead of writing width="100%", use the boolean full prop. When the parent is a flex container (display: flex or inline-flex), Flex also applies flex: 1 1 100% so the item fills the row. If width is provided, full is ignored. Works with responsive breakpoints.'
             code={`import { Flex } from "${SYS.basePath}";
 
-                 <Flex full direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
+                   <Flex full direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                      <Flex width={50} bgColor="#dbeafe" padding={6}>Fixed</Flex>
                      <Flex flex="1 1 auto" bgColor="#dcfce7" padding={6}>Grow</Flex>
-                 </Flex>`}
+                   </Flex>`}
             example={
                 <Flex full direction="row" gap={8} bgColor="#f8f8f8" padding={8}>
                     <Flex width={50} bgColor="#dbeafe" padding={6}>
@@ -133,18 +133,18 @@ const X = () => (
             description="childrenCommon provides a base set of props to all children; childrenProps allows you to add or override props for each child in order. This enables a cleaner UI."
             code={`import { Flex } from "${SYS.basePath}";
 
-                <Flex gap={8} childrenCommon={{ bgColor: "#fff", padding: 8 }} childrenProps={[{}, { bgColor: "#ff0000" }, { padding: 0, alignSelf: "end" }]} >
+                   <Flex gap={8} childrenCommon={{ bgColor: "#fff", padding: 8 }} childrenProps={[{}, { bgColor: "#ff0000" }, { padding: 0, alignSelf: "end" }]} >
                     <div>A</div>
                     <div>B</div>
                     <div>C</div>
-                </Flex>
-                <Flex gap={5} padding={2} childrenProps={[ { width: 20, bgColor: "#ffd6d6", direction: "column", gap: 10, childrenProps: [ { bgColor: "#ff0000", padding: 10 }, { bgColor: "#00ff00", padding: 10 }, ], }, { width: 0, bgColor: "#d6ffd6", }, ]} >
+                   </Flex>
+                   <Flex gap={5} padding={2} childrenProps={[ { width: 20, bgColor: "#ffd6d6", direction: "column", gap: 10, childrenProps: [ { bgColor: "#ff0000", padding: 10 }, { bgColor: "#00ff00", padding: 10 }, ], }, { width: 0, bgColor: "#d6ffd6", }, ]} >
                     <div>
                         <div>nested 1</div>
                         <div>nested 2</div>
                     </div>
                     <div>content area</div>
-                </Flex>`}
+                   </Flex>`}
             example={
                 <Flex gap={8}>
                     <Flex
@@ -193,7 +193,7 @@ const X = () => (
             title="padding & margin shorthands"
             code={`import { Flex } from "${SYS.basePath}";
 
-                `}
+`}
             example={
                 <Flex
                     gap={8}
@@ -220,14 +220,14 @@ const X = () => (
             description="responsive prop allows you to customize the Flex container for different screen sizes. You can use the responsive prop to customize the Flex container for different screen sizes."
             code={`import { Flex } from "${SYS.basePath}";
 
-                <Flex gap={2} padding={2} bgColor="#ff0000" responsive={{ tablet: { direction: "column", bgColor: "#00ff00" }, }} >
+                   <Flex gap={2} padding={2} bgColor="#ff0000" responsive={{ tablet: { direction: "column", bgColor: "#00ff00" }, }} >
                     <Item>Responsive 1</Item>
                     <Item>Responsive 2</Item>
-                </Flex>
-                <Flex gap={5} padding={5} childrenProps={[{ width: 10, bgColor: "#ffd6d6" }, { bgColor: "#d6ffd6" }]} responsive={{ phone: { direction: "column", childrenProps: [ { full: true, bgColor: "#red" }, { full: true, bgColor: "#green" }, ], }, }} >
+                   </Flex>
+                   <Flex gap={5} padding={5} childrenProps={[{ width: 10, bgColor: "#ffd6d6" }, { bgColor: "#d6ffd6" }]} responsive={{ phone: { direction: "column", childrenProps: [ { full: true, bgColor: "#red" }, { full: true, bgColor: "#green" }, ], }, }} >
                     <div>Responsive child 1</div>
                     <div>Responsive child 2</div>
-                </Flex>`}
+                   </Flex>`}
             example={
                 <Flex gap={10}>
                     <Flex
@@ -266,13 +266,13 @@ const X = () => (
             description='Wraps content with Typo: typo="h6" → Typo.h6. In the typography object, type + Typo props are provided together.'
             code={`import { Flex } from "${SYS.basePath}";
 
-                <Flex typo="h6" padding={12}>
+                   <Flex typo="h6" padding={12}>
                     h6
-                </Flex>
-                <Flex typography={{ type: "p", bold: true }} padding={12}>
+                   </Flex>
+                   <Flex typography={{ type: "p", bold: true }} padding={12}>
                     typography item, bold is true
-                </Flex>
-            `}
+                   </Flex>
+`}
             example={
                 <Flex.column gap={8}>
                     <Flex typo="h6" padding={12}>

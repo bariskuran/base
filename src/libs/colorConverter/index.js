@@ -1,30 +1,5 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { byPath } from "../byPath";
-
-/*
-
-colorConverter("#f00") => {
-    return {
-        hex6,
-        hex8,
-        rgbArray,
-        rgbString,
-        rgbaArray,
-        rgbaString,
-        hsbArray,
-        hsbString,
-        hsbaArray,
-        hsbaString,
-        hslArray,
-        hslString,
-        hslaArray,
-        hslaString,
-        luminance,
-        linearRgbaArray,
-    }
-}
-
-*/
 
 const getThemeSafe = () => {
     try {
@@ -56,32 +31,10 @@ const resolveThemeToken = (input, depth = 0) => {
     return resolved;
 };
 
-/**
- * Converts a color input to multiple formats (hex/rgb/rgba/hsl/hsla/hsb/hsba),
- * and computes relative luminance (WCAG).
- *
- * Supported inputs:
- * - string:
- *   - "#rgb", "#rgba", "#rrggbb", "#rrggbbaa"
- *   - "rgb(...)" / "rgba(...)" (both comma and modern space + "/" alpha syntax)
- *   - "hsl(...)" / "hsla(...)" (both comma and modern syntax)
- *   - "hsb(...)" / "hsba(...)" (your custom format)
- *   - CSS named colors (e.g. "red", "rebeccapurple") + "transparent" (browser only)
- * - object:
- *   { hex3, hex4, hex6, hex8, rgbArray, rgbString, rgbaArray, rgbaString, hslArray, hslString,
- *     hslaArray, hslaString, hsbArray, hsbString, hsbaArray, hsbaString, alpha, alphaPerc }
- *
- * Notes:
- * - CSS named colors are resolved via a tiny canvas trick. In non-browser environments (SSR),
- *   named colors are NOT resolved (function returns {} for those inputs).
- *
- * @param {string|Object} colorInput
- * @returns {Object} Converted formats (or {} if input cannot be parsed)
- */
 export const colorConverter = (colorInput) => {
     colorInput = resolveThemeToken(colorInput);
 
-    // ---------- helpers (internal) ----------
+
     const hexToHexA = (color) => {
         if (typeof color !== "string") return "#00000000";
         color = color.trim();
@@ -107,8 +60,8 @@ export const colorConverter = (colorInput) => {
         return "#" + color.toLowerCase();
     };
 
-    // Resolve CSS color names / "transparent" in the browser.
-    // Returns a normalized CSS color string: "#rrggbb" or "rgba(r,g,b,a)" (or null if invalid/unavailable).
+
+
     const cssColorToNormalized = (input) => {
         if (typeof input !== "string") return null;
         if (typeof document === "undefined") return null;
@@ -116,7 +69,7 @@ export const colorConverter = (colorInput) => {
         const s = input.trim();
         if (!s) return null;
 
-        // If it's already a known format, skip (we'll parse it later)
+
         const lower = s.toLowerCase();
         if (
             lower.startsWith("#") ||
@@ -136,14 +89,14 @@ export const colorConverter = (colorInput) => {
             const ctx = canvas.getContext("2d");
             if (!ctx) return null;
 
-            // Reset then set
+
             ctx.fillStyle = "#000";
             ctx.fillStyle = s;
 
-            // If invalid, browser keeps previous value ("#000000")
+
             if (ctx.fillStyle === "#000000" && lower !== "black") return null;
 
-            // Typical outputs: "#rrggbb" (for names), or "rgba(0, 0, 0, 0)" for transparent
+
             return ctx.fillStyle;
         } catch {
             return null;
@@ -331,7 +284,7 @@ export const colorConverter = (colorInput) => {
         return [h, sPerc, bPerc, clamp01(a)];
     };
 
-    // ---------- normalize input ----------
+
     if (typeof colorInput === "string") {
         const value = colorInput.trim();
         if (!value) return {};
@@ -340,7 +293,7 @@ export const colorConverter = (colorInput) => {
         const lower = value.toLowerCase();
         const isHexLike = /^#?[0-9a-f]{3,8}$/i.test(value);
         if (normalized) {
-            // "#rrggbb" OR "rgba(...)"
+
             if (normalized.startsWith("#")) colorInput = { hex8: hexToHexA(normalized) };
             else colorInput = { rgbaString: normalized };
         } else if (lower.startsWith("rgba(")) {
@@ -460,7 +413,7 @@ export const colorConverter = (colorInput) => {
         return {};
     }
 
-    // normalize channels
+
     rgba = [
         Math.round(Math.min(255, Math.max(0, rgba[0]))),
         Math.round(Math.min(255, Math.max(0, rgba[1]))),

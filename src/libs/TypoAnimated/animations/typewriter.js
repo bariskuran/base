@@ -1,6 +1,5 @@
 import { buildRevealPlan, sliceRevealText } from "../tools/animationUtils";
 
-/** Progressive reveal: d → de → den → … (chunked for long strings). */
 export default {
     id: "typewriter",
     createPlan: ({ text, duration }) => buildRevealPlan(text, duration),

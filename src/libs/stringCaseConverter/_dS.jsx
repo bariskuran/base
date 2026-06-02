@@ -1,12 +1,11 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { stringCaseConverter } from ".";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Dropdown } from "../Dropdown";
 
-/** Her case için kısa örnek string (dropdown etiketinde de gösterilir). */
 const CASE_SAMPLES = {
     camel: "helloWorld",
     pascal: "HelloWorld",

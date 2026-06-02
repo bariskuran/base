@@ -2,10 +2,6 @@ import { createElement, useMemo } from "react";
 import { Flex } from "../Flex";
 import { deepMerge } from "../deepMerge";
 
-/**
- * Renders a list of the same component type with shared groupProps merged into each item.
- * Item props override groupProps (deepMerge).
- */
 export const Group = ({
     component: Component,
     items = [],

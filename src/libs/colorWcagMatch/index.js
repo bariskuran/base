@@ -2,32 +2,6 @@ import { colorConverter } from "../colorConverter";
 import { colorWcagValue } from "../colorWcagValue";
 import { colorFind } from "../colorFind";
 
-/**
- *  * @example
- * import { colorWcagMatch } from "@bariskuran/base";
- * const { color, colorFormats, finalRatio, lightness } = colorWcagMatch(background, targetColor, wcagRatio, { tolerance, step });
- */
-
-/**
- * Adjusts a tone to match a desired contrast ratio against a background color.
- *
- * It keeps the input tone's Hue & Saturation fixed, and searches only on the
- * Lightness axis (HSL L: 0..100). The function tries to reach the target ratio
- * within a small tolerance; if it can't, it returns the closest match.
- *
- * @param {string} background - Background color in hex6 format (e.g. "#112233" or "112233", depending on colorConverter).
- * @param {string} targetColor - Base tone color in hex6 format; Hue & Saturation will be preserved.
- * @param {number} wcagRatio - Target contrast ratio (e.g. 4.5).
- * @param {object} [opts]
- * @param {number} [opts.tolerance=0.05] - Accepted ratio band: expectedRatio ± tolerance.
- * @param {number} [opts.step=1] - Lightness scan step (1 = 101 tests). Use 2/5/10 for faster, rougher results.
- * @returns {{
- *   color: string,
- *   colorFormats: any,
- *   finalRatio: number,
- *   lightness: number
- * }}
- */
 export const colorWcagMatch = (background, targetColor, wcagRatio = 4.5, opts = {}) => {
     const tolerance = typeof opts.tolerance === "number" ? opts.tolerance : 0.05;
     const step = typeof opts.step === "number" && opts.step > 0 ? opts.step : 1;

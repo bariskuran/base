@@ -13,7 +13,7 @@ export const colorTinter = (hex = "#f00", percent = 0) => {
         const alphaPart = normalizedHex.slice(6, 8);
 
         if (alphaPart !== "ff") {
-            const currentAlpha = parseInt(alphaPart, 16); // 0-255
+            const currentAlpha = parseInt(alphaPart, 16);
             const currentAlphaPercent = (currentAlpha / 255) * 100;
 
             const nextAlphaPercent = Math.min(100, currentAlphaPercent + percent);

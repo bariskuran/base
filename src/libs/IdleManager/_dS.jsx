@@ -74,12 +74,12 @@ const X = () => (
                 onIdle: {
                     description:
                         "Called when idle threshold is reached. Args: { baseStore, nowTs, idleForMs, allowedIdleMinutes }.",
-                    type: "function",
+                    type: "fn",
                 },
                 onActive: {
                     description:
                         "Called when user returns after being idle. Args: { baseStore, nowTs, reason } (reason e.g. mousemove, keydown, visibilitychange).",
-                    type: "function",
+                    type: "fn",
                 },
             }}
         />

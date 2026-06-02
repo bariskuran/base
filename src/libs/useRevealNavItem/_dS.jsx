@@ -21,13 +21,13 @@ const X = () => (
             title="Basic usage"
             code={`import { useRevealNavItem } from "${SYS.basePath}";
 
-                const [isActive, activeNavItemRef] = useRevealNavItem({
+                   const [isActive, activeNavItemRef] = useRevealNavItem({
                     links: navItems,
                     basePath: "/",
                     getPathFromLink: (link) => link[1],
-                });
+                   });
 
-                {navItems.map((entry) => { 
+                   {navItems.map((entry) => {
                     const [name, path] = entry;
                     const isActive = isActive(entry);
                     return (
@@ -39,9 +39,10 @@ const X = () => (
                             // ...other Button props
                         />
                     );
-                })}`}
+                   })}`}
         />
         <Ds.api
+            disableLastBlock
             args="const [isActive, activeNavItemRef] = useRevealNavItem({ pathname, links, basePath, getPathFromLink, block, inline, behavior, extraDeps });"
             props={{
                 pathname: {
@@ -62,7 +63,7 @@ const X = () => (
                 },
                 getPathFromLink: {
                     description: "Maps a link item to a path segment; default is link[1].",
-                    type: "function",
+                    type: "fn",
                     defaultValue: "link => link[1]",
                 },
                 block: {
@@ -90,12 +91,35 @@ const X = () => (
                 isActive: {
                     description:
                         "Predicate: true when the item matches the current pathname under basePath.",
-                    type: "function",
+                    type: "fn",
                 },
                 activeNavItemRef: {
                     description:
                         "Ref to attach to the active nav element; triggers scrollIntoView when pathname changes.",
                     type: "ref",
+                },
+            }}
+        />
+        <Ds.api
+            disableLastBlock
+            title="getPathFromLink"
+            args="getPathFromLink(link);"
+            props={{
+                link: {
+                    description: "Nav entry tuple (name, path, …).",
+                    type: "array",
+                    required: true,
+                },
+            }}
+        />
+        <Ds.api
+            title="isActive"
+            args="isActive(item);"
+            props={{
+                item: {
+                    description: "Nav entry tuple (name, path, …).",
+                    type: "array",
+                    required: true,
                 },
             }}
         />

@@ -1,22 +1,5 @@
 import { colorConverter } from "../colorConverter";
 
-/*
-
-colorWcagValue("#fff", "#111")
-
-*/
-
-/**
- * Calculates the WCAG contrast ratio between two colors.
- *
- * Accepted color formats:
- * - String: "#fff", "#ffffff", "rgb(...)", "rgba(...)", "hsl(...)", etc.
- * - Object: any format supported by `colorConverter`
- *
- * @param {string|Object} colorA - First color
- * @param {string|Object} colorB - Second color
- * @returns {number} Contrast ratio rounded to 4 decimals
- */
 export const colorWcagValue = (colorA, colorB) => {
     if (!colorA || !colorB) return 0;
 

@@ -44,17 +44,17 @@ const X = () => (
             title="With Flex wrapper"
             code={`import { Group, Button } from "${SYS.basePath}";
 
-                const items = [
+                   const items = [
                     { bgColor: "error", label: "Lead", onClick: () => {} },
                     { label: "Item 2", onClick: () => {} },
-                ];
+                   ];
 
-                <Group
+                   <Group
                     component={Button}
                     items={items}
                     groupProps={{ bgColor: "success", prefix: { icon: "user" } }}
                     flexProps={{ gap: 5, wrap: true }}
-                />`}
+                   />`}
             example={
                 <Group
                     component={Button}
@@ -99,12 +99,12 @@ const X = () => (
             title="Column layout"
             code={`import { Group, Button } from "${SYS.basePath}";
 
-                <Group
+                   <Group
                     component={Button}
                     items={items}
                     groupProps={groupProps}
                     flexProps={{ direction: "column", gap: 5 }}
-                />`}
+                   />`}
             example={
                 <Group
                     component={Button}

@@ -4,7 +4,7 @@ import { isJsxDescription } from "../isJsxDescription";
 import { templateLiteralTo } from "../../templateLiteralTo";
 
 const Page = ({ children, title, releasedOn, description }) => {
-    /* */
+
     return (
         <Flex.column full>
             <Flex.column full>

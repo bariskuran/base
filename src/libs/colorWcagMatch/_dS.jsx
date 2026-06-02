@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { colorWcagMatch } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import styled, { css } from "styled-components";
 import { colorAlpha } from "../colorAlpha";
 
@@ -183,11 +183,11 @@ const X = () => {
                 title="Basic usage"
                 code={`import { colorWcagMatch } from "${SYS.basePath}";
 
-                //result
-                
-                {
-                    "color": "#0072f5",
-                    "colorFormats": {
+                       //result
+
+                       {
+                       "color": "#0072f5",
+                       "colorFormats": {
                             "hex6": "#0072f5",
                             "hex8": "#0072f5ff",
                             "rgbArray": [ 0, 114, 245 ],
@@ -204,10 +204,10 @@ const X = () => {
                             "hslaString": "hsla(212, 100%, 48% / 1)",
                             "luminance": 0.18627,
                             "linearRgbaArray": [ 0, 0.16826940018969075, 0.9130986517934192, 1 ]
-                    },
-                    "finalRatio": 4.44,
-                    "lightness": 48
-                }`}
+                       },
+                       "finalRatio": 4.44,
+                       "lightness": 48
+                       }`}
                 example={
                     <Flex.column gap={10} full>
                         <Flex gap={10}>

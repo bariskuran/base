@@ -4,7 +4,7 @@ import { colorShader } from ".";
 import { colorFind } from "../colorFind";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { color, percent, set } = baseStore.useLocal({

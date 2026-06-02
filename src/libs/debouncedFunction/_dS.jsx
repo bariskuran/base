@@ -4,7 +4,7 @@ import { debouncedFunction } from ".";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { notifier } from "../notifier";
 
 const X = () => {
@@ -99,7 +99,7 @@ const X = () => {
                 title="Basic Debounce & Throttle"
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
-                        const debounced = debouncedFunction(callback, { 
+                        const debounced = debouncedFunction(callback, {
                             delay: 1000
                         });
                         debounced();
@@ -107,7 +107,7 @@ const X = () => {
                         const throttled = debouncedFunction(callback, {
                           delay: 1000,
                           isThrottle: true,
-                        });                        
+                        });
                         throttled();`}
                 example={
                     <Flex gap={10}>
@@ -135,11 +135,11 @@ const X = () => {
             <Ds.block
                 title="getFirst & functionName"
                 description={`getFirst: Triggers immediately on first call window. Works in debounce mode only.
-                    
+
                     functionName: Shared key for the internal debounce state. In some cases, you may want multiple instances of the same function to share the same debounce/throttle lock. By default, the function reference is used to generate the functionName automatically, but you can provide a unique key if needed in certain scenarios.`}
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
-                        const example2 = debouncedFunction(callback, { 
+                        const example2 = debouncedFunction(callback, {
                             delay: 1000,
                             getFirst: true,
                             functionName: "example2"
@@ -172,7 +172,7 @@ const X = () => {
             <Ds.block
                 title="onStart & onEnd"
                 description={`onStart: Called when wait window starts.
-                    
+
                     onEnd: Called when wait window ends.`}
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
@@ -227,11 +227,12 @@ const X = () => {
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const debounced = debouncedFunction(fn, { delay, functionName, getFirst, isThrottle, onEnd, onStart });"
                 props={{
                     fn: {
                         description: "Function to wrap.",
-                        type: "function",
+                        type: "fn",
                         required: true,
                     },
                     delay: {
@@ -257,17 +258,38 @@ const X = () => {
                     },
                     onStart: {
                         description: "Called when wait window starts.",
-                        type: "function",
+                        type: "fn",
                     },
                     onEnd: {
                         description: "Called when wait window ends.",
-                        type: "function",
+                        type: "fn",
                     },
                 }}
                 returnProps={{
                     debounced: {
                         description: "Debounced or throttled wrapper; call with the same args as fn.",
-                        type: "function",
+                        type: "fn",
+                    },
+                }}
+            />
+            <Ds.api
+                disableLastBlock
+                title="onStart"
+                args="onStart(...args);"
+                props={{
+                    args: {
+                        description: "Same arguments passed to the debounced/throttled call.",
+                        type: "any[]",
+                    },
+                }}
+            />
+            <Ds.api
+                title="debounced"
+                args="debounced(...args);"
+                props={{
+                    args: {
+                        description: "Forwarded to fn unchanged.",
+                        type: "any[]",
                     },
                 }}
             />

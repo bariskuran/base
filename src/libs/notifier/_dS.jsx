@@ -5,7 +5,7 @@ import { notifier } from ".";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const QueuePeek = () => {
     const [count] = baseStore.useGlobal((s) => [s._notifier?.count ?? 0]);
@@ -52,9 +52,9 @@ const X = () => {
                 title="Basic usage"
                 code={`import { notifier } from "${SYS.basePath}";
 
-                    const id = notifier.add("nofitication text");
-                    notifier.remove(id);
-                    notifier.clear();`}
+                       const id = notifier.add("nofitication text");
+                       notifier.remove(id);
+                       notifier.clear();`}
                 example={
                     <Flex gap={8} wrap full>
                         <Button.plain
@@ -82,8 +82,8 @@ const X = () => {
                 title="disableAutoKill + remove"
                 code={`import { notifier } from "${SYS.basePath}";
 
-                    const id = notifier.add("disableAutoKill: true", { disableAutoKill: true });
-                    notifier.remove(id);`}
+                       const id = notifier.add("disableAutoKill: true", { disableAutoKill: true });
+                       notifier.remove(id);`}
                 description="The notification will stay until closed; use the close icon on the notification or notifier.remove(id) to dismiss it."
                 example={
                     <Flex gap={10} wrap full>
@@ -109,7 +109,7 @@ const X = () => {
             <Ds.block
                 title="bgColor (success / error)"
                 code={`notifier.add("Tamam", { bgColor: "success", killAfter: 5 });
-                    notifier.add("Hata", { bgColor: "error", killAfter: 5 });`}
+                       notifier.add("Hata", { bgColor: "error", killAfter: 5 });`}
                 description="Use 'bgColor' (theme key or color) for the visible color;"
                 example={
                     <Flex gap={8} wrap>

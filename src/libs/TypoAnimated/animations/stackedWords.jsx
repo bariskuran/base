@@ -172,7 +172,6 @@ const StackedWordsAnimated = ({ lines, halfMs, step, color, typoProps }) => {
     );
 };
 
-/** Words stay visible; each cycle transitions to a new random target, then pauses at that value. */
 export default {
     id: "stackedWords",
     defaultLoop: true,

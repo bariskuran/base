@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { formatJsonForDisplay } from "../DesignSystem/formatJsonForDisplay";
 import { getClientData } from ".";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
@@ -35,11 +35,11 @@ const X = () => {
                 description="globalData._clientData can be used to get the client data."
                 code={`import { baseStore } from "${SYS.basePath}";
 
-                    // React
-                    const clientData = baseStore.useGlobal((s) => s._clientData);
+                       // React
+                       const clientData = baseStore.useGlobal((s) => s._clientData);
 
-                    // Non-React
-                    const clientData = baseStore.globalData.get()._clientData;`}
+                       // Non-React
+                       const clientData = baseStore.globalData.get()._clientData;`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex.column gap={4}>

@@ -20,14 +20,14 @@ At this stage, this is mainly architectural documentation. Usage examples will b
                 title="Intent (architecture note)"
                 code={`import NestedBaseUi from "${SYS.basePath}/libs/NestedBaseUi";
 
-// conceptual nesting example
-<PopOver>
-  <ButtonGroup>
-    <ScrollFlex>
-      ...
-    </ScrollFlex>
-  </ButtonGroup>
-</PopOver>`}
+                       // conceptual nesting example
+                       <PopOver>
+                       <ButtonGroup>
+                       <ScrollFlex>
+                       ...
+                       </ScrollFlex>
+                       </ButtonGroup>
+                       </PopOver>`}
                 example={
                     <Flex.column gap={10}>
                         <Typo.p>

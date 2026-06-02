@@ -11,16 +11,16 @@ const X = () => (
             title="How it works (quick reminder)"
             code={`import { cssSpacingResolver } from "${SYS.basePath}";
 
-                    cssSpacingResolver({ margin: "10 20" }); 
+                    cssSpacingResolver({ margin: "10 20" });
                     // "10rem 20rem 10rem 20rem"
-                    
+
                     cssSpacingResolver({ margin: "10px", marginLeft: "5px" });
                     // "10px 10px 10px 5px"
-                    
+
                     cssSpacingResolver({ padding: "4 8", paddingTop: "20" }, "padding");
                     // "20rem 8rem 4rem 8rem"`}
             description={`Used internally by layout/styling helpers.
-                                
+
                     Flow:
                     - reads base shorthand from props[key] (default key = "margin")
                     - expands 1/2/3/4-value shorthand to top/right/bottom/left

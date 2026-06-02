@@ -5,26 +5,6 @@ import { SYMBOLS } from "../../constants/SYMBOLS";
 import { LOREM_VOCABULARY } from "../../constants/LOREM_VOCABULARY";
 import React from "react";
 
-/**
-
-    generateRandom.text(length,{
-        useLowerCase = true,
-        useUpperCase = false,
-        useNumbers = false,
-        useSymbols = false,
-    });
-
-    generateRandom.loremIpsum(length, {
-        disableDot = false,
-        paragraphLength = 0,
-        enableParagraph = false,
-        paragraphComponent = "p",
-    });
-
-    generateRandom.number(min = 0, max = 100, decimal = 0, toLocaleString = false);
-
- */
-
 export const generateRandom = {
     _getRandomNumber: (min, max) => Math.floor(Math.random() * (max - min + 1) + min),
     _generateRandomArray: (len) => {

@@ -1,4 +1,4 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 export const notifier = {
     add: (notification, options) => {

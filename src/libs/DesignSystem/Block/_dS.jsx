@@ -11,12 +11,12 @@ const X = () => (
             title="Usage"
             code={`import { Ds } from "${SYS.basePath}";
 
-                <Ds.block
+                   <Ds.block
                     title="Usage"
                     description="This is a description"
                     code={\`import { Ds } from "${SYS.basePath}";\`}
                     example={<div>This is an example</div>}
-                />`}
+                   />`}
         />
         <Ds.api
             args='<Ds.block title="" />'

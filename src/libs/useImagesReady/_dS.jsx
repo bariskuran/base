@@ -16,7 +16,7 @@ const X = () => {
                 title="Watch DOM Images"
                 code={`import { useImagesReady } from "${SYS.basePath}";
 
-const isReady = useImagesReady(onReady, { selector: "img", includeErrors: true });`}
+                       const isReady = useImagesReady(onReady, { selector: "img", includeErrors: true });`}
                 example={<Typo.span>{`document images ready: ${String(ready)}`}</Typo.span>}
             />
             <Ds.api
@@ -24,7 +24,7 @@ const isReady = useImagesReady(onReady, { selector: "img", includeErrors: true }
                 props={{
                     fn: {
                         description: "Called once after images are ready.",
-                        type: "function",
+                        type: "fn",
                     },
                     includeErrors: {
                         description: "Treat errored images as ready.",

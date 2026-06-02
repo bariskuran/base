@@ -31,7 +31,6 @@ const mergeIncomingIntoDraft = (target, incoming) => {
     }
 };
 
-/** Merges parsed query via baseStore set (draft updater) at setPath or root. */
 export const applyImportToStore = ({ set, setPath, incoming }) => {
     if (typeof set !== "function") return;
 

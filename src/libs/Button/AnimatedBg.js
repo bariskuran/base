@@ -1,26 +1,7 @@
 import styled, { css } from "styled-components";
 
 const S = styled.span`
-    ${({
-        // theme,
-        $isHovered,
-        // $disabled,
-        $isActivated,
-        // $isPending,
-        $isJustIcon,
-        $resolvedBg,
-        // $color,
-        // $prefixBgColor,
-        // $prefixColor,
-        // $suffixBgColor,
-        // $suffixColor,
-        // $minHeight,
-        // $minWidth,
-        // $minLabelWidth,
-        // $inverseColor1,
-        // $inverseColor2,
-        // $size,
-    }) => css`
+    ${({ $isHovered, $isActivated, $isJustIcon, $resolvedBg }) => css`
         all: unset;
         display: flex;
         transition: all 0.2s linear 0.25s;

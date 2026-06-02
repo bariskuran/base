@@ -1,4 +1,4 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { useCallback, useEffect, useLayoutEffect } from "react";
 import { useEventListener } from "../useEventListener";
 

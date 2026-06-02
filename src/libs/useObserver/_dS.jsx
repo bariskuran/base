@@ -77,7 +77,7 @@ const X = () => {
                 title="ref1 — inViewport (viewport root)"
                 code={`import { useObserver } from "${SYS.basePath}";
 
-                    const { ref, inViewport } = useObserver({ threshold: 0.2 });`}
+                       const { ref, inViewport } = useObserver({ threshold: 0.2 });`}
                 example={
                     <Flex ref={ref1} padding={10} bgColor="greys.shade20">
                         ref1
@@ -100,11 +100,11 @@ const X = () => {
                 description="Uses notifier.add on enter and exit. Watch the HUD and toast messages while scrolling ref3 in and out of view."
                 code={`import { notifier } from "${SYS.basePath}";
 
-                    const { ref } = useObserver({
+                       const { ref } = useObserver({
                         threshold: 0.2,
                         onEnter: () => notifier.add("ref3 entered viewport."),
                         onExit: () => notifier.add("ref3 exited viewport."),
-                    });`}
+                       });`}
                 example={
                     <Flex.column gap={8}>
                         <Flex ref={ref3} padding={10} bgColor="greys.shade20">
@@ -118,18 +118,18 @@ const X = () => {
                 description="Scroll inside the box only. ref4 uses the box as customViewport (not the page viewport). customViewportMargin -20px tightens the inner detection zone."
                 code={`const [customViewport, setCustomViewport] = useState(null);
 
-                    const { ref, inViewport } = useObserver({
+                       const { ref, inViewport } = useObserver({
                         customViewport,
                         customViewportMargin: "-20px",
                         threshold: 0,
-                    });
+                       });
 
-                    return (
+                       return (
                         <div ref={setCustomViewport} style={{ height: 200, overflowY: "auto" }}>
                             <div style={{ minHeight: 480 }} />
                             <div ref={ref}>ref4</div>
                         </div>
-                    );`}
+                       );`}
                 example={
                     <Flex.column gap={10} full maxWidth={400}>
                         <Typo.span size={12}>
@@ -160,6 +160,7 @@ const X = () => {
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const { ref, inViewport } = useObserver({ disable, onEnter, onExit, customViewport, customViewportMargin, threshold });"
                 props={{
                     disable: {
@@ -168,14 +169,12 @@ const X = () => {
                         defaultValue: "false",
                     },
                     onEnter: {
-                        description:
-                            "Called when the element intersects the viewport (per threshold). Receives the IntersectionObserverEntry.",
-                        type: "function",
+                        description: "Called when the element intersects the viewport (per threshold).",
+                        type: "fn",
                     },
                     onExit: {
-                        description:
-                            "Called when intersection ends. Receives the IntersectionObserverEntry.",
-                        type: "function",
+                        description: "Called when intersection ends.",
+                        type: "fn",
                     },
                     customViewport: {
                         description:
@@ -198,12 +197,45 @@ const X = () => {
                 returnProps={{
                     ref: {
                         description: "Ref callback to attach to the observed element.",
-                        type: "function",
+                        type: "fn",
                     },
                     inViewport: {
                         description:
                             "True when the element intersects the viewport (browser or customViewport) at the given threshold.",
                         type: "boolean",
+                    },
+                }}
+            />
+            <Ds.api
+                disableLastBlock
+                title="onEnter"
+                args="onEnter(entry);"
+                props={{
+                    entry: {
+                        description: "IntersectionObserverEntry for the crossing.",
+                        type: "IntersectionObserverEntry",
+                    },
+                }}
+            />
+            <Ds.api
+                disableLastBlock
+                title="onExit"
+                args="onExit(entry);"
+                props={{
+                    entry: {
+                        description: "IntersectionObserverEntry for the crossing.",
+                        type: "IntersectionObserverEntry",
+                    },
+                }}
+            />
+            <Ds.api
+                title="ref"
+                args="ref(element);"
+                props={{
+                    element: {
+                        description: "DOM node to observe, or null to unobserve.",
+                        type: "Element | null",
+                        required: true,
                     },
                 }}
             />

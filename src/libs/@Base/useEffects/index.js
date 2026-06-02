@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import { logReferrers } from "../../logReferrers";
-import { createBaseDatePackage } from "../../@baseDate/createBaseDatePackage";
-import { baseStore } from "../../@baseStore";
+import { createBaseDatePackage } from "../../baseDate/createBaseDatePackage";
+import { baseStore } from "../../baseStore";
 import { useTimer } from "../../useTimer";
 
 export const useEffects = () => {
     const [_baseDate = {}, set] = baseStore.useGlobal((s) => [s._baseDate, s.set]);
 
-    /* Add console.ref into window */
+
     useEffect(() => {
         window.console.ref = logReferrers;
     }, []);
 
-    /* Start baseDatePackage updater   */
+
     const startTimeout = () => {
         const timezone = _baseDate?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
         const datePackage = createBaseDatePackage({ timezone });
@@ -41,6 +41,6 @@ export const useEffects = () => {
         startTimeout();
     }, []);
 
-    /* Return null */
+
     return null;
 };

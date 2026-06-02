@@ -23,7 +23,7 @@ const X = () => {
                 title="Basic Usage"
                 code={`import { useDebouncedValue } from "${SYS.basePath}";
                         import { TextArea, Button } from "${SYS.basePath}";
-                            
+
                         const [debouncedValue, setValue, { value, setDebouncedValue, reset }] = useDebouncedValue("", { delay: 500 });`}
                 description="Debounced updates 1000ms after you stop. setDebouncedValue skips the wait; reset restores the initial value."
                 example={
@@ -47,7 +47,7 @@ const X = () => {
                 title="Throttle and isWaiting"
                 code={`import { useDebouncedValue } from "${SYS.basePath}";
 
-                    const [debouncedValue, setValue, { value, isWaiting }] = useDebouncedValue("",
+                       const [debouncedValue, setValue, { value, isWaiting }] = useDebouncedValue("",
                         {
                             delay: 1000,
                             isThrottle: true,

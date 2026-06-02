@@ -1,38 +1,37 @@
-import { useCallback, useEffect } from "react";
-import { baseStore } from "../@baseStore";
+import { useCallback, useEffect, useRef } from "react";
 
-/*
-
-const [prevCount, manuallySetPreviousValue] = usePrevious(count);
-
-useEffect(() => {
-  if (prevCount !== count) {
-    console.log("count changed from", prevCount, "to", count);
-  }
-}, [count]);
-
-*/
-
-/**
- * Stores and returns the previous value from the last render.
- *
- * @template T
- * @param {T} value
- * @returns {T | undefined}
- */
 export const usePrevious = (value) => {
-    const { previousValue, set } = baseStore.useLocal({ previousValue: null });
+    const ref = useRef(undefined);
+    const listenersRef = useRef(new Set());
 
-    const setPreviousValue = useCallback(
-        (value) => {
-            set?.({ previousValue: value });
-        },
-        [set],
-    );
+    const setPreviousValue = useCallback((next) => {
+        ref.current = next;
+    }, []);
+
+    const onChange = useCallback((callback) => {
+        if (typeof callback !== "function") return () => {};
+        listenersRef.current.add(callback);
+        return () => {
+            listenersRef.current.delete(callback);
+        };
+    }, []);
+
+    const previousValue = ref.current;
 
     useEffect(() => {
-        setPreviousValue(value);
-    }, [value]);
+        if (previousValue !== value) {
+            const payload = { previousValue, currentValue: value };
+            listenersRef.current.forEach((callback) => {
+                try {
+                    callback(payload);
+                } catch (error) {
+                    console.error("usePrevious onChange listener error:", error);
+                }
+            });
+        }
+    }, [value, previousValue]);
 
-    return [previousValue, setPreviousValue];
+    ref.current = value;
+
+    return { previousValue, setPreviousValue, onChange };
 };

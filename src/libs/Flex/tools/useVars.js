@@ -9,7 +9,7 @@ import {
     useRef,
     useState,
 } from "react";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { useExportData } from "../../useExportedData";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { deepMerge } from "../../deepMerge";
@@ -197,7 +197,7 @@ export const useVars = ({ props, children, content, className, style, forwardedR
             propsNorm?.shrink != null ||
             bpOverrideRow?.shrink != null;
 
-        /** width'ten otomatik üretilen `0 0 ${width}` ile width çiftini sade; kullanıcı flex verdiyse silme. */
+
         const skipAutoWidthFlexBasis =
             !userProvidedFlex &&
             Boolean(generatedFlexTrimmed) &&

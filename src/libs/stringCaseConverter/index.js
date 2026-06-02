@@ -1,42 +1,4 @@
-/**
- * Converts a string between common "case" formats (camel, pascal, kebab, snake, constant, dot, path, etc.).
- *
- * Input case is auto-detected (best-effort), then the string is converted to the requested outputType.
- * Internally it normalizes the input into a whitespace-separated "sentence" form (words),
- * then reassembles those words according to the requested output format.
- *
- * Supported outputType values:
- * - "camel"     => "helloWorld"
- * - "pascal"    => "HelloWorld"
- * - "kebab"     => "hello-world"
- * - "snake"     => "hello_world"
- * - "constant"  => "HELLO_WORLD"
- * - "dot"       => "hello.world"
- * - "path"      => "hello/world"
- * - "lower"     => "hello world"
- * - "sentence"  => "Hello world"
- * - "title"     => "Hello World"
- * - "spaced"    => "Hello World" (currently identical to "title")
- *
- * Notes:
- * - Auto-detection is regex-based and best-effort; edge cases like acronyms (e.g. "myURLValue"),
- *   numbers, or non-ASCII characters may not be detected as expected.
- * - If `string` is falsy, it returns an empty string.
- * - If `outputType` is unknown, it returns a string like `"undefined outputType > ${outputType}"`.
- *
- * @param {string} string - The input string to convert.
- * @param {"camel"|"pascal"|"kebab"|"snake"|"constant"|"dot"|"path"|"lower"|"sentence"|"title"|"spaced"} [outputType="camel"]
- *        The desired output case format.
- *
- * @returns {string} The converted string.
- *
- * @example
- * stringCaseConverter("helloWorld", "kebab");        // "hello-world"
- * stringCaseConverter("HelloWorld", "snake");        // "hello_world"
- * stringCaseConverter("hello-world", "camel");       // "helloWorld"
- * stringCaseConverter("HELLO_WORLD", "sentence");    // "Hello world"
- * stringCaseConverter("hello/world", "title");       // "Hello World"
- */
+
 export const stringCaseConverter = (string, outputType = "camel") => {
     if (!string || typeof string !== "string") {
         console.log("stringCaseConverter: string is falsy", JSON.stringify(string));

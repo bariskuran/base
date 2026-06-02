@@ -13,9 +13,9 @@ const X = () => {
                 title="Basic usage"
                 code={`import { isArray } from "${SYS.basePath}";
 
-                    isArray([]);
-                    isArray({});
-                    isArray(new Date());`}
+                       isArray([]);
+                       isArray({});
+                       isArray(new Date());`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>

@@ -275,7 +275,6 @@ export const formatJsxPropsForViewer = (text = "", indentUnit = "    ") => {
     return result;
 };
 
-/** `(` indeksinden itibaren eşleşen kapanan `)` (string / iç içe parantez güvenli). */
 export const findMatchingCloseParen = (text, openParenIndex) => {
     let depth = 0;
     let quote = null;
@@ -308,7 +307,6 @@ export const findMatchingCloseParen = (text, openParenIndex) => {
     return -1;
 };
 
-/** Virgülle ayrılmış üst seviye parçalar (obje / dizi / parantez derinliği ve string güvenli). */
 export const splitTopLevelByDelimiter = (text, delimiterChar = ",") => {
     const result = [];
     let current = "";
@@ -459,7 +457,6 @@ const formatLeafPairOrExpr = (ft, innerIndent, indentUnit) => {
     return `${innerIndent}${key}: ${val}`;
 };
 
-/** Obje / dizi literalini çıktı görünümü için satırlara böler (JSX değil). */
 export const prettyPrintOuterLiteral = (s, baseIndent, indentUnit = "    ") => {
     const t = s.trim();
     const open = t[0];
@@ -478,10 +475,6 @@ export const prettyPrintOuterLiteral = (s, baseIndent, indentUnit = "    ") => {
     return `${baseIndent}${open}\n${formattedParts.join(`,\n`)}\n${baseIndent}${close}`;
 };
 
-/**
- * `isDeepEqual({ a: 1 }, …)` gibi tek üst seviye çağrıları okunur biçimde satırlara böler.
- * JSX biçimlendirmesinden sonra uygulanır; eşleşmezse metni olduğu gibi döndürür.
- */
 export const formatFnCallSnippetForViewer = (text = "", indentUnit = "    ") => {
     const raw = String(text)
         .trim()

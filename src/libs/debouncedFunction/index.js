@@ -1,17 +1,5 @@
 import { generateRandom } from "../generateRandom";
 
-/**
- 
-   const debounced = debouncedFunction(fn, {
-    delay = 500,
-    isThrottle = false,
-    getFirst = false,
-    getPrevious = false,
-    functionName = generateRandom.text(16),
-   });
-   debounced();
- 
- */
 const ref = {};
 let cleanupIntervalId = null;
 const autoFunctionNameRef = new WeakMap();
@@ -39,19 +27,6 @@ if (typeof window !== "undefined" && !cleanupIntervalId) {
     cleanupIntervalId = setInterval(cleanupUnusedEntries, 300_000);
 }
 
-/**
- * @typedef {Object} DebounceSettings
- * @property {number} [delay] - Delay (ms)
- * @property {boolean} [isThrottle] - Throttle mode
- * @property {boolean} [getFirst] - Run the first call immediately (debounce mode only)
- * @property {string} [functionName] - Shared state key (auto-generated per fn when omitted)
- */
-
-/**
- * @param {Function} fn - Debounced function
- * @param {Partial<DebounceSettings>} [settings={}] - Settings object
- * @returns {Function} Debounced function
- */
 export const debouncedFunction = (
     fn,
     {

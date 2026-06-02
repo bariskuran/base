@@ -46,10 +46,6 @@ const clampEdgeMarginRem = (value) => {
     return Number.isFinite(n) ? Math.max(0, n) : 0;
 };
 
-/**
- * Content-sized outer box (e.g. ButtonGroup row): negative edgeMargin places the X bar
- * outside overflow:hidden and it disappears. Clamp to >= 0 so the bar stays in the lane.
- */
 export const resolveScrollBarPropsForContentSizedLayout = (
     scrollBarProps,
     { contentSizedHeight = false, contentSizedWidth = false } = {},
@@ -99,11 +95,6 @@ export const addBarGutterToCssSize = (size, gutterPx) => {
     return normalizeCalcValue(`calc(${getLayoutSizeCss(size)} + ${gutterPx}px)`);
 };
 
-/**
- * @param {object} [layoutMode]
- * @param {boolean} [layoutMode.contentSizedHeight] When true, outer box grows for X bar gutter instead of shrinking shell height.
- * @param {boolean} [layoutMode.contentSizedWidth] When true, outer box grows for Y bar gutter instead of shrinking shell width.
- */
 export const getShellLayoutStyle = (scrollBarData, scrollBarProps, layoutMode = {}) => {
     const { contentSizedHeight = false, contentSizedWidth = false } = layoutMode;
     const barSpace = getBarAxisGutterPx(scrollBarData, scrollBarProps);

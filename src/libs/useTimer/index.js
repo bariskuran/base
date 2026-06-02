@@ -1,27 +1,8 @@
 import { useRef, useEffect, useCallback } from "react";
-import { baseStore } from "../@baseStore";
-/*
+import { baseStore } from "../baseStore";
 
-const {start, stop, isRunning} = useTimer({
-  timerName: "timerName",
-  refreshTime: 2000,
-  loop: false,
-  onStart: () => console.log("started"),
-  onEnd: () => console.log("ended"),
-  startOnLoad: false, // doesn't need to be triggered manually.
-});
-start({ refreshTime (optional), loop (optional)}); // starts the timer if startOnLoad is false.
-
-
-console.log(getTimersSnapshot());
-*/
-
-/* ------------------------------------------------------------------ */
-/* Registry (module-scope, no reassign) */
-/* ------------------------------------------------------------------ */
-
-const _timers = new Map(); // key: timerId, value: meta
-const _listeners = new Set(); // subscribers
+const _timers = new Map();
+const _listeners = new Set();
 
 const _emit = () => {
     for (const fn of _listeners) {
@@ -40,7 +21,7 @@ export const subscribeTimers = (listener) => {
 };
 
 export const getTimersSnapshot = () => {
-    // stable, serializable-ish snapshot
+
     return Array.from(_timers.values()).map((t) => ({ ...t }));
 };
 
@@ -48,10 +29,10 @@ export const getTimer = (idOrName) => {
     const key = String(idOrName || "");
     if (!key) return null;
 
-    // direct by id
+
     if (_timers.has(key)) return { ..._timers.get(key) };
 
-    // search by name
+
     for (const t of _timers.values()) {
         if (t?.timerName === key) return { ...t };
     }
@@ -70,32 +51,11 @@ const _removeTimer = (timerId) => {
     _emit();
 };
 
-/* ------------------------------------------------------------------ */
-/* utils */
-/* ------------------------------------------------------------------ */
-
 const generateTimerId = () => {
     if (typeof crypto !== "undefined" && crypto?.randomUUID) return crypto.randomUUID();
     return `timer_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 };
 
-/* ------------------------------------------------------------------ */
-/* hook */
-/* ------------------------------------------------------------------ */
-
-/**
- * React hook that provides a controllable timeout with optional looping behavior.
- *
- * @typedef {Object} useTimerSettings
- * @property {() => void} [onStart]
- * @property {() => void} [onEnd]
- * @property {number} [refreshTime=1000]
- * @property {boolean} [loop=true]
- * @property {boolean} [startOnLoad=false]
- * @property {string} [timerName] - Optional friendly name (should be unique if you want getTimer(name))
- *
- * @param {useTimerSettings} [settings]
- */
 export const useTimer = (settings = {}) => {
     const {
         onStart,
@@ -120,7 +80,7 @@ export const useTimer = (settings = {}) => {
     const loopRef = useRef(loop);
     const startRef = useRef(null);
 
-    // keep refs synced
+
     useEffect(() => {
         onStartRef.current = onStart;
         onEndRef.current = onEnd;

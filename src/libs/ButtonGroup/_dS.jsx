@@ -74,29 +74,29 @@ const X = () => {
                 title="Vertical Usage"
                 code={`import { ButtonGroup } from "${SYS.basePath}";
 
-                    const items = [
-                        { 
+                       const items = [
+                        {
                             bgColor: "error",
                             label: "test",
                             hoverLabel: "test hover",
-                            prefix: { 
+                            prefix: {
                                 icon: "bullet"
                             },
                             onClick: () => console.log("click"),
                         },
-                        { 
+                        {
                             label: "test2",
                             onClick: () => console.log("click2")
                         },
-                    ];
+                       ];
 
-                    const groupProps = {
+                       const groupProps = {
                         bgColor: "success",
                         prefix: { icon: "user" },
                         size: 100,
-                    };
+                       };
 
-                    <Flex gap={10} height={200}>
+                       <Flex gap={10} height={200}>
                         <ButtonGroup.column
                             items={items}
                             groupProps={groupProps}
@@ -111,7 +111,7 @@ const X = () => {
                             scrollBarProps={{ trackMargin: 0 }}
                             scrollEdgeShadow
                         />
-                    </Flex>`}
+                       </Flex>`}
                 example={
                     <Flex gap={10} height={200}>
                         <ButtonGroup.column
@@ -135,7 +135,7 @@ const X = () => {
                 title="Horizontal Usage"
                 code={`import { ButtonGroup } from "${SYS.basePath}";
 
-                    <Flex.column gap={10} height={200} full>
+                       <Flex.column gap={10} height={200} full>
                         <ButtonGroup
                             items={items}
                             groupProps={groupProps}
@@ -161,7 +161,7 @@ const X = () => {
                             scrollBarProps={{ trackMargin: 0 }}
                             scrollEdgeShadow
                         />
-                    </Flex.column>`}
+                       </Flex.column>`}
                 example={
                     <Flex.column gap={10} height={200} full>
                         <ButtonGroup
@@ -196,7 +196,7 @@ const X = () => {
                 title="flat (no ScrollFlex)"
                 code={`import { ButtonGroup, Flex } from "${SYS.basePath}";
 
-                    <Flex direction="row" gap={8}>
+                       <Flex direction="row" gap={8}>
                         <ButtonGroup
                             flat
                             items={[
@@ -205,7 +205,7 @@ const X = () => {
                             ]}
                             groupProps={{ variant: "plain" }}
                         />
-                    </Flex>`}
+                       </Flex>`}
                 description="No outer Variant, no inner Flex or ScrollFlex: only Button nodes in a fragment so the parent (e.g. PopOver ScrollFlex content Flex) owns gap, direction, and scroll."
                 example={
                     <Flex direction="row" gap={8}>

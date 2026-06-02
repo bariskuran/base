@@ -130,8 +130,8 @@ const X = () => {
                 description={`Short text reveals letter by letter (~55ms/char auto). Long text uses chunked steps. Auto for "${shortText}": ${autoDuration("typewriter", shortText)}ms.`}
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
-                    <TypoAnimated variant="typewriter" content="Lorem ipsum" />
-                    <TypoAnimated variant="typewriter" duration={4000} content={longText} />`}
+                       <TypoAnimated variant="typewriter" content="Lorem ipsum" />
+                       <TypoAnimated variant="typewriter" duration={4000} content={longText} />`}
                 example={
                     <Flex.column gap={24}>
                         <Demo variant="typewriter" sample={shortText} boxed {...demoProps} />
@@ -145,7 +145,7 @@ const X = () => {
                 description='Same length throughout: random letters first, then they resolve left to right.'
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
-                    <TypoAnimated variant="scrambleReveal" content="Lorem ipsum" />`}
+                       <TypoAnimated variant="scrambleReveal" content="Lorem ipsum" />`}
                 example={
                     <Demo variant="scrambleReveal" sample={shortText} boxed {...demoProps} />
                 }
@@ -156,7 +156,7 @@ const X = () => {
                 description="Like typewriter, but each new character drops ~4px from above and fades in."
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
-                    <TypoAnimated variant="animatedWriter" content="Lorem ipsum" />`}
+                       <TypoAnimated variant="animatedWriter" content="Lorem ipsum" />`}
                 example={
                     <Demo variant="animatedWriter" sample={shortText} boxed {...demoProps} />
                 }
@@ -167,11 +167,11 @@ const X = () => {
                 description="Multi-line content; words fade in (opacity) with font-size between 80–120%. Full layout is reserved from the start."
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
-                    <TypoAnimated
+                       <TypoAnimated
                         variant="scatterLines"
                         content={\`line one\\nline two\`}
                         color="foreground"
-                    />`}
+                       />`}
                 example={
                     <Flex.column gap={8} padding={12} bgColor="greys.shade30">
                         <Demo variant="scatterLines" sample={multilineText} {...demoProps} />
@@ -184,13 +184,13 @@ const X = () => {
                 description="Poster-style stacked lines: all words pulse in sync for duration/2, pause for duration/2, then restart with new random font-size/opacity targets. loop defaults to true."
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
-                    <TypoAnimated
+                       <TypoAnimated
                         variant="stackedWords"
                         loop
                         content={\`A Swiss Legend\\n—old as time—\`}
                         size={22}
                         weight={700}
-                    />`}
+                       />`}
                 example={
                     <Flex.column gap={8} padding={12} bgColor="greys.shade30">
                         <Demo

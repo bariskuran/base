@@ -1,33 +1,5 @@
 import { isArrayOrPlainObject } from "../isArrayOrPlainObject";
 
-/**
- * Utilities to work with nested values via dot-separated paths.
- *
- * - Supports arrays using numeric segments (e.g. "items.0.name")
- * - Creates missing branches in `set` as `{}` or `[]` based on the next segment
- * - Includes a `mapping` helper to pick/rename values from an object by paths
- *
- * @example
- * byPath.get({ a: { b: 1 } }, "a.b"); // 1
- *
- * @example
- * const s1 = {};
- * const s2 = byPath.set(s1, "items.0.name", "Alice");
- * // s2 => { items: [ { name: "Alice" } ] }
- *
- * @example
- * const s = { a: { b: { c: 1 } } };
- * const s2 = byPath.delete(s, "a.b.c");
- * // s2 => { a: { b: {} } }
- *
- * @example
- * const props = { user: { name: "Baris" }, theme: { primary: "#ffbf00" } };
- * const picked = byPath.mapping(props, {
- *   username: "user.name",
- *   primaryColor: "theme.primary",
- * });
- * // picked => { username: "Baris", primaryColor: "#ffbf00" }
- */
 export const byPath = (() => {
     const isIndex = (seg) => /^\d+$/.test(seg);
     const cloneContainer = (v) => (Array.isArray(v) ? v.slice() : { ...v });
@@ -122,7 +94,7 @@ export const byPath = (() => {
                 curCopy = nextCopy;
             }
 
-            return /** @type {any} */ (rootCopy);
+            return  (rootCopy);
         },
         delete(state, path, enableDirectUpdate = false) {
             const parts = splitPath(path);
@@ -166,7 +138,7 @@ export const byPath = (() => {
                 childCopy = parentCopy;
             }
 
-            return /** @type {any} */ (childCopy);
+            return  (childCopy);
         },
         mapping(props, mappingObj) {
             const out = {};

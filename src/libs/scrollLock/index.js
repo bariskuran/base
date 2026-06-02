@@ -1,34 +1,8 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 let prevOverflowY;
 let prevOverflow;
 
-/**
- * Locks/unlocks document scrolling by toggling `document.body` overflow styles,
- * and also syncs `baseStore.globalData.isScrollLocked`.
- *
- * - When `boo === true`, it stores the previous inline `overflow` / `overflowY`
- *   values once, then applies `hidden`.
- * - When `boo === false`, it restores the previously stored inline values.
- * - Safe in SSR/Node environments: if `document` is not available, it won't throw.
- *   (It still attempts to set `baseStore.globalData.isScrollLocked`.)
- *
- * @param {boolean} boo
- * Whether scrolling should be locked.
- *
- * @returns {void}
- *
- * @example
- * scrollLock(true);
- * // ... modal open
- * scrollLock(false);
- *
- * @example
- * useEffect(() => {
- *   scrollLock(true);
- *   return () => scrollLock(false);
- * }, []);
- */
 export const scrollLock = (boo) => {
     baseStore?.globalData?.set?.({ isScrollLocked: !!boo });
 

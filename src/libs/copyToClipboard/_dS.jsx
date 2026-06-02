@@ -5,7 +5,7 @@ import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { lastBasic, set } = baseStore.useLocal({ lastBasic: null });
@@ -30,7 +30,7 @@ const X = () => {
                 title="Basic usage"
                 code={`import { copyToClipboard } from "${SYS.basePath}";
 
-                    copyToClipboard("Hello world");`}
+                       copyToClipboard("Hello world");`}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Button.plain
@@ -54,9 +54,9 @@ const X = () => {
                 description="Options to customize the copyToClipboard behavior. You can disable the notifier, and provide custom success and error callbacks."
                 code={`import { copyToClipboard } from "${SYS.basePath}";
 
-                    copyToClipboard("Hello world", 
-                        { 
-                            disableNotifier: true, 
+                       copyToClipboard("Hello world",
+                        {
+                            disableNotifier: true,
                             onSuccess: ()=> console.log("success"),
                             onError: (err)=> console.error("error", err)
                         });`}
@@ -80,15 +80,15 @@ const X = () => {
                 description="copyToClipboard can copy the following formats: string, number, boolean, object, array, function, date, regex, symbol, error, null, undefined."
                 code={`import { copyToClipboard } from "${SYS.basePath}";
 
-                    copyToClipboard({ a: 1, b: 2, c: 3, d: { e: 4 } });
-                    copyToClipboard([1, 2, 3, 4]);
-                    copyToClipboard(new Date());
-                    copyToClipboard(new Error("test"));
-                    copyToClipboard(null);
-                    copyToClipboard(undefined);
-                    copyToClipboard(Symbol("test"));
-                    copyToClipboard(function() {});
-                `}
+                       copyToClipboard({ a: 1, b: 2, c: 3, d: { e: 4 } });
+                       copyToClipboard([1, 2, 3, 4]);
+                       copyToClipboard(new Date());
+                       copyToClipboard(new Error("test"));
+                       copyToClipboard(null);
+                       copyToClipboard(undefined);
+                       copyToClipboard(Symbol("test"));
+                       copyToClipboard(function() {});
+`}
                 example={
                     <Flex gap={10} padding={10} wrap>
                         <Button.plain
@@ -143,6 +143,7 @@ const X = () => {
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const copied = await copyToClipboard(value, { disableNotifier, errorMessage, onError, onSuccess, successMessage });"
                 props={{
                     value: {
@@ -152,11 +153,11 @@ const X = () => {
                     },
                     onSuccess: {
                         description: "Called on success with copied text.",
-                        type: "function",
+                        type: "fn",
                     },
                     onError: {
                         description: "Called on failure with error.",
-                        type: "function",
+                        type: "fn",
                     },
                     successMessage: {
                         description: "Notifier success message.",
@@ -183,6 +184,27 @@ const X = () => {
                     copied: {
                         description: "True when the value was copied successfully.",
                         type: "boolean",
+                    },
+                }}
+            />
+            <Ds.api
+                disableLastBlock
+                title="onSuccess"
+                args="onSuccess(text);"
+                props={{
+                    text: {
+                        description: "Copied string value.",
+                        type: "string",
+                    },
+                }}
+            />
+            <Ds.api
+                title="onError"
+                args="onError(err);"
+                props={{
+                    err: {
+                        description: "Caught error.",
+                        type: "Error",
                     },
                 }}
             />

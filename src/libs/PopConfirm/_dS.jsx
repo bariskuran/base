@@ -35,7 +35,7 @@ const X = () => (
             title="Basic Usage"
             code={`import { PopConfirm } from "${SYS.basePath}";
 
-                <PopConfirm
+                   <PopConfirm
                     contentButtonProps={{
                         label: "Delete",
                         onClick: () => notifier.add("deleted"),
@@ -46,7 +46,7 @@ const X = () => (
                     cancelButtonProps={{
                         onClick: () => notifier.add("cancelled"),
                     }}
-                />`}
+                   />`}
             example={
                 <PopConfirm
                     contentButtonProps={{
@@ -66,7 +66,7 @@ const X = () => (
             title="Advanced Usage"
             code={`import { PopConfirm } from "${SYS.basePath}";
 
-                <PopConfirm
+                   <PopConfirm
                     content="Warning: This action is irreversible."
                     contentButtonProps={{
                         icon: { icon: "trash", hoverIcon: "warning", activeIcon: "warning" },
@@ -87,7 +87,7 @@ const X = () => (
                         icon: { icon: "arrowLeft" },
                         onClick: () => notifier.add("cancelled"),
                     }}
-                />`}
+                   />`}
             example={
                 <PopConfirm
                     content="Warning: This action is irreversible."

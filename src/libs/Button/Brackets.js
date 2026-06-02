@@ -1,26 +1,7 @@
 import styled, { css } from "styled-components";
 
 const S = styled.span`
-    ${({
-        theme,
-        $isHovered,
-        $isActivated,
-        // $isPending,
-        // $disabled,
-        // $isJustIcon,
-        // $bgColor,
-        // $color,
-        // $prefixBgColor,
-        // $prefixColor,
-        // $suffixBgColor,
-        // $suffixColor,
-        // $minHeight,
-        // $minWidth,
-        // $minLabelWidth,
-        // $inverseColor1,
-        // $inverseColor2,
-        // $size,
-    }) => css`
+    ${({ theme, $isHovered, $isActivated }) => css`
         all: unset;
         display: flex;
         overflow: hidden;
@@ -70,8 +51,8 @@ const S = styled.span`
 `;
 export const X = {
     variant: S,
-    // prefix: { icon: "bracketLeft", width: 22, color: "primary" },
-    // suffix: { icon: "bracketRight", width: 22, color: "primary" },
+
+
     bgColor: "transparent",
     hoverBgColor: "transparent",
     activeBgColor: "transparent",

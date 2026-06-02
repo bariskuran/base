@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { Button } from "../Button";
 import { Typo } from "../Typo";
 import { Flex } from "../Flex";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const useRenderCount = () => {
     const renderCount = useRef(0);
@@ -135,10 +135,10 @@ const X = () => {
                 description="Same content, new reference every render: useEffect runs again; useBaseEffect does not (deep equal)."
                 code={`import { useEffect, useBaseEffect } from "${SYS.basePath}";
 
-                    const config = { value: 1 };
+                       const config = { value: 1 };
 
-                    useEffect(() => { /* runs on ref change */ }, [config]);
-                    useBaseEffect(() => { /* skips if content is equal */ }, [config]);`}
+                       useEffect(() => { /* runs on ref change */ }, [config]);
+                       useBaseEffect(() => { /* skips if content is equal */ }, [config]);`}
                 example={
                     <Flex.column gap={10} full>
                         <Typo.span size="s">
@@ -322,13 +322,14 @@ const X = () => {
             />
 
             <Ds.api
+                disableLastBlock
                 args="useBaseEffect(fn, deps, { executeOnDev, findDifferences, return, skipEffect, useFalsyDeps });"
                 returns="void; fn may return a cleanup function."
                 props={{
                     fn: {
                         description:
-                            "Effect callback. Default: fn(). With findDifferences: fn({ differences }) where differences is { changedPaths, differences }.",
-                        type: "function",
+                            "Effect callback. Default: fn(). With findDifferences: fn({ differences }).",
+                        type: "fn",
                         required: true,
                     },
                     deps: {
@@ -346,7 +347,7 @@ const X = () => {
                     return: {
                         description:
                             "Optional cleanup function used instead of a return value from fn.",
-                        type: "function",
+                        type: "fn",
                     },
                     useFalsyDeps: {
                         description:
@@ -365,6 +366,20 @@ const X = () => {
                             "When true, fn receives { differences }. One dep: diff that value. Multiple deps: diff the full deps array (indexed paths).",
                         type: "boolean",
                         defaultValue: "false",
+                    },
+                }}
+            />
+            <Ds.api
+                title="fn"
+                args="fn({ changedPaths, differences });"
+                props={{
+                    changedPaths: {
+                        description: "Dot paths that changed.",
+                        type: "string[]",
+                    },
+                    differences: {
+                        description: "Diff map keyed by path.",
+                        type: "object",
                     },
                 }}
             />

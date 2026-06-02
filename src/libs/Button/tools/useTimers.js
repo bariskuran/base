@@ -22,7 +22,7 @@ export const useTimers = (p) => {
     const cooldownMs = normalizeTimerMs(clickCooldownMs, 1000);
     const showOnClickHoldDurationMs = normalizeTimerMs(onClickHoldMs, 2000);
 
-    // Label değişince timer adı değişmemeli; aksi halde stop cleanup onEnd çağırmadan clickBlocker'da kalır
+
     const instanceId = useId();
     const timerBaseName = useMemo(() => instanceId.replace(/:/g, "_"), [instanceId]);
 

@@ -18,7 +18,7 @@ const X = () => {
                         generateRandom.number(10, 99);
                         generateRandom.number(0, 100, 2);
                         generateRandom.number(0, 10, 4, true);
-                    `}
+`}
                 example={
                     <Flex gap={20} padding={5}>
                         <Typo.code>{generateRandom.number(10, 99)}</Typo.code>
@@ -30,12 +30,12 @@ const X = () => {
             <Ds.block
                 title=".text"
                 code={`import { generateRandom } from "${SYS.basePath}";
-                
+
                         generateRandom.text(8);
                         generateRandom.text(32, { useLowerCase: false });
                         generateRandom.text(12, { useNumbers: true });
                         generateRandom.text(40, { useNumbers: true, useUpperCase: true, useSymbols: true, });
-                    `}
+`}
                 example={
                     <Flex.column padding={5}>
                         <Typo.code>{generateRandom.text(8)}</Typo.code>
@@ -69,7 +69,7 @@ const X = () => {
                             enableParagraph: true,
                             paragraphComponent: Typo.code, // Typo.p is suggested.
                         })}
-                    `}
+`}
                 example={
                     <Flex.column padding={5}>
                         <Typo.bold>50</Typo.bold>

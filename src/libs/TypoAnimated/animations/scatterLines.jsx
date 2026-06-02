@@ -81,7 +81,6 @@ const ScatterLinesLines = ({
     );
 };
 
-/** Multi-line layout; words fade in with font-size variation (80–120%). Layout reserved at full size. */
 export default {
     id: "scatterLines",
     createPlan: ({ text, duration }) => {

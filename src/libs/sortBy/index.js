@@ -1,42 +1,5 @@
-/**
- * Collection of comparison functions for "smart" ascending and descending sorting.
- *
- * Features:
- * - If both values are numeric (or numeric strings), sorts numerically.
- * - If values start with a numeric prefix (e.g. "10px", "2px"),
- *   compares the numeric prefix first.
- * - Falls back to locale-aware string comparison.
- *
- * Designed to be used directly with `Array.prototype.sort`.
- *
 
- */
 
-/**
- * Natural, case-insensitive sort helpers.
- *
- * - Splits strings into text and number segments.
- * - Compares number segments numerically.
- * - Compares text segments case-insensitively.
- * - Falls back to localeCompare when needed.
- *
- * Designed to be used directly with Array.prototype.sort.
- *  * @example
- * [1, 10, 2].sort(sortFunction.asc);
- * // → [1, 2, 10]
- *
- * @example
- * ["10", "2", "1"].sort(sortFunction.asc);
- * // → ["1", "2", "10"]
- *
- * @example
- * ["10px", "2px", "1px"].sort(sortFunction.asc);
- * // → ["1px", "2px", "10px"]
- *
- * @example
- * ["b", "a", "c"].sort(sortFunction.desc);
- * // → ["c", "b", "a"]
- */
 export const sortBy = {
     asc: (a, b) => naturalCompare(a, b),
     desc: (a, b) => naturalCompare(b, a),

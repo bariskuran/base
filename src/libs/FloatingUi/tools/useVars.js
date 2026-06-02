@@ -1,5 +1,5 @@
 import { useRef, useEffect, useLayoutEffect, useMemo, useState, useCallback } from "react";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { useEventListener } from "../../useEventListener";
 import { delayedFunction } from "../../delayedFunction";
 import getPosition from "./getPosition";

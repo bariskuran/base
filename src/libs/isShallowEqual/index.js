@@ -1,33 +1,6 @@
 import { typeOf } from "../typeOf";
 import { isPlainObject } from "../isPlainObject";
 
-/**
- * Checks shallow equality between two values with strict rules:
- *
- * - Primitives: only `Object.is(a, b)` is considered equal.
- * - Arrays: equal only if both are arrays, have the same length, and each index is `Object.is`.
- * - Plain objects: equal only if both are plain objects (prototype is `Object.prototype` or `null`),
- *   have the same own-key set (by length + key presence), and each value is `Object.is`.
- * - Everything else (Date, Map, Set, Function, class instances, etc.) is never shallow-equal
- *   unless `Object.is(a, b)` was already true.
- *
- * @param {*} a
- * @param {*} b
- * @returns {boolean}
- *
- * @example
- * isShallowEqual({ a: 1, b: 2 }, { a: 1, b: 2 }); // true
- *
- * @example
- * isShallowEqual([1, 2], [1, 2]); // true
- *
- * @example
- * isShallowEqual({ a: 1 }, { a: 1, b: 2 }); // false
- *
- * @example
- * isShallowEqual(new Date(0), new Date(0)); // false
- */
-
 export const isShallowEqual = (a, b) => {
     if (Object.is(a, b)) return true;
 

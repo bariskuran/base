@@ -67,9 +67,7 @@ export const Dropdown = ({
                     </option>
                 ))}
             </S.select>
-            {/* <S.helper>
-                Selected value: {selectedOption ? String(selectedOption.value) : "-"}
-            </S.helper> */}
+            {}
         </S.container>
     );
 };

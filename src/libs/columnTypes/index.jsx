@@ -1,4 +1,4 @@
-import { Icon } from "../@Icon";
+import { Icon } from "../Icon";
 import { stringCaseConverter } from "../stringCaseConverter";
 
 export const COLUMN_SIZES = {

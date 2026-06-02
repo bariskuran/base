@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 import { useMemo } from "react";
 import { getDesignSystemRoutes } from "../../DesignSystem";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { GlobalDataProvider } from "../GlobalDataProvider";
 import { IdleManager } from "../../IdleManager";
 import { ErrorPage } from "../ErrorPage";

@@ -19,7 +19,7 @@ const X = () => {
                 title="Preload Image List"
                 code={`import { useImagePreloader } from "${SYS.basePath}";
 
-const isLoaded = useImagePreloader(["/a.png", "/b.png"], { delayAfterLoad: 150 });`}
+                       const isLoaded = useImagePreloader(["/a.png", "/b.png"], { delayAfterLoad: 150 });`}
                 example={<Typo.span>{`images loaded: ${String(isLoaded)}`}</Typo.span>}
             />
             <Ds.api

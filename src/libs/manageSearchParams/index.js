@@ -1,4 +1,4 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { byPath } from "../byPath";
 import { getText } from "../getText";
 import { isShallowEqual } from "../isShallowEqual";
@@ -283,7 +283,6 @@ const getBaseUrlLength = (location) => {
     return pathname.length + 1;
 };
 
-/** maxLength omitted → browser budget for query; 0 → no limit; number → min(user, browser budget). */
 export const resolveMaxSearchPayloadLength = (maxLength, location) => {
     const browserMaxUrl = getBrowserMaxUrlLength();
     const baseLength = getBaseUrlLength(location);
@@ -299,7 +298,6 @@ const mergeWithDefaults = (defaults, obj) => {
     return { ...defaults, ...(obj || {}) };
 };
 
-/** disableSetDefaults true → encode object as-is (no default keys added). */
 const resolveObjectWithDefaults = (obj, defaults, disableSetDefaults) => {
     if (disableSetDefaults === true) return { ...(obj || {}) };
     return mergeWithDefaults(defaults, obj);

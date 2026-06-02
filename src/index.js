@@ -66,10 +66,11 @@ export {
 } from "react-router-dom";
 
 /* TAILOR MADE */
-export { baseDate, getNow } from "./libs/@baseDate";
-export { baseFetch, useBaseFetch } from "./libs/@baseFetch";
-export { baseStore } from "./libs/@baseStore";
-export { baseStore as cs } from "./libs/@baseStore";
+export { baseDate, getNow } from "./libs/baseDate";
+export { baseFetch } from "./libs/baseFetch";
+export { useBaseFetch } from "./libs/useBaseFetch";
+export { baseStore } from "./libs/baseStore";
+export { baseStore as cs } from "./libs/baseStore";
 export { Button } from "./libs/Button";
 export { ButtonGroup } from "./libs/ButtonGroup";
 export { byPath } from "./libs/byPath";
@@ -96,7 +97,7 @@ export { delayedFunction } from "./libs/delayedFunction";
 export { downloadAsCsv } from "./libs/downloadAsCsv";
 export { Dropdown } from "./libs/Dropdown";
 export { findDifferences } from "./libs/findDifferences";
-export { Flag } from "./libs/@Flag";
+export { Flag } from "./libs/Flag";
 export { Flex } from "./libs/Flex";
 export { FloatingUi } from "./libs/FloatingUi";
 export { generateRandom } from "./libs/generateRandom";
@@ -105,7 +106,7 @@ export { get3DShadow } from "./libs/colorGet3DShadow";
 export { getClientData } from "./libs/getClientData";
 export { getText, getText as t } from "./libs/getText";
 export { getTimeDiff } from "./libs/getTimeDiff";
-export { Icon } from "./libs/@Icon";
+export { Icon } from "./libs/Icon";
 export { isArray } from "./libs/isArray";
 export { isArrayOrPlainObject } from "./libs/isArrayOrPlainObject";
 export { isDeepEqual } from "./libs/isDeepEqual";
@@ -135,12 +136,13 @@ export { default as templateLiteralTo, dedent, splitParagraphs } from "./libs/te
 export { TemplateLiteral } from "./libs/TemplateLiteral";
 export { SYMBOLS } from "./constants/SYMBOLS";
 export { TextArea } from "./libs/TextArea";
+export { Table } from "./libs/Table";
 export { typeOf } from "./libs/typeOf";
 export { Typo, Typography } from "./libs/Typo";
 export { TypoAnimated, autoDuration } from "./libs/TypoAnimated";
 export { UPPER_CASE_ALPHABET } from "./constants/UPPER_CASE_ALPHABET";
 export { useBaseEffect } from "./libs/useBaseEffect";
-export { useBaseForm } from "./libs/@baseForm";
+export { useBaseForm } from "./libs/baseForm";
 export { useCheckOverflow } from "./libs/useCheckOverflow";
 export { useDebouncedFunction } from "./libs/useDebouncedFunction";
 export { useDebouncedValue } from "./libs/useDebouncedValue";

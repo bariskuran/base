@@ -1,15 +1,4 @@
-/**
- * Downloads a 2D array as CSV file.
- *
- * @param {any[][]} data - Rows x columns.
- * @param {string} [fileName="data"] - Name without extension.
- * @param {Object} [options]
- * @param {() => void} [options.onSuccess]
- * @param {(err: any) => void} [options.onError]
- * @param {string} [options.separator=","] - CSV separator.
- * @param {boolean} [options.includeBom=true] - Add UTF-8 BOM for Excel compatibility.
- * @param {boolean} [options.preventExcelInjection=true] - Prefix dangerous cells with `'`.
- */
+
 export const downloadAsCsv = (
     data,
     fileName = "data",
@@ -45,7 +34,7 @@ export const downloadAsCsv = (
 
         const csvText = (includeBom ? "\uFEFF" : "") + rows.join("\r\n");
 
-        // Blob approach (safer than data URI)
+
         const blob = new Blob([csvText], { type: "text/csv;charset=utf-8" });
         const url = URL.createObjectURL(blob);
 

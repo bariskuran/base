@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { queryConverter } from ".";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
@@ -48,10 +48,10 @@ const X = () => {
             <Ds.block
                 title="import"
                 code={`import { queryConverter } from "${SYS.basePath}";
-                    
-                    const obj = queryConverter.import(
+
+                       const obj = queryConverter.import(
                         "?page=2&filter[q]=test&list[0]=a&list[1]=b&flag=true"
-                    );`}
+                       );`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Button.plain
@@ -274,6 +274,7 @@ const X = () => {
             />
             <Ds.api
                 title="import"
+                disableLastBlock
                 args="const parsed = queryConverter.import(str, { baseStore, baseStoreSet, prefix, preserveBooleans, preserveNumbers, setPath });"
                 props={{
                     str: {
@@ -305,7 +306,7 @@ const X = () => {
                     baseStoreSet: {
                         description:
                             "set from baseStore.use (or set from useLocal). Draft merge at setPath. Takes precedence over baseStore.",
-                        type: "function",
+                        type: "fn",
                     },
                     setPath: {
                         description:
@@ -317,6 +318,16 @@ const X = () => {
                     parsed: {
                         description:
                             "Parsed nested object (store is updated separately when baseStore or baseStoreSet is passed).",
+                        type: "object",
+                    },
+                }}
+            />
+            <Ds.api
+                title="baseStoreSet"
+                args="baseStoreSet((draft) => {});"
+                props={{
+                    draft: {
+                        description: "Mutable store draft; merged at setPath or root.",
                         type: "object",
                     },
                 }}

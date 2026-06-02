@@ -11,7 +11,7 @@ export const Flex = componentCreator({
         row: { direction: "row" },
         "row-reverse": { direction: "row-reverse" },
         "column-reverse": { direction: "column-reverse" },
-        //
+
         xCenter: { direction: "x", xAlign: "center", yAlign: "center", gap: 10, padding: 10 },
         yCenter: { direction: "y", xAlign: "center", yAlign: "center", gap: 10, padding: 10 },
         xLeftCenter: { direction: "x", xAlign: "left", yAlign: "center", gap: 10, padding: 10 },

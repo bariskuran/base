@@ -35,5 +35,4 @@ export const Typo = componentCreator({
     variants,
 });
 
-/** @deprecated İsim karışıklığını önlemek için `Typo` kullanın. */
 export const Typography = Typo;

@@ -8,7 +8,6 @@ const splitSpaceList = (value) => {
     return value.trim().split(/\s+/).filter(Boolean);
 };
 
-/** transform scale() argümanı: >3 veya % → yüzde; küçük sayılar birimsiz çarpan. */
 export const normalizeFlexScaleValue = (value) => {
     if (value == null || value === "") return undefined;
 
@@ -72,7 +71,6 @@ const buildFlexTransform = ({ scale, scaleX, scaleY } = {}) => {
     return parts.join(" ");
 };
 
-/** transition süresi: 300 → 300ms, 0.3 → 0.3s; tam CSS shorthand olduğu gibi kalır. */
 export const normalizeFlexDuration = (value) => {
     if (value == null || value === "") return undefined;
 
@@ -136,7 +134,6 @@ const normalizeOriginToken = (token) => {
     return raw;
 };
 
-/** transform-origin: anahtar kelimeler, 50 → 50%, çoklu değer boşlukla. */
 export const normalizeFlexTransformOrigin = (value) => {
     if (value == null || value === "") return undefined;
 

@@ -122,7 +122,7 @@ const X = () => (
                     >
                         <LargeContent />
                     </PopOver>
-                        `}
+`}
             example={
                 <Flex gap={12}>
                     <PopOver buttonProps={{ icon: { flat: true } }}>
@@ -148,7 +148,7 @@ const X = () => (
             description='The "flat" prop of ButtonGroup removes outer wrappers, giving layout control to the PopOver. You can manage the UI inside the PopOver using scrollFlexProps.'
             code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
-                <PopOver
+                   <PopOver
                     buttonProps={{ label: "flat ButtonGroup usage" }}
                     scrollFlexProps={{
                         flexProps: { gap: 5 },
@@ -157,9 +157,9 @@ const X = () => (
                             variant: "primary",
                         },
                     }}
-                >
+                   >
                     <ButtonGroup items={items} groupProps={groupProps} flat />
-                </PopOver>`}
+                   </PopOver>`}
             example={
                 <PopOver
                     buttonProps={{ label: "flat ButtonGroup usage" }}
@@ -180,9 +180,9 @@ const X = () => (
             description="bgColor and color props are used to set the background and text color of the PopOver. It can be a theme color, a theme path, or a css color."
             code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
-                <PopOver bgColor="lightgrey" color="primary">
+                   <PopOver bgColor="lightgrey" color="primary">
                     <Panel />
-                </PopOver>`}
+                   </PopOver>`}
             example={
                 <PopOver bgColor="lightgrey" color="primary">
                     <Panel />
@@ -193,9 +193,9 @@ const X = () => (
             title="disableArrow"
             code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
-                <PopOver disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
+                   <PopOver disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
                     <Panel />
-                </PopOver>`}
+                   </PopOver>`}
             example={
                 <PopOver disableArrow buttonProps={{ label: "Without Arrow", outlined: true }}>
                     <Panel />

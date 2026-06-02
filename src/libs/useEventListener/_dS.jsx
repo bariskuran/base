@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { useEventListener } from ".";
 import { Typo } from "../Typo";
 import { Flex } from "../Flex";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { count, set } = baseStore.useLocal({ count: 0 });
@@ -27,7 +27,7 @@ const X = () => {
                 title="Window Event Listener"
                 code={`import { useEventListener } from "${SYS.basePath}";
 
-useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
+                       useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
                 example={
                     <Flex.column gap={8}>
                         <Typo.span>Click anywhere in page</Typo.span>
@@ -36,6 +36,7 @@ useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="useEventListener(event, handler, { capture, delay, enabled, getFirst, isThrottle, onEnd, onStart, once, passive, source });"
                 returns="void."
                 props={{
@@ -46,7 +47,7 @@ useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
                     },
                     handler: {
                         description: "Event callback.",
-                        type: "function",
+                        type: "fn",
                         required: true,
                     },
                     enabled: {
@@ -88,11 +89,21 @@ useEventListener("scroll", onScroll, { delay: 200, isThrottle: true });`}
                     },
                     onStart: {
                         description: "Debounce start callback.",
-                        type: "function",
+                        type: "fn",
                     },
                     onEnd: {
                         description: "Debounce end callback.",
-                        type: "function",
+                        type: "fn",
+                    },
+                }}
+            />
+            <Ds.api
+                title="handler"
+                args="handler(event);"
+                props={{
+                    event: {
+                        description: "DOM event instance.",
+                        type: "Event",
                     },
                 }}
             />

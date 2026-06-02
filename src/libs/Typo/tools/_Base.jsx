@@ -1,4 +1,4 @@
-// Base.jsx
+
 
 import S from "./_styled";
 import useVars from "./useVars";

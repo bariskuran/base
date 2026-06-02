@@ -5,7 +5,7 @@ import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const sample = [
     ["id", "name", "score"],
@@ -38,7 +38,7 @@ const X = () => {
                 title="Basic usage"
                 code={`import { downloadAsCsv } from "${SYS.basePath}";
 
-                    downloadAsCsv(data, "users");`}
+                       downloadAsCsv(data, "users");`}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Button.plain
@@ -82,6 +82,7 @@ const X = () => {
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const ok = downloadAsCsv(data, fileName, { includeBom, onError, onSuccess, preventExcelInjection, separator });"
                 props={{
                     data: {
@@ -96,11 +97,11 @@ const X = () => {
                     },
                     onSuccess: {
                         description: "Called when the download is successful.",
-                        type: "function",
+                        type: "fn",
                     },
                     onError: {
                         description: "Called when the download fails.",
-                        type: "function",
+                        type: "fn",
                     },
                     separator: {
                         description: "CSV separator.",
@@ -122,6 +123,16 @@ const X = () => {
                     ok: {
                         description: "True when the CSV download was triggered successfully.",
                         type: "boolean",
+                    },
+                }}
+            />
+            <Ds.api
+                title="onError"
+                args="onError(error);"
+                props={{
+                    error: {
+                        description: "Caught error.",
+                        type: "Error",
                     },
                 }}
             />

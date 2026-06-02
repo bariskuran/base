@@ -1,43 +1,10 @@
 import { useEffect, useRef } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
-/*
-
-const isReady = useImagesReady(() => {
-  console.log("All images are ready");
-});
-
-*/
-
-/**
- * React hook that detects when all matching DOM images
- * have finished loading (or errored, optionally).
- *
- * Useful for triggering animations, layout measurements,
- * or logic that depends on images being fully rendered.
- *
- * @typedef {Object} UseImagesReadyOptions
- * @property {string} [selector="img"]
- * CSS selector used to query images in the document
- *
- * @property {boolean} [includeErrors=true]
- * Whether images that fail to load should still be considered "ready"
- */
-
-/**
- * @param {() => void} [onReady]
- * Optional callback executed once when all images are ready
- *
- * @param {UseImagesReadyOptions} [options={}]
- * Configuration options
- *
- * @returns {boolean}
- * Returns `true` once all images are considered ready
- */
 export const useImagesReady = (fn, options = {}) => {
     const {
         selector = "img",
-        includeErrors = true, // true: error olsa bile "ready" say
+        includeErrors = true,
     } = options;
 
     const { isLoaded, set } = baseStore.useLocal({ isLoaded: false });

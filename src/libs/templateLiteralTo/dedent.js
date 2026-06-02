@@ -1,7 +1,4 @@
-/**
- * Strips shared leading indentation from template-literal strings (editor-friendly).
- * If the first non-empty line has zero indent, uses the minimum indent of the remaining lines.
- */
+
 export const dedent = (text = "") => {
     const lines = String(text).replace(/\r\n/g, "\n").split("\n");
 
@@ -35,7 +32,6 @@ export const dedent = (text = "") => {
         .join("\n");
 };
 
-/** Paragraphs after dedent: blank-line blocks, or one paragraph per line. */
 export const splitParagraphs = (text = "") => {
     const body = dedent(text).trim();
     if (!body) return [];

@@ -4,7 +4,7 @@ import { colorTinter } from ".";
 import { colorFind } from "../colorFind";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { color, percent, set } = baseStore.useLocal({
@@ -26,7 +26,7 @@ You can use colorTinter via direct import from base, or via the theme helper in 
                 title="Interactive tint"
                 code={`import { colorTinter } from "${SYS.basePath}";
 
-colorTinter("#4f46e5", 20);`}
+                       colorTinter("#4f46e5", 20);`}
                 example={
                     <Flex.column gap={12} full>
                         <Flex gap={10}>

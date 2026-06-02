@@ -92,7 +92,6 @@ const formatDisplayValue = (value, indent = 0, seen = new WeakSet()) => {
     return `{\n${lines.join(",\n")}\n${pad}}`;
 };
 
-/** globalData / theme snapshots: collapses tint1..100 & shade1..100 scale maps for DS readability. */
 export const formatGlobalDataForDisplay = (value) => {
     try {
         return formatDisplayValue(value, 0);

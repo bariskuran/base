@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { S } from "./_styled";
 import { formatDsNavLabel, getSitemap } from "../index";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { Button } from "../../Button";
 import useVars from "./useVars";
 import { sortBy } from "../../sortBy";

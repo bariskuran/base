@@ -5,7 +5,7 @@ import Block from "../Block";
 import { copyToClipboard } from "../../copyToClipboard";
 import { Flex } from "../../Flex";
 import { Button } from "../../Button";
-import { Icon } from "../../@Icon";
+import { Icon } from "../../Icon";
 
 const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title, full }) => {
     const hasProps = props && typeof props === "object" && Object.keys(props).length > 0;
@@ -42,6 +42,7 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title,
         <Block
             lastBlock={!disableLastBlock}
             title={blockTitle}
+            extraTitlePaddingTop={10}
             example={
                 <Flex.column gap={10} marginTop={5} full>
                     {args && (
@@ -138,7 +139,6 @@ const PropTable = ({ name, item, striped }) => {
     const { description, type, required, defaultValue } = item || {};
     const defaultValueDisplay = formatDefaultValue(defaultValue);
 
-    /* Return */
     return (
         <S.row key={name} $striped={striped}>
             <div>

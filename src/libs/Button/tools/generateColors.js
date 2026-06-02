@@ -55,9 +55,6 @@ const isTransparentSurface = (v) => {
     return false;
 };
 
-/**
- * Tüm default / hover / active yüzey + metin setleri. Icon, label vb. için toplu kullanılır.
- */
 export const getButtonColorPalette = ({
     theme,
     primary,

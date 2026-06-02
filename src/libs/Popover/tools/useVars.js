@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useRef } from "react";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { resolvePathOrRaw } from "../../Button/tools/generateColors.js";
 import { useExportData } from "../../useExportedData";
 

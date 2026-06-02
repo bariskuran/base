@@ -1,4 +1,4 @@
-/** 24rem → %25 smaller */
+
 export const SCROLL_EDGE_SHADOW_SIZE_REM = 18;
 
 const LAYER_BASE = {

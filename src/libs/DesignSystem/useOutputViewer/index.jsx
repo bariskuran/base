@@ -1,5 +1,5 @@
 import DsOutput from "../OutputArea";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { formatJsonForDisplay } from "../formatJsonForDisplay";
 import { dedent } from "../../templateLiteralTo/dedent";
 

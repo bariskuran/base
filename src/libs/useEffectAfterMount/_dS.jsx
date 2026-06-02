@@ -5,7 +5,7 @@ import { useEffectAfterMount } from ".";
 import { Button } from "../Button";
 import { Typo } from "../Typo";
 import { Flex } from "../Flex";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { count, effectCount, useEffectCount, set } = baseStore.useLocal({
@@ -36,9 +36,9 @@ const X = () => {
                 title="Skip First Render"
                 code={`import { useEffectAfterMount } from "${SYS.basePath}";
 
-                    useEffectAfterMount(() => {
+                       useEffectAfterMount(() => {
                         // runs after mount on dependency updates
-                    }, [deps]);`}
+                       }, [deps]);`}
                 example={
                     <Flex.column gap={8}>
                         <Button
@@ -61,7 +61,7 @@ const X = () => {
                 props={{
                     effect: {
                         description: "Effect callback.",
-                        type: "function",
+                        type: "fn",
                         required: true,
                     },
                     deps: {

@@ -77,9 +77,6 @@ const createPropsCss = (props = {}) => {
     `;
 };
 
-/**
- * generateProps çıktısındaki anahtarları transient ($) yapar; DOM'a öznitelik olarak düşmezler.
- */
 export const toTransientFlexContentProps = (props = {}) => {
     const out = {};
     for (const [key, value] of Object.entries(props)) {

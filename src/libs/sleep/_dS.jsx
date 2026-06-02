@@ -4,7 +4,7 @@ import { sleep } from ".";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { label, set } = baseStore.useLocal({ label: "Ready" });

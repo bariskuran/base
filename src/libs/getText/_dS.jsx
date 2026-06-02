@@ -6,7 +6,7 @@ import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
 import { Space } from "../Space";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const customLib = {
     save: { tr: "Kaydet", en: "Save" },
@@ -174,12 +174,12 @@ const X = () => {
                 title="Current textLibrary"
                 description="The merged text library from the project settings and the global data."
                 code={`import { baseStore } from "${SYS.basePath}";
-                
-                    // in react
-                    const textLibrary = baseStore.useGlobal(s=>s.textLibrary);
 
-                    // in non-react
-                    const textLibrary = baseStore.globalData.get().textLibrary;`}
+                       // in react
+                       const textLibrary = baseStore.useGlobal(s=>s.textLibrary);
+
+                       // in non-react
+                       const textLibrary = baseStore.globalData.get().textLibrary;`}
                 example={<Typo.code codeFormat={false}>{prettyTextLibrary}</Typo.code>}
             />
         </Ds.page>

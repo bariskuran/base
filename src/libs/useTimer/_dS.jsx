@@ -4,18 +4,22 @@ import { getTimersSnapshot, useTimer } from ".";
 import { Typo } from "../Typo";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
+import { notifier } from "../notifier";
 
 const X = () => {
     const { ticks, set } = baseStore.useLocal({ ticks: 0 });
     const timer = useTimer({
         timerName: "demoTimer",
-        refreshTime: 700,
+        refreshTime: 2000,
         loop: true,
-        onEnd: () =>
+        onStart: () => notifier.add("timer started"),
+        onEnd: () => {
+            notifier.add("timer cycle ended");
             set((s) => {
                 s.ticks += 1;
-            }),
+            });
+        },
     });
 
     return (
@@ -26,12 +30,16 @@ const X = () => {
         >
             <Ds.block
                 title="Start/Stop Loop Timer"
+                description="onStart and onEnd fire notifier toasts on each cycle. refreshTime is 2000ms so the callbacks are easy to observe."
                 code={`import { useTimer } from "${SYS.basePath}";
+                       import { notifier } from "${SYS.basePath}";
 
-const { start, stop, isRunning } = useTimer({
-    refreshTime: 700,
-    loop: true,
-});`}
+                       const { start, stop, isRunning } = useTimer({
+                       refreshTime: 2000,
+                       loop: true,
+                       onStart: () => notifier.add("timer started"),
+                       onEnd: () => notifier.add("timer cycle ended"),
+                       });`}
                 example={
                     <Flex.column gap={8}>
                         <Flex gap={8}>
@@ -45,15 +53,16 @@ const { start, stop, isRunning } = useTimer({
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const { start, stop, isRunning, timerId, timerName, refreshTime } = useTimer({ loop, onEnd, onStart, refreshTime, startOnLoad, timerName });"
                 props={{
                     onStart: {
                         description: "Called when timer starts.",
-                        type: "function",
+                        type: "fn",
                     },
                     onEnd: {
                         description: "Called when timer cycle ends.",
-                        type: "function",
+                        type: "fn",
                     },
                     refreshTime: {
                         description: "Timer duration in ms.",
@@ -77,12 +86,31 @@ const { start, stop, isRunning } = useTimer({
                     },
                 }}
                 returnProps={{
-                    start: { description: "Starts or restarts the timer.", type: "function" },
-                    stop: { description: "Stops the timer.", type: "function" },
+                    start: {
+                        description: "Starts or restarts the timer.",
+                        type: "fn",
+                    },
+                    stop: { description: "Stops the timer.", type: "fn" },
                     isRunning: { description: "True while the timer is active.", type: "boolean" },
                     timerId: { description: "Stable timer id ref.", type: "ref" },
                     timerName: { description: "Timer name or id ref.", type: "ref | string" },
                     refreshTime: { description: "Current refresh interval ref (ms).", type: "ref" },
+                }}
+            />
+            <Ds.api
+                title="start"
+                args="start({ refreshTime, loop });"
+                props={{
+                    refreshTime: {
+                        description:
+                            "Optional interval in milliseconds. When provided, overrides the hook's refreshTime setting for this run.",
+                        type: "number",
+                    },
+                    loop: {
+                        description:
+                            "Optional. When provided, overrides the hook's loop setting for this run.",
+                        type: "boolean",
+                    },
                 }}
             />
         </Ds.page>

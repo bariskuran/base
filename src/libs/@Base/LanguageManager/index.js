@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useMatches } from "react-router-dom";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { useEffectAfterMount } from "../../useEffectAfterMount";
 
 export const LanguageManager = () => {

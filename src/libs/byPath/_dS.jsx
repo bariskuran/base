@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { byPath } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { Button } from "../Button";
 
 const dataReset = { user: { profile: { name: "Baris" } } };
@@ -28,9 +28,9 @@ const X = () => {
                 title="Get / Set / Delete"
                 code={`import { byPath } from "${SYS.basePath}";
 
-                const result = byPath.get(data, 'user.profile.name');
-                byPath.set(data, "user.profile.name", "Selin");
-                byPath.delete(data, 'user.profile.name');`}
+                       const result = byPath.get(data, 'user.profile.name');
+                       byPath.set(data, "user.profile.name", "Selin");
+                       byPath.delete(data, 'user.profile.name');`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Typo.code>data = {JSON.stringify(data)}</Typo.code>
@@ -90,10 +90,10 @@ const X = () => {
                 description="Mapping is a helper function that allows you to pick/rename values from an object by paths. Shortly, it creates a new object with the mapped values."
                 code={`import { byPath } from "${SYS.basePath}";
 
-                    const mapped = byPath.mapping(data, {
-                      username: "user.profile.name",
-                      firstId: "items.0.id",
-                    });`}
+                       const mapped = byPath.mapping(data, {
+                       username: "user.profile.name",
+                       firstId: "items.0.id",
+                       });`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Typo.pre>data = {JSON.stringify(dataReset2)}</Typo.pre>

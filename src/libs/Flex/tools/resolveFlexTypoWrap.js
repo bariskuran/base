@@ -1,7 +1,4 @@
-/**
- * Typo componentCreator variant anahtarları ile uyumlu.
- * @returns {{ variantKey: string, typoProps: object } | null}
- */
+
 export const resolveFlexTypoWrap = (raw) => {
     if (raw == null || raw === "") return null;
 

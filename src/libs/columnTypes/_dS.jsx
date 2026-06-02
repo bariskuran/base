@@ -3,6 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { COLUMN_SIZES, columnTypes } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
+import { Button } from "../Button";
 
 const X = () => {
     const typeNames = Object.keys(columnTypes || {});
@@ -11,28 +12,26 @@ const X = () => {
         <Ds.page
             title="columnTypes"
             releasedOn="1.0.0"
-            description={`columnTypes is a helper configuration object prepared for future Table cell behaviors.
+            description={`columnTypes is a helper configuration object for Table cell behaviors.
 
-At this stage, Table is not implemented yet, so this is currently a supporting content only for the upcoming Table module. When Table is ready, this dS page will be updated with real integration examples.`}
+Use it with <Table /> (Beta) to define column width, alignment, sorting, and render presets.`}
         >
             <Ds.block
                 title="Purpose"
                 code={`import { columnTypes, COLUMN_SIZES } from "${SYS.basePath}";
 
-// planned usage (when Table is ready)
-const columns = [
-  { key: "id", type: columnTypes.id },
-  { key: "name", type: columnTypes.name },
-  { key: "amount", type: columnTypes.money, width: COLUMN_SIZES.m },
-];`}
+                       // planned usage (when Table is ready)
+                       const columns = [
+                       { key: "id", type: columnTypes.id },
+                       { key: "name", type: columnTypes.name },
+                       { key: "amount", type: columnTypes.money, width: COLUMN_SIZES.m },
+                       ];`}
                 example={
                     <Flex.column gap={10}>
                         <Typo.p>
-                            This object stores reusable cell-level behavior metadata such as default width,
-                            align, sorter, and optional render/renderData handlers.
-                        </Typo.p>
-                        <Typo.p>
-                            It exists so we do not forget the intent before Table implementation is complete.
+                            Reusable cell-level behavior metadata: default width, align, sorter, and
+                            optional render/renderData handlers. See{" "}
+                            <Button.string to="/design-system/table" label="Table" /> (Beta).
                         </Typo.p>
                         <Typo.code>{JSON.stringify(typeNames, null, 2)}</Typo.code>
                     </Flex.column>

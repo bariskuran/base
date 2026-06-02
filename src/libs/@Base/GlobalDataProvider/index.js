@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useLocation, useParams, useSearchParams, useMatches } from "react-router-dom";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { getClientData } from "../../getClientData";
-import { createBaseDatePackage } from "../../@baseDate/createBaseDatePackage";
+import { createBaseDatePackage } from "../../baseDate/createBaseDatePackage";
 import { notifierFunctions } from "../../notifier/_Base";
 import { TEXT_LIBRARY } from "../../../constants/TEXT_LIBRARY";
 import { useEventListener } from "../../useEventListener";
@@ -66,7 +66,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     globalBaseStoreVariables.defaultLanguage ??
                     "en",
 
-                // loadingManager
+
                 isLoading: false,
                 isLoadingPage: false,
                 isLoadingApi: false,
@@ -75,7 +75,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     api: loadingApi,
                 },
 
-                // baseFetch
+
                 _baseFetchSettings: {
                     disableLoadingApi: false,
                     disableAuth: false,
@@ -87,22 +87,22 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     ...baseFetchSettings,
                 },
 
-                // clientData
+
                 _clientData: {
                     ...clientData,
                 },
 
-                // iconsLibrary
+
                 _iconsLibrary: iconsLibrary,
 
-                // adminSettings
+
                 _adminSettings: {
                     showDsOnline: false,
                     showInternalDs: false,
                     ...adminSettings,
                 },
 
-                // notifier
+
                 _notifier: {
                     killAfter: 5,
                     closingDelay: 0.5,
@@ -117,7 +117,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     clear: notifierFunctions.clear,
                 },
 
-                // baseDate
+
                 _baseDate: {
                     defaultFormat: "DD/MM/YYYY",
                     firstDayOfWeek: 1,
@@ -126,16 +126,16 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     package: createBaseDatePackage(),
                 },
 
-                // idleManager
+
                 _idleManager: {
                     enabled: true,
-                    allowedIdleTime: 30, // mins
+                    allowedIdleTime: 30,
                     onIdle: null,
                     onActive: null,
                     ...idleManagerSettings,
                 },
 
-                // reactRouterDom
+
                 _reactRouterDom: {
                     navigate,
                     navigateWithSearch,
@@ -144,12 +144,12 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                     searchParams: searchParamsObj,
                 },
 
-                // baseForm
+
                 _baseForm: {
                     ...baseFormSettings,
                 },
 
-                // validationRules
+
                 _validationRules: {
                     ...VALIDATION_RULES,
                     ...validationRules,
@@ -242,6 +242,6 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         });
     }, [baseFormSettings]);
 
-    /* */
+
     return null;
 };

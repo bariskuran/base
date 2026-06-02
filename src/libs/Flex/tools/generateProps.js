@@ -15,7 +15,6 @@ export const manageColors = ({ bgColor, color } = {}) => {
     };
 };
 
-/** childrenCommon + childrenProps[slot] birleşimi (cloneElement ile iç bileşene iletmek için). */
 export const mergeCommonAndItem = (common = {}, item = {}) => {
     const merged = { ...common };
 
@@ -431,7 +430,6 @@ const generateInProps = ({
     });
 };
 
-/** Flex UI props: JSX/HTML tarzı kebab-case → React camelCase (camel tanımlıysa dokunulmaz). */
 export const FLEX_PROPS_KEBAB_TO_CAMEL = Object.freeze({
     "align-self": "alignSelf",
     "justify-self": "justifySelf",
@@ -491,7 +489,6 @@ export const FLEX_PROPS_KEBAB_TO_CAMEL = Object.freeze({
     "children-props": "childrenProps",
 });
 
-/** Tek kelimelik kısayollar (flex-shrink → flexShrink ile birlikte; camel zaten varsa dokunulmaz). */
 export const FLEX_PROPS_SHORT_ALIASES = Object.freeze({
     shrink: "flexShrink",
     grow: "flexGrow",
@@ -520,7 +517,6 @@ export const mergeFlexKebabPropAliases = (source) => {
     return out;
 };
 
-/** responsive breakpoint nesnelerindeki kebab anahtarları da camel'e çevrilir. */
 export const normalizeFlexPropsWithResponsiveAliases = (props) => {
     if (props == null || typeof props !== "object") return {};
 
@@ -540,7 +536,6 @@ export const normalizeFlexPropsWithResponsiveAliases = (props) => {
     return { ...top, responsive };
 };
 
-/** `full` → `width: "100%"` (width açıkça verilmediyse). */
 const resolveFlexFullWidthShorthand = (merged) => {
     if (merged == null || typeof merged !== "object") return merged;
     const { full, ...rest } = merged;
@@ -586,19 +581,19 @@ export const generateProps = ({
         direction,
         flex,
         flexFlow,
-        //
+
         padding,
         paddingLeft,
         paddingRight,
         paddingTop,
         paddingBottom,
-        //
+
         margin,
         marginLeft,
         marginRight,
         marginTop,
         marginBottom,
-        //
+
         width,
         height,
         flexGrow,
@@ -620,7 +615,7 @@ export const generateProps = ({
         justifyContent,
         justify,
         alignItems,
-        //
+
         childrenCommon,
         childrenProps,
         wrap,

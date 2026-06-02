@@ -4,7 +4,7 @@ import { useDelayedFunction } from ".";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { count, set } = baseStore.useLocal({ count: 0 });
@@ -40,13 +40,13 @@ const X = () => {
                 description="Run starts a 1500ms delay; Run now skips the wait; Cancel clears the pending run."
                 code={`import { useDelayedFunction } from "${SYS.basePath}";
 
-                    const { run, cancel, runNow, isPending } = useDelayedFunction(() => {
+                       const { run, cancel, runNow, isPending } = useDelayedFunction(() => {
                         set((s) => { s.count += 1; });
-                    }, { delay: 1500, autoCancel: true });
+                       }, { delay: 1500, autoCancel: true });
 
-                    run();
-                    cancel();
-                    runNow();`}
+                       run();
+                       cancel();
+                       runNow();`}
                 example={
                     <Flex.column gap={10}>
                         <Flex gap={8} wrap>
@@ -75,12 +75,13 @@ const X = () => {
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const { run, cancel, runNow, isPending } = useDelayedFunction(fn, { delay, autoCancel });"
                 props={{
                     fn: {
                         description:
                             "Function to run after delay. Latest fn is always used; inline arrows are fine.",
-                        type: "function",
+                        type: "fn",
                         required: true,
                     },
                     delay: {
@@ -97,19 +98,40 @@ const X = () => {
                 returnProps={{
                     run: {
                         description: "Schedules fn after delay; sets isPending true.",
-                        type: "function",
+                        type: "fn",
                     },
                     cancel: {
                         description: "Cancels the pending run; sets isPending false.",
-                        type: "function",
+                        type: "fn",
                     },
                     runNow: {
                         description: "Runs fn immediately and clears pending state.",
-                        type: "function",
+                        type: "fn",
                     },
                     isPending: {
                         description: "True while a delayed run is scheduled.",
                         type: "boolean",
+                    },
+                }}
+            />
+            <Ds.api
+                disableLastBlock
+                title="run"
+                args="run(...args);"
+                props={{
+                    args: {
+                        description: "Forwarded to fn after delay.",
+                        type: "any[]",
+                    },
+                }}
+            />
+            <Ds.api
+                title="runNow"
+                args="runNow(...args);"
+                props={{
+                    args: {
+                        description: "Optional args for fn; when omitted, uses the last run() args.",
+                        type: "any[]",
                     },
                 }}
             />

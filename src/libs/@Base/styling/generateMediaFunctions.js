@@ -1,4 +1,4 @@
-// ${({ theme }) => theme.responsive( "phone,tablet", css` background: red; `, )}
+
 
 import { css } from "styled-components";
 import { DEFAULT_BREAKPOINTS } from "../../../constants/DEFAULT_BREAKPOINTS";
@@ -31,7 +31,7 @@ export const generateMediaFunctions = ({
                 }
             `;
         },
-        // prettier-ignore
+
         tablet: (content) => css`
         @media (min-aspect-ratio: ${maxAspRatio})
             and (max-aspect-ratio: ${minAspRatio})
@@ -40,7 +40,7 @@ export const generateMediaFunctions = ({
                 ${content}
             }
     `,
-        // prettier-ignore
+
         desktop: (content) => css`
         @media (min-aspect-ratio: ${maxAspRatio})
             and (max-aspect-ratio: ${minAspRatio})
@@ -49,7 +49,7 @@ export const generateMediaFunctions = ({
                 ${content}
             }
     `,
-        // prettier-ignore
+
         large: (content) => css`
             @media (min-aspect-ratio: ${maxAspRatio})
             and (max-aspect-ratio: ${minAspRatio})
@@ -58,16 +58,16 @@ export const generateMediaFunctions = ({
                 ${content}
             }
     `,
-        // prettier-ignore
+
         uhd: (content) => css`
-            @media (min-aspect-ratio: ${maxAspRatio}) 
+            @media (min-aspect-ratio: ${maxAspRatio})
             and (max-aspect-ratio: ${minAspRatio})
             and (min-width: ${breakpoints.uhd[0] + "px"})
             and (max-width: ${breakpoints.uhd8[0] + "px"}) {
                 ${content}
             }
     `,
-        // prettier-ignore
+
         uhd8: (content) => css`
             @media (min-aspect-ratio: ${maxAspRatio})
             and (max-aspect-ratio: ${minAspRatio})

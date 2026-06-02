@@ -1,4 +1,4 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const resolveLang = (overrideLibrary) => {
     const gd = baseStore?.globalData?.get?.() || {};
@@ -9,27 +9,6 @@ const resolveLang = (overrideLibrary) => {
     };
 };
 
-/**
- * Simple language-based text resolver.
- *
- * @param {string} key - Text key to resolve
- * @param {Object} [overrideLibrary] - Optional text library override
- * @returns {string}
- *
- * @example
- * t("home");
- *
- * @example
- * t("save", { save: {
- *   tr: "Kaydet",
- *   en: "Save",
- * }});
- * @example
- * t({
- *   tr: "Kaydet",
- *   en: "Save",
- * });
- */
 export const getText = (keyOrEntry, overrideLibrary) => {
     if (!keyOrEntry) return "";
     const { language, textLibrary } = resolveLang(overrideLibrary);

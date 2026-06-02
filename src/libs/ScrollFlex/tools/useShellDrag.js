@@ -34,7 +34,7 @@ export const useShellDrag = ({ enabled, shellRef, contentRef }) => {
             try {
                 el.releasePointerCapture(pid);
             } catch {
-                /* ignore */
+
             }
         }
     }, [contentRef]);
@@ -75,7 +75,7 @@ export const useShellDrag = ({ enabled, shellRef, contentRef }) => {
             try {
                 surfaceEl.setPointerCapture(e.pointerId);
             } catch {
-                /* ignore */
+
             }
         },
         [contentRef, enabled, shellRef],

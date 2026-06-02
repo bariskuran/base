@@ -1,13 +1,13 @@
 import S from "./_styled";
 import { Typo } from "../../Typo";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { Button } from "../../Button";
 import { Flex } from "../../Flex";
 import CodeViewer from "../CodeViewer";
 import { isJsxDescription } from "../isJsxDescription";
 import { templateLiteralTo } from "../../templateLiteralTo";
 
-const Block = ({ title, description, code, example, lastBlock }) => {
+const Block = ({ title, description, code, example, lastBlock, extraTitlePaddingTop = 0 }) => {
     const { ajax, set } = baseStore.useLocal({
         ajax: 0,
     });
@@ -17,7 +17,7 @@ const Block = ({ title, description, code, example, lastBlock }) => {
     /* RETURN */
     return (
         <S.container $lastBlock={lastBlock}>
-            <S.titleArea>
+            <S.titleArea $extraTitlePaddingTop={extraTitlePaddingTop}>
                 <Typo.h6 selfAlign="right" margin="0 0 10rem 0" fitContent balance>
                     {title}
                 </Typo.h6>

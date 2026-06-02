@@ -1,10 +1,6 @@
-/** Tight multi-line stacks (scatterLines, stackedWords). */
+
 export const TIGHT_LINE_HEIGHT = 0.8;
 
-/**
- * Builds a step plan for progressive text reveal (typewriter-style).
- * Short text: one step per character. Long text: fewer steps with larger chunks.
- */
 export const buildRevealPlan = (
     text,
     duration,
@@ -55,7 +51,6 @@ export const resolveTextSource = (children, content) => {
     return "";
 };
 
-/** animatedWriter only: nowrap keeps per-char inline-blocks on one line with the ghost layer. */
 export const resolveAnimatedWriterWhiteSpace = (text) =>
     String(text ?? "").includes("\n") ? "pre-wrap" : "nowrap";
 
@@ -64,7 +59,6 @@ export const pseudo = (seed) => {
     return x - Math.floor(x);
 };
 
-/** Same chunking as typewriter, plus one initial step with zero correct characters. */
 export const buildScramblePlan = (text, duration, options) => {
     const base = buildRevealPlan(text, duration, options);
     if (!base.charCount) return base;
@@ -91,7 +85,6 @@ const scrambleChar = (index, char, text) => {
     return pool[Math.floor(pseudo(seed) * pool.length)];
 };
 
-/** Fixed length; prefix matches target, suffix stays scrambled until revealed. */
 export const buildScrambleText = (text, step, plan) => {
     if (!text) return "";
     const correct = getRevealCorrectCount(step, plan);

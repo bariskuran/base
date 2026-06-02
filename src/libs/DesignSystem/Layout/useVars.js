@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 const defPageTitle = "Design System";
 
-/* Handle Page Title */
 const useVars = () => {
     const matches = useMatches();
     const pageTitle =

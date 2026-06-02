@@ -1,4 +1,4 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { colorConverter } from "../colorConverter";
 import { colorShader } from "../colorShader";
 import { colorTinter } from "../colorTinter";
@@ -38,7 +38,7 @@ const getThemeContrastPair = () => {
             light = fgResolved;
         }
     } else {
-        // eksik durum fallback
+
         dark = "#000000";
         light = "#ffffff";
     }
@@ -50,8 +50,6 @@ const getAccessibleOpposite = (luminance) => {
     const { dark, light } = getThemeContrastPair();
     return luminance >= 0.5 ? dark : light;
 };
-
-/* ----------------------------- api builder ----------------------------- */
 
 const buildColorApi = (resolvedColor) => {
     const converted = colorConverter(resolvedColor);

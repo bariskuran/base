@@ -5,7 +5,7 @@ import { generateRandom } from "../generateRandom";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { useRef } from "react";
-import im from "./tools/01.jpg"; // 400x400
+import im from "./tools/01.jpg";
 
 const longText = generateRandom.loremIpsum(1000);
 const shortText = generateRandom.loremIpsum(50);
@@ -41,7 +41,7 @@ const X = () => {
                 title="Basic usage"
                 description="It is recommended to specify especially height when using ScrollFlex. This will give you the cleanest result."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
-                
+
                         <ScrollFlex width={200} height={100}>
                             {longText}
                         </ScrollFlex>
@@ -73,8 +73,8 @@ const X = () => {
                 title="Advanced usage"
                 description="You can further customize ScrollFlex using flexProps and scrollBarProps. Also ScrollFlex has a couple of props for advanced usage."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
-                
-                    <Flex gap={10} height={100}>
+
+                       <Flex gap={10} height={100}>
                         <ScrollFlex
                             variant="hoverShadow"
                             scrollBarProps={{ variant: "primary", fillMode: true }}
@@ -114,7 +114,7 @@ const X = () => {
                         >
                             {longText}
                         </ScrollFlex>
-                    </Flex>`}
+                       </Flex>`}
                 example={
                     <Flex gap={10} height={100}>
                         <ScrollFlex
@@ -163,7 +163,7 @@ const X = () => {
                 title="Auto Axis Management"
                 description="Scrollbar automatically manages the axis of the scrollbar based on the content size."
                 code={`import { ScrollFlex } from "${SYS.basePath}"
-                
+
                         <ScrollFlex width={150} height={100} padding={0}>
                             <Content width={1500} />
                         </ScrollFlex>
@@ -209,8 +209,8 @@ const X = () => {
                 title="Auto Width & Height"
                 description="When width or height are omitted, ScrollFlex uses autoWidth and autoHeight (both default to true). It compares content size with the parent: if content is smaller, the box shrinks to content plus scrollbar gutter when that axis has a bar; if content is larger, the parent size is used with max-width or max-height 100%. Explicit width, height, flexProps dimensions, or *ByRef / *ById disable the corresponding auto axis."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
-                
-                    <Flex gap={10}>
+
+                       <Flex gap={10}>
                         <Flex>
                             <ScrollFlex>{longText}</ScrollFlex>
                         </Flex>
@@ -229,7 +229,7 @@ const X = () => {
                                 </Flex>
                             </Flex>
                         </Flex>
-                    </Flex>`}
+                       </Flex>`}
                 example={
                     <Flex gap={10}>
                         <Flex height={150}>
@@ -264,13 +264,13 @@ const X = () => {
 
                     The same feature can be used for width via the "widthByRef" or "widthById" props.`}
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
-                
-                    <Flex gap={10} align="stretch">
+
+                       <Flex gap={10} align="stretch">
                         <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>
                             Source 150x150
                         </Flex>
                         <ScrollFlex heightByRef={flexRef1}>{longText}</ScrollFlex>
-                    </Flex>`}
+                       </Flex>`}
                 example={
                     <Flex gap={10} align="stretch">
                         <Flex height={150} width={150} bgColor="aliceblue" ref={flexRef1}>
@@ -285,7 +285,7 @@ const X = () => {
                 description="Same as heightByRef, but the source element is resolved with document.getElementById. Use a stable, page-unique id on the element whose height you want to mirror. Explicit height and heightByRef still take precedence over heightById. widthById works the same way for width."
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
 
-                    <Flex gap={10} align="stretch">
+                       <Flex gap={10} align="stretch">
                         <Flex
                             id={HEIGHT_BY_ID_DEMO_SOURCE}
                             height={150}
@@ -300,7 +300,7 @@ const X = () => {
                         >
                             {longText}
                         </ScrollFlex>
-                    </Flex>`}
+                       </Flex>`}
                 example={
                     <Flex gap={10} align="stretch">
                         <Flex
@@ -334,12 +334,12 @@ const X = () => {
                 }
                 code={`import { ScrollFlex, Flex } from "${SYS.basePath}"
 
-                    <ScrollFlex
+                       <ScrollFlex
                         enableDragging
                         width={180}
                         height={120}
                         flexProps={{ width: 400, height: 300 }}
-                    >
+                       >
                         <Flex
                             width={400}
                             height={300}
@@ -349,7 +349,7 @@ const X = () => {
                         >
                             Large content — drag to scroll.
                         </Flex>
-                    </ScrollFlex>`}
+                       </ScrollFlex>`}
                 example={
                     <ScrollFlex
                         enableDragging
@@ -370,7 +370,7 @@ const X = () => {
                 title="Variants"
                 description="As in the rest of the Base library, you can change the variant using a prop, or by using the compound component pattern as Component.variantName."
                 code={`import { ScrollFlex } from "${SYS.basePath}";
-                    
+
                         <ScrollFlex ... />
                         <ScrollFlex.border ... /> // same as default
                         <ScrollFlex variant="shadow" ... />

@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { colorAlpha } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { color, alpha, set } = baseStore.useLocal({
@@ -24,9 +24,9 @@ const X = () => {
                 title="Basic usage"
                 code={`import { colorAlpha } from "${SYS.basePath}";
 
-                    colorAlpha("#0077ff", 50);
-                    colorAlpha("primary", 35);
-                    colorAlpha("rgba(0,119,255,0.4)", 0.8);`}
+                       colorAlpha("#0077ff", 50);
+                       colorAlpha("primary", 35);
+                       colorAlpha("rgba(0,119,255,0.4)", 0.8);`}
                 example={
                     <Flex.column gap={10} full>
                         <Flex gap={10}>

@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { useTimer } from "../useTimer";
 import { Dropdown } from "../Dropdown";
 import { useMemo } from "react";
@@ -123,7 +123,7 @@ const X = () => {
                     </>
                 }
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} />
                         <Button label="button" onClick={onClick} suffix={{ icon: "abstract2" }} />
                         <Button onClick={onClick} icon={{ icon: "abstract2" }} />`}
@@ -148,10 +148,10 @@ const X = () => {
                 description={` color, hoverColor, activeColor,bgColor, hoverBgColor, activeBgColor props can get any valid color value including theme colors and theme color paths.
 
                     The color is usually derived from the bgColor, but can be overridden using the color prop. Note: If you use bgColor="transparent", there's a known issue. Make sure to explicitly set the color prop when using a transparent background.
-                                   
+
                     If hoverBgColor or activeBgColor are not provided, they are automatically calculated based on bgColor using tints or shades. If you prefer not to use these automatically computed colors, you can specify the desired colors by providing these props explicitly.`}
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <Button onClick={onClick} icon={{ icon: "abstract2" }} bgColor="ffba00" hoverBgColor="ff8400" activeBgColor="ff4d00" color="ff3c00" hoverColor="000000" activeColor="ffffff" />
                         <Button onClick={onClick} icon={{ icon: "abstract2", hoverColor: "white" }} bgColor="greys.shade20" />
                         <Button onClick={onClick} label="b" bgColor="ffba00" hoverBgColor="ff8400" activeBgColor="ff4d00" color="ff3c00" hoverColor="000000" activeColor="ffffff" />
@@ -211,13 +211,13 @@ const X = () => {
             <Ds.block
                 title="Hover & Active & Pending Management"
                 description={`Our Buttons make strong use of the CSS hover and active states. In addition, with the hoverManually and activeManually props, you can control the hover and active behavior of the Button programmatically from outside the component. By using different variations, you can achieve a range of visual effects.
-                    
+
                     Note: If you use hoverLabel or activeLabel alongside label, the UI will size itself to the longest text. This prevents layout shifting as labels change, but for best results, try to keep the length of these texts similar. The Button will be activated automatically when the route matches. To disable it, use the disableUseMatch prop.
 
                     In the pending state, the icon rotates 360 degrees. It is recommended to choose icons that are suitable for this type of animation.
                     `}
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <Button onClick={onClick} label="click" hoverLabel="hovered" activeLabel="active" pendingLabel="pending" hoverManually={hoverManually} activeManually={activeManually} pendingManually={pendingManually} />
                         <Button label="button" hoverLabel="hovered" activeLabel="active" pendingLabel="pending" onClick={onClick} bgColor="error" hoverBgColor="foreground" activeBgColor="foreground" hoverManually={hoverManually} activeManually={activeManually} pendingManually={pendingManually} prefix={{ icon: "abstract2", hoverIcon: "abstract3", activeIcon: "abstract4", pendingIcon: "loading", }} />
                         <Button label="submit" hoverLabel="are you sure?" activeLabel="submitted" pendingLabel="processing" onClick={onClick} bgColor="success" hoverBgColor="error" activeBgColor="foreground" hoverManually={hoverManually} activeManually={activeManually} pendingManually={pendingManually} prefix={{ icon: "fullArrowRight", hoverIcon: "warning", activeIcon: "check", pendingIcon: "loading3", }} />
@@ -325,10 +325,10 @@ const X = () => {
             <Ds.block
                 title="Disabling Cooldown and onHold"
                 description={`There are 2 automatic behaviors Buttons display. You can disable them using the skipClickCooldown and skipOnClickHold props.
-                    
+
                     cooldown prevents the Button from being clicked multiple times in quick succession (about ~1 second). onHold starts a show-on-click timer (about ~2 seconds) for the activeLabel after the Button is clicked.You can change these durations with the clickCooldownMs and onClickHoldMs props.`}
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <Button onClick={triggerNotifier} label="both enabled" />
                         <Button onClick={triggerNotifier} label="cooldown disabled" skipClickCooldown />
                         <Button onClick={triggerNotifier} label="onHold disabled" skipOnClickHold />
@@ -359,7 +359,7 @@ const X = () => {
                 title="Disabling Button"
                 description="Disable entire button function via disabled prop."
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <Button onClick={triggerNotifier} label="disabled" disabled />`}
                 example={
                     <Flex gap={10}>
@@ -371,7 +371,7 @@ const X = () => {
                 title="Resizing Button"
                 description="You can resize the Button using the size prop. The value is a percentage of the original size."
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <Button onClick={triggerNotifier} label="Regular" size={100} />
                         <Button onClick={triggerNotifier} label="Smaller" size={80} />
                         <Button onClick={triggerNotifier} label="Larger" size={120} />`}
@@ -387,7 +387,7 @@ const X = () => {
                 title="Outlined Button"
                 description="When 'outlined' prop is enabled, Button uses bgColor as border color. Some variants may ignore this feature such as 'string'."
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <ButtonVariant label="button" onClick={onClick} prefix={{ icon: "abstract2" }} outlined />
                         <ButtonVariant label="button" onClick={onClick} suffix={{ icon: "abstract2" }} outlined />
                         <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} outlined />`}
@@ -423,7 +423,7 @@ const X = () => {
                     </>
                 }
                 code={`import { Button } from "${SYS.basePath}";
-                
+
                         <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} popTip="PopTip enabled" />
                         <Button onClick={onClick} icon={{ icon: "abstract2" }} popTip={{ content: "PopTip enabled", bgColor: "success" }} />`}
                 example={
@@ -446,7 +446,7 @@ const X = () => {
                 title="Full Width"
                 description="When 'fullWidth' prop is enabled, Button takes the full width of its container. It can be boolean and for the text alignment, it can be 'left', 'center' or 'right'."
                 code={`import { Button, Flex } from "${SYS.basePath}";
-                
+
                         <Flex.column full gap={10}>
                             <Button label="button" onClick={onClick} prefix={{ icon: "abstract2" }} fullWidth="right" />
                             <Button onClick={onClick} icon={{ icon: "abstract2" }} fullWidth />
@@ -515,7 +515,7 @@ const X = () => {
                     },
                     onClick: {
                         description: "Click callback.",
-                        type: "function",
+                        type: "fn",
                     },
                     to: {
                         description: "React Router internal link target.",
@@ -647,11 +647,11 @@ const X = () => {
                     },
                     onDelayStart: {
                         description: "Called when delay starts.",
-                        type: "function",
+                        type: "fn",
                     },
                     onDelayEnd: {
                         description: "Called when delay ends.",
-                        type: "function",
+                        type: "fn",
                     },
                     skipClickCooldown: {
                         description: "Skips click cooldown timer.",

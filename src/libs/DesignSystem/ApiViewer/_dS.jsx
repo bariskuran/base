@@ -28,7 +28,8 @@ const X = () => (
             args='<Ds.api props={{}} args="signature;" returns="…" />'
             props={{
                 props: {
-                    description: "API table keyed by argument/property name.",
+                    description:
+                        "API table keyed by argument/property name. Function entries use type \"fn\"; structured callbacks are documented in separate Api blocks.",
                     type: "object",
                     required: true,
                     defaultValue: "prop default value",
@@ -59,7 +60,8 @@ const X = () => (
                     defaultValue: "false",
                 },
                 returnProps: {
-                    description: "Return object fields for API tables.",
+                    description:
+                        "Return object fields for API tables. Function entries use type \"fn\"; structured callbacks are documented in separate Api blocks.",
                     type: "object",
                 },
             }}

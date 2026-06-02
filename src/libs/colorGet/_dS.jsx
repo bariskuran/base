@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { colorGet } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { input, set } = baseStore.useLocal({ input: "primary" });
@@ -21,12 +21,12 @@ const X = () => {
                 title="Interactive"
                 code={`import { colorGet } from "${SYS.basePath}";
 
-                colorGet("primary");
-                colorGet("foregrounds.tint50");
-                colorGet("rgba(0,0,0,0.5)");
-                colorGet("red");
-                colorGet("primary");
-                `}
+                       colorGet("primary");
+                       colorGet("foregrounds.tint50");
+                       colorGet("rgba(0,0,0,0.5)");
+                       colorGet("red");
+                       colorGet("primary");
+`}
                 example={
                     <Flex.column gap={12} full>
                         <Flex gap={10} full>

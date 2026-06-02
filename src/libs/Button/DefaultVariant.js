@@ -2,28 +2,7 @@ import styled, { css } from "styled-components";
 export const DEFAULT_VARIANT_LIFT_REM = 2;
 
 export const DefaultVariant = styled.span`
-    ${({
-        // theme,
-        $isHovered,
-        // $disabled,
-        $isJustIcon,
-        $isActivated,
-        // $isPending,
-        // $bgColor,
-        // $hoverBgColor,
-        // $activeBgColor,
-        // $color,
-        // $prefixBgColor,
-        // $prefixColor,
-        // $suffixBgColor,
-        // $suffixColor,
-        // $minHeight,
-        // $minWidth,
-        // $minLabelWidth,
-        // $inverseColor1,
-        // $inverseColor2,
-        // $size,
-    }) => css`
+    ${({ $isHovered, $isJustIcon, $isActivated }) => css`
         all: unset;
         display: flex;
         transform: translateY(0);
@@ -68,8 +47,6 @@ export const DefaultVariant = styled.span`
             min-width: 20rem;
         }
 
-        /* & > [data-slot="prefix"],
-        & > [data-slot="suffix"],
-        & > [data-slot="centeredIcon"] {} */
+
     `}
 `;

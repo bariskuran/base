@@ -1,6 +1,5 @@
 import { FLEX_PROPS_OMIT_FOR_DOM } from "./generateProps.js";
 
-/** styled(...) ile sarılmış Flex'e düşebilen ve DOM'a iletilmemesi gereken anahtarlar. */
 const STYLED_COMPONENTS_NON_DOM_PROPS = new Set([
     "theme",
     "as",
@@ -9,7 +8,7 @@ const STYLED_COMPONENTS_NON_DOM_PROPS = new Set([
     "foldedComponentIds",
     "styledComponentId",
     "warnTooManyClasses",
-    /** Bazı styled + özel bileşen kombinasyonlarında yanlışlıkla DOM'a düşebiliyor. */
+
     "render",
 ]);
 

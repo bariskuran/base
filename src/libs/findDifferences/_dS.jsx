@@ -18,7 +18,7 @@ const X = () => (
             title="Basic usage"
             code={`import { findDifferences } from "${SYS.basePath}";
 
-const { changedPaths, differences } = findDifferences(oldData, newData);`}
+                   const { changedPaths, differences } = findDifferences(oldData, newData);`}
             example={
                 <Flex gap={16} padding={10} full>
                     <Flex.column gap={8} padding={10} bgColor="backgrounds.shade5" full>

@@ -1,23 +1,4 @@
-/**
- * 
 
-const delayed = delayedFunction(() => {
-    console.log("çalıştı");
-}, { delay: 500 });
-
-// çalıştır
-delayed.run();
-
-// iptal
-delayed.cancel();
-
-// hemen çalıştır
-delayed.runNow();
-
-// pending mi?
-delayed.isPending();
-
- */
 
 export const delayedFunction = (fn, settings = {}) => {
     const { delay = 500, autoCancel = true } = settings;

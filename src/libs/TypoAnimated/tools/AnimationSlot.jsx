@@ -22,7 +22,6 @@ const Layer = styled.div`
     overflow: visible;
 `;
 
-/** Reserves space for the full final frame; animated layer overlays without layout shift. */
 export const AnimationSlot = ({ ghost, children }) => (
     <Root>
         <Ghost aria-hidden="true">{ghost}</Ghost>

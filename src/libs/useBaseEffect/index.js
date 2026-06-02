@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { isDeepEqual } from "../isDeepEqual";
 import { findDifferences as findDifferencesFn } from "../findDifferences";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 export const useBaseEffect = (fn, deps = [], settings = {}) => {
     const isDevMode = baseStore.useGlobal((s) => s.isDevMode);
@@ -68,7 +68,7 @@ export const useBaseEffect = (fn, deps = [], settings = {}) => {
                 const prevArr = Array.isArray(prevDeps) ? prevDeps : [];
                 const nextArr = Array.isArray(nextDeps) ? nextDeps : [];
 
-                // Single dep: compare the value, not the deps array (paths: "name" not "0.name")
+
                 const oldData =
                     prevArr.length === 1 && nextArr.length === 1 ? prevArr[0] : prevDeps;
                 const newData =

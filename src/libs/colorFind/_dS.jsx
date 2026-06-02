@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { colorFind } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { input, output, set } = baseStore.useLocal({
@@ -25,11 +25,11 @@ You can use colorFind via direct import from base, or via the theme helper in st
                 title="Interactive"
                 code={`import { colorFind } from "${SYS.basePath}";
 
-colorFind("primary");
-colorFind("greys.shade50");
-colorFind("rgba(0,0,0,0.5)", { output: "hex8" });
-colorFind("red");
-colorFind("#07f", { output: "hex8" });`}
+                       colorFind("primary");
+                       colorFind("greys.shade50");
+                       colorFind("rgba(0,0,0,0.5)", { output: "hex8" });
+                       colorFind("red");
+                       colorFind("#07f", { output: "hex8" });`}
                 example={
                     <Flex.column gap={12} full>
                         <Flex gap={10}>

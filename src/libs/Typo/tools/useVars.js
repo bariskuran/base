@@ -2,7 +2,7 @@ import { isValidElement, useMemo, useRef, useCallback, useLayoutEffect, useEffec
 import { useExportData } from "../../useExportedData";
 import { colorGet } from "../../colorGet";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { getTruncatedHtml } from "./getTruncatedHtml";
 import { cssSpacingResolver } from "../../cssSpacingResolver";
 import { dedent } from "../../templateLiteralTo/dedent";
@@ -21,8 +21,6 @@ const sysDefaults = {
     letterSpacing: 0,
     lineHeight: 1.7,
 };
-
-// useVars.js
 
 const useVars = ({ children, content, contentGroup, ...p }) => {
     const [theme, currentBreakpoint] = baseStore.useGlobal((s) => [

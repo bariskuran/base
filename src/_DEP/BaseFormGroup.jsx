@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { useHelper } from "./tools/useHelper";
 export const GroupContext = createContext(false);
 

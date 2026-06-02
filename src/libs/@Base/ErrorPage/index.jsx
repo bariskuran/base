@@ -5,7 +5,7 @@ import {
     useNavigate,
 } from "react-router-dom";
 import { API_RESPONSE_CODES } from "../../../constants/API_RESPONSE_CODES";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { S } from "./_styled";
 import { useMemo } from "react";
 import { getText as t } from "../../getText";

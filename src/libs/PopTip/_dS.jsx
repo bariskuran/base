@@ -218,17 +218,17 @@ const X = () => {
                     },
                     closeHandler: {
                         description: "Optional close callback when using controlled open.",
-                        type: "function",
+                        type: "fn",
                     },
                     onMouseEnter: {
                         description:
                             "Trigger mouse/pointer enter; PopTip defaults open behavior if omitted.",
-                        type: "function",
+                        type: "fn",
                     },
                     onMouseLeave: {
                         description:
                             "Trigger mouse/pointer leave; PopTip defaults close behavior if omitted.",
-                        type: "function",
+                        type: "fn",
                     },
                     exportData: {
                         description: "Debug/export passthrough.",

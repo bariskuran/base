@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { colorPickHigherContrast } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const X = () => {
     const { optionA, optionB, background, set } = baseStore.useLocal({
@@ -25,7 +25,7 @@ You can use colorPickHigherContrast via direct import from base, or via the them
                 title="Interactive comparison"
                 code={`import { colorPickHigherContrast } from "${SYS.basePath}";
 
-colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
+                       colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
                 example={
                     <Flex.column gap={10} full>
                         <Flex gap={10}>

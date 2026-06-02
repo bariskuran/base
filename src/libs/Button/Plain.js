@@ -1,15 +1,5 @@
 import styled, { css } from "styled-components";
 
-// export const DefaultVariant = styled.div`
-//     ${({ theme, $hoverManually, $disabled, $bgColor, $hoverBgColor, $activeBgColor, $color  }) => css`
-//         #prefix,
-//         #suffix {}
-//         & > #container > #href-to-button {
-//             &:hover {}
-//         }
-//     `}
-// `;
-
 export const S = styled.span`
     ${({ $isJustIcon }) => css`
         all: unset;

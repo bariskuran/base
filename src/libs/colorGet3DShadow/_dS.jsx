@@ -4,7 +4,7 @@ import { get3DShadow } from ".";
 import styled from "styled-components";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const Card = styled.div`
     width: 120rem;
@@ -48,11 +48,11 @@ const X = () => {
                         const Box = styled.div\`
                           \${get3DShadow({ depth: 1 })}
                         \`;
-                        
+
                         const Box = styled.div\`
                           \${get3DShadow({ depth: 1, hoverDepth: 3 })}
                         \`;
-                        `}
+`}
                 example={
                     <Flex.column gap={12} full>
                         <Flex gap={10}>

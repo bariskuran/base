@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from "react";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { useExportData } from "../../useExportedData";
 import { isShallowEqual } from "../../isShallowEqual";
 import { EMPTY_FLEX_PROPS, EMPTY_SCROLL_BAR_PROPS, CONTENT_SIZE_MEASURE_SLACK_PX } from "./constants";

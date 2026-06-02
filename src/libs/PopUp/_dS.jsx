@@ -5,7 +5,7 @@ import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { notifier } from "../notifier";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { generateRandom } from "../generateRandom";
 
 const longText = generateRandom.loremIpsum(1000);
@@ -44,7 +44,7 @@ const X = () => {
                         const { isOpen, set } = baseStore.useLocal({
                             isOpen: false,
                         });
-                        
+
                         <Button label="Open modal" onClick={() => set((s) => { s.isOpen = true; })} />
                         <PopUp
                             open={isOpen}
@@ -172,11 +172,11 @@ const X = () => {
                     onClose: {
                         description:
                             "Called when the modal closes. Receives { reason }: close | cancel | confirm | backdrop | esc.",
-                        type: "function",
+                        type: "fn",
                     },
                     onOpenChange: {
                         description: "Called with false when the modal closes.",
-                        type: "function",
+                        type: "fn",
                     },
                     children: {
                         description: "Modal body content.",

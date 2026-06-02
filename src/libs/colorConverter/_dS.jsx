@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { colorConverter } from ".";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 
 const stringifyInlineArrays = (value) =>
     JSON.stringify(value, null, 2).replace(/\[\n([\s\S]*?)\n(\s*)\]/g, (match, inner) => {
@@ -35,12 +35,12 @@ const X = () => {
                 title="String input"
                 code={`import { colorConverter } from "${SYS.basePath}";
 
-                    colorConverter("#3498db");
-                    colorConverter("rgba(0,0,0,0.5)");
-                    colorConverter("red");
-                    colorConverter("primary");
-                    colorConverter("greys.shade20");
-                    `}
+                       colorConverter("#3498db");
+                       colorConverter("rgba(0,0,0,0.5)");
+                       colorConverter("red");
+                       colorConverter("primary");
+                       colorConverter("greys.shade20");
+`}
                 example={
                     <Flex.column gap={10} full>
                         <Typo.span>Color string input:</Typo.span>

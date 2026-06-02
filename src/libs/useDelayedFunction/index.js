@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { delayedFunction } from "../delayedFunction";
 
 export const useDelayedFunction = (fn, settings = {}) => {

@@ -61,7 +61,6 @@ const AnimatedWriterView = ({ text, step, plan, color, typoProps = {} }) => {
     );
 };
 
-/** Typewriter reveal; each new character drops in from above with a fade. */
 export default {
     id: "animatedWriter",
     createPlan: ({ text, duration }) => buildRevealPlan(text, duration),

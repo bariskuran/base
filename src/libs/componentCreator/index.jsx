@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { useNestedBaseUiContext } from "../NestedBaseUi";
 
 export const componentCreator = ({
@@ -9,7 +9,7 @@ export const componentCreator = ({
     PlainVariant,
     variants = {},
 }) => {
-    /** Unknown string keys (e.g. theme "success") must not become DOM tags; known keys resolve to their component. */
+
     const resolveVariant = (candidate) => {
         if (candidate == null || candidate === false) return DefaultVariant;
         if (typeof candidate === "string") {

@@ -1,4 +1,4 @@
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { byPath } from "../byPath";
 import { colorConverter } from "../colorConverter";
 
@@ -58,11 +58,11 @@ export const colorFind = (input, options = {}) => {
     const fromMergedTheme = tryThemeLookup(theme);
     if (fromMergedTheme) return fromMergedTheme;
 
-    // Extra fallback: if override theme is incomplete, re-check global theme only.
+
     const fromGlobalTheme = tryThemeLookup(globalTheme);
     if (fromGlobalTheme) return fromGlobalTheme;
 
-    // Raw css/hex/rgb... fallback as last step.
+
     const directHex = toHex(key, output);
     if (directHex) return directHex;
 

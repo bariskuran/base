@@ -1,5 +1,5 @@
 import S from "./_styled";
-import { Icon } from "../../@Icon";
+import { Icon } from "../../Icon";
 import { copyToClipboard } from "../../copyToClipboard";
 
 const VariantViewer = ({ variants }) => {

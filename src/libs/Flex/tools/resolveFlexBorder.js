@@ -66,10 +66,6 @@ const splitCssTokens = (value) => {
     return parts.filter(Boolean);
 };
 
-/**
- * `1px solid greys.shade40` → width + style + theme/css color.
- * Supports classic css colors, rgb/rgba, and theme paths via colorGet.
- */
 export const resolveBorderCSSValue = (value) => {
     if (value == null || value === "") return undefined;
 

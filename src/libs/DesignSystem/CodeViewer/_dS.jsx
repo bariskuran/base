@@ -11,12 +11,12 @@ const X = () => (
             title="Usage"
             code={`import { Ds } from "${SYS.basePath}";
 
-                <Ds.codeViewer
+                   <Ds.codeViewer
                     code={\`const hello = "world";
                         function test() {
                         console.log(hello);
                     }}\`}
-                />`}
+                   />`}
         />
         <Ds.api
             args='<Ds.codeViewer code="" />'

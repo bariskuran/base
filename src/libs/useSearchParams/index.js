@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { manageSearchParams } from "../manageSearchParams";
 
 export const useManageSearchParams = (options = {}) => {

@@ -1,24 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
 import { isShallowEqual } from "../isShallowEqual";
-import { baseStore } from "../@baseStore";
-
-/**
- * useVars hooku içerisindeki datayı hem komponente hem de exportData ile dışarıya döndürür. Bu advanced komponentlerdeki işleyişi sağlayan dataların dışarıda kullanılmasını sağlar.
- *
- * mesela ScrollBar içerisinde ciddi hesaplar var. Bunların komponent dışarısında kullanılması gerekebilir.
- */
-/**
- * const { thumbLength, exportData } = useExportedData();
- * <ScrollBar exportData={exportData} />
- *
- * ScrollBar içerisinde, useVars kısmında
- * return useExportData({ ... data });
- *
- * useVars içerisinde return useExportData(data1,data2); şeklinde yapılır.
- * exportData data1 içerisinde olmalı.
- * DATA2 EXPORT EDİLİR, bunu karıştırıyorsun hep,
- * hem data1 hem data2 return edilir.
- */
+import { baseStore } from "../baseStore";
 
 export const useExportData = ({ exportData, ...returnedData }, exportedData = {}) => {
     const prevRef = useRef();

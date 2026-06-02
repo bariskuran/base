@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { baseStore } from "../../@baseStore";
+import { baseStore } from "../../baseStore";
 import { useExportData } from "../../useExportedData";
 import { useEventListener } from "../../useEventListener";
 import { scrollLock } from "../../scrollLock";

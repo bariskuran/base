@@ -17,7 +17,7 @@ const S = {
         min-width: 175rem;
         box-sizing: border-box;
         padding: 10rem;
-        padding-top: 30rem;
+        padding-top: ${({ $extraTitlePaddingTop = 0 }) => 30 + $extraTitlePaddingTop}rem;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;

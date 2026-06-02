@@ -3,7 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { Button } from "../Button";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
-import { baseStore } from "../@baseStore";
+import { baseStore } from "../baseStore";
 import { useDelayedFunction } from "../useDelayedFunction";
 
 const X = () => {
@@ -39,11 +39,11 @@ const X = () => {
                 title="Basic Usage"
                 code={`import { delayedFunction } from "${SYS.basePath}";
 
-                    const delayed = delayedFunction(fn, { delay: 500 });
-                    delayed.run();
-                    delayed.cancel();
-                    delayed.runNow();
-                    delayed.isPending();`}
+                       const delayed = delayedFunction(fn, { delay: 500 });
+                       delayed.run();
+                       delayed.cancel();
+                       delayed.runNow();
+                       delayed.isPending();`}
                 example={
                     <Flex.column gap={10} padding={10}>
                         <Button.plain
@@ -78,11 +78,12 @@ const X = () => {
                 }
             />
             <Ds.api
+                disableLastBlock
                 args="const { run, cancel, runNow, isPending } = delayedFunction(fn, { autoCancel, delay });"
                 props={{
                     fn: {
                         description: "Function to delay.",
-                        type: "function",
+                        type: "fn",
                         required: true,
                     },
                     delay: {
@@ -99,20 +100,41 @@ const X = () => {
                 returnProps={{
                     run: {
                         description: "Runs the delayed function.",
-                        type: "function",
+                        type: "fn",
                     },
                     runNow: {
                         description: "Runs the delayed function immediately.",
-                        type: "function",
+                        type: "fn",
                     },
                     cancel: {
                         description: "Cancels the delayed function.",
-                        type: "function",
+                        type: "fn",
                     },
                     isPending: {
                         description:
                             "Returns true if the delayed function is pending. Works on hook side.",
                         type: "boolean",
+                    },
+                }}
+            />
+            <Ds.api
+                disableLastBlock
+                title="run"
+                args="run(...args);"
+                props={{
+                    args: {
+                        description: "Forwarded to fn after delay.",
+                        type: "any[]",
+                    },
+                }}
+            />
+            <Ds.api
+                title="runNow"
+                args="runNow(...args);"
+                props={{
+                    args: {
+                        description: "Optional args for fn; when omitted, uses the last run() args.",
+                        type: "any[]",
                     },
                 }}
             />

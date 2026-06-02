@@ -107,7 +107,6 @@ export const splitDeferredTriggerActions = (contentButtonProps = {}) => {
     return [deferred, rest];
 };
 
-/** trigger (primary) overrides confirm for href / to / url */
 export const mergeNavigationActionProps = (triggerProps, confirmProps) => {
     const merged = {
         ...pickButtonActionProps(confirmProps),

@@ -1,44 +1,6 @@
 import { applyImportToStore } from "./mergeImportIntoStore";
 import { buildQueryKeyWithPrefix, unwrapByPrefix } from "./prefixPath.js";
 
-/**
- * queryConverter
- * --------------
- * Nested object <-> query string converter (bracket notation).
- *
- * - Supports nested objects/arrays: a[b][0]=x
- * - Supports optional prefixing (dot path): filters.form[a]=1 → filters[form][a]=1
- * - Can skip empty values (default) or preserve them
- * - Can parse booleans/numbers unless you preserve them as strings
- *
- * @example
- * const qs = queryConverter.export(
- *   { a: 1, b: { x: "hello" }, list: ["a", "b"], empty: "" },
- *   { preserveEmpty: false }
- * );
- * // "a=1&b[x]=hello&list[0]=a&list[1]=b"
- *
- * @example
- * const obj = queryConverter.import(
- *   "a=1&b[x]=hello&list[0]=a&list[1]=b&flag=true",
- *   { preserveBooleans: false, preserveNumbers: false }
- * );
- * // { a: 1, b: { x: "hello" }, list: ["a","b"], flag: true }
- *
- * @example
- * const qs2 = queryConverter.export(
- *   { obj1: { value: "test" } },
- *   { prefix: "filters.form" }
- * );
- * // "?filters[form][obj1][value]=test"
- *
- * @example
- * const onlyFilters = queryConverter.import(
- *   "filters[form][obj1][value]=test&noise=1",
- *   { prefix: "filters.form" }
- * );
- * // { obj1: { value: "test" } }
- */
 export const queryConverter = {
     export: (obj, settings = {}) => {
         const { preserveEmpty = false, prefix, ignoreEncode = false } = settings;

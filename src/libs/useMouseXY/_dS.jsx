@@ -2,9 +2,11 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { useMouseXY } from ".";
 import { Typo } from "../Typo";
+import { Flex } from "../Flex";
+import { Button } from "../Button";
 
 const X = () => {
-    const [x, y] = useMouseXY();
+    const { x, y, manualTrigger } = useMouseXY(80);
 
     return (
         <Ds.page
@@ -16,11 +18,17 @@ const X = () => {
                 title="Track Mouse Position"
                 code={`import { useMouseXY } from "${SYS.basePath}";
 
-const [x, y] = useMouseXY(80);`}
-                example={<Typo.span>{`x: ${x} y: ${y}`}</Typo.span>}
+                       const { x, y, manualTrigger } = useMouseXY(80);`}
+                example={
+                    <Flex.column gap={8}>
+                        <Typo.span>{`x: ${x} y: ${y}`}</Typo.span>
+                        <Button.plain label="manualTrigger()" onClick={manualTrigger} />
+                    </Flex.column>
+                }
             />
             <Ds.api
-                args="const [x, y] = useMouseXY(delay);"
+                disableLastBlock
+                args="const { x, y, manualTrigger } = useMouseXY(delay);"
                 props={{
                     delay: {
                         description: "Throttle delay in milliseconds.",
@@ -28,9 +36,22 @@ const [x, y] = useMouseXY(80);`}
                         defaultValue: "100",
                     },
                 }}
-                returnProps={{
+            />
+            <Ds.api
+                args="x, y"
+                props={{
                     x: { description: "Latest mouse X coordinate (clientX).", type: "number" },
                     y: { description: "Latest mouse Y coordinate (clientY).", type: "number" },
+                }}
+            />
+            <Ds.api
+                args="manualTrigger()"
+                props={{
+                    manualTrigger: {
+                        description:
+                            "Immediately commits the latest known mouse position to state, bypassing throttle delay.",
+                        type: "fn",
+                    },
                 }}
             />
         </Ds.page>

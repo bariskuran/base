@@ -93,10 +93,10 @@ const X = () => {
                 code={`import { isDeepEqual } from "${SYS.basePath}";
 
                         isDeepEqual({ a: undefined }, { a: false }); // this will return false. Others are equal.
-                        isDeepEqual({ a: undefined }, { a: false }, { treatFalsiesAsEqual: true });    
+                        isDeepEqual({ a: undefined }, { a: false }, { treatFalsiesAsEqual: true });
                         isDeepEqual({ a: undefined }, { a: null }, { treatFalsiesAsEqual: true });
                         isDeepEqual({ a: undefined }, { a: 0 }, { treatFalsiesAsEqual: true });
-                    `}
+`}
                 example={
                     <Flex.column gap={10} padding={10} full>
                         <Flex gap={10} wrap>
