@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "react";
 import { debouncedFunction } from "../debouncedFunction";
-import { useStableCallback } from "../_react/useStableCallback";
+import { useStableCallback } from "./useStableCallback";
 
 export const useDebouncedFunction = (fn, settings = {}) => {
     const stableFn = useStableCallback(fn);

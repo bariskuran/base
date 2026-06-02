@@ -11,7 +11,6 @@ import { baseStore } from "../baseStore";
 
 const getShowInternalDs = () => {
     try {
-
         return !!baseStore.globalData.get?.()?._adminSettings?.showInternalDs;
     } catch {
         return false;
