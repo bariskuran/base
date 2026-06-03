@@ -9,6 +9,7 @@ export const Base = () => {
     const { displayQueue, onExitComplete, theme, BoxComponent, openingMs } = useVars();
 
     if (typeof document === "undefined") return null;
+    if (!displayQueue?.length) return null;
 
     return createPortal(
         <S.container aria-label="NotifierListener container">

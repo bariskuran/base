@@ -22,11 +22,19 @@ const S = {
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-end;
+
+        ${({ $empty }) =>
+            $empty &&
+            css`
+                padding: 0;
+                visibility: hidden;
+                pointer-events: none;
+            `}
     `,
     line: styled.div`
         position: relative;
         background: ${({ theme }) => theme.greys.shade40};
-        min-height: 100rem;
+        min-height: ${({ $empty }) => ($empty ? 50 : 100)}rem;
         width: 1px;
         min-width: 1px;
         align-self: stretch;
@@ -48,7 +56,13 @@ const S = {
                 }
             `}
     `,
-
+    line2: styled.div`
+        background: ${({ theme }) => theme.greys.shade40};
+        height: 1px;
+        width: 100rem;
+        max-width: 100rem;
+        margin: 10rem 0;
+    `,
     mainColumn: styled.div`
         flex: 1 1 auto;
         min-width: 0;

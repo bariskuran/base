@@ -7,12 +7,29 @@ import CodeViewer from "../CodeViewer";
 import { isJsxDescription } from "../isJsxDescription";
 import { templateLiteralTo } from "../../templateLiteralTo";
 
-const Block = ({ title, description, code, example, lastBlock, extraTitlePaddingTop = 0 }) => {
+const Block = ({
+    title,
+    description,
+    code,
+    example,
+    lastBlock,
+    empty,
+    extraTitlePaddingTop = 0,
+}) => {
     const { ajax, set } = baseStore.useLocal({
         ajax: 0,
     });
 
-    const enableAjax = !!code && !!(example || description);
+    const enableAjax = !empty && !!code && !!(example || description);
+
+    if (empty) {
+        return (
+            <S.container $lastBlock={lastBlock} $empty>
+                <S.titleArea $empty $extraTitlePaddingTop={extraTitlePaddingTop} aria-hidden />
+                <S.line $empty $lastBlock={lastBlock} />
+            </S.container>
+        );
+    }
 
     /* RETURN */
     return (
@@ -64,6 +81,7 @@ const Block = ({ title, description, code, example, lastBlock, extraTitlePadding
                             ) : (
                                 <Typo as="div">{templateLiteralTo.p(description)}</Typo>
                             )}
+                            {description && example && <S.line2 />}
                             <Flex.row full minWidth={0}>
                                 {example}
                             </Flex.row>

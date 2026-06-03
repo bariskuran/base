@@ -9,17 +9,27 @@ import { LanguageManager } from "../LanguageManager";
 import { PageLoadingManager } from "../loadingQueueManager";
 import { NotifierListener } from "helpers/NotifierListener";
 
-export const CoreRRDLayout = ({ routes, projectSettings }) => {
+export const CoreRRDLayout = ({ routes, preparedRoutes, projectSettings }) => {
     const [isGlobalReady, isThemeReady] = baseStore.useGlobal((s) => [
         s.isGlobalReady,
         s.isThemeReady,
     ]);
 
     if (!isGlobalReady || !isThemeReady)
-        return <GlobalDataProvider projectSettings={projectSettings} routes={routes} />;
+        return (
+            <GlobalDataProvider
+                projectSettings={projectSettings}
+                routes={routes}
+                preparedRoutes={preparedRoutes}
+            />
+        );
     return (
         <>
-            <GlobalDataProvider projectSettings={projectSettings} routes={routes} />
+            <GlobalDataProvider
+                projectSettings={projectSettings}
+                routes={routes}
+                preparedRoutes={preparedRoutes}
+            />
             <IdleManager />
             <LanguageManager />
             <PageLoadingManager />
@@ -29,7 +39,7 @@ export const CoreRRDLayout = ({ routes, projectSettings }) => {
     );
 };
 
-export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
+export const GlobalDataAndRouter = ({ routes, preparedRoutes = [], projectSettings }) => {
     const [isDevMode, isGlobalReady, isThemeReady, enableDesignSystem, showInternalDs] =
         baseStore.useGlobal((s) => [
             s.isDevMode,
@@ -44,7 +54,13 @@ export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
         () =>
             createBrowserRouter([
                 {
-                    element: <CoreRRDLayout projectSettings={projectSettings} routes={routes} />,
+                    element: (
+                        <CoreRRDLayout
+                            projectSettings={projectSettings}
+                            routes={routes}
+                            preparedRoutes={preparedRoutes}
+                        />
+                    ),
                     errorElement: <ErrorPage defaultCode={500} />,
                     children: [
                         ...(isReady ? routes : []),
@@ -54,7 +70,7 @@ export const GlobalDataAndRouter = ({ routes, projectSettings }) => {
                     ],
                 },
             ]),
-        [routes, isReady, isDevMode, enableDesignSystem, showInternalDs, projectSettings],
+        [routes, preparedRoutes, isReady, isDevMode, enableDesignSystem, showInternalDs, projectSettings],
     );
     if (!isThemeReady) return null;
     return <RouterProvider router={router} />;

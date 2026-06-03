@@ -24,8 +24,11 @@ const Layout = () => {
     const navScrollRef = useRef(null);
     const showInternalDs = baseStore.useGlobal((s) => !!s._adminSettings?.showInternalDs);
     const sorted = useMemo(() => {
-        const [first, ...rest] = getSitemap() || [];
-        return first ? [first, ...rest.sort((a, b) => sortBy.asc(a[0], b[0]))] : [];
+        const list = getSitemap() || [];
+        const pinnedCount = 2;
+        const pinned = list.slice(0, pinnedCount);
+        const rest = list.slice(pinnedCount).sort((a, b) => sortBy.asc(a[0], b[0]));
+        return [...pinned, ...rest];
     }, [showInternalDs]);
 
     useLayoutEffect(() => {

@@ -23,8 +23,10 @@ const S = {
         overflow: visible;
         background: transparent;
 
-        & > * {
-            pointer-events: auto;
+        [aria-label="ScrollFlex container"],
+        [aria-label="ScrollFlex shell"],
+        [aria-label="ScrollFlex content"] {
+            pointer-events: none;
         }
     `,
 
@@ -47,6 +49,7 @@ const S = {
     shell: styled.div`
         ${({ theme }) => css`
             width: 100%;
+            pointer-events: none;
             border-radius: 0 0 10px 10px;
             filter: drop-shadow(0 2px 2px ${theme.colorAlpha(theme.foreground, 0.5)});
         `}

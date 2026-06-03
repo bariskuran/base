@@ -9,10 +9,15 @@ import { useEventListener } from "../../useEventListener";
 import { loadingApi } from "../loadingQueueManager";
 import { VALIDATION_RULES } from "../../../constants/VALIDATION_RULES";
 import { useEffectAfterMount } from "../../useEffectAfterMount";
+import {
+    getIgnoreClientLanguage,
+    getLanguageSettings,
+    getPageLanguageFromMatches,
+    resolveInitialLanguage,
+} from "./resolveLanguage";
 
-export const GlobalDataProvider = ({ projectSettings, routes }) => {
+export const GlobalDataProvider = ({ projectSettings, routes, preparedRoutes = [] }) => {
     const {
-        globalBaseStoreVariables = {},
         notifierSettings = {},
         baseDateSettings = {},
         iconsLibrary = {},
@@ -25,13 +30,24 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         validationRules = {},
     } = projectSettings || {};
 
+    const languageSettingsConfig = useMemo(
+        () => getLanguageSettings(projectSettings),
+        [projectSettings],
+    );
+
+    const ignoreClientLanguage = getIgnoreClientLanguage(projectSettings);
+
     const navigate = useNavigate();
     const location = useLocation();
     const params = useParams();
     const [searchParams] = useSearchParams();
     const matches = useMatches();
-    const pathLanguage = matches?.[matches.length - 1]?.handle?.language;
     const searchParamsObj = useMemo(() => Object.fromEntries(searchParams), [searchParams]);
+
+    const pageLanguage = useMemo(
+        () => getPageLanguageFromMatches(matches, languageSettingsConfig.languageList),
+        [matches, languageSettingsConfig.languageList, location.pathname],
+    );
 
     const navigateWithSearch = useCallback(
         (pathname, search) => {
@@ -55,16 +71,19 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
         try {
             baseStore.globalData.set({
                 ...currGlobalData,
-                ...globalBaseStoreVariables,
+                languageSettings: languageSettingsConfig,
                 textLibrary: { ...TEXT_LIBRARY, ...(usersTextLibrary || {}) },
                 isGlobalReady: true,
                 _projectSettings: projectSettings,
                 _routes: routes,
-                language:
-                    pathLanguage ??
-                    clientData.language ??
-                    globalBaseStoreVariables.defaultLanguage ??
-                    "en",
+                _preparedRoutes: preparedRoutes,
+                sitemap: projectSettings?.rrdSettings?.SITEMAP,
+                language: resolveInitialLanguage({
+                    pageLanguage,
+                    languageSettings: languageSettingsConfig,
+                    clientData,
+                    ignoreClientLanguage,
+                }),
 
 
                 isLoading: false,
@@ -165,7 +184,7 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
 
         baseStore.globalData.set({
             ...currentGlobalData,
-            ...globalBaseStoreVariables,
+            languageSettings: languageSettingsConfig,
             _projectSettings: projectSettings,
             _notifier: {
                 ...currentGlobalData._notifier,
@@ -184,19 +203,29 @@ export const GlobalDataProvider = ({ projectSettings, routes }) => {
                 ...currentGlobalData._idleManager,
                 ...idleManagerSettings,
             },
-            language:
-                pathLanguage ??
-                currentGlobalData._clientData.language ??
-                globalBaseStoreVariables.defaultLanguage ??
-                "en",
+            language: resolveInitialLanguage({
+                pageLanguage,
+                languageSettings: languageSettingsConfig,
+                clientData: currentGlobalData._clientData,
+                ignoreClientLanguage,
+            }),
         });
-    }, [projectSettings]);
+    }, [projectSettings, languageSettingsConfig, ignoreClientLanguage, pageLanguage]);
+
+    useEffectAfterMount(() => {
+        baseStore.globalData.set((s) => {
+            delete s.languageList;
+            delete s.defaultLanguage;
+        });
+    }, []);
 
     useEffectAfterMount(() => {
         baseStore.globalData.set((s) => {
             s._routes = routes;
+            s._preparedRoutes = preparedRoutes;
+            s.sitemap = projectSettings?.rrdSettings?.SITEMAP;
         });
-    }, [routes]);
+    }, [routes, preparedRoutes, projectSettings?.rrdSettings?.SITEMAP]);
 
     const updateClientData = () => {
         const generatedClientData = getCD();

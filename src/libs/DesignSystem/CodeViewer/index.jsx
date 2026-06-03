@@ -11,7 +11,7 @@ const CodeViewer = ({
     bg,
     color,
     maxHeight,
-    wrap = false,
+    wrap = true,
     formatJsxProps = true,
     ...rest
 }) => {
@@ -19,7 +19,14 @@ const CodeViewer = ({
     if (!rawContent) return null;
 
     return (
-        <S.shell $tabSize={tabSize} $radius={radius} $bg={bg} $color={color} $maxHeight={maxHeight}>
+        <S.shell
+            $tabSize={tabSize}
+            $radius={radius}
+            $bg={bg}
+            $color={color}
+            $maxHeight={maxHeight}
+            $wrap={wrap}
+        >
             <Typo.code
                 copy
                 content={rawContent}
@@ -30,7 +37,6 @@ const CodeViewer = ({
                 color={color}
                 full
                 disableMaxWidthLock
-                whiteSpace={wrap ? "pre-wrap" : "pre"}
                 {...rest}
             />
         </S.shell>

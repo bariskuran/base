@@ -56,15 +56,9 @@ const sharedStyles = ({
         $stackedOverlayCopy &&
         css`
             margin: 0;
-            grid-area: 1 / 1;
-            align-self: stretch;
-            width: auto;
-            min-width: 0;
+            width: max-content;
             max-width: 100%;
-            padding-right: 34rem;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
+            min-width: 0;
             box-sizing: border-box;
         `}
 
@@ -239,9 +233,11 @@ const wrapperWidth = ({
     $fitContent,
     $disableMaxWidthLock,
     $overlayCopy,
+    $stackedOverlayCopy,
     $as,
 }) => {
     if (!$overlayCopy) return "auto";
+    if ($stackedOverlayCopy) return "fit-content";
     if ($width != null) return $width;
     if ($fitContent) return "fit-content";
     if ($maxWidth != null) return $maxWidth;
@@ -261,8 +257,11 @@ const S = {
 
             ${$stackedOverlayCopy &&
             css`
-                grid-template-columns: minmax(0, max-content);
-                align-items: stretch;
+                grid-template-columns: max-content auto;
+                align-items: start;
+                column-gap: 8rem;
+                width: fit-content;
+                max-width: 100%;
             `}
 
             ${$overlayCopy &&
@@ -273,13 +272,16 @@ const S = {
                     $fitContent,
                     $disableMaxWidthLock,
                     $overlayCopy,
+                    $stackedOverlayCopy,
                     $as,
                 })};
-                max-width: ${$maxWidth != null
-                    ? $maxWidth
-                    : $disableMaxWidthLock
-                      ? "none"
-                      : "min(100%, 600px)"};
+                max-width: ${$stackedOverlayCopy
+                    ? "100%"
+                    : $maxWidth != null
+                      ? $maxWidth
+                      : $disableMaxWidthLock
+                        ? "none"
+                        : "min(100%, 600px)"};
             `}
         `}
     `,
@@ -287,25 +289,25 @@ const S = {
         ${({ $stackedOverlayCopy }) =>
             $stackedOverlayCopy
                 ? css`
-                      grid-area: 1 / 1;
+                      grid-column: 2;
+                      grid-row: 1;
+                      align-self: start;
                       justify-self: end;
-                      align-self: stretch;
                       position: relative;
                       display: flex;
-                      align-items: center;
+                      align-items: flex-start;
                       justify-content: flex-end;
+                      flex-shrink: 0;
                       margin: 0;
                       padding: 0;
                       line-height: 0;
                       pointer-events: none;
                       user-select: none;
-                      z-index: 2;
+                      z-index: 1;
 
                       & > * {
                           margin: 0;
                           pointer-events: auto;
-                          align-self: stretch;
-                          height: auto;
                       }
                   `
                 : css`

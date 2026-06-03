@@ -49,6 +49,12 @@ const X = () => (
                     type: "boolean",
                     defaultValue: false,
                 },
+                empty: {
+                    description:
+                        "When true, hides title and content (no background). Only the timeline line is shown (min-height 50rem) with an optional end circle when lastBlock is set.",
+                    type: "boolean",
+                    defaultValue: false,
+                },
             }}
         />
     </Ds.page>

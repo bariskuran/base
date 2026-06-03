@@ -69,6 +69,8 @@ export {
 export { baseDate, getNow } from "./libs/baseDate";
 export { baseFetch } from "./libs/baseFetch";
 export { useBaseFetch } from "./libs/useBaseFetch";
+export { setLanguage } from "./libs/@Base/GlobalDataProvider/resolveLanguage";
+export { getPageRrdInfo } from "./libs/getPageRrdInfo";
 export { baseStore } from "./libs/baseStore";
 export { baseStore as cs } from "./libs/baseStore";
 export { Button } from "./libs/Button";

@@ -4,7 +4,7 @@ const resolveLang = (overrideLibrary) => {
     const gd = baseStore?.globalData?.get?.() || {};
 
     return {
-        language: gd.language ?? gd.defaultLanguage ?? gd._clientData?.language ?? "en",
+        language: gd.language ?? gd.languageSettings?.defaultLanguage ?? "en",
         textLibrary: overrideLibrary ?? gd.textLibrary ?? {},
     };
 };
@@ -36,3 +36,4 @@ export const getText = (keyOrEntry, overrideLibrary) => {
 
     return "";
 };
+export const t = getText;

@@ -51,29 +51,13 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title,
                             marginBottom={hasProps || hasReturnProps || returns ? 40 : 0}
                             full
                             minWidth={0}
+                            xAlign="flex-start"
                         >
                             {typeof args === "string" ? (
-                                <Typo.h6
-                                    lineHeight={1.5}
-                                    balance
-                                    copy
-                                    content={args}
-                                    padding={10}
-                                    whiteSpace="pre-wrap"
-                                    {...(full ? { full: true } : {})}
-                                />
+                                <Typo.code copy content={args} padding={10} fitContent />
                             ) : Array.isArray(args) ? (
                                 args.map((arg, i) => (
-                                    <Typo.h6
-                                        lineHeight={1.5}
-                                        balance
-                                        copy
-                                        content={arg}
-                                        key={i}
-                                        padding={10}
-                                        whiteSpace="pre-wrap"
-                                        {...(full ? { full: true } : {})}
-                                    />
+                                    <Typo.code key={i} copy content={arg} padding={10} fitContent />
                                 ))
                             ) : null}
                         </Flex.column>

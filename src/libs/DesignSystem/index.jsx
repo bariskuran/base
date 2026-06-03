@@ -8,6 +8,7 @@ import variant from "./VariantViewer";
 import output from "./OutputArea";
 import useOutputViewer from "./useOutputViewer";
 import { baseStore } from "../baseStore";
+import { t } from "../getText";
 
 const getShowInternalDs = () => {
     try {
@@ -27,7 +28,8 @@ export const formatDsNavLabel = (name) => {
 };
 
 const publicSitemap = [
-    ["How To Setup", undefined, l(() => import("./_dS")), { index: true }],
+    ["About base", undefined, l(() => import("./_dS_welcome")), { index: true }],
+    ["How To Setup", "how-to-setup", l(() => import("../@Base/_dS_howToSetup"))],
     ["Base", "base", l(() => import("../@Base/_dS"))],
     ["Button", "button", l(() => import("../Button/_dS"))],
     ["ButtonGroup", "buttonGroup", l(() => import("../ButtonGroup/_dS"))],
@@ -60,6 +62,7 @@ const publicSitemap = [
     ["generateRandom", "generateRandom", l(() => import("../generateRandom/_dS"))],
     ["Group", "group", l(() => import("../Group/_dS"))],
     ["getText", "getText", l(() => import("../getText/_dS"))],
+    ["getPageRrdInfo", "getPageRrdInfo", l(() => import("../getPageRrdInfo/_dS"))],
     ["getClientData", "getClientData", l(() => import("../getClientData/_dS"))],
     ["getTimeDiff", "getTimeDiff", l(() => import("../getTimeDiff/_dS"))],
     ["Icon", "icon", l(() => import("../Icon/_dS"))],

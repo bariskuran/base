@@ -17,7 +17,7 @@ const customObj = { tr: "Kaydet", en: "Save" };
 const X = () => {
     const [language, languageList, textLibrary] = baseStore.useGlobal((s) => [
         s.language,
-        s.languageList,
+        s.languageSettings?.languageList,
         s.textLibrary,
     ]);
     const { output, output2, output3, set } = baseStore.useLocal({
@@ -43,10 +43,13 @@ const X = () => {
                     <br />
                     The text library is located at <i>'constants.TEXT_LIBRARY'</i> in the base code.
                     Users can override the default text library with{" "}
-                    <i>'PROJECT_SETTINGS.textLibrary'</i>. There is no language limit; only matching
-                    language codes are needed. Project language settings are defined by{" "}
-                    <i>'PROJECT_SETTINGS.globalBaseStoreVariables.defaultlanguage'</i> and{" "}
-                    <i>'PROJECT_SETTINGS.globalBaseStoreVariables.languageList'</i>.
+                    <i>'PROJECT_SETTINGS.textLibrary'</i>. Language is resolved in order:{" "}
+                    <i>localStorage.language</i>, then browser locale (if supported in{" "}
+                    <i>languageList</i> and <i>ignoreClientLanguage</i> is false), then{" "}
+                    <i>defaultLanguage</i>, then <i>en</i>. Route <i>handle.language</i> (from{" "}
+                    <i>prepareRoutes</i>) has the highest priority. Use your existing language
+                    switcher (e.g. <i>switchLanguage</i>) with <i>setStoredLanguage</i> from base if
+                    you persist the user choice.
                     <br />
                     <br />
                     You can access the text library directly via <i>'globalData.textLibrary'</i>.
