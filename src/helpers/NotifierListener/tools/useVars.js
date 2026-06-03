@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { baseStore } from "../../baseStore";
+import { baseStore } from "libs/baseStore";
 import { DefaultVariant } from "../DefaultVariant";
 import { useDisplayQueue } from "./useDisplayQueue";
 

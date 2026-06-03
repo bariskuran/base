@@ -1,8 +1,8 @@
 import { memo, useMemo, useRef, useLayoutEffect, useState, useCallback, useEffect } from "react";
 import S from "./_styled";
 import { TimeBar } from "./TimeBar";
-import { Button } from "../../Button";
-import { colorGet } from "../../colorGet";
+import { Button } from "libs/Button";
+import { colorGet } from "libs/colorGet";
 
 export const Box = memo(function Box({ item, BoxComponent, theme, openingMs, onExitComplete }) {
     const {

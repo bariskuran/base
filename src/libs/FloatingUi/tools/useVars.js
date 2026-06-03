@@ -4,7 +4,7 @@ import { useEventListener } from "../../useEventListener";
 import { delayedFunction } from "../../delayedFunction";
 import getPosition from "./getPosition";
 import { colorGet } from "../../colorGet";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 import { useObserver } from "../../useObserver";
 import {
     acquireFloatingMountHost,

@@ -10,7 +10,7 @@ import {
     useState,
 } from "react";
 import { baseStore } from "../../baseStore";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { deepMerge } from "../../deepMerge";
 import {
@@ -25,15 +25,11 @@ import { splitUserStyle, SHELL_SURFACE_PROP_KEYS } from "./splitUserStyle.js";
 import { mergeStyles } from "./mergeStyles.js";
 import { resolveFlexTypoWrap } from "./resolveFlexTypoWrap.js";
 
-const FULL_WIDTH_FLEX_IN_FLEX_PARENT = "1 1 100%";
-
-const isFlexDisplayValue = (display) => display === "flex" || display === "inline-flex";
-
-const readParentIsFlexContainer = (node) => {
-    const parent = node?.parentElement;
-    if (!parent || typeof getComputedStyle === "undefined") return false;
-    return isFlexDisplayValue(getComputedStyle(parent).display);
-};
+import {
+    FULL_WIDTH_FLEX_IN_FLEX_PARENT,
+    isFlexDisplayValue,
+    readParentIsFlexContainer,
+} from "./flexParentDetection.js";
 
 export const useVars = ({ props, children, content, className, style, forwardedRef }) => {
     const [currentBreakpoint] = baseStore.useGlobal((s) => [s._clientData.currentBreakpoint]);

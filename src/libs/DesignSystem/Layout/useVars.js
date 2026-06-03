@@ -1,14 +1,12 @@
 import { useMatches } from "react-router-dom";
 import { useEffect } from "react";
-
-const defPageTitle = "Design System";
+import { DEFAULT_PAGE_TITLE, resolvePageTitleFromMatches } from "./tools/pageTitle";
 
 const useVars = () => {
     const matches = useMatches();
-    const pageTitle =
-        [...matches].reverse().find((m) => m.handle?.pageTitle)?.handle?.pageTitle || defPageTitle;
+    const pageTitle = resolvePageTitleFromMatches(matches);
     useEffect(() => {
-        document.title = defPageTitle + " | " + pageTitle;
+        document.title = DEFAULT_PAGE_TITLE + " | " + pageTitle;
     }, [pageTitle]);
 
     /*  Return */

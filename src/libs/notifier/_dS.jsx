@@ -134,7 +134,7 @@ const X = () => {
             />
             <Ds.block
                 title="Multiple calls"
-                code={`import { NotifierListener } from "${SYS.basePath}/libs/NotifierListener";
+                code={`import { NotifierListener } from "${SYS.basePath}/helpers/NotifierListener";
 
                         <NotifierListener />`}
                 example={

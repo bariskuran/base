@@ -1,4 +1,4 @@
-import { componentCreator } from "../componentCreator/index.jsx";
+import { componentCreator } from "helpers/componentCreator";
 import { Base } from "./tools/_Base.jsx";
 
 export const Flex = componentCreator({

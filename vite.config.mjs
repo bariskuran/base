@@ -2,6 +2,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import eslint from "vite-plugin-eslint";
+import { bariskuranBaseAliases, bariskuranBaseResolvePlugin } from "./vite.aliases.mjs";
 import { fileURLToPath } from "url";
 import path, { resolve } from "path";
 
@@ -21,8 +22,8 @@ export default defineConfig({
     resolve: {
         extensions: [".mjs", ".js", ".jsx", ".json"],
         alias: {
-            src: "/src",
-            libs: "/src/libs",
+            src: resolve(__dirname, "src"),
+            ...bariskuranBaseAliases(),
         },
     },
 
@@ -31,6 +32,7 @@ export default defineConfig({
     },
 
     plugins: [
+        bariskuranBaseResolvePlugin(),
         react({
             jsxRuntime: "automatic",
             // Tüm JSX dosyalarını işle (test dosyaları dahil)

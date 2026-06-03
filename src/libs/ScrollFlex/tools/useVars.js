@@ -1,8 +1,9 @@
 import { useCallback, useMemo, useRef } from "react";
 import { baseStore } from "../../baseStore";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 import { isShallowEqual } from "../../isShallowEqual";
-import { EMPTY_FLEX_PROPS, EMPTY_SCROLL_BAR_PROPS, CONTENT_SIZE_MEASURE_SLACK_PX } from "./constants";
+import { EMPTY_FLEX_PROPS, EMPTY_SCROLL_BAR_PROPS } from "./constants";
+import { getContainerExtraInsetPx as getContainerExtraInsetPxFn } from "./containerExtraInset";
 import { getLayoutSizeCss } from "./cssSizeUtils";
 import {
     getBarGutterInsets,
@@ -198,13 +199,12 @@ const useVars = (p) => {
     ]);
 
     const getContainerExtraInsetPx = useCallback(
-        (axis) => {
-            const gutter = axis === "x" ? barGutters.gutterX : barGutters.gutterY;
-            const pad = axis === "x" ? shellPaddingInsetsPx.x : shellPaddingInsetsPx.y;
-            const border = axis === "x" ? containerBorderInsetsPx.x : containerBorderInsetsPx.y;
-
-            return gutter + pad + border + CONTENT_SIZE_MEASURE_SLACK_PX;
-        },
+        (axis) =>
+            getContainerExtraInsetPxFn(axis, {
+                barGutters,
+                shellPaddingInsetsPx,
+                containerBorderInsetsPx,
+            }),
         [barGutters, containerBorderInsetsPx, shellPaddingInsetsPx],
     );
 

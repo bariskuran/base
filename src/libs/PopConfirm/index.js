@@ -1,5 +1,5 @@
 import { Base } from "./tools/_Base";
-import { componentCreator } from "../componentCreator/index.jsx";
+import { componentCreator } from "helpers/componentCreator";
 
 export const PopConfirm = componentCreator({
     name: "PopConfirm",

@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { Base } from "./tools/_Base";
-import { componentCreator } from "../componentCreator/index.jsx";
+import { componentCreator } from "helpers/componentCreator";
 import { DefaultVariant } from "./DefaultVariant.js";
 import { PlainVariant } from "./PlainVariant.js";
 

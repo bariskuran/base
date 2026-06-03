@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
-import { baseStore } from "../baseStore";
-import { useNestedBaseUiContext } from "../NestedBaseUi";
+import { baseStore } from "libs/baseStore";
+import { useNestedBaseUiContext } from "helpers/NestedBaseUi";
 
 export const componentCreator = ({
     name,

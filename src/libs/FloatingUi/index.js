@@ -1,5 +1,5 @@
 import { Base } from "./tools/_Base";
-import { componentCreator } from "../componentCreator/index.jsx";
+import { componentCreator } from "helpers/componentCreator";
 import { DefaultVariant } from "./DefaultVariant";
 import { PlainVariant } from "./PlainVariant.js";
 

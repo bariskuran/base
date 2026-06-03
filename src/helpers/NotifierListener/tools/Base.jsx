@@ -2,8 +2,8 @@ import { createPortal } from "react-dom";
 import S from "./_styled";
 import { useVars } from "./useVars";
 import { Box } from "./Box";
-import { ScrollFlex } from "../../ScrollFlex";
-import { Flex } from "../../Flex";
+import { ScrollFlex } from "libs/ScrollFlex";
+import { Flex } from "libs/Flex";
 
 export const Base = () => {
     const { displayQueue, onExitComplete, theme, BoxComponent, openingMs } = useVars();

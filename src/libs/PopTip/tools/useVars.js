@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useState } from "react";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 
 const useVars = (p) => {
     const [isOpen, setIsOpen] = useState(false);

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { useScrollThrottle } from ".";
-import { attachScrollListener } from "../getScrollParent";
+import { attachScrollListener } from "helpers/getScrollParent";
 import { Typo } from "../Typo";
 import { baseStore } from "../baseStore";
 import { Flex } from "../Flex";

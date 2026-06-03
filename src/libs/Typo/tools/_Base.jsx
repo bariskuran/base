@@ -6,8 +6,8 @@ import { Button } from "../../Button";
 import { colorAlpha } from "../../colorAlpha";
 import { getText } from "../../getText";
 import { copyToClipboard } from "../../copyToClipboard";
-import { useExportedData } from "../../useExportedData";
-import NestedBaseUi, { NESTED_UI_TYPO_PHRASING_HOST } from "../../NestedBaseUi";
+import { useExportedData } from "helpers/useExportedData";
+import NestedBaseUi, { NESTED_UI_TYPO_PHRASING_HOST } from "helpers/NestedBaseUi";
 import { isTypoPhrasingOnlyHostTag } from "./isTypoPhrasingOnlyHostTag";
 
 export const Base = (props) => {

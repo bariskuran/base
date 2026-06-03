@@ -153,7 +153,6 @@ const internalSitemap = [
     ["columnTypes", "columnTypes", l(() => import("../columnTypes/_dS"))],
     ["cssNormalizeSize", "cssNormalizeSize", l(() => import("../cssNormalizeSize/_dS"))],
     ["cssSpacingResolver", "cssSpacingResolver", l(() => import("../cssSpacingResolver/_dS"))],
-    ["NestedBaseUi", "nestedBaseUi", l(() => import("../NestedBaseUi/_dS"))],
 ];
 
 export const getSitemap = () => [...publicSitemap, ...(getShowInternalDs() ? internalSitemap : [])];

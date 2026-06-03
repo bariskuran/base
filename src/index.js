@@ -150,7 +150,7 @@ export { useDeepEqual } from "./libs/useDeepEqual";
 export { useDelayedFunction } from "./libs/useDelayedFunction";
 export { useEffectAfterMount } from "./libs/useEffectAfterMount";
 export { useEventListener } from "./libs/useEventListener";
-export { useExportData, useExportedData } from "./libs/useExportedData";
+export { useExportData, useExportedData } from "./helpers/useExportedData";
 export { useImagePreloader } from "./libs/useImagePreloader";
 export { useImagesReady } from "./libs/useImagesReady";
 export { useRevealNavItem } from "./libs/useRevealNavItem";

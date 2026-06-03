@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
-import { isShallowEqual } from "../isShallowEqual";
-import { baseStore } from "../baseStore";
+import { isShallowEqual } from "libs/isShallowEqual";
+import { baseStore } from "libs/baseStore";
 
 export const useExportData = ({ exportData, ...returnedData }, exportedData = {}) => {
     const prevRef = useRef();

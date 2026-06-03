@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 import useVars from "./useVars.js";
-import NestedBaseUi from "../../NestedBaseUi";
+import NestedBaseUi from "helpers/NestedBaseUi";
 
 const S = {
     children: styled.div`

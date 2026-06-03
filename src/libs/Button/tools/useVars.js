@@ -3,15 +3,12 @@ import { useEffect } from "react";
 import { baseStore } from "../../baseStore";
 import { useTimers } from "./useTimers.js";
 import { getButtonColorPalette } from "./generateColors.js";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 import { DefaultVariant } from "../DefaultVariant.js";
-
-const isNonTransparentBgProp = (value) => {
-    if (value == null) return false;
-    const s = String(value).trim().toLowerCase();
-    if (s === "" || s === "transparent") return false;
-    return true;
-};
+import {
+    bgAppearsFilled,
+    anyBgColorPropNonTransparent,
+} from "./backgroundFill.js";
 
 export const useVars = ({
     Variant,
@@ -225,23 +222,17 @@ export const useVars = ({
     const hasPrefixIcon = !!(prefix?.icon);
     const hasSuffixIcon = !!(suffix?.icon);
 
-    const bgAppearsFilled = (() => {
-        if (bg == null) return false;
-        const s = String(bg).trim().toLowerCase();
-        if (s === "" || s === "transparent") return false;
-        if (/^#[0-9a-f]{8}$/i.test(s) && s.slice(-2) === "00") return false;
-        return true;
-    })();
+    const bgFilled = bgAppearsFilled(bg);
 
-    const anyBgColorPropNonTransparent =
-        isNonTransparentBgProp(bgColor) ||
-        isNonTransparentBgProp(hoverBgColor) ||
-        isNonTransparentBgProp(activeBgColor) ||
-        isNonTransparentBgProp(pendingBgColor);
-
+    const anyBgColorPropNonTransparentValue = anyBgColorPropNonTransparent({
+        bgColor,
+        hoverBgColor,
+        activeBgColor,
+        pendingBgColor,
+    });
 
     const labelNeedsFullHorizontalPad =
-        !!outlined || bgAppearsFilled || anyBgColorPropNonTransparent;
+        !!outlined || bgFilled || anyBgColorPropNonTransparentValue;
 
     let labelPadStartRem = 0;
     let labelPadEndRem = 0;

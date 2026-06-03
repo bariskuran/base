@@ -1,4 +1,4 @@
-import { componentCreator } from "../componentCreator/index.jsx";
+import { componentCreator } from "helpers/componentCreator";
 import { Base } from "./_Base.jsx";
 
 import { DefaultVariant } from "./DefaultVariant.js";

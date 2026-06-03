@@ -1,5 +1,5 @@
 // import { Tooltip as AntdTooltip } from "antd";
-// import { componentCreator } from "../componentCreator/index.jsx";
+// import { componentCreator } from "helpers/componentCreator";
 // import { baseStore } from "../baseStore";
 // /**
 //  *

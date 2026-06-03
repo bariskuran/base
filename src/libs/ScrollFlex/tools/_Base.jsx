@@ -1,6 +1,6 @@
 import useVars from "./useVars";
 import { ScrollBar } from "../../ScrollBar";
-import NestedBaseUi from "../../NestedBaseUi";
+import NestedBaseUi from "helpers/NestedBaseUi";
 import { S } from "./_styled.js";
 
 export const Base = ({ children, ...p }) => {

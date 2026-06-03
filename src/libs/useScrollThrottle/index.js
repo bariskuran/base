@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { attachScrollListener } from "../getScrollParent";
-import { useScrollTarget } from "../getScrollParent/useScrollTarget";
+import { attachScrollListener } from "helpers/getScrollParent";
+import { useScrollTarget } from "helpers/getScrollParent/useScrollTarget";
 
 export const useScrollThrottle = (callback, delay = 100, options = {}) => {
     const { source: sourceProp } = options;

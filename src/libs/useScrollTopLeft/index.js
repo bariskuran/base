@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useDebouncedFunction } from "../useDebouncedFunction";
 import { baseStore } from "../baseStore";
-import { attachScrollListener, readScrollLeft, readScrollTop } from "../getScrollParent";
-import { useScrollTarget } from "../getScrollParent/useScrollTarget";
+import { attachScrollListener, readScrollLeft, readScrollTop } from "helpers/getScrollParent";
+import { useScrollTarget } from "helpers/getScrollParent/useScrollTarget";
 
 export const useScrollTopLeft = (options = {}) => {
     const { source: sourceProp, delay = 0 } = options;

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 import {
     DEFAULT_CANCEL_BUTTON_PROPS,
     DEFAULT_CONFIRM_BUTTON_PROPS,

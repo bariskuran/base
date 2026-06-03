@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 import { useScrollEdgeShadow } from "./useScrollEdgeShadow";
 
 const useVars = (p = {}) => {

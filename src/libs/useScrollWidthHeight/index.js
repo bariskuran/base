@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef } from "react";
 import { useImagesReady } from "../useImagesReady";
 import { useEventListener } from "../useEventListener";
 import { baseStore } from "../baseStore";
-import { getDocumentScrollElement, readScrollSize } from "../getScrollParent";
-import { useScrollTarget } from "../getScrollParent/useScrollTarget";
+import { getDocumentScrollElement, readScrollSize } from "helpers/getScrollParent";
+import { useScrollTarget } from "helpers/getScrollParent/useScrollTarget";
 
 export const useScrollWidthHeight = (sourceOrOptions, legacyOptions = {}) => {
     const isOptionsObject =

@@ -5,9 +5,15 @@ import { disableBrowserScrollBar, enableBrowserScrollBar } from "./manageBrowser
 import getScrollHost from "./getScrollHost";
 import { getAxisOverflow, getHostRect } from "./getScrollMetrics";
 import getThumbProps from "./getThumbProps";
+import {
+    toBodyEdgeMargin,
+    getBarPositionForAxis,
+    getClientValueForAxis,
+    getVisibleEdge,
+} from "./scrollBarAxis";
 import { useEventListener } from "../../useEventListener";
 import { delayedFunction } from "../../delayedFunction";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 
 const useVars = (p) => {
     const {
@@ -38,8 +44,6 @@ const useVars = (p) => {
 
     const edgeMarginDefault = -2 - thickness;
     const trackMargin = trackMarginProp ?? 9;
-
-    const toBodyEdgeMargin = (value) => (value < 0 ? Math.abs(value) : value);
 
     let edgeMargin = edgeMarginProp ?? edgeMarginDefault;
     let edgeMarginX = edgeMarginXProp ?? edgeMarginDefault;
@@ -120,18 +124,10 @@ const useVars = (p) => {
 
     const colors = colorGet(truckColor || theme.foreground);
 
-    const getBarPositionForAxis = (axis) => {
-        if (axis === "y") return effectiveOpposite ? "horizontal" : "vertical";
-        return effectiveOpposite ? "vertical" : "horizontal";
-    };
+    const axisContext = { effectiveOpposite };
 
-    const getClientValueForAxis = (axis, e) => {
-        const barPosition = getBarPositionForAxis(axis);
-        return barPosition === "vertical" ? e.clientY : e.clientX;
-    };
-
-    const xBarPosition = getBarPositionForAxis("x");
-    const yBarPosition = getBarPositionForAxis("y");
+    const xBarPosition = getBarPositionForAxis("x", axisContext);
+    const yBarPosition = getBarPositionForAxis("y", axisContext);
 
     const resolveExternalSource = () => {
         if (typeof document === "undefined") return null;
@@ -667,7 +663,7 @@ const useVars = (p) => {
         const metrics = getTrackMetrics(axis);
         if (!metrics) return;
 
-        const clickPos = getClientValueForAxis(axis, e);
+        const clickPos = getClientValueForAxis(axis, e, axisContext);
         const clickOffset = clickPos - metrics.trackStart;
 
         let nextScroll;
@@ -694,7 +690,7 @@ const useVars = (p) => {
         e.preventDefault();
         e.stopPropagation();
 
-        const client = getClientValueForAxis(axis, e);
+        const client = getClientValueForAxis(axis, e, axisContext);
         const axisState = axis === "y" ? y : x;
 
         set((s) => {
@@ -713,7 +709,7 @@ const useVars = (p) => {
 
         if (!metrics) return;
 
-        const currentClient = getClientValueForAxis(axis, e);
+        const currentClient = getClientValueForAxis(axis, e, axisContext);
         const deltaClient = currentClient - dragStartClient;
 
         if (metrics.movableArea <= 0 || axisState.maxScroll <= 0) return;
@@ -787,18 +783,13 @@ const useVars = (p) => {
     const showY = y.isOverflowing && !disableY;
     const isDraggingX = dragAxis === "x";
     const isDraggingY = dragAxis === "y";
-    const getVisibleEdge = (isVisible, barPosition) => {
-        if (!isVisible) return {};
-        if (barPosition === "vertical") return effectiveMirror ? { left: true } : { right: true };
-        return effectiveMirror ? { top: true } : { bottom: true };
-    };
     const visibleEdges = {
         top: false,
         bottom: false,
         left: false,
         right: false,
-        ...getVisibleEdge(showY, yBarPosition),
-        ...getVisibleEdge(showX, xBarPosition),
+        ...getVisibleEdge(showY, yBarPosition, effectiveMirror),
+        ...getVisibleEdge(showX, xBarPosition, effectiveMirror),
     };
 
     return useExportData(

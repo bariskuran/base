@@ -1,7 +1,7 @@
-import Ds from "../DesignSystem";
+import Ds from "libs/DesignSystem";
 import { SYS } from "../../constants/SYS";
-import { Typo } from "../Typo";
-import { Flex } from "../Flex";
+import { Typo } from "libs/Typo";
+import { Flex } from "libs/Flex";
 
 const X = () => {
     return (
@@ -18,7 +18,7 @@ At this stage, this is mainly architectural documentation. Usage examples will b
         >
             <Ds.block
                 title="Intent (architecture note)"
-                code={`import NestedBaseUi from "${SYS.basePath}/libs/NestedBaseUi";
+                code={`import NestedBaseUi from "${SYS.basePath}/helpers/NestedBaseUi";
 
                        // conceptual nesting example
                        <PopOver>

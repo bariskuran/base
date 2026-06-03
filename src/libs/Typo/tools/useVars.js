@@ -1,5 +1,5 @@
 import { isValidElement, useMemo, useRef, useCallback, useLayoutEffect, useEffect } from "react";
-import { useExportData } from "../../useExportedData";
+import { useExportData } from "helpers/useExportedData";
 import { colorGet } from "../../colorGet";
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { baseStore } from "../../baseStore";
@@ -11,7 +11,7 @@ import {
     formatJsxPropsForViewer,
 } from "../../DesignSystem/CodeViewer/tools/codeFormatters.jsx";
 import { coerceToCodeText } from "../../DesignSystem/formatJsonForDisplay";
-import { useNestedBaseUiContext, NESTED_UI_TYPO_PHRASING_HOST } from "../../NestedBaseUi";
+import { useNestedBaseUiContext, NESTED_UI_TYPO_PHRASING_HOST } from "helpers/NestedBaseUi";
 
 const sysDefaults = {
     as: "span",
