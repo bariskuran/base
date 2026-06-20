@@ -64,6 +64,7 @@ export {
     useParams,
     useSearchParams,
 } from "react-router-dom";
+export { createPortal } from "react-dom";
 
 /* TAILOR MADE */
 export { baseDate, getNow } from "./libs/baseDate";
@@ -164,3 +165,4 @@ export { useScrollThrottle } from "./libs/useScrollThrottle";
 export { useScrollTopLeft } from "./libs/useScrollTopLeft";
 export { useScrollWidthHeight } from "./libs/useScrollWidthHeight";
 export { useTimer, getTimersSnapshot } from "./libs/useTimer";
+export { Slider } from "./libs/Slider";

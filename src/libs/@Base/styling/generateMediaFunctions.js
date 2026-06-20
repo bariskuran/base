@@ -20,7 +20,7 @@ export const generateMediaFunctions = ({
     breakpoints = DEFAULT_BREAKPOINTS,
     maxAspRatio = DEFAULT_MAX_ASP_RATIO,
     minAspRatio = DEFAULT_MIN_ASP_RATIO,
-}) => {
+} = {}) => {
     const mediaFunctions = {
         phone: (content) => {
             return css`
@@ -75,6 +75,18 @@ export const generateMediaFunctions = ({
                 ${content}
             }
     `,
+
+        vertical: (content) => css`
+            @media (max-aspect-ratio: ${maxAspRatio}) {
+                ${content}
+            }
+        `,
+
+        square: (content) => css`
+            @media (aspect-ratio: 1/1) {
+                ${content}
+            }
+        `,
     };
 
     mediaFunctions.responsive = (arrStr = "", content) => {
@@ -86,10 +98,12 @@ export const generateMediaFunctions = ({
         ${arr.includes("large") && mediaFunctions.large(content)}
         ${arr.includes("uhd") && mediaFunctions.uhd(content)}
         ${arr.includes("uhd8") && mediaFunctions.uhd8(content)}
+        ${arr.includes("vertical") && mediaFunctions.vertical(content)}
+        ${arr.includes("square") && mediaFunctions.square(content)}
         `;
     };
 
-    const keys = ["phone", "tablet", "desktop", "large", "uhd", "uhd8"];
+    const keys = ["phone", "tablet", "desktop", "large", "uhd", "uhd8", "vertical", "square"];
 
     keys.forEach((key) => {
         mediaFunctions.responsive[key] = (content) => mediaFunctions[key](content);

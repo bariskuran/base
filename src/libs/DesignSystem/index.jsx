@@ -8,7 +8,7 @@ import variant from "./VariantViewer";
 import output from "./OutputArea";
 import useOutputViewer from "./useOutputViewer";
 import { baseStore } from "../baseStore";
-import { t } from "../getText";
+// import { t } from "../getText";
 
 const getShowInternalDs = () => {
     try {

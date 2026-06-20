@@ -5,12 +5,19 @@ export const useScrollTarget = (sourceProp) => {
     const elementRef = useRef(null);
     const [element, setElement] = useState(null);
     const [source, setSource] = useState(() =>
-        sourceProp != null ? normalizeScrollSource(sourceProp) : null,
+        sourceProp != null ? normalizeScrollSource(sourceProp) : getDocumentScrollElement(),
     );
 
     useEffect(() => {
-        if (sourceProp != null) setSource(normalizeScrollSource(sourceProp));
-    }, [sourceProp]);
+        if (sourceProp != null) {
+            setSource(normalizeScrollSource(sourceProp));
+            return;
+        }
+
+        if (!element) {
+            setSource(getDocumentScrollElement());
+        }
+    }, [sourceProp, element]);
 
     const resolveFromElement = useCallback(
         (el) => {

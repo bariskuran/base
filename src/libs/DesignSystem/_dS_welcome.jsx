@@ -1,6 +1,6 @@
 import Ds from "./index";
 import { Button } from "../Button";
-import { Typo } from "../Typo";
+// import { Typo } from "../Typo";
 import { t } from "../getText";
 
 const X = () => (
@@ -10,9 +10,10 @@ const X = () => (
         description={t({
             tr: (
                 <>
-                    <b>@bariskuran/base</b> bileşen ve yardımcı kütüphanelerinin canlı dokümantasyonu.
-                    Kurulum için{" "}
-                    <Button.string to="/design-system/how-to-setup" label="How To Setup" /> sayfasına,
+                    <b>@bariskuran/base</b> bileşen ve yardımcı kütüphanelerinin canlı
+                    dokümantasyonu. Kurulum için{" "}
+                    <Button.string to="/design-system/how-to-setup" label="How To Setup" />{" "}
+                    sayfasına,
                     <b>Base</b> ve <b>PROJECT_SETTINGS</b> detayları için{" "}
                     <Button.string to="/design-system/base" label="Base" /> sayfasına gidin.
                 </>
@@ -21,8 +22,8 @@ const X = () => (
                 <>
                     Live documentation for <b>@bariskuran/base</b> components and helpers. See{" "}
                     <Button.string to="/design-system/how-to-setup" label="How To Setup" /> for
-                    installation and the <Button.string to="/design-system/base" label="Base" /> page
-                    for <b>PROJECT_SETTINGS</b>.
+                    installation and the <Button.string to="/design-system/base" label="Base" />{" "}
+                    page for <b>PROJECT_SETTINGS</b>.
                 </>
             ),
         })}
