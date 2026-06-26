@@ -48,7 +48,7 @@ const projectSettingsExample = `export const PROJECT_SETTINGS = {
         cacheTime: 10,
     },
 
-    styledSettings: { /* themes, primaryFont, globalStyle, … */ },
+    styledSettings: { /* themes, fonts.primaryFont, globalStyle, … */ },
     baseFormSettings: { helperMode: "auto" },
     validationRules: {},
     defaultVariants: {},

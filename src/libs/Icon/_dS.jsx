@@ -75,7 +75,7 @@ const X = () => {
             />
             <Ds.block
                 title="flat"
-                description="ViewBox-proportional box instead of a square: `width`/`size` targets the **long** side of the viewBox (same mental model as a square icon). Root width is `width × viewW / max(viewW, viewH)` so tall narrow glyphs (e.g. vertical dots) no longer blow up vertically for the same numeric width."
+                description="Content-proportional box instead of a square: `width`/`size` targets the **long** side of the icon content (same mental model as a square icon). For path-based icons, `flat` trims the SVG to the path bounds and disables optical scaling, so logos and wordmarks render edge-to-edge even when the source viewBox has extra whitespace."
                 code={`import { Icon } from "${SYS.basePath}";
 
                         <Icon icon="baseLogo" width={80} />
@@ -409,7 +409,7 @@ const X = () => {
                     },
                     flat: {
                         description:
-                            "If true, the icon is sized according to its viewBox aspect ratio, not forced into a square. Width/size sets the width in rem; height is calculated from the viewBox proportions.",
+                            "If true, the icon is not forced into a square. Width/size targets the long side. Path-based icons are trimmed to their actual path bounds and optical scaling is disabled so logos and wordmarks can render edge-to-edge.",
                         type: "boolean",
                         defaultValue: "false",
                     },

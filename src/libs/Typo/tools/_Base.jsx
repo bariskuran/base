@@ -60,6 +60,11 @@ export const Base = (props) => {
         $inlineCopy: vars.canUseInlineCopy,
         $overlayCopyLayout: vars.shouldUseOverlayCopy,
         $stackedOverlayCopy: vars.shouldUseStackedOverlayCopy,
+        $font: vars.font,
+        style: {
+            ...(vars.style || {}),
+            ...(vars.fontStyle || {}),
+        },
     };
 
     const CopyButton = (

@@ -150,8 +150,10 @@ export const Icon = ({
     if (!baseMeta) return null;
 
 
-    const viewLong = Math.max(baseMeta.viewW, baseMeta.viewH);
-    const flatRootWidth = flat ? baseSize * (baseMeta.viewW / viewLong) : baseSize;
+    const flatBoxW = baseMeta.contentBounds?.width || baseMeta.viewW;
+    const flatBoxH = baseMeta.contentBounds?.height || baseMeta.viewH;
+    const viewLong = Math.max(flatBoxW, flatBoxH);
+    const flatRootWidth = flat ? baseSize * (flatBoxW / viewLong) : baseSize;
 
     return (
         <PopTipWrapper popTipProps={popTipProps}>
@@ -159,8 +161,8 @@ export const Icon = ({
                 $size={baseSize}
                 $flat={flat}
                 $flatRootWidth={flatRootWidth}
-                $aspectW={flat ? baseMeta.viewW : 1}
-                $aspectH={flat ? baseMeta.viewH : 1}
+                $aspectW={flat ? flatBoxW : 1}
+                $aspectH={flat ? flatBoxH : 1}
                 onMouseEnter={() =>
                     set((s) => {
                         s.isSelfHover = true;
@@ -184,6 +186,8 @@ export const Icon = ({
                     scale={finalScale}
                     spinPending={pendingState && showBaseLayer}
                     isFlag={isFlag}
+                    disableOpticalScale={flat}
+                    trimToContentBounds={flat}
                     enablePulse={
                         pulseEnabled &&
                         activeState &&
@@ -200,6 +204,8 @@ export const Icon = ({
                         fill={finalColor}
                         scale={finalScale}
                         isFlag={isFlag}
+                        disableOpticalScale={flat}
+                        trimToContentBounds={flat}
                         enablePulse={false}
                         isActive={false}
                     />
@@ -212,6 +218,8 @@ export const Icon = ({
                         fill={finalColor}
                         scale={finalScale}
                         isFlag={isFlag}
+                        disableOpticalScale={flat}
+                        trimToContentBounds={flat}
                         enablePulse={pulseEnabled && activeState}
                         isActive={activeState}
                     />
@@ -225,6 +233,8 @@ export const Icon = ({
                         scale={finalScale}
                         spinPending={showPendingLayer}
                         isFlag={isFlag}
+                        disableOpticalScale={flat}
+                        trimToContentBounds={flat}
                         enablePulse={false}
                         isActive={false}
                     />

@@ -35,11 +35,17 @@ const apiProps = {
         defaultValue: "{}",
     },
     size: {
-        description: "Font size.",
+        description:
+            'Font size. On preset variants with a base size (h1-h6, quote, sub), percentage values such as "110%" and numeric scale-like values such as 110 scale from that variant base.',
         type: "string | number",
         defaultValue: "theme/body default",
     },
     fontSize: { description: "Alias for size.", type: "string | number" },
+    fontFamily: {
+        description:
+            'Named font key from PROJECT_SETTINGS.styledSettings.fonts, e.g. "montserrat". When omitted, Typo inherits fonts.primaryFont.',
+        type: "string",
+    },
     weight: { description: "Font weight.", type: "number | string", defaultValue: "400" },
     color: { description: "Text color.", type: "string", defaultValue: "inherit" },
     highlight: { description: "Highlight background color.", type: "string" },
@@ -154,11 +160,32 @@ const X = () => (
 
                     <Typo size={26} weight={700} color="primary">
                         Custom size, weight & color
-                    </Typo>`}
+                    </Typo>
+                    <Typo.h1 size="110%">
+                        h1 scaled from h1 base
+                    </Typo.h1>`}
             example={
-                <Typo size={26} weight={700} color="primary">
-                    Custom size, weight & color
-                </Typo>
+                <Flex.column gap={8}>
+                    <Typo size={26} weight={700} color="primary">
+                        Custom size, weight & color
+                    </Typo>
+                    <Typo.h1 size="110%">h1 scaled from h1 base</Typo.h1>
+                </Flex.column>
+            }
+        />
+
+        <Ds.block
+            title="fontFamily"
+            description="Select a named font from PROJECT_SETTINGS.styledSettings.fonts."
+            code={`import { Typo } from "${SYS.basePath}";
+
+                    <Typo content="Primary font" />
+                    <Typo fontFamily="montserrat" content="Montserrat font" />`}
+            example={
+                <Flex.column gap={8}>
+                    <Typo content="Primary font" />
+                    <Typo fontFamily="montserrat" content="Montserrat font" />
+                </Flex.column>
             }
         />
 

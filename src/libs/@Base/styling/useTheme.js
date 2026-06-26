@@ -1,6 +1,6 @@
 import { useMemo, useCallback, useEffect } from "react";
 import { baseStore } from "../../baseStore";
-import { DEFAULT_THEME, makeAntdTheme } from "../../../constants/DEFAULT_THEME";
+import { DEFAULT_THEME } from "../../../constants/DEFAULT_THEME";
 import { colorTinter } from "../../colorTinter";
 import { colorShader } from "../../colorShader";
 
@@ -70,7 +70,7 @@ const packTheme = ({ colors, scales }) => {
     return packed;
 };
 
-export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) => {
+export const useTheme = ({ theme } = {}) => {
     const {
         theme: currentColors,
         currentThemeKey,
@@ -82,7 +82,7 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
         currentThemeLebelObj: null,
     });
 
-    const [preparedThemes, antdTheme] = useMemo(() => {
+    const preparedThemes = useMemo(() => {
         const input = theme && typeof theme === "object" ? theme : {};
         const keys = Object.keys(input);
 
@@ -96,10 +96,6 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
 
         const defaultThemeColors = pickColorsOnly(input[defaultKey]);
         const basePaletteRaw = { ...(DEFAULT_THEME || {}), ...(defaultThemeColors || {}) };
-
-        const antdTheme = makeAntdThemeOverride
-            ? makeAntdThemeOverride(basePaletteRaw)
-            : makeAntdTheme(basePaletteRaw);
 
         const out = {};
         for (const k of keys) {
@@ -128,7 +124,7 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
 
         out._meta = { defaultKey, basePalette: basePaletteRaw };
 
-        return [out, antdTheme];
+        return out;
     }, [theme]);
 
     const selectedKey = useMemo(() => {
@@ -191,5 +187,5 @@ export const useTheme = ({ theme, makeAntdTheme: makeAntdThemeOverride } = {}) =
         });
     }, [currentColors, currentThemeKey, currentThemeLabelObj, setTheme, preparedThemes]);
 
-    return { theme: currentColors, antdTheme };
+    return { theme: currentColors };
 };

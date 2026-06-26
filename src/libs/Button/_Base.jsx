@@ -37,6 +37,7 @@ export const Base = (props = {}) => {
         disabled,
         scaleWrapperProps,
         useLiftHitSlop,
+        font,
     } = useVars(propsRest);
 
     /* RETURN */
@@ -50,6 +51,7 @@ export const Base = (props = {}) => {
                 isActivated={isActivated}
                 isHovered={isHovered}
                 useLiftHitSlop={useLiftHitSlop}
+                font={font}
                 scaleWrapperProps={scaleWrapperProps}
             >
                 <Variant ref={forwardedRef} {...variantProps}>

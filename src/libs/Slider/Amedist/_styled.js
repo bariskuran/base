@@ -90,7 +90,8 @@ const S = {
     slideStack: styled.div`
         position: absolute;
         inset: 0;
-        z-index: ${({ $motion }) => ($motion === "active" ? 2 : $motion.startsWith("exit") ? 1 : 0)};
+        z-index: ${({ $motion }) =>
+            $motion === "active" ? 2 : $motion.startsWith("exit") ? 1 : 0};
         pointer-events: none;
     `,
 
@@ -123,15 +124,16 @@ const S = {
     slideContent: styled.div`
         grid-area: 1 / 1;
         width: 100%;
-        justify-self: center;
         display: flex;
-        justify-content: center;
         transform: ${slideTransform};
         opacity: ${({ $motion }) => ($motion === "active" ? 1 : 0)};
         transition: ${({ $snap }) =>
-            $snap ? "none" : `transform ${AMEDIST_TEXT_MS}ms ease, opacity ${AMEDIST_TEXT_MS}ms ease`};
+            $snap
+                ? "none"
+                : `transform ${AMEDIST_TEXT_MS}ms ease, opacity ${AMEDIST_TEXT_MS}ms ease`};
         pointer-events: ${({ $motion }) => ($motion === "active" ? "auto" : "none")};
-        z-index: ${({ $motion }) => ($motion === "active" ? 2 : $motion.startsWith("exit") ? 1 : 0)};
+        z-index: ${({ $motion }) =>
+            $motion === "active" ? 2 : $motion.startsWith("exit") ? 1 : 0};
         will-change: transform, opacity;
         ${pauseWhenHidden};
         ${({ $motion }) =>

@@ -12,6 +12,7 @@ import {
 } from "../../DesignSystem/CodeViewer/tools/codeFormatters.jsx";
 import { coerceToCodeText } from "../../DesignSystem/formatJsonForDisplay";
 import { useNestedBaseUiContext, NESTED_UI_TYPO_PHRASING_HOST } from "helpers/NestedBaseUi";
+import { getCssDeclarationValue, stripCssImports } from "../../@Base/styling/fontCss";
 
 const sysDefaults = {
     as: "span",
@@ -22,11 +23,47 @@ const sysDefaults = {
     lineHeight: 1.7,
 };
 
+const getPercentNumber = (value) => {
+    if (typeof value === "number") return value;
+    if (typeof value !== "string") return null;
+
+    const trimmed = value.trim();
+    const match = /^(\d+(?:\.\d+)?)%?$/.exec(trimmed);
+    if (!match) return null;
+    return Number(match[1]);
+};
+
+const resolveTypoSize = (size, baseSize) => {
+    if (size == null) return cssNormalizeSize(size);
+    if (!baseSize) return cssNormalizeSize(size);
+
+    const basePct = getPercentNumber(baseSize);
+    const sizePct = getPercentNumber(size);
+
+    if (basePct == null || sizePct == null) return cssNormalizeSize(size);
+
+    const isExplicitPercent = typeof size === "string" && size.trim().endsWith("%");
+    const isScaleLikeNumber = typeof size === "number" && sizePct >= 50 && sizePct <= 300;
+    const isScaleLikeNumericString =
+        typeof size === "string" && !size.trim().endsWith("%") && sizePct >= 50 && sizePct <= 300;
+
+    if (!isExplicitPercent && !isScaleLikeNumber && !isScaleLikeNumericString) {
+        return cssNormalizeSize(size);
+    }
+
+    return `calc(${basePct}% * ${sizePct / 100})`;
+};
+
 const useVars = ({ children, content, contentGroup, ...p }) => {
-    const [theme, currentBreakpoint] = baseStore.useGlobal((s) => [
+    const [theme, currentBreakpoint, fonts] = baseStore.useGlobal((s) => [
         s.theme,
         s._clientData.currentBreakpoint,
+        s._projectSettings?.styledSettings?.fonts,
     ]);
+    const font = p.fontFamily ? stripCssImports(fonts?.[p.fontFamily]) : null;
+    const fontStyle = font
+        ? { fontFamily: getCssDeclarationValue(font, "font-family") }
+        : null;
 
     const { truncatedHtml, set } = baseStore.useLocal({
         truncatedHtml: null,
@@ -40,7 +77,8 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
         const responsiveProps = p.responsive?.[currentBreakpoint] || {};
         const mergedProps = { ...sysDefaults, ...p, ...responsiveProps };
 
-        const { maxWidth, size, color, highlight, width, full, ...restMerged } = mergedProps || {};
+        const { maxWidth, size, _baseSize, color, highlight, width, full, ...restMerged } =
+            mergedProps || {};
 
         const clr = colorGet(color || theme.foreground);
         const highlightClr = colorGet(highlight || clr.opposite);
@@ -56,7 +94,7 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
             clamp: enableQuoteMarks ? false : restMerged.clamp,
             width: cssNormalizeSize(resolvedWidth),
             maxWidth: cssNormalizeSize(maxWidth),
-            size: cssNormalizeSize(size),
+            size: resolveTypoSize(size, _baseSize),
             color: color ? clr.color : highlight ? highlightClr.opposite : undefined,
             highlight: highlight ? colorGet(highlight || clr.opposite)?.color : undefined,
         };
@@ -201,6 +239,8 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
             isEllipsisBase: isEllipsisBaseFinal,
             canUseInlineCopy,
             shouldRenderChildren,
+            font,
+            fontStyle,
             ref,
             truncatedHtml,
             finalVisibleContent,

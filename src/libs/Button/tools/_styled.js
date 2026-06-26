@@ -51,6 +51,7 @@ export const S = {
         width: fit-content;
         max-width: 100%;
         cursor: ${({ $disabled }) => ($disabled ? "default" : "pointer")};
+        ${({ $font }) => $font}
 
         ${({ $useLiftHitSlop, $isHovered, $isActivated }) =>
             $useLiftHitSlop &&

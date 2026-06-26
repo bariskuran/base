@@ -9,6 +9,7 @@ export const ScaleWrapper = ({
     isActivated,
     isHovered,
     useLiftHitSlop,
+    font,
     scaleWrapperProps = {},
 }) => (
     <S.ScaleDiv
@@ -19,6 +20,7 @@ export const ScaleWrapper = ({
         $isHovered={isHovered}
         $isActivated={isActivated}
         $useLiftHitSlop={useLiftHitSlop}
+        $font={font}
         style={{ cursor: disabled || isActivated ? "default" : "pointer" }}
         {...scaleWrapperProps}
     >

@@ -37,10 +37,12 @@ const sharedStyles = ({
     $inlineCopy,
     $overlayCopyLayout,
     $stackedOverlayCopy,
+    $font,
 }) => {
     return css`
         box-sizing: border-box;
         position: relative;
+        ${$font}
 
         ${$overlayCopyLayout &&
         !$stackedOverlayCopy &&

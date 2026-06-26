@@ -253,15 +253,24 @@ iconsLibrary: ICONS_LIBRARY,`)}
             disableLastBlock
             title="styledSettings"
             args={section(`styledSettings: {
-    primaryFont: css\`...\`,
+    fonts: {
+        primaryFont: css\`...\`,
+        montserrat: css\`...\`,
+    },
     globalStyle: css\`...\`,
     themes: { light: { /* ... */ }, dark: { /* ... */ } },
-    makeAntdTheme: (t) => ({ token: { /* ... */ } }),
 },`)}
             props={{
-                primaryFont: {
-                    description: "styled-components css injected as body/root font (ThemeProvider).",
+                fonts: {
+                    description:
+                        "Named styled-components css font map. fonts.primaryFont is mandatory and used as the default global font; other keys can be consumed by components such as <Button fontFamily=\"montserrat\" />.",
+                    type: "Record<string, css>",
+                    required: true,
+                },
+                "fonts.primaryFont": {
+                    description: "Default styled-components css font injected as body/root font.",
                     type: "css",
+                    required: true,
                 },
                 globalStyle: {
                     description: "Global styled-components css (e.g. #root layout).",
@@ -272,10 +281,6 @@ iconsLibrary: ICONS_LIBRARY,`)}
                         "Named theme tokens (background, foreground, primary, …). _props.label supports i18n objects.",
                     type: "object",
                     required: true,
-                },
-                makeAntdTheme: {
-                    description: "Maps theme tokens to Ant Design ConfigProvider token object.",
-                    type: "function",
                 },
                 breakpoints: {
                     description: "Custom breakpoint map for responsive helpers.",

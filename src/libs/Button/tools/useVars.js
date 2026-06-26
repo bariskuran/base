@@ -1,10 +1,10 @@
 import { useMatch, useNavigation, useNavigate, Link, useResolvedPath } from "react-router-dom";
-import { useEffect } from "react";
 import { baseStore } from "../../baseStore";
 import { useTimers } from "./useTimers.js";
 import { getButtonColorPalette } from "./generateColors.js";
 import { useExportData } from "helpers/useExportedData";
 import { DefaultVariant } from "../DefaultVariant.js";
+import { stripCssImports } from "../../@Base/styling/fontCss.js";
 import {
     bgAppearsFilled,
     anyBgColorPropNonTransparent,
@@ -61,6 +61,7 @@ export const useVars = ({
     skipOnClickHold,
     clickCooldownMs,
     onClickHoldMs,
+    fontFamily,
 }) => {
     const navigate = useNavigate();
     const url = href || to || urlProp;
@@ -165,7 +166,7 @@ export const useVars = ({
 
     const autoClickEffect =
         !isClickEffectControlled &&
-        ((skipOnClickHold && isPressed) || timers.isShowOnClickValuesRunning);
+        (isPressed || timers.isShowOnClickValuesRunning);
 
     const manualClickEffect = isClickEffectControlled && !!clickEffectManually;
 
@@ -178,18 +179,14 @@ export const useVars = ({
 
     const isActivated = sustainedActive || isClickEffectActive;
 
-    useEffect(() => {
-        if (!timers.isShowOnClickValuesRunning) return;
-        const hasRouteOrTimerHold =
-            (activeManually || isMatch || isActive || timers.isDelayRunning) && !disabled;
-        if (hasRouteOrTimerHold) return;
-        timers.showOnClickValuesStop();
-    }, [isMatch, isActive, activeManually]);
-
     const isHovered = (hoverManually || isHover) && !disabled && !isPending;
     const isJustIcon = !label && icon;
 
-    const [theme] = baseStore.useGlobal((s) => [s.theme]);
+    const [theme, fonts] = baseStore.useGlobal((s) => [
+        s.theme,
+        s._projectSettings?.styledSettings?.fonts,
+    ]);
+    const font = fontFamily ? stripCssImports(fonts?.[fontFamily]) : null;
 
     const iconPalette = getButtonColorPalette({
         primary,
@@ -240,9 +237,7 @@ export const useVars = ({
     const hasTextLabel = label != null && label !== "" && !isJustIcon;
 
     if (hasTextLabel) {
-        if (hasPrefixIcon && hasSuffixIcon) {
-
-        } else if (hasPrefixIcon && !hasSuffixIcon) {
+        if (hasPrefixIcon && !hasSuffixIcon) {
             labelPadEndRem = 12;
         } else if (!hasPrefixIcon && hasSuffixIcon) {
             labelPadStartRem = 12;
@@ -422,7 +417,6 @@ export const useVars = ({
             urlProp,
             hoverManually,
             activeManually,
-            clickEffectManually,
             prefix,
             suffix,
             icon,
@@ -455,6 +449,8 @@ export const useVars = ({
             skipOnClickHold,
             clickCooldownMs,
             onClickHoldMs,
+            fontFamily,
+            font,
         },
         {
             showOnClickValues,

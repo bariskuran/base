@@ -384,6 +384,24 @@ const X = () => {
                 }
             />
             <Ds.block
+                title="Font Family"
+                description='Use fontFamily to select a named font from PROJECT_SETTINGS.styledSettings.fonts. If omitted, Button inherits the global primaryFont.'
+                code={`import { Button } from "${SYS.basePath}";
+
+                        <Button label="Primary font" />
+                        <Button label="Montserrat" fontFamily="montserrat" />`}
+                example={
+                    <Flex gap={10}>
+                        <ButtonVariant label="Primary font" onClick={triggerNotifier} />
+                        <ButtonVariant
+                            label="Montserrat"
+                            fontFamily="montserrat"
+                            onClick={triggerNotifier}
+                        />
+                    </Flex>
+                }
+            />
+            <Ds.block
                 title="Outlined Button"
                 description="When 'outlined' prop is enabled, Button uses bgColor as border color. Some variants may ignore this feature such as 'string'."
                 code={`import { Button } from "${SYS.basePath}";
@@ -614,6 +632,11 @@ const X = () => {
                         description: "Full width + alignment (true/left/center/right).",
                         type: "boolean | string",
                         defaultValue: "false",
+                    },
+                    fontFamily: {
+                        description:
+                            'Named font key from PROJECT_SETTINGS.styledSettings.fonts, e.g. "montserrat". When omitted, Button inherits fonts.primaryFont.',
+                        type: "string",
                     },
                     hoverManually: {
                         description: "Forces hover state externally.",
