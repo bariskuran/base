@@ -23,6 +23,16 @@ const sysDefaults = {
     lineHeight: 1.7,
 };
 
+const baseSizeByTag = {
+    h1: "190%",
+    h2: "175%",
+    h3: "160%",
+    h4: "145%",
+    h5: "130%",
+    h6: "115%",
+    blockquote: "110%",
+};
+
 const getPercentNumber = (value) => {
     if (typeof value === "number") return value;
     if (typeof value !== "string") return null;
@@ -31,6 +41,21 @@ const getPercentNumber = (value) => {
     const match = /^(\d+(?:\.\d+)?)%?$/.exec(trimmed);
     if (!match) return null;
     return Number(match[1]);
+};
+
+const formatPercent = (value) => {
+    const rounded = Math.round(value * 10000) / 10000;
+    return `${rounded}%`;
+};
+
+const isScaleLikeSize = (value) => {
+    const pct = getPercentNumber(value);
+    if (pct == null) return false;
+
+    return (
+        (typeof value === "string" && value.trim().endsWith("%")) ||
+        (pct >= 50 && pct <= 300)
+    );
 };
 
 const resolveTypoSize = (size, baseSize) => {
@@ -51,7 +76,15 @@ const resolveTypoSize = (size, baseSize) => {
         return cssNormalizeSize(size);
     }
 
-    return `calc(${basePct}% * ${sizePct / 100})`;
+    if (isExplicitPercent && sizePct === basePct) return formatPercent(basePct);
+
+    return formatPercent((basePct * sizePct) / 100);
+};
+
+const resolveTypoBaseSize = ({ size, baseSize, as }) => {
+    if (baseSize) return baseSize;
+    if (!isScaleLikeSize(size)) return null;
+    return baseSizeByTag[as] || null;
 };
 
 const useVars = ({ children, content, contentGroup, ...p }) => {
@@ -82,6 +115,11 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
 
         const clr = colorGet(color || theme.foreground);
         const highlightClr = colorGet(highlight || clr.opposite);
+        const typoBaseSize = resolveTypoBaseSize({
+            size,
+            baseSize: _baseSize,
+            as: restMerged.as,
+        });
 
         const enableQuoteMarks = !!restMerged.enableQuoteMarks;
 
@@ -94,7 +132,7 @@ const useVars = ({ children, content, contentGroup, ...p }) => {
             clamp: enableQuoteMarks ? false : restMerged.clamp,
             width: cssNormalizeSize(resolvedWidth),
             maxWidth: cssNormalizeSize(maxWidth),
-            size: resolveTypoSize(size, _baseSize),
+            size: resolveTypoSize(size, typoBaseSize),
             color: color ? clr.color : highlight ? highlightClr.opposite : undefined,
             highlight: highlight ? colorGet(highlight || clr.opposite)?.color : undefined,
         };

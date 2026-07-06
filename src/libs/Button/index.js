@@ -9,6 +9,7 @@ import String from "./String.js";
 import Plain from "./Plain.js";
 import SquareOnRight from "./SquareOnRight.js";
 import WithCopyIcon from "./WithCopyIcon.js";
+import Amedist from "./Amedist.js";
 
 export const buttonVariants = {
     brackets: Brackets,
@@ -18,6 +19,7 @@ export const buttonVariants = {
     plain: Plain,
     default: DefaultVariant,
     squareOnRight: SquareOnRight,
+    amedist: Amedist,
 };
 
 const genericVariants = {

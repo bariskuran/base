@@ -117,7 +117,8 @@ const X = () => {
                 description={
                     <>
                         Button can also be used with prefixed icon, suffixed icon, icon only.
-                        prefix, suffix and icon objects are totally same with the Icon component.
+                        prefix, suffix and icon objects can render Icon with an `icon` key or Flag
+                        with a `flag` key.
                         Check out <Button.string to="/design-system/icon" label="<Icon>" /> for more
                         details.
                     </>
@@ -140,6 +141,39 @@ const X = () => {
                             suffix={{ icon: "abstract2" }}
                         />
                         <ButtonVariant onClick={onClick} icon={{ icon: "abstract2" }} />
+                    </Flex>
+                }
+            />
+            <Ds.block
+                title="Flag Usage"
+                description={
+                    <>
+                        Use `flag` instead of `icon` inside prefix, suffix, or centered icon objects.
+                        Other visual props such as width, flat, color, bgColor, hoverColor, and
+                        activeColor follow the same object pattern.
+                    </>
+                }
+                code={`import { Button } from "${SYS.basePath}";
+
+                        <Button label="Türkiye" prefix={{ flag: "tr", width: 18, flat: true }} />
+                        <Button label="English" suffix={{ flag: "gb", width: 18, flat: true }} />
+                        <Button icon={{ flag: "global", width: 18, flat: true }} />`}
+                example={
+                    <Flex gap={10}>
+                        <ButtonVariant
+                            label="Türkiye"
+                            onClick={onClick}
+                            prefix={{ flag: "tr", width: 18, flat: true }}
+                        />
+                        <ButtonVariant
+                            label="English"
+                            onClick={onClick}
+                            suffix={{ flag: "gb", width: 18, flat: true }}
+                        />
+                        <ButtonVariant
+                            onClick={onClick}
+                            icon={{ flag: "global", width: 18, flat: true }}
+                        />
                     </Flex>
                 }
             />
@@ -520,15 +554,15 @@ const X = () => {
                         type: "string | ReactNode",
                     },
                     icon: {
-                        description: "Center icon object.",
+                        description: "Center icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
                         type: "object",
                     },
                     prefix: {
-                        description: "Prefix icon object.",
+                        description: "Prefix icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
                         type: "object",
                     },
                     suffix: {
-                        description: "Suffix icon object.",
+                        description: "Suffix icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
                         type: "object",
                     },
                     onClick: {

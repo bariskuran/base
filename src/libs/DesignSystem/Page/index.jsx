@@ -4,7 +4,6 @@ import { isJsxDescription } from "../isJsxDescription";
 import { templateLiteralTo } from "../../templateLiteralTo";
 
 const Page = ({ children, title, releasedOn, description }) => {
-
     return (
         <Flex.column full>
             <Flex.column full>
@@ -16,7 +15,7 @@ const Page = ({ children, title, releasedOn, description }) => {
                         borderRight="1px solid greys.shade40"
                     >
                         <Flex.column flex="1 1 auto" yAlign="center" paddingRight={30}>
-                            <Typo.h1 alignSelf="center" color="greys.shade40">
+                            <Typo.h1 alignSelf="center" color="greys.shade40" size={100}>
                                 {title}
                             </Typo.h1>
                             {releasedOn && (

@@ -90,7 +90,15 @@ export const useVars = ({
         });
 
     const getTimerBaseName = ({ label, prefix, suffix, icon }) =>
-        label || prefix?.icon || suffix?.icon || icon?.icon || icon || "unknown";
+        label ||
+        prefix?.icon ||
+        prefix?.flag ||
+        suffix?.icon ||
+        suffix?.flag ||
+        icon?.icon ||
+        icon?.flag ||
+        icon ||
+        "unknown";
 
     const isClickEffectControlled = clickEffectManually !== undefined;
 
@@ -216,8 +224,8 @@ export const useVars = ({
     const i1 = iconPalette.inverse1;
     const i2 = iconPalette.inverse2;
 
-    const hasPrefixIcon = !!(prefix?.icon);
-    const hasSuffixIcon = !!(suffix?.icon);
+    const hasPrefixIcon = !!(prefix?.icon || prefix?.flag);
+    const hasSuffixIcon = !!(suffix?.icon || suffix?.flag);
 
     const bgFilled = bgAppearsFilled(bg);
 

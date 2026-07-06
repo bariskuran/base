@@ -4,19 +4,39 @@ import { baseStore } from "../../baseStore";
 import {
     getIgnoreClientLanguage,
     getLanguageSettings,
-    getPageLanguageFromMatches,
     getRouteLanguageContextFromMatches,
+    isLanguageSupported,
     resolveInitialLanguage,
     setStoredLanguage,
 } from "../GlobalDataProvider/resolveLanguage";
+
+const normalizePathname = (path) => {
+    if (path == null || path === "") return "";
+    const s = String(path).trim();
+    return s.startsWith("/") ? s : `/${s}`;
+};
+
+const routeHasDistinctLanguagePaths = (routeLanguageContext) => {
+    const relatives = routeLanguageContext?.relatives;
+    if (relatives == null || typeof relatives !== "object") return true;
+
+    const paths = Object.values(relatives).filter((path) => path != null && path !== "");
+    if (paths.length <= 1) return true;
+
+    return new Set(paths.map(normalizePathname)).size > 1;
+};
 
 export const LanguageManager = () => {
     const location = useLocation();
     const matches = useMatches();
 
-    const [clientData, languageSettings, currentGlobalLanguage, projectSettings] = baseStore.useGlobal(
-        (s) => [s._clientData, s.languageSettings, s.language, s._projectSettings],
-    );
+    const [clientData, languageSettings, currentGlobalLanguage, projectSettings] =
+        baseStore.useGlobal((s) => [
+            s._clientData,
+            s.languageSettings,
+            s.language,
+            s._projectSettings,
+        ]);
 
     const resolvedLanguageSettings = useMemo(
         () => languageSettings ?? getLanguageSettings(projectSettings ?? {}),
@@ -24,15 +44,19 @@ export const LanguageManager = () => {
     );
     const ignoreClientLanguage = getIgnoreClientLanguage(projectSettings ?? {});
 
-    const pageLanguage = useMemo(
-        () => getPageLanguageFromMatches(matches, resolvedLanguageSettings.languageList),
-        [matches, resolvedLanguageSettings.languageList, location.pathname],
-    );
-
     const routeLanguageContext = useMemo(
         () => getRouteLanguageContextFromMatches(matches),
         [matches, location.pathname],
     );
+
+    const pageLanguage = useMemo(() => {
+        if (!routeHasDistinctLanguagePaths(routeLanguageContext)) return null;
+
+        const code = routeLanguageContext?.language;
+        if (!isLanguageSupported(code, resolvedLanguageSettings.languageList)) return null;
+
+        return code;
+    }, [routeLanguageContext, resolvedLanguageSettings.languageList]);
 
     const language = useMemo(
         () =>

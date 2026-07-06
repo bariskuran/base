@@ -1,4 +1,5 @@
 import { Icon } from "../../Icon";
+import { Flag } from "../../Flag";
 import { colorConverter } from "../../colorConverter";
 import { S } from "./_styled";
 
@@ -27,6 +28,7 @@ export const IconArea = (props = {}) => {
     } = props;
     const {
         icon,
+        flag,
         color: colorFromItem,
         bgColor: bgColorFromItem,
         hoverBgColor: hoverBgColorFromItem,
@@ -38,8 +40,10 @@ export const IconArea = (props = {}) => {
 
     const def = iconPalette?.default || {};
     const pen = iconPalette?.pending || {};
+    const Visual = flag != null ? Flag : Icon;
+    const visualIdentityProps = flag != null ? { flag } : { icon };
 
-    if (!icon) return null;
+    if (flag == null && !icon) return null;
 
     const iconBg = orTransparent(bgColorFromItem);
     const iconHoverBg = orTransparent(hoverBgColorFromItem);
@@ -82,7 +86,7 @@ export const IconArea = (props = {}) => {
                 ...(wrapColor != null && wrapColor !== "" ? { color: wrapColor } : {}),
             }}
         >
-            <Icon
+            <Visual
                 {...{
                     width: 18,
                     hoverManually,
@@ -97,7 +101,7 @@ export const IconArea = (props = {}) => {
                     activeColor: iconActiveColor,
                     pendingColor: iconPendingColor,
                     ...rest,
-                    icon,
+                    ...visualIdentityProps,
                 }}
             />
         </S.icon>
