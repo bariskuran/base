@@ -116,7 +116,6 @@ export const GlobalDataProvider = ({ projectSettings, routes, preparedRoutes = [
 
 
                 _adminSettings: {
-                    showDsOnline: false,
                     showInternalDs: false,
                     ...adminSettings,
                 },

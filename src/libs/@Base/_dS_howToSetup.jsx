@@ -53,7 +53,6 @@ const projectSettingsExample = `export const PROJECT_SETTINGS = {
     validationRules: {},
     defaultVariants: {},
     adminSettings: {
-        showDsOnline: false,
         showInternalDs: true,
     },
 };`;

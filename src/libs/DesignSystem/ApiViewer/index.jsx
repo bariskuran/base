@@ -6,8 +6,9 @@ import { copyToClipboard } from "../../copyToClipboard";
 import { Flex } from "../../Flex";
 import { Button } from "../../Button";
 import { Icon } from "../../Icon";
+import { t } from "../../getText";
 
-const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title, full }) => {
+const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title, full: _full }) => {
     const hasProps = props && typeof props === "object" && Object.keys(props).length > 0;
     const hasReturnProps =
         returnProps && typeof returnProps === "object" && Object.keys(returnProps).length > 0;
@@ -35,8 +36,11 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title,
         },
     );
 
+    const resolvedTitle = t(title);
     const blockTitle =
-        title != null && String(title).trim() !== "" ? `${String(title).trim()} Api` : "Api";
+        resolvedTitle != null && String(resolvedTitle).trim() !== ""
+            ? `${String(resolvedTitle).trim()} Api`
+            : "Api";
 
     return (
         <Block
@@ -77,7 +81,7 @@ const ApiViewer = ({ props, args, returns, returnProps, disableLastBlock, title,
                         <Flex.column gap={10} full>
                             <Typo.span weight="bold">Return Arguments</Typo.span>
                             {hasReturnProps && <PropContainer obj={sortedReturnProps} />}
-                            {returns && !hasReturnProps && <Typo.span>{returns}</Typo.span>}
+                            {returns && !hasReturnProps && <Typo.span>{t(returns)}</Typo.span>}
                         </Flex.column>
                     )}
                 </Flex.column>
@@ -135,8 +139,8 @@ const PropTable = ({ name, item, striped }) => {
             ) : (
                 <Typo.span>{name}</Typo.span>
             )}
-            <div>{type}</div>
-            <div>{description}</div>
+            <div>{t(type)}</div>
+            <div>{t(description)}</div>
             <div style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
                 {defaultValueDisplay}
             </div>

@@ -33,6 +33,10 @@
     },
     "main": "src/index.js",
     "module": "src/index.js",
+    "bin": {
+        "base-image-catalog-setup": "./src/libs/createImageCatalog/tools/base-image-catalog-setup.cjs",
+        "base-image-index": "./src/libs/createImageCatalog/tools/base-image-index.cjs"
+    },
     "exports": {
         ".": {
             "import": "./src/index.js",

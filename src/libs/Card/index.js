@@ -1,13 +1,14 @@
-import Amedist from "./Amedist";
+import { componentCreator } from "helpers/componentCreator";
+import { Base } from "./_Base.jsx";
+import Amedist from "./Amedist/index.jsx";
 
-const defaultVariantKey = "amedist";
-const variants = {
+export const cardVariants = {
     amedist: Amedist,
 };
 
-export const Card = variants[defaultVariantKey];
-Object.assign(Card, variants);
-Card.displayName = "Card";
-Object.entries(variants).forEach(([key, Component]) => {
-    if (Component) Component.displayName = `Card.${key}`;
+export const Card = componentCreator({
+    name: "Card",
+    BaseComp: Base,
+    DefaultVariant: Amedist,
+    variants: cardVariants,
 });

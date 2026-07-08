@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
+/* eslint-disable no-undef */
 const { generateImageIndexes } = require("../vars");
 
 const result = generateImageIndexes(process.cwd());

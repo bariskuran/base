@@ -78,6 +78,12 @@ export { Button } from "./libs/Button";
 export { ButtonGroup } from "./libs/ButtonGroup";
 export { byPath } from "./libs/byPath";
 export { cleanFalsyValues, FALSY_TYPES } from "./libs/cleanFalsyValues";
+export {
+    THEME_SCALE_KEYS,
+    buildScale,
+    buildThemeWithScales,
+    packTheme,
+} from "./libs/COLORS";
 export { colorAlpha } from "./libs/colorAlpha";
 export { colorConverter } from "./libs/colorConverter";
 export { colorFind } from "./libs/colorFind";
@@ -90,6 +96,7 @@ export { colorWcagValue } from "./libs/colorWcagValue";
 export { columnTypes, COLUMN_SIZES } from "./libs/columnTypes";
 export { copyToClipboard } from "./libs/copyToClipboard";
 export { COUNTRY_INFORMATION } from "./constants/COUNTRY_INFORMATION";
+export { createImageCatalog, getImageCatalog } from "./libs/createImageCatalog";
 export { cssNormalizeSize } from "./libs/cssNormalizeSize";
 export { cssSpacingResolver } from "./libs/cssSpacingResolver";
 export { debouncedFunction } from "./libs/debouncedFunction";
@@ -110,6 +117,7 @@ export { getClientData } from "./libs/getClientData";
 export { getText, getText as t } from "./libs/getText";
 export { getTimeDiff } from "./libs/getTimeDiff";
 export { Icon } from "./libs/Icon";
+export { Image } from "./libs/Image";
 export { isArray } from "./libs/isArray";
 export { isArrayOrPlainObject } from "./libs/isArrayOrPlainObject";
 export { isDeepEqual } from "./libs/isDeepEqual";
@@ -137,6 +145,7 @@ export { Space } from "./libs/Space";
 export { stringCaseConverter } from "./libs/stringCaseConverter";
 export { default as templateLiteralTo, dedent, splitParagraphs } from "./libs/templateLiteralTo";
 export { TemplateLiteral } from "./libs/TemplateLiteral";
+export { useCatalogImage } from "./libs/useCatalogImage";
 export { SYMBOLS } from "./constants/SYMBOLS";
 export { TextArea } from "./libs/TextArea";
 export { Table } from "./libs/Table";
@@ -168,3 +177,4 @@ export { useTimer, getTimersSnapshot } from "./libs/useTimer";
 export { Slider } from "./libs/Slider";
 export { BlockBuilder } from "./libs/BlockBuilder";
 export { Card } from "./libs/Card";
+export { CardViewer } from "./libs/CardViewer";

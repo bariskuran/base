@@ -8,6 +8,7 @@ const S = styled.span`
         overflow: visible;
         text-transform: uppercase;
         font-weight: 600;
+        font-size: 90%;
         align-items: center;
         gap: 10rem;
         line-height: 0;

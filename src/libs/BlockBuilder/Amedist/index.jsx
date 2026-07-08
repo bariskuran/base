@@ -1,7 +1,25 @@
 const V = (p = {}) => {
     // const {} = p;
-    console.log(p);
+
     /* Return */
-    return <div>Block Builder</div>;
+    return (
+        <div
+            style={{
+                backgroundColor: "red",
+                minHeight: 10000,
+                color: "white",
+                paddingTop: 150,
+                maxWidth: 500,
+            }}
+        >
+            Block Builder Block Builder Block Builder Block Builder Block Builder Block Builder
+            Block Builder Block Builder Block Builder Block Builder Block Builder Block Builder
+            Block Builder Block Builder Block Builder Block Builder Block Builder Block Builder
+            Block Builder Block Builder Block Builder Block Builder Block Builder Block Builder
+            Block Builder Block Builder Block Builder Block Builder Block Builder Block Builder
+            Block Builder Block Builder Block Builder Block Builder Block Builder Block Builder
+            Block Builder Block Builder Block Builder Block Builder Block Builder Block Builder
+        </div>
+    );
 };
 export default V;

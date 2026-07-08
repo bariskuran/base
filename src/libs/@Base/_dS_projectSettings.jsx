@@ -353,15 +353,9 @@ iconsLibrary: ICONS_LIBRARY,`)}
         <Ds.api
             title="adminSettings"
             args={section(`adminSettings: {
-    showDsOnline: false,
     showInternalDs: true,
 },`)}
             props={{
-                showDsOnline: {
-                    description: "Enables Design System routes in production builds.",
-                    type: "boolean",
-                    defaultValue: "false",
-                },
                 showInternalDs: {
                     description:
                         "Shows internal DS sitemap entries in development (with dev mode).",

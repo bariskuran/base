@@ -6,6 +6,7 @@ import { Flex } from "../../Flex";
 import CodeViewer from "../CodeViewer";
 import { isJsxDescription } from "../isJsxDescription";
 import { templateLiteralTo } from "../../templateLiteralTo";
+import { t } from "../../getText";
 
 const Block = ({
     title,
@@ -19,8 +20,10 @@ const Block = ({
     const { ajax, set } = baseStore.useLocal({
         ajax: 0,
     });
+    const displayTitle = isJsxDescription(title) ? title : t(title);
+    const displayDescription = isJsxDescription(description) ? description : t(description);
 
-    const enableAjax = !empty && !!code && !!(example || description);
+    const enableAjax = !empty && !!code && !!(example || displayDescription);
 
     if (empty) {
         return (
@@ -36,7 +39,7 @@ const Block = ({
         <S.container $lastBlock={lastBlock}>
             <S.titleArea $extraTitlePaddingTop={extraTitlePaddingTop}>
                 <Typo.h6 selfAlign="right" margin="0 0 10rem 0" fitContent balance>
-                    {title}
+                    {displayTitle}
                 </Typo.h6>
                 {enableAjax && (
                     <S.ajaxArea>
@@ -74,20 +77,20 @@ const Block = ({
             <S.line $lastBlock={lastBlock} />
             <S.mainColumn>
                 <Flex.column full minWidth={0}>
-                    {(example || description) && ajax === 0 && (
+                    {(example || displayDescription) && ajax === 0 && (
                         <S.contentArea area-title="Block Content">
                             {isJsxDescription(description) ? (
                                 <Typo as="div">{description}</Typo>
                             ) : (
-                                <Typo as="div">{templateLiteralTo.p(description)}</Typo>
+                                <Typo as="div">{templateLiteralTo.p(displayDescription)}</Typo>
                             )}
-                            {description && example && <S.line2 />}
+                            {displayDescription && example && <S.line2 />}
                             <Flex.row full minWidth={0}>
                                 {example}
                             </Flex.row>
                         </S.contentArea>
                     )}
-                    {((code && ajax === 1) || (!example && !description && code)) && (
+                    {((code && ajax === 1) || (!example && !displayDescription && code)) && (
                         <S.contentArea area-title="Block Content">
                             <CodeViewer>{code}</CodeViewer>
                         </S.contentArea>

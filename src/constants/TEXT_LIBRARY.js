@@ -55,4 +55,11 @@ export const TEXT_LIBRARY = {
         de: "Maximale Länge überschritten in SearchParams",
         es: "Longitud máxima excedida en SearchParams",
     },
+    emptyCardMap: {
+        tr: "Gösterilecek öğe bulunamadı.",
+        en: "No item to display.",
+        fr: "Aucun élément à afficher.",
+        de: "Kein Element zum Anzeigen.",
+        es: "No hay elementos para mostrar.",
+    },
 };

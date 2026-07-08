@@ -2,8 +2,12 @@ import { Typo } from "../../Typo";
 import { Flex } from "../../Flex";
 import { isJsxDescription } from "../isJsxDescription";
 import { templateLiteralTo } from "../../templateLiteralTo";
+import { t } from "../../getText";
 
 const Page = ({ children, title, releasedOn, description }) => {
+    const displayTitle = isJsxDescription(title) ? title : t(title);
+    const displayDescription = isJsxDescription(description) ? description : t(description);
+
     return (
         <Flex.column full>
             <Flex.column full>
@@ -16,7 +20,7 @@ const Page = ({ children, title, releasedOn, description }) => {
                     >
                         <Flex.column flex="1 1 auto" yAlign="center" paddingRight={30}>
                             <Typo.h1 alignSelf="center" color="greys.shade40" size={100}>
-                                {title}
+                                {displayTitle}
                             </Typo.h1>
                             {releasedOn && (
                                 <Typo.span size={12} balance>
@@ -36,11 +40,11 @@ const Page = ({ children, title, releasedOn, description }) => {
                         justify="center"
                         margin="50rem 0"
                     >
-                        {description &&
+                        {displayDescription &&
                             (isJsxDescription(description) ? (
                                 <Typo as="div">{description}</Typo>
                             ) : (
-                                <Typo as="div">{templateLiteralTo.p(description)}</Typo>
+                                <Typo as="div">{templateLiteralTo.p(displayDescription)}</Typo>
                             ))}
                     </Flex.column>
                 </Flex>

@@ -5,7 +5,7 @@ import { t } from "../getText";
 
 const X = () => (
     <Ds.page
-        title={t({ tr: "Design System", en: "Design System" })}
+        title={t({ tr: "base Hakkında", en: "About base" })}
         releasedOn="1.0.0"
         description={t({
             tr: (
@@ -13,6 +13,9 @@ const X = () => (
                     <b>@bariskuran/base</b> bileşen ve yardımcı kütüphanelerinin canlı
                     dokümantasyonu. Kurulum için{" "}
                     <Button.string to="/design-system/how-to-setup" label="How To Setup" />{" "}
+                    sayfasına,
+                    <b>Design System</b> çalışma modeli için{" "}
+                    <Button.string to="/design-system/design-sistem" label="Design System" />{" "}
                     sayfasına,
                     <b>Base</b> ve <b>PROJECT_SETTINGS</b> detayları için{" "}
                     <Button.string to="/design-system/base" label="Base" /> sayfasına gidin.
@@ -22,8 +25,11 @@ const X = () => (
                 <>
                     Live documentation for <b>@bariskuran/base</b> components and helpers. See{" "}
                     <Button.string to="/design-system/how-to-setup" label="How To Setup" /> for
-                    installation and the <Button.string to="/design-system/base" label="Base" />{" "}
-                    page for <b>PROJECT_SETTINGS</b>.
+                    installation,{" "}
+                    <Button.string to="/design-system/design-sistem" label="Design System" /> for
+                    runtime behavior, and the{" "}
+                    <Button.string to="/design-system/base" label="Base" /> page for{" "}
+                    <b>PROJECT_SETTINGS</b>.
                 </>
             ),
         })}

@@ -87,7 +87,7 @@ const Layout = () => {
                             <Button.squareOnRight
                                 key={path ?? `nav-${i}`}
                                 ref={isActive(entry) ? activeNavItemRef : undefined}
-                                to={path || "/design-system"}
+                                to={path ? `/design-system/${path}` : "/design-system"}
                                 label={formatDsNavLabel(name)}
                                 bgColor="transparent"
                                 color="foreground"
