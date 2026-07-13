@@ -30,19 +30,19 @@ const X = () => {
                     <Typo.p>
                         {t({
                             tr: "Image, base içindeki görsel render katmanıdır. Tek bir src ile geleneksel img gibi çalışabilir; externalSet ile metadata verilmiş dış görsel setlerini yönetebilir; catalogSet ile createImageCatalog tarafından globalData'ya yazılan kataloglanmış setleri okuyabilir.",
-                            en: "",
+                            en: "Image is the image-rendering layer in base. It can behave like a traditional img with a single src, manage metadata-rich external sets through externalSet, or read cataloged sets registered in globalData by createImageCatalog.",
                         })}
                     </Typo.p>
                     <Typo.p>
                         {t({
                             tr: "Responsive ve progressive seçimler, yalnızca set içinde doğal ölçü bilgisi varsa aktiftir. Kataloglanan görsellerde bu metadata otomatik üretilir. Dışarıdan gelen setlerde naturalWidth/naturalHeight veya dimensionWidth/dimensionHeight verilirse Image container genişliğine ve device pixel ratio değerine göre uygun dosyayı seçer.",
-                            en: "",
+                            en: "Responsive and progressive selection is active only when the set includes natural-size metadata. Cataloged images receive this metadata automatically. For external sets, naturalWidth/naturalHeight or dimensionWidth/dimensionHeight lets Image choose a suitable file from container width and device pixel ratio.",
                         })}
                     </Typo.p>
                     <Typo.p>
                         {t({
                             tr: "catalogSet akışı için önce createImageCatalog runtime kurulumu yapılmalıdır. Katalog datasına component dışında erişmek istediğinizde useCatalogImage hooku kullanılır.",
-                            en: "",
+                            en: "The catalogSet flow requires createImageCatalog runtime setup. Use useCatalogImage when catalog data is needed outside the component.",
                         })}
                     </Typo.p>
                     <Flex gap={8} wrap marginTop={14}>
@@ -58,6 +58,16 @@ const X = () => {
                 </>
             }
         >
+            <Ds.block
+                title={{ tr: "Kaynak Önceliği", en: "Source precedence" }}
+                description={{
+                    tr: "Aynı anda birden fazla kaynak verilmemelidir. Yine de çözümleme sırası catalogSet, externalSet, src şeklindedir. variant yalnızca set kaynaklarında anlamlıdır.",
+                    en: "Provide only one source mode at a time. If multiple modes are supplied, precedence is catalogSet, externalSet, then src. variant is meaningful only for set sources.",
+                }}
+                code={`<Image src={url} alt="..." />
+<Image externalSet={imageSet} alt="..." />
+<Image catalogSet="i0030" />`}
+            />
             <Ds.block
                 title={{ tr: "Standart Görsel", en: "" }}
                 description={{
@@ -201,6 +211,56 @@ const X = () => {
                             en: "",
                         },
                         type: "number | string",
+                    },
+                    width: {
+                        description: {
+                            tr: "Wrapper genişliği; w ile aynı işlevdedir.",
+                            en: "Wrapper width; equivalent to w.",
+                        },
+                        type: "number | string",
+                    },
+                    height: {
+                        description: {
+                            tr: "Wrapper yüksekliği; h ile aynı işlevdedir.",
+                            en: "Wrapper height; equivalent to h.",
+                        },
+                        type: "number | string",
+                    },
+                    alt: {
+                        description: {
+                            tr: "Alt metin; yoksa catalogSet alt değeri kullanılır.",
+                            en: "Alt text; falls back to catalogSet alt copy.",
+                        },
+                        type: "string | object",
+                    },
+                    objectFit: {
+                        description: {
+                            tr: "İç img için object-fit değeri.",
+                            en: "object-fit value for the inner img.",
+                        },
+                        type: "string",
+                    },
+                    fetchPriority: {
+                        description: {
+                            tr: "Native img fetchPriority değeri.",
+                            en: "Native img fetchPriority value.",
+                        },
+                        type: '"high" | "low" | "auto"',
+                        defaultValue: '"auto"',
+                    },
+                    onLoad: {
+                        description: {
+                            tr: "Final görsel yüklendiğinde çağrılır.",
+                            en: "Called when the final image has loaded.",
+                        },
+                        type: "function",
+                    },
+                    style: {
+                        description: {
+                            tr: "Image wrapper elementine uygulanan inline stil.",
+                            en: "Inline styles applied to the Image wrapper.",
+                        },
+                        type: "object",
                     },
                 }}
             />

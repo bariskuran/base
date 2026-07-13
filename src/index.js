@@ -1,6 +1,5 @@
 /* 3rd PARTIES */
 export {
-    Activity,
     Children,
     cloneElement,
     createContext,
@@ -118,6 +117,8 @@ export { getText, getText as t } from "./libs/getText";
 export { getTimeDiff } from "./libs/getTimeDiff";
 export { Icon } from "./libs/Icon";
 export { Image } from "./libs/Image";
+export { Layout } from "./libs/Layout";
+export { Visibility } from "./libs/Visibility";
 export { isArray } from "./libs/isArray";
 export { isArrayOrPlainObject } from "./libs/isArrayOrPlainObject";
 export { isDeepEqual } from "./libs/isDeepEqual";

@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { Icon } from "../../Icon";
+import { Visibility } from "../../Visibility";
 
 const S = {
     container: styled.div`
@@ -27,12 +28,6 @@ const S = {
             css`
                 opacity: 0.5;
                 pointer-events: none;
-            `}
-
-        ${({ $hidden }) =>
-            $hidden &&
-            css`
-                display: none;
             `}
     `,
     titleArea: styled.div`
@@ -73,7 +68,6 @@ const S = {
 
 export const DefaultHelper = ({ children, ...props }) => {
     const {
-
         flexColumn,
         label,
         labelIcon,
@@ -93,33 +87,39 @@ export const DefaultHelper = ({ children, ...props }) => {
 
     /* Return */
     return (
-        <S.container
-            aria-label={`BaseFormItem_${name}`}
-            $isMainItem={isMainItem}
-            $disable={disabled}
-            $hidden={hidden}
-            $isFocused={isFocused}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-        >
-            {shouldUseHelper && (
-                <S.titleArea aria-label="Title Area">
-                    {labelIcon && <Icon icon={labelIcon} width={labelIconWidth} />}
-                    {label}
-                    {description && (
-                        <Icon
-                            icon="information"
-                            width={labelIconWidth}
-                            enablePopTip={true}
-                            tooltipProps={{ title: description }}
-                        />
+        <Visibility
+            visible={!hidden}
+            content={
+                <S.container
+                    aria-label={`BaseFormItem_${name}`}
+                    $isMainItem={isMainItem}
+                    $disable={disabled}
+                    $isFocused={isFocused}
+                    onMouseEnter={handleOnMouseEnter}
+                    onMouseLeave={handleOnMouseLeave}
+                >
+                    {shouldUseHelper && (
+                        <S.titleArea aria-label="Title Area">
+                            {labelIcon && <Icon icon={labelIcon} width={labelIconWidth} />}
+                            {label}
+                            {description && (
+                                <Icon
+                                    icon="information"
+                                    width={labelIconWidth}
+                                    enablePopTip={true}
+                                    tooltipProps={{ title: description }}
+                                />
+                            )}
+                        </S.titleArea>
                     )}
-                </S.titleArea>
-            )}
-            <S.contentArea aria-label="Content Area" $flexColumn={flexColumn}>
-                {children}
-            </S.contentArea>
-            {shouldUseHelper && <S.actionArea aria-label="Action Area">actions</S.actionArea>}
-        </S.container>
+                    <S.contentArea aria-label="Content Area" $flexColumn={flexColumn}>
+                        {children}
+                    </S.contentArea>
+                    {shouldUseHelper && (
+                        <S.actionArea aria-label="Action Area">actions</S.actionArea>
+                    )}
+                </S.container>
+            }
+        />
     );
 };

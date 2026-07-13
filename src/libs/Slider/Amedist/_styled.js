@@ -1,9 +1,6 @@
 import styled, { keyframes, css } from "styled-components";
-import { Typo } from "../../Typo";
 
-export const AMEDIST_TEXT_MS = 600;
-export const AMEDIST_IMAGE_BASE_MS = 250;
-export const AMEDIST_IMAGE_STAGGER_MS = 200;
+export const AMEDIST_DEFAULT_ANIMATION_RATIO = 0.25;
 
 const timeBarGrow = keyframes`
     from {
@@ -14,21 +11,69 @@ const timeBarGrow = keyframes`
     }
 `;
 
+const imageTransformEnter = keyframes`
+    from {
+        transform: translateX(var(--amedist-image-enter-x)) scale(var(--amedist-image-enter-scale));
+    }
+    to {
+        transform: translateX(0) scale(1);
+    }
+`;
+
+const imageFadeEnter = keyframes`
+    from {
+        opacity: var(--amedist-image-enter-opacity);
+    }
+    to {
+        opacity: 1;
+    }
+`;
+
 const slideTransform = ({ $motion }) => {
     switch ($motion) {
         case "active":
-            return "translateX(0)";
+            return "translateX(0) scale(1)";
         case "exit-forward":
-            return "translateX(-100%)";
+            return "translateX(-100%) scale(1)";
         case "exit-backward":
-            return "translateX(100%)";
+            return "translateX(100%) scale(1)";
         case "hidden-right":
-            return "translateX(100%)";
+            return "translateX(100%) scale(1)";
         case "hidden-left":
-            return "translateX(-100%)";
+            return "translateX(-100%) scale(1)";
         default:
-            return "translateX(100%)";
+            return "translateX(100%) scale(1)";
     }
+};
+
+const getImageEnterX = ($from) => {
+    if ($from === "center") return "0";
+    return $from === "left" ? "-100%" : "100%";
+};
+
+const getTransitionMs = ({ $motion, $enterMs, $exitMs }) =>
+    $motion === "active" ? $enterMs : $exitMs;
+
+const imageEnterAnimation = ({
+    $from,
+    $scale,
+    $fade,
+    $motion,
+    $transitioning,
+    $snap,
+    $durationMs,
+    $delayMs,
+}) => {
+    if ($snap || !$transitioning || $motion !== "active") return "";
+
+    return css`
+        --amedist-image-enter-x: ${getImageEnterX($from)};
+        --amedist-image-enter-scale: ${$scale ? 0.5 : 1};
+        --amedist-image-enter-opacity: ${$fade ? 0 : 1};
+        animation:
+            ${imageTransformEnter} ${$durationMs}ms ease ${$delayMs || 0}ms both,
+            ${imageFadeEnter} ${$durationMs}ms linear ${$delayMs || 0}ms both;
+    `;
 };
 
 const pauseWhenHidden = ({ $paused }) =>
@@ -39,54 +84,36 @@ const pauseWhenHidden = ({ $paused }) =>
     `;
 
 const S = {
-    root: styled.div`
+    container: styled.div`
         position: relative;
         width: 100%;
+        height: 100vh;
+        min-height: 560rem;
+        overflow: hidden;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         background: ${({ theme }) => theme.background};
     `,
-
-    timeBarTrack: styled.div`
+    sliderArea: styled.div`
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 4;
+        inset: 0;
+        z-index: 1;
         width: 100%;
-        height: 3px;
-        background: ${({ theme }) => theme.greys.shade20};
-    `,
-
-    timeBarFill: styled.div`
         height: 100%;
-        width: 100%;
-        transform-origin: left center;
-        transform: scaleX(0);
-        background: ${({ theme }) => theme.primary};
-        animation: ${timeBarGrow} ${({ $durationSec }) => $durationSec}s linear forwards;
-        ${pauseWhenHidden};
-    `,
-
-    imageArea: styled.div`
-        position: relative;
-        width: 100%;
-        flex: 0 0 auto;
         overflow: hidden;
-        aspect-ratio: 16 / 9;
-
-        ${({ theme }) =>
-            theme.responsive.vertical(css`
-                aspect-ratio: 4 / 5;
-            `)}
+        background: ${({ theme }) => theme.background};
     `,
-
     slidesLayer: styled.div`
         position: absolute;
         inset: 0;
         z-index: 0;
     `,
-
+    frontSlidesLayer: styled.div`
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+    `,
     slideStack: styled.div`
         position: absolute;
         inset: 0;
@@ -94,43 +121,109 @@ const S = {
             $motion === "active" ? 2 : $motion.startsWith("exit") ? 1 : 0};
         pointer-events: none;
     `,
-
     slideBgLayer: styled.div`
+        position: absolute;
+        inset: 0;
+        transform: ${slideTransform};
+        opacity: ${({ $motion }) => ($motion === "active" || $motion.startsWith("exit") ? 1 : 0)};
+        transition: ${({ $snap, $motion, $exitMs }) => {
+            if ($snap || $motion === "active") return "none";
+            return `transform ${$exitMs}ms ease`;
+        }};
+        z-index: ${({ $layerIndex }) => $layerIndex};
+        will-change: transform, opacity;
+        ${imageEnterAnimation};
+        ${pauseWhenHidden};
+    `,
+    slideBgImage: styled.div`
         position: absolute;
         inset: 0;
         background-image: url(${({ $image }) => $image});
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        transform: ${slideTransform};
-        opacity: ${({ $motion }) => ($motion === "active" ? 1 : 0)};
-        transition: ${({ $snap, $motion, $durationMs }) => {
-            if ($snap) return "none";
-            const ms = $motion === "active" ? $durationMs : AMEDIST_TEXT_MS;
-            return `transform ${ms}ms ease, opacity ${ms}ms ease`;
-        }};
-        z-index: ${({ $layerIndex }) => $layerIndex};
-        will-change: transform, opacity;
-        ${pauseWhenHidden};
+        opacity: ${({ $candleOpacity }) => $candleOpacity};
+        transition: opacity ${({ $candleTransitionMs }) => $candleTransitionMs}ms linear;
+        will-change: opacity;
     `,
-
-    contentWrap: styled.div`
-        display: grid;
+    contentArea: styled.div`
         width: 100%;
-        max-width: 720rem;
+        z-index: 2;
+        position: relative;
+        margin-bottom: ${({ $bottomMargin }) => $bottomMargin}rem;
+        display: flex;
+        align-items: flex-end;
+    `,
+    area1: styled.div`
+        flex: 0 0 150rem;
+        height: 90rem;
+        background: ${({ theme }) => theme.colorAlpha(theme.background, 10)};
+        backdrop-filter: blur(3rem);
+        -webkit-backdrop-filter: blur(3rem);
+    `,
+    area3: styled.div`
+        flex: 1 1 auto;
+        height: 40rem;
+        background: ${({ theme }) => theme.colorAlpha(theme.background, 10)};
+        backdrop-filter: blur(3rem);
+        -webkit-backdrop-filter: blur(3rem);
+        margin-bottom: 15rem;
+    `,
+    sliderInfo: styled.div`
+        flex: 0 0 50%;
+        min-height: 100rem;
+        background: ${({ theme }) => theme.colorAlpha(theme.background, 20)};
+        backdrop-filter: blur(25rem);
+        -webkit-backdrop-filter: blur(25rem);
+        margin-bottom: 30rem;
+    `,
+    topBarArea: styled.div`
+        width: 100%;
+        height: 2px;
         overflow: hidden;
     `,
-
+    topBarFill: styled.div`
+        height: 2px;
+        width: 100%;
+        transform-origin: left center;
+        transform: scaleX(0);
+        background: ${({ theme }) => theme.primary};
+        animation: ${timeBarGrow} ${({ $durationSec }) => $durationSec}s linear forwards;
+        ${pauseWhenHidden};
+    `,
+    sliderContent: styled.div`
+        width: 100%;
+        display: flex;
+        gap: 20rem;
+        align-items: stretch;
+    `,
+    infoArea: styled.div`
+        flex: 1 1 auto;
+        min-width: 0;
+        padding: 24rem 36rem 30rem 36rem;
+        overflow-x: hidden;
+    `,
+    contentWrap: styled.div`
+        position: relative;
+        display: grid;
+        width: 100%;
+        min-height: 74rem;
+        padding-bottom: 36rem;
+        overflow: visible;
+    `,
     slideContent: styled.div`
         grid-area: 1 / 1;
         width: 100%;
         display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16rem;
         transform: ${slideTransform};
         opacity: ${({ $motion }) => ($motion === "active" ? 1 : 0)};
-        transition: ${({ $snap }) =>
+        transition: ${({ $snap, $motion, $enterMs, $exitMs }) =>
             $snap
                 ? "none"
-                : `transform ${AMEDIST_TEXT_MS}ms ease, opacity ${AMEDIST_TEXT_MS}ms ease`};
+                : `transform ${getTransitionMs({ $motion, $enterMs, $exitMs })}ms ease, opacity ${getTransitionMs({ $motion, $enterMs, $exitMs })}ms ease`};
         pointer-events: ${({ $motion }) => ($motion === "active" ? "auto" : "none")};
         z-index: ${({ $motion }) =>
             $motion === "active" ? 2 : $motion.startsWith("exit") ? 1 : 0};
@@ -144,16 +237,37 @@ const S = {
                       overflow: hidden;
                   `};
     `,
-
-    slideTitle: styled(Typo.h1)`
-        font-family: "Cormorant Garamond", serif;
-        text-align: center;
+    commonContent: styled.div`
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        transform: ${slideTransform};
+        opacity: ${({ $motion }) => ($motion === "active" ? 1 : 0)};
+        transition: ${({ $snap, $motion, $enterMs, $exitMs }) =>
+            $snap
+                ? "none"
+                : `transform ${getTransitionMs({ $motion, $enterMs, $exitMs })}ms ease, opacity ${getTransitionMs({ $motion, $enterMs, $exitMs })}ms ease`};
+        pointer-events: ${({ $motion }) => ($motion === "active" ? "auto" : "none")};
+        z-index: 4;
+        will-change: transform, opacity;
+        ${pauseWhenHidden};
     `,
-
+    bullets: styled.div`
+        flex: 0 0 30rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6rem;
+        padding: 12rem 10rem 12rem 0;
+    `,
     bulletButton: styled.button`
         appearance: none;
         border: none;
-        padding: 4rem 0;
+        padding: 0;
         margin: 0;
         flex: 0 0 auto;
         background: transparent;
@@ -169,18 +283,16 @@ const S = {
             border-radius: 999px;
         }
     `,
-
     bulletSvg: styled.svg`
         display: block;
         overflow: visible;
         flex-shrink: 0;
     `,
-
     bulletRect: styled.rect`
         transition:
-            width 0.35s ease,
+            height 0.35s ease,
             fill 0.35s ease;
-        fill: ${({ theme, $active }) => ($active ? theme.primary : theme.greys.shade20)};
+        fill: ${({ theme, $active }) => ($active ? theme.primary : "#fff")};
     `,
 };
 

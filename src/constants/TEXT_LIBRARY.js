@@ -62,4 +62,11 @@ export const TEXT_LIBRARY = {
         de: "Kein Element zum Anzeigen.",
         es: "No hay elementos para mostrar.",
     },
+    loading: {
+        tr: "Yükleniyor...",
+        en: "Loading...",
+        fr: "Chargement...",
+        de: "Laden...",
+        es: "Cargando...",
+    },
 };

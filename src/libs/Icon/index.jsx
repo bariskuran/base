@@ -6,6 +6,7 @@ import { IconLayer } from "./tools/IconLayer";
 import { PopTipWrapper } from "./tools/PopTipWrapper";
 import { Root } from "./tools/styled";
 import { resolveSize, resolveVisualScale } from "./tools/visualScale";
+import { Visibility } from "../Visibility";
 
 export const Icon = ({
     icon,
@@ -57,10 +58,8 @@ export const Icon = ({
     const pendingState = !!pendingManually;
     const clickEffectControlled = clickEffectManually !== undefined;
     const activeFromClickEffect = clickEffectControlled ? !!clickEffectManually : false;
-    const activeState =
-        (!!activeManually || activeFromClickEffect) && !pendingState;
-    const hoverState =
-        !!(hoverManually || isSelfHover) && !activeState && !pendingState;
+    const activeState = (!!activeManually || activeFromClickEffect) && !pendingState;
+    const hoverState = !!(hoverManually || isSelfHover) && !activeState && !pendingState;
 
     const hoverGlyph = hoverIconProp || null;
     const activeGlyph = activeIconProp || null;
@@ -139,8 +138,7 @@ export const Icon = ({
     const shouldUsePendingLayer = pendingState && shouldRenderPendingLayer;
     const shouldUseHoverLayer = hoverState && shouldRenderHoverLayer;
     const shouldUseActiveLayer = activeState && shouldRenderActiveLayer;
-    const showBaseLayer =
-        !shouldUsePendingLayer && !shouldUseHoverLayer && !shouldUseActiveLayer;
+    const showBaseLayer = !shouldUsePendingLayer && !shouldUseHoverLayer && !shouldUseActiveLayer;
     const showHoverLayer = shouldUseHoverLayer;
     const showActiveLayer = shouldUseActiveLayer;
     const showPendingLayer = shouldUsePendingLayer;
@@ -148,7 +146,6 @@ export const Icon = ({
     const pulseEnabled = !disablePulseEffect;
 
     if (!baseMeta) return null;
-
 
     const flatBoxW = baseMeta.contentBounds?.width || baseMeta.viewW;
     const flatBoxH = baseMeta.contentBounds?.height || baseMeta.viewH;
@@ -189,56 +186,62 @@ export const Icon = ({
                     disableOpticalScale={flat}
                     trimToContentBounds={flat}
                     enablePulse={
-                        pulseEnabled &&
-                        activeState &&
-                        !shouldRenderActiveLayer &&
-                        !pendingState
+                        pulseEnabled && activeState && !shouldRenderActiveLayer && !pendingState
                     }
                     isActive={activeState}
                 />
 
-                {shouldRenderHoverLayer && (
-                    <IconLayer
-                        meta={hoverMeta}
-                        visible={showHoverLayer}
-                        fill={finalColor}
-                        scale={finalScale}
-                        isFlag={isFlag}
-                        disableOpticalScale={flat}
-                        trimToContentBounds={flat}
-                        enablePulse={false}
-                        isActive={false}
-                    />
-                )}
+                <Visibility.mount
+                    visible={shouldRenderHoverLayer}
+                    content={
+                        <IconLayer
+                            meta={hoverMeta}
+                            visible={showHoverLayer}
+                            fill={finalColor}
+                            scale={finalScale}
+                            isFlag={isFlag}
+                            disableOpticalScale={flat}
+                            trimToContentBounds={flat}
+                            enablePulse={false}
+                            isActive={false}
+                        />
+                    }
+                />
 
-                {shouldRenderActiveLayer && (
-                    <IconLayer
-                        meta={activeMeta}
-                        visible={showActiveLayer}
-                        fill={finalColor}
-                        scale={finalScale}
-                        isFlag={isFlag}
-                        disableOpticalScale={flat}
-                        trimToContentBounds={flat}
-                        enablePulse={pulseEnabled && activeState}
-                        isActive={activeState}
-                    />
-                )}
+                <Visibility.mount
+                    visible={shouldRenderActiveLayer}
+                    content={
+                        <IconLayer
+                            meta={activeMeta}
+                            visible={showActiveLayer}
+                            fill={finalColor}
+                            scale={finalScale}
+                            isFlag={isFlag}
+                            disableOpticalScale={flat}
+                            trimToContentBounds={flat}
+                            enablePulse={pulseEnabled && activeState}
+                            isActive={activeState}
+                        />
+                    }
+                />
 
-                {shouldRenderPendingLayer && (
-                    <IconLayer
-                        meta={pendingMeta}
-                        visible={showPendingLayer}
-                        fill={finalColor}
-                        scale={finalScale}
-                        spinPending={showPendingLayer}
-                        isFlag={isFlag}
-                        disableOpticalScale={flat}
-                        trimToContentBounds={flat}
-                        enablePulse={false}
-                        isActive={false}
-                    />
-                )}
+                <Visibility.mount
+                    visible={shouldRenderPendingLayer}
+                    content={
+                        <IconLayer
+                            meta={pendingMeta}
+                            visible={showPendingLayer}
+                            fill={finalColor}
+                            scale={finalScale}
+                            spinPending={showPendingLayer}
+                            isFlag={isFlag}
+                            disableOpticalScale={flat}
+                            trimToContentBounds={flat}
+                            enablePulse={false}
+                            isActive={false}
+                        />
+                    }
+                />
             </Root>
         </PopTipWrapper>
     );

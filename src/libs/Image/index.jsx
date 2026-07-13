@@ -1,5 +1,6 @@
 import { S } from "./_styled";
 import { useVars } from "./useVars";
+import { Visibility } from "../Visibility";
 
 export const Image = ({
     src,
@@ -59,21 +60,26 @@ export const Image = ({
             $aspectRatio={aspectRatio}
             $showPlaceholder={shouldShowPlaceholder}
             $loadingAnimation={
-                loadingAnimation === false || loadingAnimation === "none" ? "none" : loadingAnimation
+                loadingAnimation === false || loadingAnimation === "none"
+                    ? "none"
+                    : loadingAnimation
             }
         >
-            {shouldShowImg && (
-                <S.img
-                    {...rest}
-                    src={imgSrc}
-                    alt={selectedAlt}
-                    fetchPriority={fetchPriority}
-                    onLoad={handleLoad}
-                    $loaded={isLoaded}
-                    $heightAuto={(height ?? h ?? "auto") === "auto"}
-                    $objectFit={objectFit || resolvedObjectFit}
-                />
-            )}
+            <Visibility.mount
+                visible={shouldShowImg}
+                content={
+                    <S.img
+                        {...rest}
+                        src={imgSrc}
+                        alt={selectedAlt}
+                        fetchPriority={fetchPriority}
+                        onLoad={handleLoad}
+                        $loaded={isLoaded}
+                        $heightAuto={(height ?? h ?? "auto") === "auto"}
+                        $objectFit={objectFit || resolvedObjectFit}
+                    />
+                }
+            />
         </S.wrapper>
     );
 };

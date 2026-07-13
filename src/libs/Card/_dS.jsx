@@ -10,18 +10,29 @@ const X = () => {
             releasedOn="1.0.0"
             description={{
                 tr: "Card, base içindeki tıklanabilir içerik kartı katmanıdır. İlk varyant Amedist olarak hazırlanmıştır. Kart genişliği her zaman bulunduğu alanın %100'ünü alır; genişlik kararını CardViewer veya parent layout verir.",
-                en: "",
+                en: "Card is the clickable content-card layer in base. Its first variant is Amedist. A card always fills the width supplied by its parent; CardViewer or the parent layout owns sizing.",
             }}
         >
             <Ds.block
-                title={{ tr: "Amedist", en: "" }}
+                title={{ tr: "Varyant Sözleşmesi", en: "Variant contract" }}
                 description={{
-                    tr: "thumb, title, subtitle, description ve cta alanları opsiyoneldir. to, href veya onClick verilirse tüm kart tıklanabilir olur. İçteki Button görsel aksiyon alanıdır ve kart hover olduğunda hoverManually ile anime edilir.",
-                    en: "",
+                    tr: "Card şu anda Card.amedist aliasıdır. Base katmanı görsel kaynağı, lokalize metinleri, tıklama/klavye davranışını ve disabled durumunu normalize eder. Yerleşim, tipografi ve CTA görünümü varyanta aittir; yeni bir Card varyantının Amedist görünümünü veya tüm alanlarını desteklemesi zorunlu değildir. Belirli tasarıma bağımlı kullanımda Card.amedist yazın.",
+                    en: "Card currently aliases Card.amedist. The base layer normalizes image sources, localized copy, click/keyboard behavior, and the disabled state. Layout, typography, and CTA presentation belong to the variant; a future Card variant does not have to reproduce Amedist's presentation or every field. Use Card.amedist when the design specifically depends on Amedist.",
+                }}
+                code={`<Card.amedist {...cardProps} />
+
+// Current default-variant shorthand:
+<Card {...cardProps} />`}
+            />
+            <Ds.block
+                title={{ tr: "Amedist", en: "Amedist" }}
+                description={{
+                    tr: "thumb, title, subtitle ve description alanları opsiyoneldir. ctaLabel verilmezse lokalize İncele/View etiketi kullanılır; disabled kartta CTA gizlenir. to, href veya onClick verilirse tüm kart tıklanabilir olur. İçteki Button yalnızca görsel aksiyon alanıdır ve kart hover olduğunda hoverManually ile anime edilir.",
+                    en: "thumb, title, subtitle, and description are optional. ctaLabel defaults to the localized View label; the CTA is hidden for a disabled card. Supplying to, href, or onClick makes the whole card interactive. Its internal Button is only a visual action affordance and follows card hover through hoverManually.",
                 }}
                 code={`import { Card } from "${SYS.basePath}";
 
-<Card
+<Card.amedist
     thumb={thumbUrl}
     title="Lorem ipsum dolor sit amet consectetur adipiscing elit."
     description="Lorem ipsum dolor sit amet consectetur adipiscing elit."
@@ -53,15 +64,42 @@ const X = () => {
 />`}
             />
             <Ds.api
-                args="<Card />"
+                args="Card base props"
                 props={{
                     thumb: {
-                        description: { tr: "String src veya React node olarak görsel alanı.", en: "" },
+                        description: {
+                            tr: "String src veya React node olarak görsel alanı.",
+                            en: "",
+                        },
                         type: "string | ReactNode",
                     },
                     catalogSet: {
-                        description: { tr: "Image catalog set adı. Thumb variantı seçilir.", en: "" },
+                        description: {
+                            tr: "Image catalog set adı. Thumb variantı seçilir.",
+                            en: "",
+                        },
                         type: "string",
+                    },
+                    src: {
+                        description: {
+                            tr: "Image komponentine aktarılan tekil görsel URL'i.",
+                            en: "Single image URL forwarded to Image.",
+                        },
+                        type: "string",
+                    },
+                    externalSet: {
+                        description: {
+                            tr: "Image komponentine aktarılan harici görsel seti.",
+                            en: "External image set forwarded to Image.",
+                        },
+                        type: "object | array",
+                    },
+                    thumbAlt: {
+                        description: {
+                            tr: "Kart görselinin alt metni.",
+                            en: "Alt text for the card image.",
+                        },
+                        type: "string | object",
                     },
                     title: {
                         description: { tr: "Kart başlığı.", en: "" },
@@ -76,7 +114,10 @@ const X = () => {
                         type: "string | object",
                     },
                     ctaLabel: {
-                        description: { tr: "Kart aksiyon metni.", en: "" },
+                        description: {
+                            tr: "Kart aksiyon metni; varsayılan İncele/View.",
+                            en: "Card action copy; defaults to View.",
+                        },
                         type: "string | object",
                     },
                     to: {
@@ -90,6 +131,21 @@ const X = () => {
                     onClick: {
                         description: { tr: "Kart tıklama callback'i.", en: "" },
                         type: "function",
+                    },
+                    target: {
+                        description: {
+                            tr: "href/to hedef davranışı; _blank güvenli window.open kullanır.",
+                            en: "Destination target; _blank uses a safe window.open call.",
+                        },
+                        type: "string",
+                    },
+                    disabled: {
+                        description: {
+                            tr: "Tıklama ve klavye aktivasyonunu kapatır.",
+                            en: "Disables click and keyboard activation.",
+                        },
+                        type: "boolean",
+                        defaultValue: "false",
                     },
                 }}
             />

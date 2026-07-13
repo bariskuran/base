@@ -97,6 +97,7 @@ const publicSitemap = [
     ["sleep", "sleep", l(() => import("../sleep/_dS"))],
     ["sortBy", "sortBy", l(() => import("../sortBy/_dS"))],
     ["Space", "space", l(() => import("../Space/_dS"))],
+    ["Slider", "slider", l(() => import("../Slider/_dS"))],
     ["stringCaseConverter", "stringCaseConverter", l(() => import("../stringCaseConverter/_dS"))],
     ["Table", "table", l(() => import("../Table/_dS"))],
     ["templateLiteralTo", "templateLiteralTo", l(() => import("../templateLiteralTo/_dS"))],
@@ -132,6 +133,7 @@ const publicSitemap = [
     ["useTimer", "useTimer", l(() => import("../useTimer/_dS"))],
     ["useRevealNavItem", "useRevealNavItem", l(() => import("../useRevealNavItem/_dS"))],
     ["useDelayedFunction", "useDelayedFunction", l(() => import("../useDelayedFunction/_dS"))],
+    ["Visibility", "visibility", l(() => import("../Visibility/_dS"))],
     [
         "COUNTRY_INFORMATION",
         "countryInformation",

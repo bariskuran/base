@@ -25,9 +25,18 @@ const X = () => {
             releasedOn="1.0.0"
             description={{
                 tr: "CardViewer, Card datasını listelemek için kullanılan viewer katmanıdır. Array tabanlı kullanım, empty state, layout varyantı, card varyantı, basic pagination ve load more aksiyonlarını destekler. BE destekli kullanımda page, offset, pageSize, total, onPageChange ve onLoadMore proplarıyla dış sorgu akışı bağlanabilir.",
-                en: "",
+                en: "CardViewer renders collections of Card data. It supports array data, empty state, layout variants, Card variants, basic pagination, and load-more actions. For backend-driven lists, external query state can be connected through page, offset, pageSize, total, onPageChange, and onLoadMore.",
             }}
         >
+            <Ds.block
+                title={{ tr: "İki Ayrı Varyant Ekseni", en: "Two independent variant axes" }}
+                description={{
+                    tr: "CardViewer.grid ve CardViewer.masonry yalnızca koleksiyon yerleşimini seçer. cardVariant ise her item için hangi Card varyantının render edileceğini belirler. Bu API'ler birbirinden bağımsızdır: yeni layout varyantları Card API'sini, yeni Card varyantları da viewer yerleşimini miras almak zorunda değildir.",
+                    en: "CardViewer.grid and CardViewer.masonry select only the collection layout. cardVariant selects the Card variant rendered for each item. These APIs are independent: future layout variants do not define the Card API, and future Card variants do not define viewer layout behavior.",
+                }}
+                code={`<CardViewer.grid items={items} cardVariant="amedist" />
+<CardViewer.masonry items={items} cardVariant="amedist" />`}
+            />
             <Ds.block
                 title={{ tr: "Grid", en: "" }}
                 description={{
@@ -37,7 +46,7 @@ const X = () => {
                 code={`import { CardViewer } from "${SYS.basePath}";
 
 <CardViewer.grid items={items} />`}
-                example={<CardViewer items={items} />}
+                example={<CardViewer.grid items={items} />}
             />
             <Ds.block
                 title={{ tr: "Masonry", en: "" }}
@@ -80,10 +89,17 @@ const X = () => {
 />`}
             />
             <Ds.api
-                args="<CardViewer items />"
+                args="CardViewer common props"
                 props={{
                     items: {
                         description: { tr: "Kart datası array'i.", en: "" },
+                        type: "array",
+                    },
+                    data: {
+                        description: {
+                            tr: "items için geriye uyumlu alias.",
+                            en: "Compatibility alias for items.",
+                        },
                         type: "array",
                     },
                     variant: {
@@ -97,7 +113,10 @@ const X = () => {
                         defaultValue: '"amedist"',
                     },
                     minColumnWidth: {
-                        description: { tr: "Grid/masonry kolonları için minimum kolon genişliği.", en: "" },
+                        description: {
+                            tr: "Grid/masonry kolonları için minimum kolon genişliği.",
+                            en: "",
+                        },
                         type: "number | string",
                         defaultValue: "280",
                     },
@@ -107,6 +126,28 @@ const X = () => {
                             en: "",
                         },
                         type: "string | object",
+                    },
+                    renderItem: {
+                        description: {
+                            tr: "Varsayılan Card renderını tamamen değiştiren render callback'i.",
+                            en: "Render callback that fully replaces default Card rendering.",
+                        },
+                        type: "function(item, index)",
+                    },
+                    getItemProps: {
+                        description: {
+                            tr: "Her item için Card proplarını genişleten callback.",
+                            en: "Callback that extends Card props for each item.",
+                        },
+                        type: "function(item, index)",
+                    },
+                    gap: {
+                        description: {
+                            tr: "Kartlar arasındaki rem tabanlı boşluk.",
+                            en: "Rem-based gap between cards.",
+                        },
+                        type: "number | string",
+                        defaultValue: "20",
                     },
                     page: {
                         description: { tr: "1 tabanlı sayfa numarası.", en: "" },
@@ -131,6 +172,20 @@ const X = () => {
                     onLoadMore: {
                         description: { tr: "Load more callback'i.", en: "" },
                         type: "function",
+                    },
+                    hasMore: {
+                        description: {
+                            tr: "Load more aksiyonunun gösterilip gösterilmeyeceği.",
+                            en: "Whether the load-more action remains available.",
+                        },
+                        type: "boolean",
+                    },
+                    loading: {
+                        description: {
+                            tr: "Pagination ve load more aksiyonlarının pending/disabled durumu.",
+                            en: "Pending/disabled state for pagination and load-more actions.",
+                        },
+                        type: "boolean",
                     },
                 }}
             />
