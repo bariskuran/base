@@ -636,7 +636,7 @@ const useVars = (p) => {
     const getTrackMetrics = (axis) => {
         const truckEl = axis === "y" ? yTruckRef.current : xTruckRef.current;
         const axisState = axis === "y" ? y : x;
-        const barPosition = getBarPositionForAxis(axis);
+        const barPosition = getBarPositionForAxis(axis, axisContext);
 
         if (!truckEl) return null;
 

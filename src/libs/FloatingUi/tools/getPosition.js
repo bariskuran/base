@@ -63,6 +63,23 @@ const getMountBoundsRect = (mountRoot) => {
     };
 };
 
+const resolveMeasureMaxWidthPx = (floatingEl, maxWidthPx, viewportOffset = 20) => {
+    let effective = maxWidthPx > 0 ? maxWidthPx : null;
+
+    if (typeof window !== "undefined" && floatingEl) {
+        const computedMax = window.getComputedStyle(floatingEl).maxWidth;
+        if (computedMax && computedMax !== "none") {
+            const parsed = parseFloat(computedMax);
+            if (!Number.isNaN(parsed) && parsed > 0) {
+                effective = effective != null ? Math.min(effective, parsed) : parsed;
+            }
+        }
+    }
+
+    if (effective != null && effective > 0) return effective;
+    return null;
+};
+
 const getFloatingRectForMeasure = (floatingEl, maxWidthPx, viewportOffset = 20) => {
     if (!floatingEl) return null;
 
@@ -75,14 +92,16 @@ const getFloatingRectForMeasure = (floatingEl, maxWidthPx, viewportOffset = 20) 
         transform: floatingEl.style.transform,
     };
 
+    const measureMax = resolveMeasureMaxWidthPx(floatingEl, maxWidthPx, viewportOffset);
+
     floatingEl.style.inset = "0px auto auto 0px";
     floatingEl.style.visibility = "hidden";
     floatingEl.style.pointerEvents = "none";
     floatingEl.style.transform = "none";
     floatingEl.style.width = "max-content";
     floatingEl.style.maxWidth =
-        maxWidthPx > 0
-            ? `${maxWidthPx}px`
+        measureMax != null
+            ? `${measureMax}px`
             : `calc(100vw - ${viewportOffset * 2}px)`;
 
     const rect = floatingEl.getBoundingClientRect();
@@ -142,8 +161,15 @@ const getPosition = ({
     if (!floatingRect) return;
 
     const liveRect = floatingEl.getBoundingClientRect();
-    const fw = Math.max(floatingRect.width, liveRect.width > 0.5 ? liveRect.width : 0);
-    const fh = Math.max(floatingRect.height, liveRect.height > 0.5 ? liveRect.height : 0);
+    // Prefer live width when laid out — measure must not inflate past CSS maxWidth.
+    const fw =
+        liveRect.width > 0.5
+            ? Math.min(floatingRect.width || liveRect.width, liveRect.width) || liveRect.width
+            : floatingRect.width;
+    const fh =
+        liveRect.height > 0.5
+            ? Math.min(floatingRect.height || liveRect.height, liveRect.height) || liveRect.height
+            : floatingRect.height;
     const arrowSlop = Math.max(72, gap * 2, Math.round(viewportOffset * 2));
     const fhCol = fh + arrowSlop;
 
@@ -235,6 +261,14 @@ const getPosition = ({
 
     let positionX = clamp(xByAlign[alignX], innerLeft, innerRight - fw);
 
+    // Arrow tracks the trigger center on the tip, even when the tip was clamped.
+    const arrowHalf = 9;
+    const arrowEdgePad = 8;
+    const arrowMin = arrowEdgePad + arrowHalf;
+    const arrowMax = Math.max(arrowMin, fw - arrowEdgePad - arrowHalf);
+    const triggerCenterX = childrenRect.left + childrenRect.width / 2;
+    const arrowOffset = Math.round(clamp(triggerCenterX - positionX, arrowMin, arrowMax));
+
     const innerBox = { top: innerTop, left: innerLeft, right: innerRight, bottom: innerBottom };
     const predCur = {
         left: positionX,
@@ -266,6 +300,7 @@ const getPosition = ({
         s.positionY = Math.round(positionY - layerRect.top);
         s.alignX = alignX;
         s.alignY = alignY;
+        s.arrowOffset = arrowOffset;
         s.blockVisibility = false;
     });
 };

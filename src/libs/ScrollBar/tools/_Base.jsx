@@ -213,81 +213,80 @@ export const Base = (p) => {
         hasSplitPositionSource,
     } = useVars(p);
 
-    const bars = (
-        <>
-            <Visibility.mount
-                visible={showY}
-                content={
-                    <Bar
-                        Variant={Variant}
-                        truckRef={yTruckRef}
-                        thumbRef={yThumbRef}
-                        onTruckMouseDown={onYTruckMouseDown}
-                        onThumbMouseDown={onYThumbMouseDown}
-                        onMouseEnter={handleOnMouseEnter}
-                        onMouseLeave={handleOnMouseLeave}
-                        isDragging={isDraggingY}
-                        isScrollbarActive={isScrollbarActive}
-                        isWindowLike={isWindowLike}
-                        hostRect={hostRect}
-                        truckColor={truckColor}
-                        thumbColor={thumbColor}
-                        colors={colors}
-                        thickness={thickness}
-                        maxLength={maxLength}
-                        trackMargin={trackMargin}
-                        edgeMarginX={edgeMarginX}
-                        edgeMarginY={edgeMarginY}
-                        minThumbLength={minThumbLength}
-                        exactThumbSize={exactThumbSize}
-                        fillMode={fillMode}
-                        enableThumbScale={enableThumbScale}
-                        disableOpacityEffect={disableOpacityEffect}
-                        thumbLength={y.thumbLength}
-                        thumbPosition={y.thumbPosition}
-                        barPosition={yBarPosition}
-                        mirror={mirror}
-                    />
-                }
-            />
-
-            <Visibility.mount
-                visible={showX}
-                content={
-                    <Bar
-                        Variant={Variant}
-                        truckRef={xTruckRef}
-                        thumbRef={xThumbRef}
-                        onTruckMouseDown={onXTruckMouseDown}
-                        onThumbMouseDown={onXThumbMouseDown}
-                        onMouseEnter={handleOnMouseEnter}
-                        onMouseLeave={handleOnMouseLeave}
-                        isDragging={isDraggingX}
-                        isScrollbarActive={isScrollbarActive}
-                        isWindowLike={isWindowLike}
-                        hostRect={hostRect}
-                        truckColor={truckColor}
-                        thumbColor={thumbColor}
-                        colors={colors}
-                        thickness={thickness}
-                        maxLength={maxLength}
-                        trackMargin={trackMargin}
-                        edgeMarginX={edgeMarginX}
-                        edgeMarginY={edgeMarginY}
-                        minThumbLength={minThumbLength}
-                        exactThumbSize={exactThumbSize}
-                        fillMode={fillMode}
-                        enableThumbScale={enableThumbScale}
-                        disableOpacityEffect={disableOpacityEffect}
-                        thumbLength={x.thumbLength}
-                        thumbPosition={x.thumbPosition}
-                        barPosition={xBarPosition}
-                        mirror={mirror}
-                    />
-                }
-            />
-        </>
-    );
+    const bars = [
+        <Visibility.mount
+            key="scrollbar-y"
+            visible={showY}
+            content={
+                <Bar
+                    Variant={Variant}
+                    truckRef={yTruckRef}
+                    thumbRef={yThumbRef}
+                    onTruckMouseDown={onYTruckMouseDown}
+                    onThumbMouseDown={onYThumbMouseDown}
+                    onMouseEnter={handleOnMouseEnter}
+                    onMouseLeave={handleOnMouseLeave}
+                    isDragging={isDraggingY}
+                    isScrollbarActive={isScrollbarActive}
+                    isWindowLike={isWindowLike}
+                    hostRect={hostRect}
+                    truckColor={truckColor}
+                    thumbColor={thumbColor}
+                    colors={colors}
+                    thickness={thickness}
+                    maxLength={maxLength}
+                    trackMargin={trackMargin}
+                    edgeMarginX={edgeMarginX}
+                    edgeMarginY={edgeMarginY}
+                    minThumbLength={minThumbLength}
+                    exactThumbSize={exactThumbSize}
+                    fillMode={fillMode}
+                    enableThumbScale={enableThumbScale}
+                    disableOpacityEffect={disableOpacityEffect}
+                    thumbLength={y.thumbLength}
+                    thumbPosition={y.thumbPosition}
+                    barPosition={yBarPosition}
+                    mirror={mirror}
+                />
+            }
+        />,
+        <Visibility.mount
+            key="scrollbar-x"
+            visible={showX}
+            content={
+                <Bar
+                    Variant={Variant}
+                    truckRef={xTruckRef}
+                    thumbRef={xThumbRef}
+                    onTruckMouseDown={onXTruckMouseDown}
+                    onThumbMouseDown={onXThumbMouseDown}
+                    onMouseEnter={handleOnMouseEnter}
+                    onMouseLeave={handleOnMouseLeave}
+                    isDragging={isDraggingX}
+                    isScrollbarActive={isScrollbarActive}
+                    isWindowLike={isWindowLike}
+                    hostRect={hostRect}
+                    truckColor={truckColor}
+                    thumbColor={thumbColor}
+                    colors={colors}
+                    thickness={thickness}
+                    maxLength={maxLength}
+                    trackMargin={trackMargin}
+                    edgeMarginX={edgeMarginX}
+                    edgeMarginY={edgeMarginY}
+                    minThumbLength={minThumbLength}
+                    exactThumbSize={exactThumbSize}
+                    fillMode={fillMode}
+                    enableThumbScale={enableThumbScale}
+                    disableOpacityEffect={disableOpacityEffect}
+                    thumbLength={x.thumbLength}
+                    thumbPosition={x.thumbPosition}
+                    barPosition={xBarPosition}
+                    mirror={mirror}
+                />
+            }
+        />,
+    ];
 
     const overlay =
         !isWindowLike && (!hasExternalSource || hasSplitPositionSource) && overlayHost && hostRect
@@ -311,10 +310,8 @@ export const Base = (p) => {
               )
             : null;
 
-    return (
-        <>
-            <S.anchor ref={anchorRef} />
-            {isWindowLike ? bars : hasExternalSource && !hasSplitPositionSource ? bars : overlay}
-        </>
-    );
+    const barContent =
+        isWindowLike || (hasExternalSource && !hasSplitPositionSource) ? bars : [overlay];
+
+    return [<S.anchor key="scrollbar-anchor" ref={anchorRef} />, ...barContent];
 };

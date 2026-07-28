@@ -40,12 +40,13 @@ const X = () => {
             <Ds.block
                 title={{ tr: "Grid", en: "" }}
                 description={{
-                    tr: "items içindeki her obje Card prop'u gibi değerlendirilir. Grid varyantı aynı row içindeki kartları aynı yüksekliğe stretch eder.",
+                    tr: "items içindeki her obje Card prop'u gibi değerlendirilir. Grid varyantı aynı row içindeki kartları aynı yüksekliğe stretch eder. Kart genişliği minColumnWidth ile sabit kalır; az item olduğunda alignX ile hizalanır (default: center).",
                     en: "",
                 }}
                 code={`import { CardViewer } from "${SYS.basePath}";
 
-<CardViewer.grid items={items} />`}
+<CardViewer.grid items={items} />
+<CardViewer.grid items={items} alignX="start" />`}
                 example={<CardViewer.grid items={items} />}
             />
             <Ds.block
@@ -114,11 +115,19 @@ const X = () => {
                     },
                     minColumnWidth: {
                         description: {
-                            tr: "Grid/masonry kolonları için minimum kolon genişliği.",
-                            en: "",
+                            tr: "Grid kolon genişliği (sabit). Kartlar bu genişliği korur; 1fr ile esnemez.",
+                            en: "Fixed grid column width. Cards keep this size instead of stretching with 1fr.",
                         },
                         type: "number | string",
                         defaultValue: "280",
+                    },
+                    alignX: {
+                        description: {
+                            tr: "Az kart olduğunda yatay hizalama. center | start | end (left→start, right→end alias).",
+                            en: "Horizontal alignment when cards do not fill the row. center | start | end (left→start, right→end aliases).",
+                        },
+                        type: '"center" | "start" | "end" | "left" | "right"',
+                        defaultValue: '"center"',
                     },
                     emptyText: {
                         description: {

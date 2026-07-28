@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useLocation, useMatches } from "react-router-dom";
 import { baseStore } from "../../baseStore";
+import { getPageRrdInfo } from "../../getPageRrdInfo";
 import {
     getIgnoreClientLanguage,
     getLanguageSettings,
@@ -44,10 +45,20 @@ export const LanguageManager = () => {
     );
     const ignoreClientLanguage = getIgnoreClientLanguage(projectSettings ?? {});
 
-    const routeLanguageContext = useMemo(
-        () => getRouteLanguageContextFromMatches(matches),
-        [matches, location.pathname],
-    );
+    const routeLanguageContext = useMemo(() => {
+        const fromMatches = getRouteLanguageContextFromMatches(matches);
+        if (fromMatches?.relatives) return fromMatches;
+
+        // Fallback: same relatives resolution as useRelative / setLanguage
+        const { handle, relatives } = getPageRrdInfo(location.pathname);
+        if (relatives) {
+            return {
+                language: handle?.language ?? fromMatches?.language ?? null,
+                relatives,
+            };
+        }
+        return fromMatches;
+    }, [matches, location.pathname]);
 
     const pageLanguage = useMemo(() => {
         if (!routeHasDistinctLanguagePaths(routeLanguageContext)) return null;

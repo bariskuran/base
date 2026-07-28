@@ -21,6 +21,7 @@ export const Base = ({ children, content, ...p }) => {
         positionY,
         alignX,
         alignY,
+        arrowOffset,
         blockVisibility,
         disableArrow,
         onMouseEnter,
@@ -32,47 +33,58 @@ export const Base = ({ children, content, ...p }) => {
         delayMs,
         floatingMountHost,
         floatingPadding,
+        floatingMaxWidth,
         popOverTriggerMarker,
     } = useVars(p);
 
-    /* Return */
+    const trigger = (
+        <S.children
+            key="floating-ui-trigger"
+            ref={childrenRef}
+            {...(popOverTriggerMarker ? { "data-floating-ui-pop-over-trigger": "" } : {})}
+        >
+            {children}
+        </S.children>
+    );
+
+    const portal =
+        status !== "closed" && isMounted && floatingMountHost
+            ? createPortal(
+                  <NestedBaseUi>
+                      <Variant
+                          ref={floatingRef}
+                          $bgColor={bgColor}
+                          $color={color}
+                          aria-label="floating-ui"
+                          $positionX={positionX}
+                          $positionY={positionY}
+                          $alignX={alignX}
+                          $alignY={alignY}
+                          $arrowOffset={arrowOffset}
+                          $blockVisibility={blockVisibility}
+                          $disableArrow={disableArrow}
+                          $openFromUser={openFromUser}
+                          $colors={colors || {}}
+                          $status={status}
+                          $delayMs={delayMs}
+                          $floatingPadding={floatingPadding}
+                          $maxWidth={floatingMaxWidth}
+                          onMouseEnter={onMouseEnter}
+                          onMouseLeave={onMouseLeave}
+                          onClick={onClick}
+                      >
+                          {content}
+                      </Variant>
+                  </NestedBaseUi>,
+                  floatingMountHost,
+              )
+            : null;
+
+    // Fragment (not a returned array) — avoids missing-key warnings when portal mounts.
     return (
         <>
-            <S.children
-                ref={childrenRef}
-                {...(popOverTriggerMarker ? { "data-floating-ui-pop-over-trigger": "" } : {})}
-            >
-                {children}
-            </S.children>
-            {status !== "closed" && isMounted && floatingMountHost
-                ? createPortal(
-                      <NestedBaseUi>
-                          <Variant
-                              ref={floatingRef}
-                              $bgColor={bgColor}
-                              $color={color}
-                              aria-label="floating-ui"
-                              $positionX={positionX}
-                              $positionY={positionY}
-                              $alignX={alignX}
-                              $alignY={alignY}
-                              $blockVisibility={blockVisibility}
-                              $disableArrow={disableArrow}
-                              $openFromUser={openFromUser}
-                              $colors={colors || {}}
-                              $status={status}
-                              $delayMs={delayMs}
-                              $floatingPadding={floatingPadding}
-                              onMouseEnter={onMouseEnter}
-                              onMouseLeave={onMouseLeave}
-                              onClick={onClick}
-                          >
-                              {content}
-                          </Variant>
-                      </NestedBaseUi>,
-                      floatingMountHost,
-                  )
-                : null}
+            {trigger}
+            {portal}
         </>
     );
 };

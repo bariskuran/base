@@ -14,6 +14,7 @@ import {
 } from "./floatingMountHost";
 import { generate4DirectionProps } from "../../Flex/tools/generateProps";
 import { generateRandom } from "../../generateRandom";
+import { cssNormalizeSize } from "../../cssNormalizeSize";
 
 const DEFAULT_FLOATING_PADDING = 10;
 
@@ -43,6 +44,7 @@ const useVars = (p) => {
         paddingRight,
         paddingBottom,
         paddingLeft,
+        maxWidth,
         disableMultipleBlock = false,
         popOverTriggerMarker = false,
     } = p || {};
@@ -65,6 +67,7 @@ const useVars = (p) => {
         positionY,
         alignX,
         alignY,
+        arrowOffset,
         blockVisibility,
         status,
     } = baseStore.useLocal({
@@ -73,6 +76,7 @@ const useVars = (p) => {
         positionY: 0,
         alignX: "center",
         alignY: "top",
+        arrowOffset: null,
         blockVisibility: false,
         status: "closed",
     });
@@ -303,6 +307,11 @@ const useVars = (p) => {
         [padding, paddingTop, paddingRight, paddingBottom, paddingLeft],
     );
 
+    const floatingMaxWidth = useMemo(() => {
+        if (maxWidth == null || maxWidth === "") return undefined;
+        return cssNormalizeSize(maxWidth);
+    }, [maxWidth]);
+
     const { ref: observedChildrenRef } = useObserver({
         disable: !isFloatingActive,
         threshold: 0,
@@ -430,9 +439,11 @@ const useVars = (p) => {
             isMounted,
             positionX,
             positionY,
+            arrowOffset,
             blockVisibility,
             floatingMountHost,
             floatingPadding,
+            floatingMaxWidth,
         },
     );
 };

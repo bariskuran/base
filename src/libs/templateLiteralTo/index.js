@@ -1,4 +1,4 @@
-import { Fragment, createElement } from "react";
+import { createElement } from "react";
 import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { dedent, splitParagraphs } from "./dedent";
@@ -12,9 +12,7 @@ const toParagraphNodes = (text, as = "p") => {
         return createElement(
             Flex.column,
             { gap: 4 },
-            ...paragraphs.map((para, index) =>
-                createElement(Typo.span, { key: index }, para),
-            ),
+            ...paragraphs.map((para, index) => createElement(Typo.span, { key: index }, para)),
         );
     }
 
@@ -22,18 +20,14 @@ const toParagraphNodes = (text, as = "p") => {
         return createElement(Typo.p, { key: 0 }, paragraphs[0]);
     }
 
-    return createElement(
-        Fragment,
-        null,
-        ...paragraphs.map((para, index) =>
-            createElement(
-                Typo.p,
-                {
-                    key: index,
-                    margin: index < paragraphs.length - 1 ? "0 0 1em 0" : 0,
-                },
-                para,
-            ),
+    return paragraphs.map((para, index) =>
+        createElement(
+            Typo.p,
+            {
+                key: index,
+                margin: index < paragraphs.length - 1 ? "0 0 1em 0" : 0,
+            },
+            para,
         ),
     );
 };

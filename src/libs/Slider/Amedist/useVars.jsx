@@ -2,6 +2,8 @@ import { baseStore } from "../../baseStore";
 import { useMemo, useRef, useEffect, useCallback, useState } from "react";
 import { useObserver } from "../../useObserver";
 import { useTimer } from "../../useTimer";
+import { useLayout } from "../../Layout";
+import { getLayoutController } from "../../Layout/controllerRegistry";
 import S from "./_styled";
 
 const BULLET_INACTIVE = 8;
@@ -11,7 +13,7 @@ const DEFAULT_BOTTOM_MARGIN = 40;
 const MIN_SEC_PER_SLIDE = 2;
 const CONTENT_TRANSITION_MS = 500;
 const DEFAULT_ITEM_ANIMATION_SEC = 0.5;
-const CANDLE_MIN_TRANSITION_MS = 100;
+const CANDLE_MIN_TRANSITION_MS = 150;
 const CANDLE_MAX_TRANSITION_MS = 500;
 
 const isEditableTarget = (target) => {
@@ -152,10 +154,15 @@ export const resolveSlideImageTiming = (slide, context = {}) => {
         const delaySec = index === 0 ? 0 : cursorSec;
         cursorSec += Math.max(layer.itemDurationSec - layer.itemCrossFadeSec, 0);
 
+        const floatDurationSec = images[index]?.floatFrom
+            ? clampSec(toFiniteNumber(images[index]?.itemDurationSec) ?? maxSlideSec, maxSlideSec)
+            : null;
+
         return {
             ...layer,
             delaySec,
             endSec: delaySec + layer.itemAnimationSec,
+            floatDurationSec,
         };
     });
 
@@ -166,11 +173,15 @@ export const resolveSlideImageTiming = (slide, context = {}) => {
         layers: timedLayers.map((layer) => ({
             durationMs: Math.round(layer.itemAnimationSec * 1000),
             delayMs: Math.round(layer.delaySec * 1000),
+            ...(layer.floatDurationSec != null && {
+                floatDurationMs: Math.round(layer.floatDurationSec * 1000),
+            }),
         })),
     };
 };
 
 const VALID_IMAGE_FROM = ["default", "left", "right", "opposite", "center"];
+const VALID_FLOAT_FROM = ["left", "right", "top", "bottom"];
 
 const normalizeMotionFrom = (image) => {
     if (VALID_IMAGE_FROM.includes(image.from)) return image.from;
@@ -197,6 +208,7 @@ const normalizeImageLayer = (image) => {
             fade: image.fade != null ? Boolean(image.fade) : true,
             bringToFront: Boolean(image.bringToFront),
             candle: image.candle,
+            floatFrom: VALID_FLOAT_FROM.includes(image.floatFrom) ? image.floatFrom : null,
             slideDurationSec: image.slideDurationSec,
             itemDurationSec: image.itemDurationSec,
             itemAnimationSec: image.itemAnimationSec,
@@ -211,6 +223,7 @@ const normalizeImageLayer = (image) => {
         fade: true,
         bringToFront: false,
         candle: null,
+        floatFrom: null,
     };
 };
 
@@ -359,6 +372,7 @@ export const useVars = ({
     slides = [],
     slideCommons = {},
     bottomMargin,
+    layoutControllerId = "default",
 }) => {
     const slideList = useMemo(() => {
         const list = Array.isArray(slides) ? slides.filter(Boolean) : [];
@@ -373,10 +387,15 @@ export const useVars = ({
         snapLayout: false,
         timeBarKey: 0,
     });
-    const [isMenuOpen, setGlobalByPath] = baseStore.useGlobal((s) => [s.isMenuOpen, s.setByPath]);
+    const { menuStatus } = useLayout("headerAmedist", { controllerId: layoutControllerId });
+    const { setHeaderAppearance, clearHeaderAppearance } = getLayoutController(
+        "headerAmedist",
+        layoutControllerId,
+    );
+    const appearanceSourceRef = useRef(Symbol("Slider.amedist"));
 
     const { ref: rootRef, inViewport } = useObserver({ threshold: 0.05 });
-    const isPlaybackActive = inViewport && !isMenuOpen;
+    const isPlaybackActive = inViewport && menuStatus === "closed";
 
     const rootDurationSec = Math.max(
         MIN_SEC_PER_SLIDE,
@@ -417,16 +436,17 @@ export const useVars = ({
     const resolvedBottomMargin = bottomMargin != null ? bottomMargin : DEFAULT_BOTTOM_MARGIN;
 
     useEffect(() => {
-        setGlobalByPath("headerBackgroundAlpha", headerBackgroundAlpha);
-        setGlobalByPath("headerColor", headerColor);
-    }, [headerBackgroundAlpha, headerColor, setGlobalByPath]);
+        setHeaderAppearance(appearanceSourceRef.current, {
+            headerBackgroundAlpha,
+            headerColor,
+        });
+    }, [headerBackgroundAlpha, headerColor, setHeaderAppearance]);
 
     useEffect(
         () => () => {
-            setGlobalByPath("headerBackgroundAlpha", null);
-            setGlobalByPath("headerColor", null);
+            clearHeaderAppearance(appearanceSourceRef.current);
         },
-        [setGlobalByPath],
+        [clearHeaderAppearance],
     );
 
     const countRef = useRef(count);

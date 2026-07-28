@@ -1,7 +1,14 @@
 import { cssNormalizeSize } from "../../cssNormalizeSize";
 import { S } from "./_styled";
 
-const FooterAmedist = ({ minHeight = "100vh", logo, links, credit, ...rest }) => (
+const FooterAmedist = ({
+    controllerId: _controllerId,
+    minHeight = "100vh",
+    logo,
+    links,
+    credit,
+    ...rest
+}) => (
     <S.container {...rest} $minHeight={cssNormalizeSize(minHeight)}>
         <S.logoArea data-slot="logo-area">{logo}</S.logoArea>
         <S.linksArea data-slot="links-area">{links}</S.linksArea>
@@ -10,5 +17,6 @@ const FooterAmedist = ({ minHeight = "100vh", logo, links, credit, ...rest }) =>
 );
 
 FooterAmedist.displayName = "Layout.footerAmedist";
+FooterAmedist.layoutControllerName = "footerAmedist";
 
 export default FooterAmedist;

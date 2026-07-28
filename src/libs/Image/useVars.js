@@ -4,6 +4,9 @@ import { getText as t } from "../getText";
 import { useCatalogImage } from "../useCatalogImage";
 
 const DEV_WARNING_PREFIX = "[base/Image]";
+const VIEWPORT_ROOT_MARGIN = "100px";
+const ARATIO_DECIMALS = 1;
+const ARATIO_TOLERANCE = 0.02;
 
 const warn = (message) => {
     if (!baseStore.globalData.get?.()?.isDevMode) return;
@@ -24,6 +27,22 @@ const getNaturalWidth = (entry = {}) =>
 const getNaturalHeight = (entry = {}) =>
     toNumber(entry.naturalHeight ?? entry.dimensionHeight ?? entry.height ?? entry.h);
 
+const roundARatio = (value) => {
+    const number = toNumber(value);
+    if (!number) return null;
+    const factor = 10 ** ARATIO_DECIMALS;
+    return Math.round(number * factor) / factor;
+};
+
+const getEntryARatio = (entry = {}) => {
+    if (entry.aRatio != null) return roundARatio(entry.aRatio);
+
+    const naturalWidth = getNaturalWidth(entry);
+    const naturalHeight = getNaturalHeight(entry);
+    if (!naturalWidth || !naturalHeight) return null;
+    return roundARatio(naturalWidth / naturalHeight);
+};
+
 const normalizeSetEntry = (value, key) => {
     if (!value) return null;
 
@@ -42,6 +61,7 @@ const normalizeSetEntry = (value, key) => {
 
     const naturalWidth = getNaturalWidth(value);
     const naturalHeight = getNaturalHeight(value);
+    const aRatio = getEntryARatio({ ...value, naturalWidth, naturalHeight });
 
     return {
         ...value,
@@ -49,6 +69,7 @@ const normalizeSetEntry = (value, key) => {
         src,
         naturalWidth,
         naturalHeight,
+        aRatio,
         hasDimensions: !!naturalWidth,
     };
 };
@@ -57,9 +78,7 @@ const normalizeSet = (set) => {
     if (!set) return [];
 
     if (Array.isArray(set)) {
-        return set
-            .map((value, index) => normalizeSetEntry(value, index))
-            .filter(Boolean);
+        return set.map((value, index) => normalizeSetEntry(value, index)).filter(Boolean);
     }
 
     if (typeof set === "object") {
@@ -86,12 +105,26 @@ const getAspectRatio = (entry) => {
     return `${naturalWidth} / ${naturalHeight}`;
 };
 
-const getSmallestPreview = (items) => {
-    const withSize = items.filter((item) => Number.isFinite(Number(item.sizeBytes)));
+const isARatioMatch = (candidateRatio, targetRatio) => {
+    if (candidateRatio == null || targetRatio == null) return false;
+    if (candidateRatio === targetRatio) return true;
+    if (targetRatio === 0) return false;
+    return Math.abs(candidateRatio - targetRatio) / Math.abs(targetRatio) <= ARATIO_TOLERANCE;
+};
+
+const getPlaceholderPreview = (items, targetItem) => {
+    if (!items.length || !targetItem) return null;
+
+    const targetRatio = getEntryARatio(targetItem);
+    const ratioMatched = items.filter((item) => isARatioMatch(getEntryARatio(item), targetRatio));
+    const pool = ratioMatched.length > 0 ? ratioMatched : items;
+
+    const withSize = pool.filter((item) => Number.isFinite(Number(item.sizeBytes)));
     if (withSize.length > 0) {
         return [...withSize].sort((a, b) => Number(a.sizeBytes) - Number(b.sizeBytes))[0];
     }
-    return sortByWidth(items)[0] || null;
+
+    return sortByWidth(pool)[0] || null;
 };
 
 const getBestByTargetWidth = (items, targetWidth) => {
@@ -104,6 +137,13 @@ const getBestByTargetWidth = (items, targetWidth) => {
 const resolveDisplayWidth = ({ explicitWidth, measuredWidth, clientData }) => {
     const numericWidth = toNumber(explicitWidth);
     if (numericWidth) return numericWidth;
+
+    // Non-numeric width ("auto", "100%", …): never fall back to viewport width.
+    // Using winW here made thumbs briefly pick full-bleed sources, then flip after
+    // measure — a visible left/right layout thrash on some DPR/Chrome combos.
+    const hasNonNumericWidth = explicitWidth != null && explicitWidth !== "";
+    if (hasNonNumericWidth) return measuredWidth;
+
     if (measuredWidth) return measuredWidth;
     return clientData?.winW || clientData?.windowWidth || null;
 };
@@ -129,19 +169,42 @@ export const useVars = ({
     w,
     h,
     onLoad,
+    onError,
 }) => {
     const wrapperRef = useRef(null);
     const catalogImage = useCatalogImage(catalogSet);
+    const placeholderCatalogImage = useCatalogImage("_placeholder");
     const [measuredWidth, setMeasuredWidth] = useState(null);
     const [isInViewport, setIsInViewport] = useState(false);
     const [readySrc, setReadySrc] = useState(null);
+    const [hasLoadError, setHasLoadError] = useState(false);
+    const [sourceIdentity, setSourceIdentity] = useState(() =>
+        [catalogSet, externalSet, src].map(String).join("|"),
+    );
+    const nextSourceIdentity = [catalogSet, externalSet, src].map(String).join("|");
+    if (nextSourceIdentity !== sourceIdentity) {
+        setSourceIdentity(nextSourceIdentity);
+        setHasLoadError(false);
+        setReadySrc(null);
+    }
     const clientData = baseStore.useGlobal((s) => s._clientData);
 
     const source = useMemo(() => {
-        if (catalogSet) return { type: "catalogSet", set: getCatalogSource(catalogImage) };
+        if (hasLoadError && placeholderCatalogImage) {
+            return {
+                type: "placeholder",
+                set: getCatalogSource(placeholderCatalogImage),
+            };
+        }
+        if (catalogSet) {
+            return {
+                type: "catalogSet",
+                set: getCatalogSource(catalogImage) || getCatalogSource(placeholderCatalogImage),
+            };
+        }
         if (externalSet) return { type: "externalSet", set: externalSet };
         return { type: "src", src };
-    }, [catalogSet, catalogImage, externalSet, src]);
+    }, [catalogSet, catalogImage, externalSet, hasLoadError, placeholderCatalogImage, src]);
 
     const normalizedItems = useMemo(() => normalizeSet(source.set), [source.set]);
     const selectedAlt = alt ?? t(catalogImage?.alt) ?? "";
@@ -154,11 +217,17 @@ export const useVars = ({
             return () => clearTimeout(timeout);
         }
 
-        const observer = new IntersectionObserver(([entry]) => {
-            if (!entry?.isIntersecting) return;
-            setIsInViewport(true);
-            observer.disconnect();
-        });
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry?.isIntersecting) return;
+                setIsInViewport(true);
+                observer.disconnect();
+            },
+            {
+                threshold: 0,
+                rootMargin: VIEWPORT_ROOT_MARGIN,
+            },
+        );
 
         observer.observe(wrapperRef.current);
         return () => observer.disconnect();
@@ -168,8 +237,10 @@ export const useVars = ({
         if (!wrapperRef.current) return undefined;
 
         const update = () => {
-            const nextWidth = wrapperRef.current?.getBoundingClientRect?.().width || null;
-            if (nextWidth) setMeasuredWidth(nextWidth);
+            const raw = wrapperRef.current?.getBoundingClientRect?.().width || 0;
+            if (!raw) return;
+            const nextWidth = Math.round(raw);
+            setMeasuredWidth((prev) => (prev != null && Math.abs(prev - nextWidth) < 1 ? prev : nextWidth));
         };
 
         update();
@@ -241,7 +312,7 @@ export const useVars = ({
             ? displayWidth * (clientData?.dpr || clientData?.devicePixelRatio || browserDpr)
             : null;
         const final = getBestByTargetWidth(normalizedItems, targetWidth);
-        const preview = progressive ? getSmallestPreview(normalizedItems) : null;
+        const preview = progressive ? getPlaceholderPreview(normalizedItems, final) : null;
 
         return {
             final,
@@ -265,6 +336,8 @@ export const useVars = ({
     const activeSrc = canLoad ? selection.final?.src : null;
     const previewSrc = canLoad ? selection.preview?.src : null;
     const isLoaded = !!activeSrc && readySrc === activeSrc;
+    const displaySrc = !isLoaded && previewSrc ? previewSrc : activeSrc;
+    const isShowingPreview = !isLoaded && !!previewSrc && displaySrc === previewSrc;
 
     useEffect(() => {
         if (!activeSrc || !previewSrc || isLoaded) return undefined;
@@ -289,7 +362,13 @@ export const useVars = ({
         onLoad?.(event);
     };
 
-    const displaySrc = !isLoaded && previewSrc ? previewSrc : activeSrc;
+    const handleError = (event) => {
+        onError?.(event);
+        if (placeholderCatalogImage && source.type !== "placeholder") {
+            setHasLoadError(true);
+        }
+    };
+
     const shouldShowPlaceholder = !isLoaded && !!activeSrc;
     const objectFit = source.type === "src" ? "contain" : "cover";
 
@@ -298,7 +377,9 @@ export const useVars = ({
         imgSrc: displaySrc || "",
         selectedAlt,
         handleLoad,
+        handleError,
         isLoaded,
+        isShowingPreview,
         shouldShowImg: !!displaySrc,
         shouldShowPlaceholder,
         loadingAnimation,

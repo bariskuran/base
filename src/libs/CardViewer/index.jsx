@@ -1,5 +1,6 @@
 import { Button } from "../Button";
 import { Card } from "../Card";
+import { Visibility } from "../Visibility";
 import { useVars } from "./tools/useVars";
 import { S } from "./tools/_styled";
 
@@ -18,6 +19,7 @@ const BaseCardViewer = ({
     getItemProps,
     gap = 20,
     minColumnWidth = 280,
+    alignX = "center",
     page = 1,
     pageSize,
     offset = 0,
@@ -31,16 +33,15 @@ const BaseCardViewer = ({
     nextLabel = { tr: "Sonraki", en: "Next" },
     ...rest
 }) => {
-    const { visibleItems, isEmpty, resolvedEmptyText, totalPages, hasPreviousPage, hasNextPage } =
-        useVars({
-            items,
-            data,
-            page,
-            pageSize,
-            offset,
-            emptyText,
-            total,
-        });
+    const { visibleItems, isEmpty, totalPages, hasPreviousPage, hasNextPage } = useVars({
+        items,
+        data,
+        page,
+        pageSize,
+        offset,
+        emptyText,
+        total,
+    });
 
     const VariantCard = getCardComponent(cardVariant);
     const cards = visibleItems.map((item, index) => {
@@ -49,52 +50,46 @@ const BaseCardViewer = ({
         return <VariantCard key={key} {...item} {...getItemProps?.(item, index)} />;
     });
 
-    if (isEmpty) {
-        return (
-            <S.Wrapper {...rest}>
-                <S.Empty>{resolvedEmptyText}</S.Empty>
-            </S.Wrapper>
-        );
-    }
-
     return (
-        <S.Wrapper {...rest}>
-            {variant === "masonry" ? (
-                <S.Masonry $gap={gap} $minColumnWidth={minColumnWidth}>
-                    {cards}
-                </S.Masonry>
-            ) : (
-                <S.Grid $gap={gap} $minColumnWidth={minColumnWidth}>
-                    {cards}
-                </S.Grid>
-            )}
-            {(onLoadMore || onPageChange) && (
-                <S.Actions>
-                    {onPageChange && totalPages > 1 && (
-                        <>
+        <Visibility.mount visible={!isEmpty}>
+            <S.Wrapper {...rest}>
+                {variant === "masonry" ? (
+                    <S.Masonry $gap={gap} $minColumnWidth={minColumnWidth}>
+                        {cards}
+                    </S.Masonry>
+                ) : (
+                    <S.Grid $gap={gap} $minColumnWidth={minColumnWidth} $alignX={alignX}>
+                        {cards}
+                    </S.Grid>
+                )}
+                {(onLoadMore || onPageChange) && (
+                    <S.Actions>
+                        {onPageChange && totalPages > 1 && (
+                            <>
+                                <Button.amedist
+                                    label={previousLabel}
+                                    disabled={!hasPreviousPage || loading}
+                                    onClick={() => onPageChange(page - 1)}
+                                />
+                                <Button.amedist
+                                    label={nextLabel}
+                                    disabled={!hasNextPage || loading}
+                                    onClick={() => onPageChange(page + 1)}
+                                />
+                            </>
+                        )}
+                        {onLoadMore && (hasMore ?? true) && (
                             <Button.amedist
-                                label={previousLabel}
-                                disabled={!hasPreviousPage || loading}
-                                onClick={() => onPageChange(page - 1)}
+                                label={loadMoreLabel}
+                                pendingManually={loading}
+                                disabled={loading}
+                                onClick={onLoadMore}
                             />
-                            <Button.amedist
-                                label={nextLabel}
-                                disabled={!hasNextPage || loading}
-                                onClick={() => onPageChange(page + 1)}
-                            />
-                        </>
-                    )}
-                    {onLoadMore && (hasMore ?? true) && (
-                        <Button.amedist
-                            label={loadMoreLabel}
-                            pendingManually={loading}
-                            disabled={loading}
-                            onClick={onLoadMore}
-                        />
-                    )}
-                </S.Actions>
-            )}
-        </S.Wrapper>
+                        )}
+                    </S.Actions>
+                )}
+            </S.Wrapper>
+        </Visibility.mount>
     );
 };
 

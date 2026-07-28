@@ -11,6 +11,8 @@ export const S = {
         gap: 20rem;
 
         border-top: 1px solid ${({ theme }) => theme.colorAlpha(theme.foreground, 0.5)};
+
+        background: ${({ theme }) => theme.background};
     `,
     logoArea: styled.div`
         flex: 0 0 250rem;

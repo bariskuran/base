@@ -58,6 +58,7 @@ export {
     Routes,
     useLocation,
     useMatch,
+    useMatches,
     useNavigate,
     useNavigation,
     useParams,
@@ -77,12 +78,7 @@ export { Button } from "./libs/Button";
 export { ButtonGroup } from "./libs/ButtonGroup";
 export { byPath } from "./libs/byPath";
 export { cleanFalsyValues, FALSY_TYPES } from "./libs/cleanFalsyValues";
-export {
-    THEME_SCALE_KEYS,
-    buildScale,
-    buildThemeWithScales,
-    packTheme,
-} from "./libs/COLORS";
+export { THEME_SCALE_KEYS, buildScale, buildThemeWithScales, packTheme } from "./libs/COLORS";
 export { colorAlpha } from "./libs/colorAlpha";
 export { colorConverter } from "./libs/colorConverter";
 export { colorFind } from "./libs/colorFind";
@@ -110,6 +106,7 @@ export { Flag } from "./libs/Flag";
 export { Flex } from "./libs/Flex";
 export { FloatingUi } from "./libs/FloatingUi";
 export { generateRandom } from "./libs/generateRandom";
+export { GoogleMapViewer } from "./libs/GoogleMapViewer";
 export { Group } from "./libs/Group";
 export { get3DShadow } from "./libs/colorGet3DShadow";
 export { getClientData } from "./libs/getClientData";
@@ -117,7 +114,8 @@ export { getText, getText as t } from "./libs/getText";
 export { getTimeDiff } from "./libs/getTimeDiff";
 export { Icon } from "./libs/Icon";
 export { Image } from "./libs/Image";
-export { Layout } from "./libs/Layout";
+export { ImageGalery, ImageGallery } from "./libs/ImageGalery";
+export { Layout, useLayout } from "./libs/Layout";
 export { Visibility } from "./libs/Visibility";
 export { isArray } from "./libs/isArray";
 export { isArrayOrPlainObject } from "./libs/isArrayOrPlainObject";
@@ -131,6 +129,7 @@ export { LOWER_CASE_ALPHABET } from "./constants/LOWER_CASE_ALPHABET";
 export { manageSearchParams } from "./libs/manageSearchParams";
 export { notifier } from "./libs/notifier";
 export { NUMBERS } from "./constants/NUMBERS";
+export { ParalaxItem } from "./libs/ParalaxItem";
 export { PopConfirm } from "./libs/PopConfirm";
 export { PopOver } from "./libs/PopOver";
 export { PopTip } from "./libs/PopTip";
@@ -175,7 +174,11 @@ export { useScrollThrottle } from "./libs/useScrollThrottle";
 export { useScrollTopLeft } from "./libs/useScrollTopLeft";
 export { useScrollWidthHeight } from "./libs/useScrollWidthHeight";
 export { useTimer, getTimersSnapshot } from "./libs/useTimer";
+export { useCountNumber, formatCountNumber } from "./libs/useCountNumber";
+export { ScrollAnimatedItem } from "./libs/ScrollAnimatedItem";
 export { Slider } from "./libs/Slider";
+export { HeaderCover } from "./libs/HeaderCover";
 export { BlockBuilder } from "./libs/BlockBuilder";
 export { Card } from "./libs/Card";
 export { CardViewer } from "./libs/CardViewer";
+export { StoryTeller } from "./libs/StoryTeller";

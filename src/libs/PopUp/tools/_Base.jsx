@@ -17,6 +17,8 @@ export const Base = (p) => {
         zIndex,
         useScrollFlex,
         scrollFlexProps,
+        bodyProps,
+        hideCloseButton,
         panelRest,
     } = useVars(p);
 
@@ -30,6 +32,8 @@ export const Base = (p) => {
                 <PopUpBodyWrapper
                     useScrollFlex={useScrollFlex}
                     scrollFlexProps={scrollFlexProps}
+                    bodyProps={bodyProps}
+                    hideCloseButton={hideCloseButton}
                     popUpContent={popUpContent}
                     showFooter={showFooter}
                     hasCancelButton={hasCancelButton}

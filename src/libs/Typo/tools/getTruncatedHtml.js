@@ -1,4 +1,4 @@
-import { createElement, Fragment } from "react";
+import { Children, createElement, Fragment } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 const getLineHeightPx = (computedStyle, fallbackFontSize = 16) => {
@@ -29,7 +29,9 @@ const getAvailableWidth = (sourceEl) => {
 
 const createSourceRoot = ({ content, as = "span" }) => {
     const root = document.createElement(as || "span");
-    root.innerHTML = renderToStaticMarkup(createElement(Fragment, null, content));
+    root.innerHTML = renderToStaticMarkup(
+        createElement(Fragment, null, ...Children.toArray(content)),
+    );
     return root;
 };
 

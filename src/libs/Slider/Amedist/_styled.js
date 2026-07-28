@@ -29,6 +29,60 @@ const imageFadeEnter = keyframes`
     }
 `;
 
+const floatTrackFromLeft = keyframes`
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+`;
+
+const floatTrackFromRight = keyframes`
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+`;
+
+const floatTrackFromTop = keyframes`
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+`;
+
+const floatTrackFromBottom = keyframes`
+    from { transform: translateY(0); }
+    to { transform: translateY(-100%); }
+`;
+
+const floatImageFromLeft = keyframes`
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+`;
+
+const floatImageFromRight = keyframes`
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+`;
+
+const floatImageFromTop = keyframes`
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+`;
+
+const floatImageFromBottom = keyframes`
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+`;
+
+const floatTrackKeyframes = {
+    left: floatTrackFromLeft,
+    right: floatTrackFromRight,
+    top: floatTrackFromTop,
+    bottom: floatTrackFromBottom,
+};
+
+const floatImageKeyframes = {
+    left: floatImageFromLeft,
+    right: floatImageFromRight,
+    top: floatImageFromTop,
+    bottom: floatImageFromBottom,
+};
+
 const slideTransform = ({ $motion }) => {
     switch ($motion) {
         case "active":
@@ -63,8 +117,9 @@ const imageEnterAnimation = ({
     $snap,
     $durationMs,
     $delayMs,
+    $floatFrom,
 }) => {
-    if ($snap || !$transitioning || $motion !== "active") return "";
+    if ($floatFrom || $snap || !$transitioning || $motion !== "active") return "";
 
     return css`
         --amedist-image-enter-x: ${getImageEnterX($from)};
@@ -73,6 +128,42 @@ const imageEnterAnimation = ({
         animation:
             ${imageTransformEnter} ${$durationMs}ms ease ${$delayMs || 0}ms both,
             ${imageFadeEnter} ${$durationMs}ms linear ${$delayMs || 0}ms both;
+    `;
+};
+
+const resolveFloatAnimation =
+    (animations) =>
+    ({ $floatFrom, $floatDurationMs, $motion }) => {
+        const animation = animations[$floatFrom];
+        if (!animation || !$floatDurationMs || $motion !== "active") return "";
+
+        return css`
+            animation: ${animation} ${$floatDurationMs}ms linear both;
+        `;
+    };
+
+const floatTrackAnimation = resolveFloatAnimation(floatTrackKeyframes);
+const floatImageAnimation = resolveFloatAnimation(floatImageKeyframes);
+
+const floatImageGeometry = ({ $floatFrom }) => {
+    if ($floatFrom === "left" || $floatFrom === "right") {
+        return css`
+            top: 0;
+            ${$floatFrom}: 0;
+            width: auto;
+            height: 100%;
+            max-width: none;
+            max-height: 100%;
+        `;
+    }
+
+    return css`
+        left: 0;
+        ${$floatFrom}: 0;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        max-height: none;
     `;
 };
 
@@ -146,17 +237,40 @@ const S = {
         transition: opacity ${({ $candleTransitionMs }) => $candleTransitionMs}ms linear;
         will-change: opacity;
     `,
+    slideBgFloatTrack: styled.div`
+        position: absolute;
+        inset: 0;
+        opacity: ${({ $motion }) => ($motion === "active" ? 1 : 0)};
+        pointer-events: none;
+        will-change: transform;
+        ${floatTrackAnimation};
+        ${pauseWhenHidden};
+    `,
+    slideBgFloatImage: styled.img`
+        position: absolute;
+        display: block;
+        object-fit: contain;
+        user-select: none;
+        pointer-events: none;
+        opacity: ${({ $candleOpacity }) => $candleOpacity};
+        transition: opacity ${({ $candleTransitionMs }) => $candleTransitionMs}ms linear;
+        will-change: transform, opacity;
+        ${floatImageGeometry};
+        ${floatImageAnimation};
+        ${pauseWhenHidden};
+    `,
     contentArea: styled.div`
         width: 100%;
         z-index: 2;
         position: relative;
         margin-bottom: ${({ $bottomMargin }) => $bottomMargin}rem;
         display: flex;
-        align-items: flex-end;
+        align-items: flex-start;
     `,
     area1: styled.div`
         flex: 0 0 150rem;
         height: 90rem;
+        margin-top: 30rem;
         background: ${({ theme }) => theme.colorAlpha(theme.background, 10)};
         backdrop-filter: blur(3rem);
         -webkit-backdrop-filter: blur(3rem);
@@ -167,7 +281,7 @@ const S = {
         background: ${({ theme }) => theme.colorAlpha(theme.background, 10)};
         backdrop-filter: blur(3rem);
         -webkit-backdrop-filter: blur(3rem);
-        margin-bottom: 15rem;
+        margin-top: 60rem;
     `,
     sliderInfo: styled.div`
         flex: 0 0 50%;

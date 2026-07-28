@@ -1,44 +1,52 @@
 import styled, { css } from "styled-components";
 
+const toCssSize = (value, fallback) => {
+    if (value == null || value === "") return fallback;
+    return typeof value === "number" ? `${value}rem` : value;
+};
+
+const normalizeAlignX = (alignX) => {
+    if (alignX === "start" || alignX === "left") return "start";
+    if (alignX === "end" || alignX === "right") return "end";
+    return "center";
+};
+
 const Wrapper = styled.div`
     width: 100%;
     min-width: 0;
 `;
 
 const Grid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(
-        auto-fill,
-        minmax(
-            min(
-                100%,
-                ${({ $minColumnWidth }) =>
-                    typeof $minColumnWidth === "number"
-                        ? `${$minColumnWidth}rem`
-                        : $minColumnWidth || "280rem"}
-            ),
-            1fr
-        )
-    );
-    gap: ${({ $gap }) => (typeof $gap === "number" ? `${$gap}rem` : $gap || "20rem")};
-    width: 100%;
-    align-items: stretch;
+    ${({ $gap, $minColumnWidth, $alignX }) => {
+        const columnWidth = toCssSize($minColumnWidth, "280rem");
+        const gap = toCssSize($gap, "20rem");
+        const justifyContent = normalizeAlignX($alignX);
 
-    & > * {
-        height: 100%;
-    }
+        return css`
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, ${columnWidth}), ${columnWidth}));
+            gap: ${gap};
+            width: 100%;
+            align-items: stretch;
+            justify-content: ${justifyContent};
+
+            & > * {
+                height: 100%;
+                max-width: 100%;
+            }
+        `;
+    }}
 `;
 
 const Masonry = styled.div`
-    column-width: ${({ $minColumnWidth }) =>
-        typeof $minColumnWidth === "number" ? `${$minColumnWidth}rem` : $minColumnWidth || "280rem"};
-    column-gap: ${({ $gap }) => (typeof $gap === "number" ? `${$gap}rem` : $gap || "20rem")};
+    column-width: ${({ $minColumnWidth }) => toCssSize($minColumnWidth, "280rem")};
+    column-gap: ${({ $gap }) => toCssSize($gap, "20rem")};
     width: 100%;
 
     & > * {
         display: block;
         break-inside: avoid;
-        margin-bottom: ${({ $gap }) => (typeof $gap === "number" ? `${$gap}rem` : $gap || "20rem")};
+        margin-bottom: ${({ $gap }) => toCssSize($gap, "20rem")};
     }
 `;
 
@@ -67,3 +75,5 @@ export const S = {
     Empty,
     Actions,
 };
+
+export { normalizeAlignX };

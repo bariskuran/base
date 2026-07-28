@@ -5,14 +5,12 @@ import { getButtonColorPalette } from "./generateColors.js";
 import { useExportData } from "helpers/useExportedData";
 import { DefaultVariant } from "../DefaultVariant.js";
 import { stripCssImports } from "../../@Base/styling/fontCss.js";
-import {
-    bgAppearsFilled,
-    anyBgColorPropNonTransparent,
-} from "./backgroundFill.js";
+import { bgAppearsFilled, anyBgColorPropNonTransparent } from "./backgroundFill.js";
 
 export const useVars = ({
     Variant,
     label,
+    ariaLabel,
     hoverLabel,
     activeLabel,
     pendingLabel,
@@ -111,11 +109,7 @@ export const useVars = ({
             clickBlockerStart,
         },
     ) => {
-        if (
-            !isClickEffectControlled &&
-            !skipOnClickHold &&
-            !isShowOnClickValuesRunning
-        ) {
+        if (!isClickEffectControlled && !skipOnClickHold && !isShowOnClickValuesRunning) {
             showOnClickValuesStart?.();
         }
         if (!skipClickCooldown && !isClickBlockerRunning) clickBlockerStart?.();
@@ -173,17 +167,14 @@ export const useVars = ({
     };
 
     const autoClickEffect =
-        !isClickEffectControlled &&
-        (isPressed || timers.isShowOnClickValuesRunning);
+        !isClickEffectControlled && (isPressed || timers.isShowOnClickValuesRunning);
 
     const manualClickEffect = isClickEffectControlled && !!clickEffectManually;
 
     const isClickEffectActive = autoClickEffect || manualClickEffect;
 
     const sustainedActive =
-        (activeManually || isMatch || isActive || timers.isDelayRunning) &&
-        !disabled &&
-        !isPending;
+        (activeManually || isMatch || isActive || timers.isDelayRunning) && !disabled && !isPending;
 
     const isActivated = sustainedActive || isClickEffectActive;
 
@@ -236,8 +227,7 @@ export const useVars = ({
         pendingBgColor,
     });
 
-    const labelNeedsFullHorizontalPad =
-        !!outlined || bgFilled || anyBgColorPropNonTransparentValue;
+    const labelNeedsFullHorizontalPad = !!outlined || bgFilled || anyBgColorPropNonTransparentValue;
 
     let labelPadStartRem = 0;
     let labelPadEndRem = 0;
@@ -268,6 +258,7 @@ export const useVars = ({
     const commonProps = {
         ...(shouldBindClickHandler ? { onClick: handleClick } : {}),
         ...(url ? (isExternalUrl ? { href: url } : { to: url }) : {}),
+        ...(ariaLabel ? { "aria-label": ariaLabel } : {}),
     };
 
     const linkAProps = {

@@ -1,5 +1,3 @@
-
-
 import S from "./_styled";
 import useVars from "./useVars";
 import { Button } from "../../Button";
@@ -16,13 +14,9 @@ export const Base = (props) => {
     const vars = useVars({ children, content, contentGroup, ...p });
 
     if (contentGroup?.length) {
-        return (
-            <>
-                {contentGroup.map((item, index) => (
-                    <Base key={index} {...p} content={item} contentGroup={undefined} />
-                ))}
-            </>
-        );
+        return contentGroup.map((item, index) => (
+            <Base key={index} {...p} content={item} contentGroup={undefined} />
+        ));
     }
 
     if (vars.hasNoContent) return null;
@@ -90,24 +84,29 @@ export const Base = (props) => {
         />
     );
 
-    const innerFlow = vars.canUseInlineCopy ? (
+    const visibleContent = vars.shouldRenderChildren ? vars.finalVisibleContent : null;
+
+    const contentNode = vars.canUseInlineCopy ? (
         <>
-            <S.inlineContent>
-                {vars.shouldRenderChildren ? vars.finalVisibleContent : null}
-            </S.inlineContent>
+            <S.inlineContent>{visibleContent}</S.inlineContent>
             <S.inlineCopy>{CopyButton}</S.inlineCopy>
         </>
     ) : (
-        <>{vars.shouldRenderChildren ? vars.finalVisibleContent : null}</>
+        visibleContent
     );
 
+    // Always key Fragment / multi-child rich JSX via NestedBaseUi (not only p/h/span).
+    // Typo.quote uses as="blockquote", which is outside phrasing-only hosts — without this,
+    // content like <>text <i>…</i> text</> warns about missing keys.
+    const isPhrasingHost = isTypoPhrasingOnlyHostTag(vars.as);
     const innerMarked =
-        isTypoPhrasingOnlyHostTag(vars.as) && !vars.shouldUseInnerHtml ? (
-            <NestedBaseUi value={{ [NESTED_UI_TYPO_PHRASING_HOST]: true }}>
-                {innerFlow}
-            </NestedBaseUi>
+        !vars.shouldUseInnerHtml ? (
+            <NestedBaseUi
+                value={isPhrasingHost ? { [NESTED_UI_TYPO_PHRASING_HOST]: true } : undefined}
+                content={contentNode}
+            />
         ) : (
-            innerFlow
+            contentNode
         );
 
     const Main = vars.shouldUseInnerHtml ? (

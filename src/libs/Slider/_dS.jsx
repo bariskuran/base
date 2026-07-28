@@ -66,8 +66,8 @@ const X = () => {
             <Ds.block
                 title={{ tr: "Amedist — Görsel Katmanları", en: "Amedist — Image layers" }}
                 description={{
-                    tr: "image tek URL veya katman dizisi olabilir. Katmanlarda src/im/file, from, scale, fade, candle ve bringToFront kullanılabilir. from; left, right, opposite, center veya default kabul eder. candle, görsel opacity'sini verilen değer ile 1 arasında, her yönde ayrı üretilen rastgele 100–500 ms geçişlerle titreştirir. bringToFront katmanı içerik panelinin önündeki ayrı katmana taşır.",
-                    en: "image may be a single URL or an array of layers. Layers support src/im/file, from, scale, fade, candle, and bringToFront. from accepts left, right, opposite, center, or default. candle flickers image opacity between the supplied value and 1, using independently randomized 100–500 ms transitions in each direction. bringToFront moves that layer into the separate layer above the content panel.",
+                    tr: "image tek URL veya katman dizisi olabilir. Katmanlarda src/im/file, from, floatFrom, scale, fade, candle ve bringToFront kullanılabilir. from; left, right, opposite, center veya default kabul eder. floatFrom; left, right, top veya bottom yönünden girip karşı yönden çıkan kesintisiz bir hareket üretir ve normal item giriş animasyonunu devre dışı bırakır. Yatay harekette görsel slider yüksekliğine, dikey harekette slider genişliğine oturtulur; diğer eksen görselin kendi oranından hesaplanır. Bu nedenle aynı sürede daha uzun mesafe katetmesi gereken geniş veya yüksek görsel doğal olarak daha hızlı hareket eder. Ham dosya çözünürlüğü değil, ekranda render edilen ölçü belirleyicidir. Hareket varsayılan olarak slideDurationSec boyunca sürer; yalnızca image item'ın kendi itemDurationSec değeri varsa onu kullanır. candle, görsel opacity'sini verilen değer ile 1 arasında, her yönde ayrı üretilen rastgele 150–500 ms geçişlerle titreştirir. bringToFront katmanı içerik panelinin önündeki ayrı katmana taşır.",
+                    en: "image may be a single URL or an array of layers. Layers support src/im/file, from, floatFrom, scale, fade, candle, and bringToFront. from accepts left, right, opposite, center, or default. floatFrom creates continuous motion entering from left, right, top, or bottom and exiting through the opposite edge, while disabling the normal item entrance animation. Horizontal motion fits the image to the slider height, while vertical motion fits it to the slider width; the other axis follows the image's own aspect ratio. A wider or taller image therefore moves faster when it must cover a longer distance in the same duration. Rendered dimensions, not raw file resolution, determine that distance. The motion lasts for slideDurationSec by default and uses itemDurationSec only when it is defined directly on that image item. candle flickers image opacity between the supplied value and 1, using independently randomized 150–500 ms transitions in each direction. bringToFront moves that layer into the separate layer above the content panel.",
                 }}
                 code={`<Slider.amedist
     slides={[
@@ -75,6 +75,7 @@ const X = () => {
             title: "Layered slide",
             image: [
                 { src: background, from: "right" },
+                { src: cloud, floatFrom: "left" },
                 { src: foreground, from: "center", scale: true, candle: 0.8, bringToFront: true },
             ],
         },
@@ -152,6 +153,14 @@ const X = () => {
                         type: "number",
                         defaultValue: "40",
                     },
+                    layoutControllerId: {
+                        description: {
+                            tr: "Menu pause ve header appearance entegrasyonu için hedef Layout.headerAmedist controller kimliği.",
+                            en: "Target Layout.headerAmedist controller identity for menu pause and header appearance integration.",
+                        },
+                        type: "string",
+                        defaultValue: "default",
+                    },
                 }}
             />
             <Ds.api
@@ -198,15 +207,15 @@ const X = () => {
                     },
                     headerBackgroundAlpha: {
                         description: {
-                            tr: "Slide aktifken global headerBackgroundAlpha değerine yazılan header arka plan alpha değeri.",
-                            en: "Header background alpha written to global headerBackgroundAlpha while the slide is active.",
+                            tr: "Slide aktifken bağlı headerAmedist controller'a yayınlanan header arka plan alpha değeri.",
+                            en: "Header background alpha published to the connected headerAmedist controller while the slide is active.",
                         },
                         type: "number",
                     },
                     headerColor: {
                         description: {
-                            tr: "Slide aktifken global headerColor değerine yazılan theme renk yolu veya renk değeri.",
-                            en: "Theme color path or color value written to global headerColor while the slide is active.",
+                            tr: "Slide aktifken bağlı headerAmedist controller'a yayınlanan theme renk yolu veya renk değeri.",
+                            en: "Theme color path or color value published to the connected headerAmedist controller while the slide is active.",
                         },
                         type: "string",
                     },
@@ -240,10 +249,17 @@ const X = () => {
                     },
                     candle: {
                         description: {
-                            tr: "Image item opacity'sinin bu değer ile 1 arasında rastgele 100–500 ms sürelerle yanıp sönmesini sağlar. 0–1 aralığına sınırlandırılır; verilmezse kapalıdır.",
-                            en: "Flickers an image item's opacity between this value and 1 with random 100–500 ms transitions. Clamped to 0–1; disabled when omitted.",
+                            tr: "Image item opacity'sinin bu değer ile 1 arasında rastgele 150–500 ms sürelerle yanıp sönmesini sağlar. 0–1 aralığına sınırlandırılır; verilmezse kapalıdır.",
+                            en: "Flickers an image item's opacity between this value and 1 with random 150–500 ms transitions. Clamped to 0–1; disabled when omitted.",
                         },
                         type: "number",
+                    },
+                    floatFrom: {
+                        description: {
+                            tr: "Image item'ı belirtilen sınırdan tamamen dışarıda başlatır ve karşı sınırdan tamamen çıkarır. left, right, top veya bottom kabul eder. Mesafe item'ın render edilen ölçüsüne göre hesaplandığı için aynı sürede daha geniş veya yüksek item daha hızlı hareket eder. Normal giriş animasyonunu kapatır. Süre, item üzerinde doğrudan itemDurationSec verilmedikçe slideDurationSec'tir.",
+                            en: "Starts the image item fully outside the specified edge and moves it fully beyond the opposite edge. Accepts left, right, top, or bottom. Travel distance uses the item's rendered dimensions, so a wider or taller item moves faster over the same duration. Disables the normal entrance animation. Duration is slideDurationSec unless itemDurationSec is defined directly on the item.",
+                        },
+                        type: '"left" | "right" | "top" | "bottom"',
                     },
                 }}
             />

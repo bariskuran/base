@@ -39,22 +39,18 @@ export const TypoAnimatedBase = (props = {}) => {
     });
 
     if (contentGroup?.length) {
-        return (
-            <>
-                {contentGroup.map((item, index) => (
-                    <TypoAnimatedBase
-                        key={index}
-                        variant={variant}
-                        duration={duration}
-                        loop={resolvedLoop}
-                        useTimerProps={useTimerProps}
-                        content={item}
-                        color={color}
-                        {...typoProps}
-                    />
-                ))}
-            </>
-        );
+        return contentGroup.map((item, index) => (
+            <TypoAnimatedBase
+                key={index}
+                variant={variant}
+                duration={duration}
+                loop={resolvedLoop}
+                useTimerProps={useTimerProps}
+                content={item}
+                color={color}
+                {...typoProps}
+            />
+        ));
     }
 
     if (frame?.mode === "custom") {

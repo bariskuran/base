@@ -144,6 +144,28 @@ const X = () => {
                     </Flex>
                 }
             />
+            <Ds.block
+                title="Max Width"
+                description="By default the tip grows with its content (capped at viewport). Pass maxWidth to constrain long content; numbers become rem."
+                code={`import { PopTip } from "${SYS.basePath}";
+
+                        <PopTip
+                            maxWidth={200}
+                            content="Long copy wraps once the tip hits maxWidth instead of stretching with the content."
+                        >
+                            <Template>maxWidth 200</Template>
+                        </PopTip>`}
+                example={
+                    <Flex gap={10}>
+                        <PopTip
+                            maxWidth={200}
+                            content="Long copy wraps once the tip hits maxWidth instead of stretching with the content."
+                        >
+                            <Template>maxWidth 200</Template>
+                        </PopTip>
+                    </Flex>
+                }
+            />
             <Ds.api
                 args='<PopTip content="">{React.Node}</PopTip>'
                 props={{
@@ -187,6 +209,11 @@ const X = () => {
                     },
                     padding: {
                         description: "FloatingUi padding shorthand.",
+                        type: "number | string",
+                    },
+                    maxWidth: {
+                        description:
+                            "Floating panel max-width. Number → rem; string → css (px/%/vw…). Default remains calc(100vw - 40rem).",
                         type: "number | string",
                     },
                     paddingTop: {

@@ -215,6 +215,11 @@ const X = () => {
                         type: "number | string",
                         defaultValue: "10",
                     },
+                    maxWidth: {
+                        description:
+                            "Floating panel max-width. Number → rem; string → css (px/%/vw…). Default remains calc(100vw - 40rem).",
+                        type: "number | string",
+                    },
                     paddingTop: {
                         description: "Overrides top edge of padding shorthand.",
                         type: "number | string",

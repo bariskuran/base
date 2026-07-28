@@ -27,8 +27,8 @@ const X = () => {
             <Ds.block
                 title={{ tr: "Amedist", en: "Amedist" }}
                 description={{
-                    tr: "thumb, title, subtitle ve description alanları opsiyoneldir. ctaLabel verilmezse lokalize İncele/View etiketi kullanılır; disabled kartta CTA gizlenir. to, href veya onClick verilirse tüm kart tıklanabilir olur. İçteki Button yalnızca görsel aksiyon alanıdır ve kart hover olduğunda hoverManually ile anime edilir.",
-                    en: "thumb, title, subtitle, and description are optional. ctaLabel defaults to the localized View label; the CTA is hidden for a disabled card. Supplying to, href, or onClick makes the whole card interactive. Its internal Button is only a visual action affordance and follows card hover through hoverManually.",
+                    tr: "thumb, supTitle, title, subtitle ve description alanları opsiyoneldir. supTitle title üstünde gösterilir ve title-case uygulanır (TR locale). supTitleIcon ile ikon eklenebilir. ctaLabel verilmezse lokalize İncele/View etiketi kullanılır; disabled kartta CTA gizlenir. to verilen kart React Router Link, href veya dış URL verilen kart anchor olarak render edilir; yalnızca onClick verilen kart button semantiğini kullanır. CTA yalnızca görsel bir işarettir.",
+                    en: "thumb, supTitle, title, subtitle, and description are optional. supTitle renders above title with title-case formatting. Use supTitleIcon for an optional icon. ctaLabel defaults to the localized View label; the CTA is hidden for a disabled card. A card with to renders as a React Router Link, while href or an external URL renders as an anchor; button semantics are reserved for onClick-only cards. The CTA is visual only.",
                 }}
                 code={`import { Card } from "${SYS.basePath}";
 
@@ -105,6 +105,20 @@ const X = () => {
                         description: { tr: "Kart başlığı.", en: "" },
                         type: "string | object",
                     },
+                    supTitle: {
+                        description: {
+                            tr: "Title üstündeki üst başlık. String değerler title-case uygulanır (ör. TARİHİ MİRAS → Tarihi Miras).",
+                            en: "Overline above title. String values are title-cased (e.g. HISTORICAL HERITAGE → Historical Heritage).",
+                        },
+                        type: "string | object | ReactNode",
+                    },
+                    supTitleIcon: {
+                        description: {
+                            tr: "supTitle yanında gösterilecek Icon adı.",
+                            en: "Icon name rendered beside supTitle.",
+                        },
+                        type: "string",
+                    },
                     subtitle: {
                         description: { tr: "Kart alt başlığı.", en: "" },
                         type: "string | object",
@@ -123,6 +137,13 @@ const X = () => {
                     to: {
                         description: { tr: "Internal route.", en: "" },
                         type: "string",
+                    },
+                    state: {
+                        description: {
+                            tr: "React Router Link state. Örn. { fromCategory: \"tarihi-miras\" }.",
+                            en: "React Router Link state. e.g. { fromCategory: \"tarihi-miras\" }.",
+                        },
+                        type: "object",
                     },
                     href: {
                         description: { tr: "External veya direct URL.", en: "" },

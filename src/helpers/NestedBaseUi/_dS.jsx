@@ -43,7 +43,7 @@ At this stage, this is mainly architectural documentation. Usage examples will b
             />
 
             <Ds.api
-                args="<NestedBaseUi value={{ ... }}>{children}</NestedBaseUi>"
+                args={'<NestedBaseUi value={{ ... }} content={node} />  |  <NestedBaseUi value={{ ... }}>{children}</NestedBaseUi>'}
                 returns="React context provider wrapper for internal nested-UI coordination."
                 props={{
                     value: {
@@ -51,10 +51,15 @@ At this stage, this is mainly architectural documentation. Usage examples will b
                             "Optional extra context merged with the parent NestedBaseUi layer (if any), then with internal flags such as __hasParentUiComponent. Typo sets __typoPhrasingHost under phrasing-only hosts (e.g. Typo.p) so nested Typo.code maps to a <code> root instead of <pre>.",
                         type: "object",
                     },
-                    children: {
-                        description: "Nested UI subtree to be context-aware.",
+                    content: {
+                        description:
+                            "Preferred payload when the node may be a list or Fragment. Avoids React missing-key warnings that get attributed to NestedBaseUi when the same payload is passed as children. Typo uses this for phrasing hosts.",
                         type: "ReactNode",
-                        required: true,
+                    },
+                    children: {
+                        description:
+                            "Nested UI subtree (single element preferred). Used by ScrollFlex / FloatingUi. Ignored when content is set.",
+                        type: "ReactNode",
                     },
                 }}
             />

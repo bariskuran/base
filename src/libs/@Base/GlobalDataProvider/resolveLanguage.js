@@ -1,4 +1,5 @@
 import { baseStore } from "../../baseStore";
+import { getPageRrdInfo } from "../../getPageRrdInfo";
 
 export const LANGUAGE_STORAGE_KEY = "language";
 
@@ -151,17 +152,21 @@ export const setLanguage = (code, options = {}) => {
 
     if (shouldNavigate === false) return;
 
-    const relatives = options.relatives ?? gd._languageRoute?.relatives;
+    // Prefer explicit relatives, then current page RRD info (same source as useRelative),
+    // then LanguageManager snapshot.
+    const pageInfo = getPageRrdInfo();
+    const relatives =
+        options.relatives ?? pageInfo?.relatives ?? gd._languageRoute?.relatives;
     if (relatives == null || typeof relatives !== "object") return;
 
     const targetPath = relatives[code];
     if (targetPath == null || targetPath === "") return;
 
-    const rrd = gd._reactRouterDom;
+    const rrd = baseStore.globalData.get()?._reactRouterDom ?? gd._reactRouterDom;
     if (!rrd) return;
 
     const normalizedTarget = normalizePathname(targetPath);
-    const currentPath = normalizePathname(rrd.location?.pathname ?? "");
+    const currentPath = normalizePathname(rrd.location?.pathname ?? pageInfo?.pathname ?? "");
     if (currentPath === normalizedTarget) return;
 
     if (typeof rrd.navigateWithSearch === "function") {

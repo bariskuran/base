@@ -14,12 +14,8 @@ const link = "/design-system";
 const Template = ({ row1, row2 }) => {
     return (
         <Flex.column gap={10}>
-            <Flex gap={10}>
-                {row1}
-            </Flex>
-            <Flex gap={10}>
-                {row2}
-            </Flex>
+            <Flex gap={10}>{row1}</Flex>
+            <Flex gap={10}>{row2}</Flex>
         </Flex.column>
     );
 };
@@ -118,9 +114,8 @@ const X = () => {
                     <>
                         Button can also be used with prefixed icon, suffixed icon, icon only.
                         prefix, suffix and icon objects can render Icon with an `icon` key or Flag
-                        with a `flag` key.
-                        Check out <Button.string to="/design-system/icon" label="<Icon>" /> for more
-                        details.
+                        with a `flag` key. Check out{" "}
+                        <Button.string to="/design-system/icon" label="<Icon>" /> for more details.
                     </>
                 }
                 code={`import { Button } from "${SYS.basePath}";
@@ -148,9 +143,9 @@ const X = () => {
                 title="Flag Usage"
                 description={
                     <>
-                        Use `flag` instead of `icon` inside prefix, suffix, or centered icon objects.
-                        Other visual props such as width, flat, color, bgColor, hoverColor, and
-                        activeColor follow the same object pattern.
+                        Use `flag` instead of `icon` inside prefix, suffix, or centered icon
+                        objects. Other visual props such as width, flat, color, bgColor, hoverColor,
+                        and activeColor follow the same object pattern.
                     </>
                 }
                 code={`import { Button } from "${SYS.basePath}";
@@ -419,7 +414,7 @@ const X = () => {
             />
             <Ds.block
                 title="Font Family"
-                description='Use fontFamily to select a named font from PROJECT_SETTINGS.styledSettings.fonts. If omitted, Button inherits the global primaryFont.'
+                description="Use fontFamily to select a named font from PROJECT_SETTINGS.styledSettings.fonts. If omitted, Button inherits the global primaryFont."
                 code={`import { Button } from "${SYS.basePath}";
 
                         <Button label="Primary font" />
@@ -541,6 +536,10 @@ const X = () => {
                         description: "Default button label.",
                         type: "string | ReactNode",
                     },
+                    ariaLabel: {
+                        description: "Accessible label for icon-only buttons.",
+                        type: "string",
+                    },
                     hoverLabel: {
                         description: "Label shown on hover.",
                         type: "string | ReactNode",
@@ -554,15 +553,18 @@ const X = () => {
                         type: "string | ReactNode",
                     },
                     icon: {
-                        description: "Center icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
+                        description:
+                            "Center icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
                         type: "object",
                     },
                     prefix: {
-                        description: "Prefix icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
+                        description:
+                            "Prefix icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
                         type: "object",
                     },
                     suffix: {
-                        description: "Suffix icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
+                        description:
+                            "Suffix icon / flag object. Use `{ icon }` for Icon or `{ flag }` for Flag.",
                         type: "object",
                     },
                     onClick: {

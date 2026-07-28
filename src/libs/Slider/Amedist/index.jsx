@@ -43,12 +43,36 @@ const SlideImageLayer = ({
             $snap={snapLayout}
             $paused={!playbackActive}
             $layerIndex={layerIndex}
+            $floatFrom={img.floatFrom}
         >
-            <S.slideBgImage
-                $image={img.src}
-                $candleOpacity={candle.opacity}
-                $candleTransitionMs={candle.transitionMs}
-            />
+            {img.floatFrom ? (
+                <S.slideBgFloatTrack
+                    $floatFrom={img.floatFrom}
+                    $floatDurationMs={layerTiming.floatDurationMs}
+                    $motion={motion}
+                    $paused={!playbackActive}
+                >
+                    <S.slideBgFloatImage
+                        src={img.src}
+                        alt=""
+                        aria-hidden="true"
+                        draggable="false"
+                        data-slider-float={img.floatFrom}
+                        $floatFrom={img.floatFrom}
+                        $floatDurationMs={layerTiming.floatDurationMs}
+                        $motion={motion}
+                        $paused={!playbackActive}
+                        $candleOpacity={candle.opacity}
+                        $candleTransitionMs={candle.transitionMs}
+                    />
+                </S.slideBgFloatTrack>
+            ) : (
+                <S.slideBgImage
+                    $image={img.src}
+                    $candleOpacity={candle.opacity}
+                    $candleTransitionMs={candle.transitionMs}
+                />
+            )}
         </S.slideBgLayer>
     );
 };

@@ -23,7 +23,7 @@ export const S = {
         width: 100%;
         height: ${({ $heightAuto }) => ($heightAuto ? "auto" : "100%")};
         object-fit: ${({ $objectFit }) => $objectFit || "cover"};
-        opacity: ${({ $loaded }) => ($loaded ? 1 : 0)};
+        opacity: ${({ $loaded, $showingPreview }) => ($loaded || $showingPreview ? 1 : 0)};
         transition: opacity 220ms ease;
     `,
 };

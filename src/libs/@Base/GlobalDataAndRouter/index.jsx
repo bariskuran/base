@@ -51,15 +51,16 @@ export const CoreRRDLayout = ({ routes, preparedRoutes, projectSettings }) => {
     return (
         <>
             <GlobalDataProvider
+                key="global-data-provider"
                 projectSettings={projectSettings}
                 routes={routes}
                 preparedRoutes={preparedRoutes}
             />
-            <IdleManager />
-            <LanguageManager />
-            <PageLoadingManager />
-            <NotifierListener />
-            <Outlet />
+            <IdleManager key="idle-manager" />
+            <LanguageManager key="language-manager" />
+            <PageLoadingManager key="page-loading-manager" />
+            <NotifierListener key="notifier-listener" />
+            <Outlet key="outlet" />
         </>
     );
 };

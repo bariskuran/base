@@ -13,6 +13,8 @@ export const PopUpBodyWrapper = ({
     cancelButtonProps,
     confirmButtonProps,
     closeButtonProps,
+    bodyProps,
+    hideCloseButton,
 }) => {
     const { flexProps, scrollBarProps, ...restScrollFlexProps } = scrollFlexProps || {};
 
@@ -32,11 +34,13 @@ export const PopUpBodyWrapper = ({
 
     return (
         <>
-            <Flex justify="end" flexShrink={0} padding="10rem 10rem 0">
-                <Button.closeIcon {...closeButtonProps} />
-            </Flex>
+            {!hideCloseButton && (
+                <Flex justify="end" flexShrink={0} padding="10rem 10rem 0">
+                    <Button.closeIcon {...closeButtonProps} />
+                </Flex>
+            )}
             {useScrollFlex ? (
-                <S.body $useScrollFlex>
+                <S.body $useScrollFlex {...bodyProps}>
                     <ScrollFlex
                         variant="plain"
                         autoWidth={false}
@@ -55,7 +59,7 @@ export const PopUpBodyWrapper = ({
                     </ScrollFlex>
                 </S.body>
             ) : (
-                <S.body>{scrollContent}</S.body>
+                <S.body {...bodyProps}>{scrollContent}</S.body>
             )}
         </>
     );

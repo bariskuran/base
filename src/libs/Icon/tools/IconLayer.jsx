@@ -213,9 +213,9 @@ export const IconLayer = ({
     };
 
     return (
-        <>
+        <span style={{ display: "contents" }}>
             {renderLayer(swap.previousMeta, swap.showPrevious, "previous", true)}
             {renderLayer(meta, visible && swap.showCurrent, "current")}
-        </>
+        </span>
     );
 };

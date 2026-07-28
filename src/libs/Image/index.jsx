@@ -20,6 +20,7 @@ export const Image = ({
     height,
     objectFit,
     onLoad,
+    onError,
     style,
     ...rest
 }) => {
@@ -28,7 +29,9 @@ export const Image = ({
         imgSrc,
         selectedAlt,
         handleLoad,
+        handleError,
         isLoaded,
+        isShowingPreview,
         shouldShowImg,
         shouldShowPlaceholder,
         aspectRatio,
@@ -49,6 +52,7 @@ export const Image = ({
         width,
         height,
         onLoad,
+        onError,
     });
 
     return (
@@ -74,7 +78,9 @@ export const Image = ({
                         alt={selectedAlt}
                         fetchPriority={fetchPriority}
                         onLoad={handleLoad}
+                        onError={handleError}
                         $loaded={isLoaded}
+                        $showingPreview={isShowingPreview}
                         $heightAuto={(height ?? h ?? "auto") === "auto"}
                         $objectFit={objectFit || resolvedObjectFit}
                     />

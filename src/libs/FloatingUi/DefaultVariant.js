@@ -9,15 +9,18 @@ export const DefaultVariant = styled.div`
         $positionY,
         $alignX,
         $alignY,
+        $arrowOffset,
         $blockVisibility,
         $disableArrow,
         $colors,
         $status,
         $delayMs,
         $floatingPadding,
+        $maxWidth,
     }) => {
         const translateY = $alignY === "bottom" ? "-8rem" : "8rem";
         const isOpen = $status === "opened";
+        const hasArrowOffset = $arrowOffset != null && Number.isFinite($arrowOffset);
 
         /* Return */
         return css`
@@ -25,7 +28,7 @@ export const DefaultVariant = styled.div`
             display: block;
             box-sizing: border-box;
             width: max-content;
-            max-width: calc(100vw - 40rem);
+            max-width: ${$maxWidth != null ? $maxWidth : "calc(100vw - 40rem)"};
 
             @starting-style {
                 opacity: 0;
@@ -82,31 +85,38 @@ export const DefaultVariant = styled.div`
                 clip-path: polygon(50% 100%, 0 0, 100% 0);
                 filter: drop-shadow(1px 1px 4rem ${theme.colorAlpha(theme.foreground, 0.35)});
 
-                ${$alignX === "left" &&
-                css`
-                    left: 8rem;
-                `}
+                ${hasArrowOffset
+                    ? css`
+                          left: ${$arrowOffset}px;
+                          transform: translateX(-50%);
+                      `
+                    : css`
+                          ${$alignX === "left" &&
+                          css`
+                              left: 8rem;
+                          `}
 
-                ${$alignX === "right" &&
-                css`
-                    right: 8rem;
-                `}
+                          ${$alignX === "right" &&
+                          css`
+                              right: 8rem;
+                          `}
 
-        ${$alignX === "center" &&
-                css`
-                    left: 50%;
-                    transform: translateX(-50%);
-                `}
+                          ${$alignX === "center" &&
+                          css`
+                              left: 50%;
+                              transform: translateX(-50%);
+                          `}
+                      `}
 
-        ${$alignY === "top" &&
+                ${$alignY === "top" &&
                 css`
                     bottom: -9rem;
                 `}
 
-        ${$alignY === "bottom" &&
+                ${$alignY === "bottom" &&
                 css`
                     top: -9rem;
-                    transform: ${$alignX === "center"
+                    transform: ${hasArrowOffset || $alignX === "center"
                         ? "translateX(-50%) rotate(180deg)"
                         : "rotate(180deg)"};
                 `}

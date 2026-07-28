@@ -42,6 +42,8 @@ const useVars = (p) => {
         zIndex = 100000,
         useScrollFlex = DEFAULT_USE_SCROLL_FLEX,
         scrollFlexProps,
+        bodyProps,
+        hideCloseButton = false,
         ...panelRest
     } = p || {};
 
@@ -66,9 +68,7 @@ const useVars = (p) => {
 
     const hasCancelDismissActions = useMemo(() => {
         if (!hasCancelButton) return false;
-        return (
-            Object.keys(pickButtonActionProps(cancelButtonPropsProp)).length > 0
-        );
+        return Object.keys(pickButtonActionProps(cancelButtonPropsProp)).length > 0;
     }, [cancelButtonPropsProp, hasCancelButton]);
 
     const requestClose = useCallback(
@@ -76,9 +76,7 @@ const useVars = (p) => {
             if (!isOpen) return;
 
             const shouldRunCancelDismiss =
-                hasCancelDismissActions &&
-                reason !== "cancel" &&
-                reason !== "confirm";
+                hasCancelDismissActions && reason !== "cancel" && reason !== "confirm";
 
             if (shouldRunCancelDismiss) {
                 invokeButtonActionProps(cancelDismissActionsRef.current, event, {
@@ -95,15 +93,7 @@ const useVars = (p) => {
             onOpenChange?.(false);
             onClose?.({ reason });
         },
-        [
-            hasCancelDismissActions,
-            isControlled,
-            isOpen,
-            navigate,
-            onClose,
-            onOpenChange,
-            set,
-        ],
+        [hasCancelDismissActions, isControlled, isOpen, navigate, onClose, onOpenChange, set],
     );
 
     useEffect(() => {
@@ -132,29 +122,23 @@ const useVars = (p) => {
 
     const closeButtonProps = useMemo(
         () =>
-            mergeActionButtonProps(
-                DEFAULT_CLOSE_BUTTON_PROPS,
-                closeButtonPropsProp,
-                () => requestClose("close"),
+            mergeActionButtonProps(DEFAULT_CLOSE_BUTTON_PROPS, closeButtonPropsProp, () =>
+                requestClose("close"),
             ),
         [closeButtonPropsProp, requestClose],
     );
 
     const cancelButtonProps = useMemo(() => {
         if (!hasCancelButton) return null;
-        return mergeActionButtonProps(
-            DEFAULT_CANCEL_BUTTON_PROPS,
-            cancelButtonPropsProp,
-            () => requestClose("cancel"),
+        return mergeActionButtonProps(DEFAULT_CANCEL_BUTTON_PROPS, cancelButtonPropsProp, () =>
+            requestClose("cancel"),
         );
     }, [cancelButtonPropsProp, hasCancelButton, requestClose]);
 
     const confirmButtonProps = useMemo(() => {
         if (!hasConfirmButton) return null;
-        return mergeActionButtonProps(
-            DEFAULT_CONFIRM_BUTTON_PROPS,
-            confirmButtonPropsProp,
-            () => requestClose("confirm"),
+        return mergeActionButtonProps(DEFAULT_CONFIRM_BUTTON_PROPS, confirmButtonPropsProp, () =>
+            requestClose("confirm"),
         );
     }, [confirmButtonPropsProp, hasConfirmButton, requestClose]);
 
@@ -175,6 +159,8 @@ const useVars = (p) => {
             zIndex,
             useScrollFlex,
             scrollFlexProps,
+            bodyProps,
+            hideCloseButton,
             panelRest,
         },
         {

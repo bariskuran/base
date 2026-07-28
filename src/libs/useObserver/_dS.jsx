@@ -161,7 +161,7 @@ const X = () => {
             />
             <Ds.api
                 disableLastBlock
-                args="const { ref, inViewport } = useObserver({ disable, onEnter, onExit, customViewport, customViewportMargin, threshold });"
+                args="const { ref, inViewport, phase, direction, intersectionRatio } = useObserver({ disable, onEnter, onExit, customViewport, customViewportMargin, threshold });"
                 props={{
                     disable: {
                         description: "Disables observer setup.",
@@ -169,7 +169,8 @@ const X = () => {
                         defaultValue: "false",
                     },
                     onEnter: {
-                        description: "Called when the element intersects the viewport (per threshold).",
+                        description:
+                            "Called when the element intersects the viewport (per threshold).",
                         type: "fn",
                     },
                     onExit: {
@@ -203,6 +204,19 @@ const X = () => {
                         description:
                             "True when the element intersects the viewport (browser or customViewport) at the given threshold.",
                         type: "boolean",
+                    },
+                    phase: {
+                        description:
+                            'Current movement phase: "outside", "entering", "inside", or "exiting".',
+                        type: "string",
+                    },
+                    direction: {
+                        description: 'Nearest movement edge: "top", "right", "bottom", or "left".',
+                        type: "string",
+                    },
+                    intersectionRatio: {
+                        description: "Latest visible intersection ratio between 0 and 1.",
+                        type: "number",
                     },
                 }}
             />

@@ -25,7 +25,7 @@ export const Group = ({
         });
     });
 
-    if (flat) return <>{nodes}</>;
+    if (flat) return nodes;
 
     return (
         <Flex {...flexProps}>

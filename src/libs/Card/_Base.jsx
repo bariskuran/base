@@ -33,10 +33,12 @@ export const Base = (props = {}) => {
         thumbAlt = "",
         title,
         subtitle,
+        supTitle,
         description,
         ctaLabel,
         to,
         href,
+        state,
         onClick,
         target,
         disabled,
@@ -44,13 +46,24 @@ export const Base = (props = {}) => {
     } = props;
     const VariantComponent = Variant?.component || Variant?.variant || Variant;
 
-    const { texts, isHovered, isClickable, handleClick, handleKeyDown, hoverProps } = useVars({
+    const {
+        texts,
+        isHovered,
+        isClickable,
+        isSemanticLink,
+        linkProps,
+        handleClick,
+        handleKeyDown,
+        hoverProps,
+    } = useVars({
         title,
         subtitle,
+        supTitle,
         description,
         ctaLabel,
         to,
         href,
+        state,
         onClick,
         target,
         disabled,
@@ -62,12 +75,13 @@ export const Base = (props = {}) => {
         <VariantComponent
             {...rest}
             {...hoverProps}
+            {...linkProps}
             ref={forwardedRef}
-            role={isClickable ? "button" : undefined}
-            tabIndex={isClickable ? 0 : undefined}
+            role={isClickable && !isSemanticLink ? "button" : undefined}
+            tabIndex={isClickable && !isSemanticLink ? 0 : undefined}
             aria-disabled={disabled || undefined}
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
+            onClick={onClick ? handleClick : undefined}
+            onKeyDown={isSemanticLink ? undefined : handleKeyDown}
             $isClickable={isClickable}
             $isHovered={isHovered}
             texts={texts}

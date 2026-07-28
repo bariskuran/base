@@ -11,6 +11,7 @@ const Wrapper = styled.article`
         box-sizing: border-box;
         background: ${theme.backgrounds.shade10};
         color: ${theme.foreground};
+        text-decoration: none;
         cursor: ${$isClickable ? "pointer" : "default"};
         outline: 0;
         overflow: hidden;
@@ -46,6 +47,18 @@ const Body = styled.div`
     flex: 1;
     flex-direction: column;
     gap: 10rem;
+`;
+
+const SupTitle = styled.div`
+    margin: 0;
+    padding: 0 15rem;
+    display: flex;
+    align-items: center;
+    gap: 6rem;
+    font-size: 13rem;
+    line-height: 1.25;
+    font-weight: 600;
+    text-transform: capitalize;
 `;
 
 const Title = styled.h3`
@@ -85,6 +98,18 @@ const Footer = styled.div`
     transition: transform 220ms ease;
 `;
 
+const Cta = styled.span`
+    width: 32rem;
+    height: 32rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: ${({ theme }) => theme.background};
+    background: ${({ theme, $isHovered }) => ($isHovered ? theme.primarys.shade20 : theme.primary)};
+    pointer-events: none;
+    transition: background 0.2s ease;
+`;
+
 const line = styled.div`
     border: 1px solid ${({ theme }) => theme.primary};
     pointer-events: none;
@@ -100,10 +125,12 @@ export const S = {
     Wrapper,
     Thumb,
     Body,
+    SupTitle,
     Title,
     Subtitle,
     Description,
     Footer,
+    Cta,
     line,
 };
 

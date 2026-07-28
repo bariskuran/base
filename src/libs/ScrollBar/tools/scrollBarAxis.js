@@ -1,11 +1,11 @@
 export const toBodyEdgeMargin = (value) => (value < 0 ? Math.abs(value) : value);
 
-export const getBarPositionForAxis = (axis, { effectiveOpposite }) => {
+export const getBarPositionForAxis = (axis, { effectiveOpposite } = {}) => {
     if (axis === "y") return effectiveOpposite ? "horizontal" : "vertical";
     return effectiveOpposite ? "vertical" : "horizontal";
 };
 
-export const getClientValueForAxis = (axis, e, { effectiveOpposite }) => {
+export const getClientValueForAxis = (axis, e, { effectiveOpposite } = {}) => {
     const barPosition = getBarPositionForAxis(axis, { effectiveOpposite });
     return barPosition === "vertical" ? e.clientY : e.clientX;
 };
