@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useLayoutEffect, useMemo, useCallback } from "react";
 import { useNavigate, useLocation, useParams, useSearchParams, useMatches } from "react-router-dom";
 import { baseStore } from "../../baseStore";
 import { getClientData } from "../../getClientData";
@@ -64,7 +64,9 @@ export const GlobalDataProvider = ({ projectSettings, routes, preparedRoutes = [
         });
     }, [styledSettings.breakpoints, styledSettings.maxAspRatio, styledSettings.minAspRatio]);
 
-    useEffect(() => {
+    // Icons, theme-aware props and route data are consumed by the initial route
+    // render. Populate the global store before the browser paints.
+    useLayoutEffect(() => {
         const clientData = getCD();
         const currGlobalData = baseStore.globalData.get();
 

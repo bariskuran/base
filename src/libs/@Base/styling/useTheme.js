@@ -67,6 +67,19 @@ export const useTheme = ({ theme } = {}) => {
         return defaultKey;
     }, [preparedThemes]);
 
+    // `useLocal` starts empty and is synchronised in an effect below. Returning
+    // the prepared default synchronously prevents the first production paint from
+    // receiving an empty styled-components theme.
+    const resolvedTheme = useMemo(() => {
+        if (Object.keys(currentColors || {}).length > 0) return currentColors;
+
+        const selectedTheme = preparedThemes?.[selectedKey];
+        if (!selectedTheme) return {};
+
+        const { _props, ...themePacked } = selectedTheme;
+        return themePacked;
+    }, [currentColors, preparedThemes, selectedKey]);
+
     useEffect(() => {
         const t = preparedThemes?.[selectedKey];
         if (!t) return;
@@ -111,14 +124,14 @@ export const useTheme = ({ theme } = {}) => {
 
     useEffect(() => {
         baseStore.globalData.set?.({
-            theme: currentColors,
+            theme: resolvedTheme,
             currentThemeLabel: currentThemeKey,
             currentThemeLabelObj,
             setTheme,
             themes: preparedThemes,
-            isThemeReady: Object.keys(currentColors).length > 0 ? true : false,
+            isThemeReady: Object.keys(resolvedTheme).length > 0,
         });
-    }, [currentColors, currentThemeKey, currentThemeLabelObj, setTheme, preparedThemes]);
+    }, [resolvedTheme, currentThemeKey, currentThemeLabelObj, setTheme, preparedThemes]);
 
-    return { theme: currentColors };
+    return { theme: resolvedTheme };
 };

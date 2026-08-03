@@ -226,15 +226,20 @@ const S = {
         ${imageEnterAnimation};
         ${pauseWhenHidden};
     `,
-    slideBgImage: styled.div`
+    slideBgImage: styled.div.attrs(({ $image, $candleOpacity, $candleTransitionMs }) => ({
+        style: {
+            backgroundImage: `url(${$image})`,
+            opacity: $candleOpacity,
+            transitionDuration: `${$candleTransitionMs}ms`,
+        },
+    }))`
         position: absolute;
         inset: 0;
-        background-image: url(${({ $image }) => $image});
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        opacity: ${({ $candleOpacity }) => $candleOpacity};
-        transition: opacity ${({ $candleTransitionMs }) => $candleTransitionMs}ms linear;
+        transition-property: opacity;
+        transition-timing-function: linear;
         will-change: opacity;
     `,
     slideBgFloatTrack: styled.div`

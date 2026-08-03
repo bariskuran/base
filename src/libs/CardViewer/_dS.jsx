@@ -40,13 +40,14 @@ const X = () => {
             <Ds.block
                 title={{ tr: "Grid", en: "" }}
                 description={{
-                    tr: "items içindeki her obje Card prop'u gibi değerlendirilir. Grid varyantı aynı row içindeki kartları aynı yüksekliğe stretch eder. Kart genişliği minColumnWidth ile sabit kalır; az item olduğunda alignX ile hizalanır (default: center).",
+                    tr: "items içindeki her obje Card prop'u gibi değerlendirilir. Grid varyantı aynı row içindeki kartları aynı yüksekliğe stretch eder. Kart genişliği minColumnWidth ile sabit kalır; autoWidth açıldığında aynı satırdaki iki veya daha fazla kart kalan alanı paylaşır.",
                     en: "",
                 }}
                 code={`import { CardViewer } from "${SYS.basePath}";
 
 <CardViewer.grid items={items} />
-<CardViewer.grid items={items} alignX="start" />`}
+<CardViewer.grid items={items} alignX="start" />
+<CardViewer.grid items={items} autoWidth />`}
                 example={<CardViewer.grid items={items} />}
             />
             <Ds.block
@@ -128,6 +129,14 @@ const X = () => {
                         },
                         type: '"center" | "start" | "end" | "left" | "right"',
                         defaultValue: '"center"',
+                    },
+                    autoWidth: {
+                        description: {
+                            tr: "true olduğunda tek satırda iki veya daha fazla kart varsa, gap korunarak kartlar kalan genişliği paylaşır. Tek kart minColumnWidth değerinde kalır.",
+                            en: "When true and a row has two or more cards, cards share the remaining width while preserving the gap. A single card keeps minColumnWidth.",
+                        },
+                        type: "boolean",
+                        defaultValue: "false",
                     },
                     emptyText: {
                         description: {

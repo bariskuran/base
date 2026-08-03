@@ -20,6 +20,7 @@ const BaseCardViewer = ({
     gap = 20,
     minColumnWidth = 280,
     alignX = "center",
+    autoWidth = false,
     page = 1,
     pageSize,
     offset = 0,
@@ -58,7 +59,12 @@ const BaseCardViewer = ({
                         {cards}
                     </S.Masonry>
                 ) : (
-                    <S.Grid $gap={gap} $minColumnWidth={minColumnWidth} $alignX={alignX}>
+                    <S.Grid
+                        $gap={gap}
+                        $minColumnWidth={minColumnWidth}
+                        $alignX={alignX}
+                        $autoWidth={autoWidth && visibleItems.length > 1}
+                    >
                         {cards}
                     </S.Grid>
                 )}

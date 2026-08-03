@@ -2,7 +2,7 @@ import { SuspenseWrapper } from "./Suspense";
 import { StyledComponentsWrapper } from "./styling";
 import { GlobalDataAndRouter } from "./GlobalDataAndRouter";
 import { useEffects } from "./useEffects";
-import { useEffect, useMemo } from "react";
+import { useInsertionEffect, useMemo } from "react";
 import { injectInitialRemAndBodyFontStyle } from "./styling/injectInitialRemAndBodyFontStyle";
 import { buildAppRoutes } from "./prepareRoutes";
 
@@ -19,7 +19,9 @@ const Base = (props) => {
         return buildAppRoutes(projectSettings?.rrdSettings ?? {});
     }, [routesProp, projectSettings?.rrdSettings]);
 
-    useEffect(() => {
+    // The rem scale controls every visual primitive. Inject it before the first
+    // paint so production cannot briefly fall back to the browser's 16px root.
+    useInsertionEffect(() => {
         injectInitialRemAndBodyFontStyle(projectSettings?.styledSettings?.remSettings);
     }, []);
 

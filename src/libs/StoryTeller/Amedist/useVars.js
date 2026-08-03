@@ -45,10 +45,17 @@ export const useVars = ({ stories = [] } = {}) => {
     const direction = slideNumber < previousSlideNumberRef.current ? "backward" : "forward";
     const canGoPrevious = slideNumber > 1;
     const canGoNext = slideNumber > 0 && slideNumber < slideCount;
+    const previousIndex = canGoPrevious ? activeIndex - 1 : -1;
+    const previousStory = previousIndex >= 0 ? storyList[previousIndex] : null;
     const nextIndex = canGoNext ? activeIndex + 1 : -1;
     const nextStory = nextIndex >= 0 ? storyList[nextIndex] : null;
-    const shouldPreloadNext =
-        Boolean(nextStory) && (!activeStory?.image || loadedSlideNumber === slideNumber);
+    const shouldPreloadAdjacent = !activeStory?.image || loadedSlideNumber === slideNumber;
+    const preloadStories = shouldPreloadAdjacent
+        ? [
+              { story: previousStory, index: previousIndex },
+              { story: nextStory, index: nextIndex },
+          ].filter(({ story }) => Boolean(story))
+        : [];
     const canFullscreen =
         typeof document !== "undefined" &&
         typeof document.documentElement?.requestFullscreen === "function";
@@ -175,14 +182,12 @@ export const useVars = ({ stories = [] } = {}) => {
         rootRef,
         activeStory,
         activeIndex,
-        nextStory,
-        nextIndex,
+        preloadStories,
         slideNumber,
         slideCount,
         direction,
         canGoPrevious,
         canGoNext,
-        shouldPreloadNext,
         canFullscreen,
         isFullscreen,
         close,

@@ -17,14 +17,17 @@ const Wrapper = styled.div`
 `;
 
 const Grid = styled.div`
-    ${({ $gap, $minColumnWidth, $alignX }) => {
+    ${({ $gap, $minColumnWidth, $alignX, $autoWidth }) => {
         const columnWidth = toCssSize($minColumnWidth, "280rem");
         const gap = toCssSize($gap, "20rem");
         const justifyContent = normalizeAlignX($alignX);
 
         return css`
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, ${columnWidth}), ${columnWidth}));
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(min(100%, ${columnWidth}), ${$autoWidth ? "1fr" : columnWidth})
+            );
             gap: ${gap};
             width: 100%;
             align-items: stretch;

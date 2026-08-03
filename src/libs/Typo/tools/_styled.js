@@ -202,7 +202,8 @@ const sharedStyles = ({
             &::before,
             &::after {
                 font-family: "Times New Roman", serif;
-                font-size: 500%;
+                /* Keep decorative marks independent from Typo.quote's content size. */
+                font-size: 77rem;
                 line-height: 0;
                 font-weight: 100;
                 opacity: 0.3;
@@ -253,8 +254,20 @@ const wrapperWidth = ({
 
 const S = {
     wrapper: styled.div`
-        ${({ $overlayCopy, $stackedOverlayCopy, $maxWidth, $width, $fitContent, $disableMaxWidthLock, $as }) => css`
-            display: ${$overlayCopy ? ($stackedOverlayCopy ? "inline-grid" : "inline-flex") : "inline-block"};
+        ${({
+            $overlayCopy,
+            $stackedOverlayCopy,
+            $maxWidth,
+            $width,
+            $fitContent,
+            $disableMaxWidthLock,
+            $as,
+        }) => css`
+            display: ${$overlayCopy
+                ? $stackedOverlayCopy
+                    ? "inline-grid"
+                    : "inline-flex"
+                : "inline-block"};
             position: relative;
 
             ${$stackedOverlayCopy &&

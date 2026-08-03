@@ -9,14 +9,12 @@ const Amedist = (props = {}) => {
         rootRef,
         activeStory,
         activeIndex,
-        nextStory,
-        nextIndex,
+        preloadStories,
         slideNumber,
         slideCount,
         direction,
         canGoPrevious,
         canGoNext,
-        shouldPreloadNext,
         canFullscreen,
         isFullscreen,
         close,
@@ -28,7 +26,6 @@ const Amedist = (props = {}) => {
 
     if (!activeStory) return null;
     const ActiveSlideDesign = slideDesigns[activeStory.slideDesign];
-    const NextSlideDesign = nextStory ? slideDesigns[nextStory.slideDesign] : null;
 
     return (
         <S.container ref={rootRef} aria-roledescription="storyteller">
@@ -43,20 +40,26 @@ const Amedist = (props = {}) => {
                     />
                 )}
             </S.slideLayer>
-            {shouldPreloadNext && NextSlideDesign && (
-                <S.preloadLayer
-                    aria-hidden="true"
-                    inert={true}
-                    data-storyteller-preload={nextIndex + 1}
-                >
-                    <NextSlideDesign
-                        story={nextStory}
-                        index={nextIndex}
-                        slideNumber={nextIndex + 1}
-                        slideCount={slideCount}
-                    />
-                </S.preloadLayer>
-            )}
+            {preloadStories.map(({ story, index }) => {
+                const PreloadSlideDesign = slideDesigns[story.slideDesign];
+                if (!PreloadSlideDesign) return null;
+
+                return (
+                    <S.preloadLayer
+                        key={index}
+                        aria-hidden="true"
+                        inert={true}
+                        data-storyteller-preload={index + 1}
+                    >
+                        <PreloadSlideDesign
+                            story={story}
+                            index={index}
+                            slideNumber={index + 1}
+                            slideCount={slideCount}
+                        />
+                    </S.preloadLayer>
+                );
+            })}
             <S.controls aria-label="Story controls">
                 {canGoPrevious && (
                     <S.previous data-storyteller-control="previous">
