@@ -39,8 +39,8 @@ const clampBoundsToViewBox = (bounds, viewW, viewH) => {
     return { minX, minY, width, height };
 };
 
-export const createIconMeta = (iconInput, allIcons) => {
-    const file = resolveIconInput(iconInput, allIcons);
+export const createIconMeta = (file) => {
+    if (!isValidIconArray(file)) return null;
     if (!file) return null;
 
     const [viewBox, Content] = file;

@@ -1,9 +1,10 @@
 import Ds from "../DesignSystem";
-import { icons } from "./icons";
+import { loadAllBuiltInIcons } from "./icons";
 import { Icon } from "./";
 import styled from "styled-components";
 import { copyToClipboard } from "../copyToClipboard";
 import { baseStore } from "../baseStore";
+import { useEffect, useState } from "react";
 import { sortBy } from "../sortBy";
 import { Button } from "../Button";
 
@@ -91,6 +92,19 @@ const S = {
 export const Library = () => {
     const [iconsLibrary] = baseStore.useGlobal((s) => [s._iconsLibrary]);
     const { searchText, set } = baseStore.useLocal({ searchText: "" });
+    const [builtInIcons, setBuiltInIcons] = useState({});
+
+    useEffect(() => {
+        let cancelled = false;
+
+        loadAllBuiltInIcons().then((definitions) => {
+            if (!cancelled) setBuiltInIcons(definitions);
+        });
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     /* Return */
     return (
@@ -101,7 +115,7 @@ export const Library = () => {
                 value={searchText}
                 onChange={(e) => set({ searchText: e.target.value })}
             />
-            {Object.entries({ ...icons, ...iconsLibrary })
+            {Object.entries({ ...builtInIcons, ...iconsLibrary })
                 .filter(([iconName, iconArr]) => {
                     if (!searchText) return true;
                     const lowerSearch = searchText.toLowerCase();

@@ -1,7 +1,13 @@
-import { useMemo } from "react";
-import { icons } from "./icons";
+import { useEffect, useMemo, useState } from "react";
+import { getBuiltInIcon, loadBuiltInIcon } from "./icons";
+import { getBuiltInFlag, loadBuiltInFlag } from "../Flag/flags";
 import { baseStore } from "../baseStore";
-import { createIconMeta, normalizeIconsLibrary, resolveThemeColor } from "./tools/iconMeta";
+import {
+    createIconMeta,
+    normalizeIconsLibrary,
+    resolveIconInput,
+    resolveThemeColor,
+} from "./tools/iconMeta";
 import { IconLayer } from "./tools/IconLayer";
 import { PopTipWrapper } from "./tools/PopTipWrapper";
 import { Root } from "./tools/styled";
@@ -47,13 +53,13 @@ export const Icon = ({
     isFlag = false,
 }) => {
     const [iconsLibraryRaw, theme] = baseStore.useGlobal((s) => [s._iconsLibrary, s.theme]);
+    const [, setDefinitionVersion] = useState(0);
 
     const { isSelfHover, set } = baseStore.useLocal({
         isSelfHover: false,
     });
 
     const iconsLibrary = useMemo(() => normalizeIconsLibrary(iconsLibraryRaw), [iconsLibraryRaw]);
-    const allIcons = useMemo(() => ({ ...icons, ...iconsLibrary }), [iconsLibrary]);
 
     const pendingState = !!pendingManually;
     const clickEffectControlled = clickEffectManually !== undefined;
@@ -65,15 +71,46 @@ export const Icon = ({
     const activeGlyph = activeIconProp || null;
     const pendingGlyph = pendingIconProp || null;
 
-    const baseMeta = useMemo(() => createIconMeta(icon, allIcons), [icon, allIcons]);
-    const hoverMeta = useMemo(() => createIconMeta(hoverGlyph, allIcons), [hoverGlyph, allIcons]);
+    const glyphsToLoad = useMemo(
+        () => [icon, hoverGlyph, activeGlyph, pendingGlyph].filter((glyph) => typeof glyph === "string"),
+        [icon, hoverGlyph, activeGlyph, pendingGlyph],
+    );
+    const glyphsKey = glyphsToLoad.join("|");
+
+    useEffect(() => {
+        const load = isFlag ? loadBuiltInFlag : loadBuiltInIcon;
+        let cancelled = false;
+
+        Promise.all(glyphsToLoad.map((glyph) => load(glyph))).then(() => {
+            if (!cancelled) setDefinitionVersion((version) => version + 1);
+        });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [glyphsKey, glyphsToLoad, isFlag]);
+
+    const resolveDefinition = (glyph) => {
+        const customDefinition = isFlag ? null : resolveIconInput(glyph, iconsLibrary);
+        if (customDefinition) return customDefinition;
+        if (typeof glyph !== "string") return resolveIconInput(glyph, {});
+        return isFlag ? getBuiltInFlag(glyph) : getBuiltInIcon(glyph);
+    };
+
+    const baseDefinition = resolveDefinition(icon);
+    const hoverDefinition = resolveDefinition(hoverGlyph);
+    const activeDefinition = resolveDefinition(activeGlyph);
+    const pendingDefinition = resolveDefinition(pendingGlyph);
+
+    const baseMeta = useMemo(() => createIconMeta(baseDefinition), [baseDefinition]);
+    const hoverMeta = useMemo(() => createIconMeta(hoverDefinition), [hoverDefinition]);
     const activeMeta = useMemo(
-        () => createIconMeta(activeGlyph, allIcons),
-        [activeGlyph, allIcons],
+        () => createIconMeta(activeDefinition),
+        [activeDefinition],
     );
     const pendingMeta = useMemo(
-        () => createIconMeta(pendingGlyph, allIcons),
-        [pendingGlyph, allIcons],
+        () => createIconMeta(pendingDefinition),
+        [pendingDefinition],
     );
 
     const finalColorRaw = pendingState

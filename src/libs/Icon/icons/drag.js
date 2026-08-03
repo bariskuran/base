@@ -1,0 +1,1 @@
+export default ["12 20","M0,0h4v4H0V0ZM8,0h4v4h-4V0ZM0,8h4v4H0v-4ZM8,8h4v4h-4v-4ZM0,16h4v4H0v-4ZM8,16h4v4h-4v-4Z"];

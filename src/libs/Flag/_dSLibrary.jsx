@@ -1,11 +1,12 @@
 import Ds from "../DesignSystem";
-import { flags } from "./flags";
+import { flagNames, loadAllBuiltInFlags } from "./flags";
 import { Flag } from ".";
 import styled from "styled-components";
 import { copyToClipboard } from "../copyToClipboard";
 import { sortBy } from "../sortBy";
 import { Button } from "../Button";
 import { baseStore } from "../baseStore";
+import { useEffect, useState } from "react";
 
 const X = () => (
     <Ds.page
@@ -68,9 +69,22 @@ const S = {
 
 const Library = () => {
     const { searchText, set } = baseStore.useLocal({ searchText: "" });
+    const [builtInFlags, setBuiltInFlags] = useState({});
     const q = String(searchText || "")
         .trim()
         .toLowerCase();
+
+    useEffect(() => {
+        let cancelled = false;
+
+        loadAllBuiltInFlags().then((definitions) => {
+            if (!cancelled) setBuiltInFlags(definitions);
+        });
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const isMatch = (code, entry) => {
         if (!q) return true;
@@ -87,9 +101,9 @@ const Library = () => {
                 value={searchText}
                 onChange={(e) => set({ searchText: e.target.value })}
             />
-            {Object.keys(flags)
+            {flagNames
                 .filter((name) => {
-                    return isMatch(name, flags[name]);
+                    return isMatch(name, builtInFlags[name]);
                 })
                 .sort((a, b) => sortBy.asc(a, b))
                 .map((name) => (
