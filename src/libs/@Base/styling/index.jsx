@@ -6,7 +6,7 @@ import { prepareRemSettings } from "./prepareRemSettings";
 import { GlobalStyle } from "./GlobalStyle";
 import { DEFAULT_PRIMARY_FONT } from "../../../constants/DEFAULT_PRIMARY_FONT";
 import { DEFAULT_GLOBAL_STYLE } from "../../../constants/DEFAULT_GLOBAL_STYLE";
-import { collectFontImports, collectFontImportUrls, stripCssImports } from "./fontCss";
+import { collectFontImportUrls, stripCssImports } from "./fontCss";
 
 export const StyledComponentsWrapper = ({ children, styledSettings }) => {
     const {
@@ -26,7 +26,8 @@ export const StyledComponentsWrapper = ({ children, styledSettings }) => {
         ...(fonts || {}),
     };
     const primaryFontCss = stripCssImports(availableFonts.primaryFont);
-    const fontImports = collectFontImports(availableFonts);
+    // Fonts must load via <link>, never via @import inside the styled-components sheet.
+    // @import in that sheet causes production CSSOM insertRule drops (missing Button/Icon/Flex rules).
     const fontImportUrls = useMemo(() => collectFontImportUrls(availableFonts), [fonts, primaryFont]);
 
     const { theme } = useTheme({ theme: themes });
@@ -62,7 +63,6 @@ export const StyledComponentsWrapper = ({ children, styledSettings }) => {
         <ThemeProvider theme={{ ...theme, ...mediaFunctions }} {...otherStyledComponentsProps}>
             <GlobalStyle
                 preparedRemSettings={preparedRemSettings}
-                fontImports={fontImports}
                 primaryFont={primaryFontCss}
                 defaultGlobalStyle={DEFAULT_GLOBAL_STYLE}
                 globalStyle={globalStyle}

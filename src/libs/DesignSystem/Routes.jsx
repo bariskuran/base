@@ -5,7 +5,9 @@ import { formatDsNavLabel, getSitemap } from ".";
 const DesignSystemRoutes = () => {
     return (
         <Routes>
-            <Route element={<Layout />}>
+            <Route
+                element={<Layout getSitemap={getSitemap} formatNavLabel={formatDsNavLabel} />}
+            >
                 {getSitemap().map(([name, path, El, props]) => (
                     <Route
                         key={path || "index"}

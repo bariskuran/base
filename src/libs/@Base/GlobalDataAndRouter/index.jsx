@@ -8,19 +8,18 @@ import { LanguageManager } from "../LanguageManager";
 import { PageLoadingManager } from "../loadingQueueManager";
 import { NotifierListener } from "helpers/NotifierListener";
 
-const LazyDesignSystemRoutes = lazy(() => {
-    if (import.meta.env.DEV || import.meta.env.VITE_ENABLE_DESIGN_SYSTEM === "true") {
-        return import("../../DesignSystem/Routes.jsx");
-    }
+// Keep the dynamic import itself behind a compile-time condition. The previous
+// callback always contained an import(), so Vite emitted the entire Design System
+// chunk graph even when its route was disabled.
+const CAN_LOAD_DESIGN_SYSTEM =
+    import.meta.env.DEV || import.meta.env.VITE_ENABLE_DESIGN_SYSTEM === "true";
 
-    return Promise.resolve({ default: () => null });
-});
+const LazyDesignSystemRoutes = CAN_LOAD_DESIGN_SYSTEM
+    ? lazy(() => import("../../DesignSystem/Routes.jsx"))
+    : null;
 
 const getDesignSystemRoutes = () => {
-    const canLoadDesignSystem =
-        import.meta.env.DEV || import.meta.env.VITE_ENABLE_DESIGN_SYSTEM === "true";
-
-    if (!canLoadDesignSystem) return [];
+    if (!CAN_LOAD_DESIGN_SYSTEM || !LazyDesignSystemRoutes) return [];
 
     return [
         {

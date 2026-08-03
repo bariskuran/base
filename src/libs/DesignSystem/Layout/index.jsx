@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import { S } from "./_styled";
-import { formatDsNavLabel, getSitemap } from "../index";
 import { baseStore } from "../../baseStore";
 import { Button } from "../../Button";
 import useVars from "./useVars";
@@ -18,18 +17,20 @@ const resetDocumentScroll = () => {
     document.body.scrollTop = 0;
 };
 
-const Layout = () => {
+const fallbackFormatNavLabel = (name) => String(name ?? "");
+
+const Layout = ({ getSitemap: getSitemapProp = () => [], formatNavLabel = fallbackFormatNavLabel }) => {
     const vars = useVars();
     const { pathname } = useLocation();
     const navScrollRef = useRef(null);
     const showInternalDs = baseStore.useGlobal((s) => !!s._adminSettings?.showInternalDs);
     const sorted = useMemo(() => {
-        const list = getSitemap() || [];
+        const list = getSitemapProp() || [];
         const pinnedCount = 2;
         const pinned = list.slice(0, pinnedCount);
         const rest = list.slice(pinnedCount).sort((a, b) => sortBy.asc(a[0], b[0]));
         return [...pinned, ...rest];
-    }, [showInternalDs]);
+    }, [showInternalDs, getSitemapProp]);
 
     useLayoutEffect(() => {
         if (typeof history !== "undefined" && "scrollRestoration" in history) {
@@ -88,7 +89,7 @@ const Layout = () => {
                                 key={path ?? `nav-${i}`}
                                 ref={isActive(entry) ? activeNavItemRef : undefined}
                                 to={path ? `/design-system/${path}` : "/design-system"}
-                                label={formatDsNavLabel(name)}
+                                label={formatNavLabel(name)}
                                 bgColor="transparent"
                                 color="foreground"
                                 fullWidth="right"

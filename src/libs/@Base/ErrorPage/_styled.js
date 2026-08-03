@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 
 export const S = {
     container: styled.div`
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
+        width: 100%;
         height: 100vh;
         padding: 100rem;
+        box-sizing: border-box;
         overflow: hidden;
 
         ${({ theme }) =>
@@ -28,6 +31,7 @@ export const S = {
         font-weight: 600;
         opacity: 0.05;
         letter-spacing: -20rem;
+        white-space: nowrap;
         ${({ theme }) =>
             theme.responsive(
                 "phone,tablet",

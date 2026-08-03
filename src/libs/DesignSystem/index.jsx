@@ -182,7 +182,7 @@ export const getSitemap = () => [...publicSitemap, ...(getShowInternalDs() ? int
 export const getDesignSystemRoutes = () => [
     {
         path: "design-system",
-        element: <Layout />,
+        element: <Layout getSitemap={getSitemap} formatNavLabel={formatDsNavLabel} />,
         children: [
             ...getSitemap().map(([name, path, El, props]) => ({
                 path,

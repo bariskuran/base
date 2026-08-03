@@ -97,7 +97,6 @@ export { cssSpacingResolver } from "./libs/cssSpacingResolver";
 export { debouncedFunction } from "./libs/debouncedFunction";
 export { deepMerge } from "./libs/deepMerge";
 export { default as Base } from "./libs/@Base/index";
-export { default as DS } from "./libs/DesignSystem";
 export { delayedFunction } from "./libs/delayedFunction";
 export { downloadAsCsv } from "./libs/downloadAsCsv";
 export { Dropdown } from "./libs/Dropdown";
