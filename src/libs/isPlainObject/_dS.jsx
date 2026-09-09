@@ -11,10 +11,10 @@ const X = () => {
         <Ds.page
             title="isPlainObject()"
             releasedOn="1.0.0"
-            description="Checks plain-object values."
+            description={{ tr: "Düz nesne değerlerini kontrol eder.", en: "Checks plain-object values." }}
         >
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel kullanım", en: "Basic Usage" }}
                 code={`import { isPlainObject } from "${SYS.basePath}";
 
                         isPlainObject({ a: 1 });
@@ -56,14 +56,14 @@ const X = () => {
                 args="const ok = isPlainObject(v);"
                 props={{
                     v: {
-                        description: "Value to test.",
+                        description: { tr: "Test edilecek değer.", en: "Value to test." },
                         type: "any",
                         required: true,
                     },
                 }}
                 returnProps={{
                     ok: {
-                        description: "True for plain object or null-prototype object.",
+                        description: { tr: "Düz nesne veya null-prototype nesnesinde true.", en: "True for a plain object or null-prototype object." },
                         type: "boolean",
                     },
                 }}

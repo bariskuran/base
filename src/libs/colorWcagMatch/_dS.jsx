@@ -180,7 +180,7 @@ const X = () => {
                 You can use colorWcagMatch via direct import from base, or via the theme helper in styled usage (theme.colorWcagMatch).`}
         >
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel Kullanım", en: "Basic usage" }}
                 code={`import { colorWcagMatch } from "${SYS.basePath}";
 
                        //result
@@ -283,17 +283,17 @@ const X = () => {
                 args="const { color, colorFormats, finalRatio, lightness } = colorWcagMatch(background, targetColor, wcagRatio, { tolerance, step });"
                 props={{
                     background: {
-                        description: "Background color.",
+                        description: { tr: "Arka plan rengi.", en: "Background color." },
                         type: "string",
                         required: true,
                     },
                     targetColor: {
-                        description: "Base color whose hue/saturation are preserved.",
+                        description: { tr: "Hue/saturation değerleri korunan temel renk.", en: "Base color whose hue/saturation are preserved." },
                         type: "string",
                         required: true,
                     },
                     wcagRatio: {
-                        description: "Target contrast ratio.",
+                        description: { tr: "Hedef kontrast oranı.", en: "Target contrast ratio." },
                         type: "number",
                         defaultValue: "4.5",
                     },
@@ -311,13 +311,13 @@ const X = () => {
                     },
                 }}
                 returnProps={{
-                    color: { description: "Matched hex6 color.", type: "string" },
+                    color: { description: { tr: "Eşleştirilmiş hex6 renk.", en: "Matched hex6 color." }, type: "string" },
                     colorFormats: {
-                        description: "Full colorConverter output for the match.",
+                        description: { tr: "Eşleşmenin tam colorConverter çıktısı.", en: "Full colorConverter output for the match." },
                         type: "object",
                     },
-                    finalRatio: { description: "Achieved contrast ratio.", type: "number" },
-                    lightness: { description: "Matched HSL lightness (0–100).", type: "number" },
+                    finalRatio: { description: { tr: "Elde edilen kontrast oranı.", en: "Achieved contrast ratio." }, type: "number" },
+                    lightness: { description: { tr: "Eşleşen HSL lightness değeri (0–100).", en: "Matched HSL lightness (0–100)." }, type: "number" },
                 }}
             />
         </Ds.page>

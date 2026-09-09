@@ -13,14 +13,20 @@ const X = () => (
     <Ds.page
         title="<TemplateLiteral>"
         releasedOn="1.0.0"
-        description={templateLiteralTo.p(`React wrapper around templateLiteralTo. Pass a template literal
-            as children; shared indentation is stripped and output is rendered with Typo.
+        description={{
+            tr: templateLiteralTo.p(`templateLiteralTo için React sarmalayıcısıdır. Template literal'ı
+                children olarak verin; ortak girinti temizlenir ve çıktı Typo ile render edilir.
 
-            Use .pre, .p, or .span for the same modes as the utility function.`)}
+                Yardımcı fonksiyonla aynı modlar için .pre, .p veya .span kullanın.`),
+            en: templateLiteralTo.p(`React wrapper around templateLiteralTo. Pass a template literal
+                as children; shared indentation is stripped and output is rendered with Typo.
+
+                Use .pre, .p, or .span for the same modes as the utility function.`),
+        }}
     >
         <Ds.block
             title=".pre"
-            description="Dedented string inside Typo.pre."
+            description={{ tr: "Typo.pre içinde girintisi temizlenmiş string.", en: "Dedented string inside Typo.pre." }}
             code={`import { TemplateLiteral } from "${SYS.basePath}";
 
                     <TemplateLiteral.pre>{\`
@@ -36,7 +42,7 @@ const X = () => (
 
         <Ds.block
             title=".p"
-            description="Dedented paragraphs as Typo.p nodes inside a div."
+            description={{ tr: "Bir div içinde Typo.p node'ları olarak girintisi temizlenmiş paragraflar.", en: "Dedented paragraphs as Typo.p nodes inside a div." }}
             code={`import { TemplateLiteral } from "${SYS.basePath}";
 
                     <TemplateLiteral.p>{description}</TemplateLiteral.p>`}
@@ -45,7 +51,7 @@ const X = () => (
 
         <Ds.block
             title=".span"
-            description="Dedented paragraphs as Typo.span stack."
+            description={{ tr: "Typo.span yığını olarak girintisi temizlenmiş paragraflar.", en: "Dedented paragraphs as Typo.span stack." }}
             code={`import { TemplateLiteral } from "${SYS.basePath}";
 
                     <TemplateLiteral.span>{text}</TemplateLiteral.span>`}
@@ -56,7 +62,7 @@ const X = () => (
             args="<TemplateLiteral /> | .pre | .p | .span"
             props={{
                 children: {
-                    description: "Template literal string (or any stringifiable value).",
+                    description: { tr: "Template literal string'i (veya string'e dönüştürülebilen herhangi bir değer).", en: "Template literal string (or any stringifiable value)." },
                     type: "string",
                 },
             }}

@@ -90,10 +90,10 @@ const X = () => {
         <Ds.page
             title="<TypoAnimated>"
             releasedOn="1.0.0"
-            description="Text animations on top of Typo and useTimer. See the Typo and useTimer docs for typography props, timer naming, and lifecycle hooks. Omit duration to use autoDuration (length- and variant-based). Pick a variant for the animation module."
+            description={{ tr: "Typo ve useTimer üzerine kurulu metin animasyonlarıdır. Tipografi propları, timer adlandırması ve yaşam döngüsü hook'ları için Typo ve useTimer dokümantasyonuna bakın. autoDuration (uzunluk ve varyant tabanlı) kullanmak için duration'ı vermeyin. Animasyon modülü için varyant seçin.", en: "Text animations built on Typo and useTimer. See the Typo and useTimer docs for typography props, timer naming, and lifecycle hooks. Omit duration to use autoDuration (length- and variant-based). Pick a variant for the animation module." }}
         >
             <Ds.block
-                title="Controls"
+                title={{ tr: "Kontroller", en: "Controls" }}
                 example={
                     <Flex gap={20} wrap alignItems="flex-end">
                         <Flex.column gap={6} minWidth={160}>
@@ -153,7 +153,7 @@ const X = () => {
 
             <Ds.block
                 title="animatedWriter"
-                description="Like typewriter, but each new character drops ~4px from above and fades in."
+                description={{ tr: "typewriter gibidir, ancak her yeni karakter yukarıdan yaklaşık 4px düşer ve fade in olur.", en: "Like typewriter, but each new character drops ~4px from above and fades in." }}
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
                        <TypoAnimated variant="animatedWriter" content="Lorem ipsum" />`}
@@ -164,7 +164,7 @@ const X = () => {
 
             <Ds.block
                 title="scatterLines"
-                description="Multi-line content; words fade in (opacity) with font-size between 80–120%. Full layout is reserved from the start."
+                description={{ tr: "Çok satırlı içerik; kelimeler 80–120% arası font-size ile opacity üzerinden görünür. Tam yerleşim baştan ayrılır.", en: "Multi-line content; words fade in (opacity) with font-size between 80–120%. Full layout is reserved from the start." }}
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
                        <TypoAnimated
@@ -181,7 +181,7 @@ const X = () => {
 
             <Ds.block
                 title="stackedWords"
-                description="Poster-style stacked lines: all words pulse in sync for duration/2, pause for duration/2, then restart with new random font-size/opacity targets. loop defaults to true."
+                description={{ tr: "Poster tarzı üst üste satırlar: tüm kelimeler duration/2 boyunca eşzamanlı pulse olur, duration/2 durur, ardından yeni rastgele font-size/opacity hedefleriyle yeniden başlar. loop varsayılan olarak true'dur.", en: "Poster-style stacked lines: all words pulse in sync for duration/2, pause for duration/2, then restart with new random font-size/opacity targets. loop defaults to true." }}
                 code={`import { TypoAnimated } from "${SYS.basePath}";
 
                        <TypoAnimated

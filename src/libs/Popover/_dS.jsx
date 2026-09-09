@@ -4,6 +4,7 @@ import { PopOver } from ".";
 import { Flex } from "../Flex";
 import { ButtonGroup } from "../ButtonGroup";
 import { Button } from "../Button";
+import { t } from "../getText";
 
 const Panel = () => (
     <Flex.column gap={2}>
@@ -80,12 +81,8 @@ const X = () => (
         releasedOn="1.0.0"
         description={
             <>
-                PopOver is composed of advanced components such as FloatingUi, ScrollFlex, Button,
-                and ButtonGroup. As a result, it does not have many features of its own, but can
-                utilize all the features provided by the aforementioned components. <br />
-                <br />A nice feature of the PopOver component: by default the system allows only one
-                exclusive PopOver at a time (see FloatingUi <code>disableMultipleBlock</code>). Use{" "}
-                <code>disableMultipleBlock</code> on PopOver when multiple panels should stay open.
+                {t({ tr: "PopOver; FloatingUi, ScrollFlex, Button ve ButtonGroup gibi gelişmiş componentlerden oluşur. Bu nedenle kendi başına çok fazla özelliği yoktur; ancak söz konusu componentlerin sunduğu tüm özellikleri kullanabilir.", en: "PopOver is composed of advanced components such as FloatingUi, ScrollFlex, Button, and ButtonGroup. It therefore has few features of its own but can use all features provided by those components." })} <br />
+                <br />{t({ tr: "PopOver'ın faydalı bir özelliği: sistem varsayılan olarak aynı anda yalnızca bir özel PopOver'a izin verir (FloatingUi ", en: "A useful PopOver feature: by default, the system allows only one exclusive PopOver at a time (see FloatingUi " })}<code>disableMultipleBlock</code>{t({ tr: "). Birden fazla panel açık kalacaksa PopOver üzerinde ", en: "). Use " })}<code>disableMultipleBlock</code>{t({ tr: " kullanın.", en: " on PopOver when multiple panels should stay open." })}
                 <br />
                 <br />
                 <Button.string to="/design-system/floatingUi" label="FloatingUi" />
@@ -97,14 +94,14 @@ const X = () => (
         }
     >
         <Ds.block
-            title="Basic Usage"
+            title={{ tr: "Temel Kullanım", en: "Basic Usage" }}
             code={`import { PopOver } from "${SYS.basePath}";
 
                         <PopOver>content</PopOver>`}
             example={<PopOver>content</PopOver>}
         />
         <Ds.block
-            title="Advanced Usage"
+            title={{ tr: "Gelişmiş Kullanım", en: "Advanced Usage" }}
             code={`import { PopOver } from "${SYS.basePath}";
 
                     <PopOver buttonProps={{ icon: { flat: true } }}>
@@ -144,8 +141,8 @@ const X = () => (
             }
         />
         <Ds.block
-            title="ButtonGroup with PopOver"
-            description='The "flat" prop of ButtonGroup removes outer wrappers, giving layout control to the PopOver. You can manage the UI inside the PopOver using scrollFlexProps.'
+            title={{ tr: "PopOver ile ButtonGroup", en: "ButtonGroup with PopOver" }}
+            description={{ tr: "ButtonGroup içindeki flat prop'u dış sarmalayıcıları kaldırır ve yerleşim kontrolünü PopOver'a verir. PopOver içindeki arayüzü scrollFlexProps ile yönetebilirsiniz.", en: "The ButtonGroup flat prop removes outer wrappers, giving layout control to PopOver. You can manage the UI inside PopOver with scrollFlexProps." }}
             code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
                    <PopOver
@@ -176,8 +173,8 @@ const X = () => (
             }
         />
         <Ds.block
-            title="Styling"
-            description="bgColor and color props are used to set the background and text color of the PopOver. It can be a theme color, a theme path, or a css color."
+            title={{ tr: "Stil", en: "Styling" }}
+            description={{ tr: "bgColor ve color propları PopOver'ın arka plan ve metin rengini belirler. Theme rengi, theme path'i veya CSS rengi olabilir.", en: "bgColor and color set PopOver's background and text colour. They can be theme colours, theme paths, or CSS colours." }}
             code={`import { PopOver, ButtonGroup } from "${SYS.basePath}";
 
                    <PopOver bgColor="lightgrey" color="primary">
@@ -206,21 +203,20 @@ const X = () => (
             args="<PopOver>{React.Node}</PopOver>"
             props={{
                 children: {
-                    description: "Panel content rendered inside the internal ScrollFlex.",
+                    description: { tr: "Dahili ScrollFlex içinde render edilen panel içeriği.", en: "Panel content rendered inside the internal ScrollFlex." },
                     type: "React Node",
                     required: true,
                 },
                 buttonProps: {
-                    description: "Checkout Button api.",
+                    description: { tr: "Button API'sine bakın.", en: "See the Button API." },
                     type: "object",
                 },
                 scrollFlexProps: {
-                    description: "Checkout ScrollFlex api.",
+                    description: { tr: "ScrollFlex API'sine bakın.", en: "See the ScrollFlex API." },
                     type: "object",
                 },
                 _rest: {
-                    description:
-                        "All rest props are passed to the FloatingUi component. Check out FloatingUi api.",
+                    description: { tr: "Kalan tüm proplar FloatingUi componentine aktarılır. FloatingUi API'sine bakın.", en: "All remaining props are passed to FloatingUi. See the FloatingUi API." },
                     type: "object",
                 },
             }}

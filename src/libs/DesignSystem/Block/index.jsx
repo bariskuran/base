@@ -20,8 +20,9 @@ const Block = ({
     const { ajax, set } = baseStore.useLocal({
         ajax: 0,
     });
-    const displayTitle = isJsxDescription(title) ? title : t(title);
-    const displayDescription = isJsxDescription(description) ? description : t(description);
+    const displayTitle = t(title);
+    const displayDescription = t(description);
+    const descriptionIsJsx = isJsxDescription(displayDescription);
 
     const enableAjax = !empty && !!code && !!(example || displayDescription);
 
@@ -79,8 +80,8 @@ const Block = ({
                 <Flex.column full minWidth={0}>
                     {(example || displayDescription) && ajax === 0 && (
                         <S.contentArea area-title="Block Content">
-                            {isJsxDescription(description) ? (
-                                <Typo as="div">{description}</Typo>
+                            {descriptionIsJsx ? (
+                                <Typo as="div">{displayDescription}</Typo>
                             ) : (
                                 <Typo as="div">{templateLiteralTo.p(displayDescription)}</Typo>
                             )}

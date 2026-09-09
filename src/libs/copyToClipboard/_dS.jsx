@@ -27,7 +27,7 @@ const X = () => {
             }
         >
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel Kullanım", en: "Basic usage" }}
                 code={`import { copyToClipboard } from "${SYS.basePath}";
 
                        copyToClipboard("Hello world");`}
@@ -50,8 +50,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Options"
-                description="Options to customize the copyToClipboard behavior. You can disable the notifier, and provide custom success and error callbacks."
+                title={{ tr: "Seçenekler", en: "Options" }}
+                description={{ tr: "copyToClipboard davranışını özelleştiren seçenekler. Notifier'ı devre dışı bırakabilir, özel başarı ve hata callback'leri verebilirsiniz.", en: "Options to customize the copyToClipboard behavior. You can disable the notifier, and provide custom success and error callbacks." }}
                 code={`import { copyToClipboard } from "${SYS.basePath}";
 
                        copyToClipboard("Hello world",
@@ -76,8 +76,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Supported Formats"
-                description="copyToClipboard can copy the following formats: string, number, boolean, object, array, function, date, regex, symbol, error, null, undefined."
+                title={{ tr: "Desteklenen Formatlar", en: "Supported Formats" }}
+                description={{ tr: "copyToClipboard şu formatları kopyalayabilir: string, number, boolean, object, array, function, date, regex, symbol, error, null, undefined.", en: "copyToClipboard can copy the following formats: string, number, boolean, object, array, function, date, regex, symbol, error, null, undefined." }}
                 code={`import { copyToClipboard } from "${SYS.basePath}";
 
                        copyToClipboard({ a: 1, b: 2, c: 3, d: { e: 4 } });
@@ -147,30 +147,30 @@ const X = () => {
                 args="const copied = await copyToClipboard(value, { disableNotifier, errorMessage, onError, onSuccess, successMessage });"
                 props={{
                     value: {
-                        description: "Value to copy.",
+                        description: { tr: "Kopyalanacak değer.", en: "Value to copy." },
                         type: "any",
                         required: true,
                     },
                     onSuccess: {
-                        description: "Called on success with copied text.",
+                        description: { tr: "Başarılı olduğunda kopyalanan metinle çağrılır.", en: "Called on success with copied text." },
                         type: "fn",
                     },
                     onError: {
-                        description: "Called on failure with error.",
+                        description: { tr: "Başarısız olduğunda hata ile çağrılır.", en: "Called on failure with error." },
                         type: "fn",
                     },
                     successMessage: {
-                        description: "Notifier success message.",
+                        description: { tr: "Notifier başarı mesajı.", en: "Notifier success message." },
                         type: "string",
                         defaultValue: '"Copied to clipboard."',
                     },
                     errorMessage: {
-                        description: "Notifier error message.",
+                        description: { tr: "Notifier hata mesajı.", en: "Notifier error message." },
                         type: "string",
                         defaultValue: '"Failed to copy text."',
                     },
                     disableNotifier: {
-                        description: "Disable notifier.",
+                        description: { tr: "Notifier'ı devre dışı bırakır.", en: "Disable notifier." },
                         type: "boolean",
                         defaultValue: false,
                     },
@@ -182,28 +182,28 @@ const X = () => {
                 }}
                 returnProps={{
                     copied: {
-                        description: "True when the value was copied successfully.",
+                        description: { tr: "Değer başarıyla kopyalandığında true olur.", en: "True when the value was copied successfully." },
                         type: "boolean",
                     },
                 }}
             />
             <Ds.api
                 disableLastBlock
-                title="onSuccess"
+                title={{ tr: "onSuccess", en: "onSuccess" }}
                 args="onSuccess(text);"
                 props={{
                     text: {
-                        description: "Copied string value.",
+                        description: { tr: "Kopyalanan string değeri.", en: "Copied string value." },
                         type: "string",
                     },
                 }}
             />
             <Ds.api
-                title="onError"
+                title={{ tr: "onError", en: "onError" }}
                 args="onError(err);"
                 props={{
                     err: {
-                        description: "Caught error.",
+                        description: { tr: "Yakalanan hata.", en: "Caught error." },
                         type: "Error",
                     },
                 }}

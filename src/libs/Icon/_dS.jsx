@@ -4,6 +4,7 @@ import { Icon } from "./";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
 import { baseStore } from "../baseStore";
+import { t } from "../getText";
 
 const CustomTriangle = () => (
     <>
@@ -26,19 +27,16 @@ const X = () => {
             releasedOn="1.0.0"
             description={
                 <>
-                    DSIcon renders svg icons from the built-in icon set or from custom icon
-                    definitions. It supports hover state, active state, size switching, color
-                    switching, and optional PopTip integration.
+                    {t({ tr: "Icon, SVG ikonlarını yerleşik ikon setinden veya özel ikon tanımlarından render eder. Hover ve active durumlarını, boyut ve renk değişimini, ayrıca isteğe bağlı PopTip entegrasyonunu destekler.", en: "Icon renders SVG icons from the built-in icon set or custom icon definitions. It supports hover and active states, size and colour switching, and optional PopTip integration." })}
                     <br />
-                    <br /> Check out
-                    <Button.string to="/design-system/iconLibrary" label="Icon Library" /> to see
-                    all available icons and how to add new icons.
+                    <br /> {t({ tr: "Tüm kullanılabilir ikonları ve yeni ikon eklemeyi görmek için ", en: "See " })}
+                    <Button.string to="/design-system/iconLibrary" label="Icon Library" />{t({ tr: " sayfasına bakın.", en: " for all available icons and how to add new icons." })}
                 </>
             }
         >
             <Ds.block
-                title="Basic usage"
-                description="The Icon component can render any icon from the icon library by passing the icon name."
+                title={{ tr: "Temel kullanım", en: "Basic Usage" }}
+                description={{ tr: "Icon componenti, ikon adını vererek ikon kütüphanesindeki herhangi bir ikonu render edebilir.", en: "The Icon component can render any icon from the icon library by passing its name." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                        <Flex gap={16}>
@@ -55,8 +53,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Custom icon array"
-                description="You can pass a custom icon definition directly as an array. The first item is the viewBox size and the second item is either a path string, a component, or another renderable content."
+                title={{ tr: "Özel ikon dizisi", en: "Custom Icon Array" }}
+                description={{ tr: "Özel ikon tanımını doğrudan dizi olarak verebilirsiniz. İlk öğe viewBox boyutu; ikinci öğe ise path string'i, component veya render edilebilir başka bir içeriktir.", en: "You can pass a custom icon definition directly as an array. The first item is the viewBox size and the second item is a path string, a component, or other renderable content." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                         const customIcon = [ "24 24", "M12 2L22 22H2Z" ];
@@ -75,7 +73,7 @@ const X = () => {
             />
             <Ds.block
                 title="flat"
-                description="Content-proportional box instead of a square: `width`/`size` targets the **long** side of the icon content (same mental model as a square icon). For path-based icons, `flat` trims the SVG to the path bounds and disables optical scaling, so logos and wordmarks render edge-to-edge even when the source viewBox has extra whitespace."
+                description={{ tr: "Kare yerine içerikle orantılı kutu kullanır: width/size, ikon içeriğinin uzun kenarını hedefler (kare ikonla aynı zihinsel model). Path tabanlı ikonlarda flat, SVG'yi path sınırlarına kırpar ve optik ölçeklemeyi kapatır; böylece kaynak viewBox'ta fazladan boşluk olsa bile logolar ve wordmark'lar kenardan kenara render edilir.", en: "Uses a content-proportional box instead of a square: width/size targets the long side of the icon content. For path-based icons, flat trims the SVG to path bounds and disables optical scaling, so logos and wordmarks render edge-to-edge even when the source viewBox has extra whitespace." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                         <Icon icon="baseLogo" width={80} />
@@ -92,11 +90,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Width and color"
-                description={`Width controls the icon size. Color supports both raw values and theme path values. 'size' && 'w' prop also work for width as well.
-
-                "color" prop supports both raw values, theme values and theme path values.
-                `}
+                title={{ tr: "Genişlik ve renk", en: "Width and Color" }}
+                description={{ tr: "width ikon boyutunu kontrol eder. color ham değerleri, theme değerlerini ve theme path'lerini destekler. width için size ve w propları da kullanılabilir.", en: "width controls icon size. color supports raw values, theme values, and theme paths. size and w also work as width shorthands." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                        <Flex gap={20}>
@@ -115,8 +110,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Hover state"
-                description="You can change icon, color and width on hover. Hover behavior works automatically with mouse interaction or you can trigger it manually with hoverManually (boolean) prop."
+                title={{ tr: "Hover durumu", en: "Hover State" }}
+                description={{ tr: "Hover sırasında ikonu, rengi ve genişliği değiştirebilirsiniz. Hover davranışı fare etkileşimiyle otomatik çalışır; hoverManually boolean prop'u ile elle de tetiklenebilir.", en: "You can change the icon, colour, and width on hover. Hover works automatically through pointer interaction or can be triggered manually with the hoverManually boolean prop." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                        <Flex gap={20}>
@@ -157,10 +152,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Active state"
-                description={`Active state can switch the icon, color and scale. When active, the component also plays the built-in pulse animation unless disableScaleEffect is true.
-
-                    Technically, <Icon> component can not trigger active state itself. But, you can trigger it manually with activeManually (boolean) prop inside your component.`}
+                title={{ tr: "Active durumu", en: "Active State" }}
+                description={{ tr: "Active durum ikonu, rengi ve scale değerini değiştirebilir. Active iken disableScaleEffect true değilse yerleşik pulse animasyonu da oynar. Icon kendi başına active durumu tetiklemez; componentiniz içinden activeManually boolean prop'u ile elle tetikleyebilirsiniz.", en: "The active state can switch icon, colour, and scale. Unless disableScaleEffect is true, it also plays the built-in pulse animation. Icon cannot trigger the active state itself; trigger it manually in your component with the activeManually boolean prop." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                        <Flex gap={20}>
@@ -201,12 +194,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Pending state"
-                description={`Pending state can switch the icon, color and scale.
-
-                    Technically, <Icon> component can not trigger pending state itself. But, you can trigger it manually with pendingManually (boolean) prop inside your component.
-
-                    In the pending state, the icon rotates 360 degrees. It is recommended to choose icons that are suitable for this type of animation. `}
+                title={{ tr: "Pending durumu", en: "Pending State" }}
+                description={{ tr: "Pending durum ikonu, rengi ve scale değerini değiştirebilir. Icon bunu kendi başına tetiklemez; pendingManually boolean prop'u ile elle tetikleyebilirsiniz. Pending durumunda ikon 360 derece döner; bu animasyona uygun ikonların seçilmesi önerilir.", en: "The pending state can switch icon, colour, and scale. Icon cannot trigger it itself; trigger it manually with the pendingManually boolean prop. While pending, the icon rotates 360 degrees, so choose icons suitable for this animation." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                        <Icon icon="copy" pendingIcon="loading" pendingColor="green" pendingManually={isPending} />
@@ -237,12 +226,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Click state"
-                description={`Click/press visuals reuse the active layer: activeIcon, activeColor, activeScale, and pulse (unless disablePulseEffect).
-
-                    Icon does not play click feedback on its own. Use clickEffectManually (boolean) from a parent — for example Button with deferred actions, or PopConfirm after confirm.
-
-                    When clickEffectManually is defined, only that boolean controls click-effect visuals (in addition to activeManually for sustained active). Omit the prop when Icon is driven automatically via Button.`}
+                title={{ tr: "Click durumu", en: "Click State" }}
+                description={{ tr: "Click/press görselleri active katmanını yeniden kullanır: activeIcon, activeColor, activeScale ve pulse (disablePulseEffect değilse). Icon click feedback'i kendi başına oynatmaz. Parent'tan clickEffectManually boolean'ını kullanın; örneğin ertelenmiş action'lı Button veya confirm sonrası PopConfirm. clickEffectManually tanımlıysa click efektini activeManually'e ek olarak yalnızca bu boolean yönetir. Icon Button ile otomatik yönetiliyorsa prop'u vermeyin.", en: "Click/press visuals reuse the active layer: activeIcon, activeColor, activeScale, and pulse unless disablePulseEffect is set. Icon does not play click feedback itself; use clickEffectManually from a parent, such as a Button with deferred actions or PopConfirm after confirmation. When defined, this boolean controls click-effect visuals alongside activeManually. Omit it when Button drives Icon automatically." }}
                 code={`import { Icon } from "${SYS.basePath}";
 
                        <Flex gap={20}>
@@ -287,16 +272,13 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="PopTip integration"
+                title={{ tr: "PopTip entegrasyonu", en: "PopTip Integration" }}
                 description={
                     <>
-                        If you want to use PopTip with an Icon, you can specify the tooltip content
-                        and configuration using the popTipProps prop. The popTipProps object uses
-                        the same API as PopTip.
+                        {t({ tr: "Icon ile PopTip kullanmak isterseniz, tooltip içeriğini ve ayarını popTipProps prop'u ile belirleyebilirsiniz. popTipProps nesnesi PopTip ile aynı API'yi kullanır.", en: "To use PopTip with an Icon, specify tooltip content and configuration through the popTipProps prop. The popTipProps object uses the same API as PopTip." })}
                         <br />
                         <br />
-                        Check out
-                        <Button.string to="/design-system/popTip" label="PopTip" /> for popTipProps.
+                        {t({ tr: "popTipProps için ", en: "See " })}<Button.string to="/design-system/popTip" label="PopTip" />{t({ tr: " sayfasına bakın.", en: " for popTipProps." })}
                     </>
                 }
                 code={`import { Icon } from "${SYS.basePath}";
@@ -316,105 +298,97 @@ const X = () => {
                 args='<Icon icon="" />'
                 props={{
                     icon: {
-                        description:
-                            "Icon name from the library or a custom icon array in the form of [viewBox, content].",
+                        description: { tr: "Kütüphanedeki ikon adı veya [viewBox, content] biçiminde özel ikon dizisi.", en: "Icon name from the library or a custom icon array in the form [viewBox, content]." },
                         type: "string | array",
                         required: true,
                         defaultValue: "warning",
                     },
                     color: {
-                        description: "Default icon color.",
+                        description: { tr: "Varsayılan ikon rengi.", en: "Default icon colour." },
                         type: "string",
                         defaultValue: "foreground || black",
                     },
                     width: {
-                        description: "Base icon size. Shorthands: 'size' && 'w'",
+                        description: { tr: "Temel ikon boyutu. Kısaltmalar: size ve w.", en: "Base icon size. Shorthands: size and w." },
                         type: "number",
                         defaultValue: "10",
                     },
                     hoverIcon: {
-                        description: "Icon shown on hover state.",
+                        description: { tr: "Hover durumunda gösterilen ikon.", en: "Icon shown on hover state." },
                         type: "string | array",
                     },
                     hoverColor: {
-                        description: "Color shown on hover state.",
+                        description: { tr: "Hover durumunda gösterilen renk.", en: "Colour shown on hover state." },
                         type: "string",
                     },
                     hoverWidth: {
-                        description:
-                            "Size shown on hover state. Shorthands: 'hoverSize' && 'hoverW'",
+                        description: { tr: "Hover durumunda gösterilen boyut. Kısaltmalar: hoverSize ve hoverW.", en: "Size shown on hover state. Shorthands: hoverSize and hoverW." },
                         type: "number",
                     },
                     hoverManually: {
-                        description: "Triggers hover visuals manually.",
+                        description: { tr: "Hover görsellerini elle tetikler.", en: "Triggers hover visuals manually." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     activeIcon: {
-                        description: "Icon shown on active state.",
+                        description: { tr: "Active durumunda gösterilen ikon.", en: "Icon shown on active state." },
                         type: "string | array",
                     },
                     activeColor: {
-                        description: "Color shown on active state.",
+                        description: { tr: "Active durumunda gösterilen renk.", en: "Colour shown on active state." },
                         type: "string",
                     },
                     activeWidth: {
-                        description:
-                            "Size shown on active state. Shorthands: 'activeSize' && 'activeW'",
+                        description: { tr: "Active durumunda gösterilen boyut. Kısaltmalar: activeSize ve activeW.", en: "Size shown on active state. Shorthands: activeSize and activeW." },
                         type: "number",
                     },
                     activeManually: {
-                        description: "Triggers active visuals manually.",
+                        description: { tr: "Active görsellerini elle tetikler.", en: "Triggers active visuals manually." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     pendingIcon: {
-                        description:
-                            "Icon shown while pending (e.g. navigation loading). Takes precedence over hover/active when pending.",
+                        description: { tr: "Pending durumunda gösterilen ikon (ör. navigasyon yüklenirken). Pending iken hover/active üzerinde önceliklidir.", en: "Icon shown while pending (e.g. navigation loading). Takes precedence over hover/active while pending." },
                         type: "string | array",
                     },
                     pendingColor: {
-                        description: "Color while pending.",
+                        description: { tr: "Pending durumundaki renk.", en: "Colour while pending." },
                         type: "string",
                     },
                     pendingWidth: {
-                        description: "Size while pending. Shorthands: 'pendingSize' && 'pendingW'",
+                        description: { tr: "Pending durumundaki boyut. Kısaltmalar: pendingSize ve pendingW.", en: "Size while pending. Shorthands: pendingSize and pendingW." },
                         type: "number",
                     },
                     pendingScale: {
-                        description: "Visual scale override while pending.",
+                        description: { tr: "Pending durumundaki görsel scale ezmesi.", en: "Visual scale override while pending." },
                         type: "number",
                     },
                     pendingManually: {
-                        description:
-                            "Triggers pending visuals manually (e.g. alongside Router loading state).",
+                        description: { tr: "Pending görsellerini elle tetikler (ör. Router loading durumu ile birlikte).", en: "Triggers pending visuals manually (e.g. alongside Router loading state)." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     clickEffectManually: {
-                        description:
-                            "Click/press state (uses activeIcon, activeColor, activeScale). Icon does not self-trigger; parent sets true/false. When defined, click-effect visuals follow this boolean together with activeManually. Omit when nested in Button for automatic handling.",
+                        description: { tr: "Click/press durumu (activeIcon, activeColor, activeScale kullanır). Icon kendini tetiklemez; parent true/false verir. Tanımlandığında click efekti activeManually ile birlikte bu boolean'ı izler. Button içinde otomatik yönetim için vermeyin.", en: "Click/press state (uses activeIcon, activeColor, activeScale). Icon does not self-trigger; the parent sets true/false. When defined, click-effect visuals follow this boolean together with activeManually. Omit it when nested in Button for automatic handling." },
                         type: "boolean",
                     },
                     popTipProps: {
-                        description:
-                            "Enables popTip integration. Props passed to PopTip when enablePopTip is true.",
+                        description: { tr: "PopTip entegrasyonunu açar. enablePopTip true olduğunda proplar PopTip'e aktarılır.", en: "Enables PopTip integration. Props are passed to PopTip when enablePopTip is true." },
                         type: "object",
                         defaultValue: "{}",
                     },
                     disableScaleEffect: {
-                        description: "Disables hover scale effect.",
+                        description: { tr: "Hover scale efektini kapatır.", en: "Disables the hover scale effect." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     flat: {
-                        description:
-                            "If true, the icon is not forced into a square. Width/size targets the long side. Path-based icons are trimmed to their actual path bounds and optical scaling is disabled so logos and wordmarks can render edge-to-edge.",
+                        description: { tr: "true olduğunda ikon kare olmaya zorlanmaz. width/size uzun kenarı hedefler. Path tabanlı ikonlar gerçek path sınırlarına kırpılır ve logolar/wordmark'lar kenardan kenara render edilebilsin diye optik scale kapatılır.", en: "When true, the icon is not forced into a square. width/size targets the long side. Path-based icons are trimmed to their real path bounds and optical scaling is disabled so logos and wordmarks render edge-to-edge." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     disablePulse: {
-                        description: "Disables active pulse effect.",
+                        description: { tr: "Active pulse efektini kapatır.", en: "Disables the active pulse effect." },
                         type: "boolean",
                         defaultValue: "false",
                     },

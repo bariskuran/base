@@ -69,10 +69,10 @@ const X = () => {
 <Image catalogSet="i0030" />`}
             />
             <Ds.block
-                title={{ tr: "Standart Görsel", en: "" }}
+                title={{ tr: "Standart Görsel", en: "Standard Image" }}
                 description={{
                     tr: "src verildiğinde Image doğrudan img gibi davranır. Bu kullanımda responsive ve progressive seçim yapılmaz.",
-                    en: "",
+                    en: "When src is provided, Image behaves like a direct img element. Responsive and progressive selection is not used in this mode.",
                 }}
                 code={`import { Image } from "${SYS.basePath}";
 
@@ -83,10 +83,10 @@ const X = () => {
                 example={<Image src={sampleSrc} alt="Örnek görsel" w={280} />}
             />
             <Ds.block
-                title={{ tr: "External Set", en: "" }}
+                title={{ tr: "External Set", en: "External Set" }}
                 description={{
                     tr: "externalSet dış kaynaklardan veya BE'den gelen görseller içindir. Set içindeki entry'lerde doğal ölçü metadata'sı varsa responsive ve progressive seçim çalışır. Sadece string array verilirse Image boyutları bilemeyeceği için ilk geçerli görseli kullanır.",
-                    en: "",
+                    en: "externalSet is for images coming from external sources or a backend. When entries include natural-size metadata, responsive and progressive selection works. If only a string array is provided, Image cannot know dimensions and uses the first valid image.",
                 }}
                 code={`const externalSet = {
     thumb: {
@@ -105,18 +105,18 @@ const X = () => {
                 example={<Image externalSet={externalSet} alt="External set örneği" w={280} />}
             />
             <Ds.block
-                title={{ tr: "Catalog Set", en: "" }}
+                title={{ tr: "Catalog Set", en: "Catalog Set" }}
                 description={{
                     tr: "catalogSet, createImageCatalog ile baseStore.globalData.__imageCatalog içine yazılmış set adını alır. alt prop verilmezse katalogdaki alt alanı kullanılmaya çalışılır. Katalog kurulum adımları için createImageCatalog sayfasına bakın.",
-                    en: "",
+                    en: "catalogSet receives the name of a set written to baseStore.globalData.__imageCatalog by createImageCatalog. If alt is not supplied, Image tries to use the catalog's alt value. See createImageCatalog for catalog setup steps.",
                 }}
                 code={`<Image catalogSet="i0030" />`}
             />
             <Ds.block
-                title={{ tr: "Variant Kullanımı", en: "" }}
+                title={{ tr: "Variant Kullanımı", en: "Using Variants" }}
                 description={{
                     tr: "variant verildiğinde Image ilgili key'i doğrudan kullanır. Variant bulunamazsa normal seçim akışına geri döner. Bu kullanım, belirli tasarım alanlarında thumb, phone veya desktop gibi sabit dosya adlarını bilinçli seçmek için uygundur.",
-                    en: "",
+                    en: "When variant is supplied, Image uses that key directly. If the variant does not exist, it falls back to the normal selection flow. Use this to intentionally select fixed file names such as thumb, phone, or desktop in specific design areas.",
                 }}
                 code={`<Image
     catalogSet="i0030"
@@ -124,10 +124,10 @@ const X = () => {
 />`}
             />
             <Ds.block
-                title={{ tr: "Viewport Yükleme ve Loading Animation", en: "" }}
+                title={{ tr: "Viewport Yükleme ve Loading Animation", en: "Viewport Loading and Loading Animation" }}
                 description={{
                     tr: "loadInViewport true olduğunda görsel viewport'a girene kadar src img üzerine basılmaz. loadingAnimation, görsel yüklenene kadar gösterilen animasyonu yönetir. Görsel yüklendikten sonra animasyon durur. none veya false verilirse animasyon kapatılır.",
-                    en: "",
+                    en: "When loadInViewport is true, src is not set on the img until the image enters the viewport. loadingAnimation controls the animation shown while the image is loading and stops after it loads. Pass none or false to disable it.",
                 }}
                 code={`<Image
     catalogSet="i0030"
@@ -141,35 +141,35 @@ const X = () => {
                     src: {
                         description: {
                             tr: "Tek görsel URL'i. Verildiğinde responsive/progressive seçim yapılmaz.",
-                            en: "",
+                            en: "Single image URL. Responsive/progressive selection is not used when this is supplied.",
                         },
                         type: "string",
                     },
                     externalSet: {
                         description: {
                             tr: "Katalog dışından gelen image set. Metadata varsa responsive/progressive seçim yapılabilir.",
-                            en: "",
+                            en: "Image set from outside the catalog. Responsive/progressive selection can be used when metadata exists.",
                         },
                         type: "object | array",
                     },
                     catalogSet: {
                         description: {
                             tr: "createImageCatalog ile kaydedilmiş set adı.",
-                            en: "",
+                            en: "Set name registered through createImageCatalog.",
                         },
                         type: "string",
                     },
                     variant: {
                         description: {
                             tr: "Set içindeki belirli key'i doğrudan seçer.",
-                            en: "",
+                            en: "Selects a specific key in the set directly.",
                         },
                         type: "string",
                     },
                     responsive: {
                         description: {
                             tr: "Metadata varsa container genişliğine göre en uygun görseli seçer.",
-                            en: "",
+                            en: "Selects the most suitable image from container width when metadata exists.",
                         },
                         type: "boolean",
                         defaultValue: "true",
@@ -177,7 +177,7 @@ const X = () => {
                     progressive: {
                         description: {
                             tr: "Final görsel yüklenmeden önce en küçük uygun preview'i kullanır.",
-                            en: "",
+                            en: "Uses the smallest suitable preview before the final image is loaded.",
                         },
                         type: "boolean",
                         defaultValue: "true",
@@ -185,7 +185,7 @@ const X = () => {
                     loadInViewport: {
                         description: {
                             tr: "Görseli yalnızca viewport'a girdikten sonra yükler.",
-                            en: "",
+                            en: "Loads the image only after it enters the viewport.",
                         },
                         type: "boolean",
                         defaultValue: "false",
@@ -193,7 +193,7 @@ const X = () => {
                     loadingAnimation: {
                         description: {
                             tr: "Görsel yüklenene kadar gösterilecek animasyon.",
-                            en: "",
+                            en: "Animation shown until the image loads.",
                         },
                         type: '"pulse" | "none" | false',
                         defaultValue: '"pulse"',
@@ -201,14 +201,14 @@ const X = () => {
                     w: {
                         description: {
                             tr: "width aliası.",
-                            en: "",
+                            en: "width alias.",
                         },
                         type: "number | string",
                     },
                     h: {
                         description: {
                             tr: "height aliası.",
-                            en: "",
+                            en: "height alias.",
                         },
                         type: "number | string",
                     },

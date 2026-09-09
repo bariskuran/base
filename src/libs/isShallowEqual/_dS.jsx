@@ -11,10 +11,10 @@ const X = () => {
         <Ds.page
             title="isShallowEqual()"
             releasedOn="1.0.0"
-            description="Shallow compare for arrays/plain objects."
+            description={{ tr: "Diziler/düz nesneler için sığ karşılaştırma.", en: "Shallow comparison for arrays/plain objects." }}
         >
             <Ds.block
-                title="Object and array checks"
+            title={{ tr: "Nesne ve dizi kontrolleri", en: "Object and Array Checks" }}
                 code={`import { isShallowEqual } from "${SYS.basePath}";
 
                         isShallowEqual({ a: 1 }, { a: 1 });
@@ -58,19 +58,19 @@ const X = () => {
                 args="const equal = isShallowEqual(a, b);"
                 props={{
                     a: {
-                        description: "First value.",
+                        description: { tr: "İlk değer.", en: "First value." },
                         type: "any",
                         required: true,
                     },
                     b: {
-                        description: "Second value.",
+                        description: { tr: "İkinci değer.", en: "Second value." },
                         type: "any",
                         required: true,
                     },
                 }}
                 returnProps={{
                     equal: {
-                        description: "True when values are shallow-equal.",
+                        description: { tr: "Değerler sığ olarak eşitse true.", en: "True when values are shallow-equal." },
                         type: "boolean",
                     },
                 }}

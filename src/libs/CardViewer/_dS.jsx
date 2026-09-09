@@ -38,10 +38,10 @@ const X = () => {
 <CardViewer.masonry items={items} cardVariant="amedist" />`}
             />
             <Ds.block
-                title={{ tr: "Grid", en: "" }}
+                title={{ tr: "Grid", en: "Grid" }}
                 description={{
                     tr: "items içindeki her obje Card prop'u gibi değerlendirilir. Grid varyantı aynı row içindeki kartları aynı yüksekliğe stretch eder. Kart genişliği minColumnWidth ile sabit kalır; autoWidth açıldığında aynı satırdaki iki veya daha fazla kart kalan alanı paylaşır.",
-                    en: "",
+                    en: "Each object in items is treated as Card props. The Grid variant stretches cards in the same row to equal height. Card width remains fixed by minColumnWidth; when autoWidth is enabled, two or more cards in the same row share the remaining space.",
                 }}
                 code={`import { CardViewer } from "${SYS.basePath}";
 
@@ -51,10 +51,10 @@ const X = () => {
                 example={<CardViewer.grid items={items} />}
             />
             <Ds.block
-                title={{ tr: "Masonry", en: "" }}
+                title={{ tr: "Masonry", en: "Masonry" }}
                 description={{
                     tr: "Masonry, Pinterest benzeri column bazlı yerleşimdir. Bu varyantta kartlar kendi doğal yüksekliğini korur ve kolonlara akar.",
-                    en: "",
+                    en: "Masonry is a Pinterest-like column-based layout. Cards retain their natural height and flow into columns.",
                 }}
                 code={`<CardViewer.masonry
     items={items}
@@ -63,10 +63,10 @@ const X = () => {
                 example={<CardViewer.masonry items={items} />}
             />
             <Ds.block
-                title={{ tr: "Empty State", en: "" }}
+                title={{ tr: "Boş Durum", en: "Empty State" }}
                 description={{
                     tr: "items boşsa emptyText gösterilir. emptyText verilmezse globalData.textLibrary.emptyCardMap kullanılır.",
-                    en: "",
+                    en: "When items is empty, emptyText is displayed. If emptyText is omitted, globalData.textLibrary.emptyCardMap is used.",
                 }}
                 code={`<CardViewer
     items={[]}
@@ -74,10 +74,10 @@ const X = () => {
 />`}
             />
             <Ds.block
-                title={{ tr: "BE ve Pagination Hazırlığı", en: "" }}
+                title={{ tr: "BE ve Pagination Hazırlığı", en: "Backend and Pagination Readiness" }}
                 description={{
                     tr: "CardViewer veri çekmez; sorgu state'ini parent yönetir. page değişiminde parent yeni BE sorgusunu yapar ve items/total değerlerini tekrar gönderir. Load more akışında onLoadMore parent tarafında offset/page artırabilir.",
-                    en: "",
+                    en: "CardViewer does not fetch data; the parent manages query state. On page changes, the parent makes the new backend query and passes items/total again. In a load-more flow, onLoadMore can increment offset or page in the parent.",
                 }}
                 code={`<CardViewer
     items={items}
@@ -94,7 +94,7 @@ const X = () => {
                 args="CardViewer common props"
                 props={{
                     items: {
-                        description: { tr: "Kart datası array'i.", en: "" },
+                        description: { tr: "Kart datası dizisi.", en: "Array of Card data." },
                         type: "array",
                     },
                     data: {
@@ -105,12 +105,12 @@ const X = () => {
                         type: "array",
                     },
                     variant: {
-                        description: { tr: "CardViewer layout varyantı.", en: "" },
+                        description: { tr: "CardViewer yerleşim varyantı.", en: "CardViewer layout variant." },
                         type: "string",
                         defaultValue: '"grid"',
                     },
                     cardVariant: {
-                        description: { tr: "Kullanılacak Card varyantı.", en: "" },
+                        description: { tr: "Kullanılacak Card varyantı.", en: "Card variant to use." },
                         type: "string",
                         defaultValue: '"amedist"',
                     },
@@ -141,7 +141,7 @@ const X = () => {
                     emptyText: {
                         description: {
                             tr: "Boş state metni. String veya dil objesi kabul eder.",
-                            en: "",
+                            en: "Empty-state copy. Accepts a string or a language object.",
                         },
                         type: "string | object",
                     },
@@ -168,27 +168,27 @@ const X = () => {
                         defaultValue: "20",
                     },
                     page: {
-                        description: { tr: "1 tabanlı sayfa numarası.", en: "" },
+                        description: { tr: "1 tabanlı sayfa numarası.", en: "1-based page number." },
                         type: "number",
                     },
                     offset: {
-                        description: { tr: "Slice veya BE sorgusu için offset.", en: "" },
+                        description: { tr: "Slice veya backend sorgusu için offset.", en: "Offset for a slice or backend query." },
                         type: "number",
                     },
                     pageSize: {
-                        description: { tr: "Sayfa başına kart sayısı.", en: "" },
+                        description: { tr: "Sayfa başına kart sayısı.", en: "Number of cards per page." },
                         type: "number",
                     },
                     total: {
-                        description: { tr: "BE tarafındaki toplam kayıt sayısı.", en: "" },
+                        description: { tr: "Backend tarafındaki toplam kayıt sayısı.", en: "Total record count on the backend." },
                         type: "number",
                     },
                     onPageChange: {
-                        description: { tr: "Pagination sayfa değişim callback'i.", en: "" },
+                        description: { tr: "Pagination sayfa değişim callback'i.", en: "Pagination page-change callback." },
                         type: "function",
                     },
                     onLoadMore: {
-                        description: { tr: "Load more callback'i.", en: "" },
+                        description: { tr: "Load-more callback'i.", en: "Load-more callback." },
                         type: "function",
                     },
                     hasMore: {

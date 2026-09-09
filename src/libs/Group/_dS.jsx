@@ -41,7 +41,7 @@ const X = () => (
         }
     >
         <Ds.block
-            title="With Flex wrapper"
+            title={{ tr: "Flex sarmalayıcısı ile", en: "With Flex Wrapper" }}
             code={`import { Group, Button } from "${SYS.basePath}";
 
                    const items = [
@@ -65,8 +65,8 @@ const X = () => (
             }
         />
         <Ds.block
-            title="flat — parent owns layout"
-            description="When flat is true, Group returns only the mapped components in a fragment. Wrap with Flex or ScrollFlex yourself."
+            title={{ tr: "flat — yerleşim parent'a aittir", en: "flat — Parent Owns Layout" }}
+            description={{ tr: "flat true olduğunda Group, yalnızca eşlenmiş componentleri bir fragment içinde döndürür. Flex veya ScrollFlex ile kendiniz sarmalayın.", en: "When flat is true, Group returns only the mapped components in a fragment. Wrap with Flex or ScrollFlex yourself." }}
             code={`import { Group, Button, Flex } from "${SYS.basePath}";
 
                     <Flex gap={8}>
@@ -96,7 +96,7 @@ const X = () => (
             }
         />
         <Ds.block
-            title="Column layout"
+            title={{ tr: "Kolon yerleşimi", en: "Column Layout" }}
             code={`import { Group, Button } from "${SYS.basePath}";
 
                    <Group
@@ -136,7 +136,7 @@ const X = () => (
                     defaultValue: "{}",
                 },
                 flexProps: {
-                    description: "Forwarded to the inner Flex wrapper. Ignored when flat is true.",
+                    description: { tr: "İç Flex sarmalayıcısına aktarılır. flat true olduğunda yok sayılır.", en: "Forwarded to the inner Flex wrapper. Ignored when flat is true." },
                     type: "object",
                     defaultValue: "{}",
                 },

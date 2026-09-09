@@ -42,7 +42,7 @@ const X = () => {
                     You can use get3DShadow via direct import from base, or via the theme helper in styled usage (theme.get3DShadow if attached in your setup).`}
         >
             <Ds.block
-                title="Interactive preview"
+                title={{ tr: "Etkileşimli Önizleme", en: "Interactive preview" }}
                 code={`import { get3DShadow } from "${SYS.basePath}";
 
                         const Box = styled.div\`
@@ -133,28 +133,28 @@ const X = () => {
                 args="const shadowCss = get3DShadow({ color, depth, hoverDepth, transition });"
                 props={{
                     depth: {
-                        description: "Base shadow depth level.",
+                        description: { tr: "Temel gölge derinliği seviyesi.", en: "Base shadow depth level." },
                         type: "number",
                         defaultValue: "1",
                     },
                     hoverDepth: {
-                        description: "Shadow depth on hover.",
+                        description: { tr: "Hover durumundaki gölge derinliği.", en: "Shadow depth on hover." },
                         type: "number | null",
                     },
                     transition: {
-                        description: "Adds transition for hover shadow.",
+                        description: { tr: "Hover gölgesi için transition ekler.", en: "Adds transition for hover shadow." },
                         type: "boolean",
                         defaultValue: "true",
                     },
                     color: {
-                        description: "Shadow source color (defaults theme.foreground).",
+                        description: { tr: "Gölge kaynak rengi (varsayılan theme.foreground).", en: "Shadow source color (defaults theme.foreground)." },
                         type: "string",
                         defaultValue: "theme.foreground",
                     },
                 }}
                 returnProps={{
                     shadowCss: {
-                        description: "styled-components css fragment for box-shadow layers.",
+                        description: { tr: "box-shadow katmanları için styled-components CSS parçası.", en: "styled-components css fragment for box-shadow layers." },
                         type: "css",
                     },
                 }}

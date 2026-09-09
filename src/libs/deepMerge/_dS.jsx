@@ -24,10 +24,13 @@ const X = () => (
     <Ds.page
         title="deepMerge()"
         releasedOn="1.0.0"
-        description="Deep merges plain objects. When paths overlap, newData values override oldData."
+        description={{
+            tr: "Düz nesneleri derinlemesine birleştirir. Yollar çakıştığında newData değerleri oldData değerlerinin üzerine yazılır.",
+            en: "Deep merges plain objects. When paths overlap, newData values override oldData.",
+        }}
     >
         <Ds.block
-            title="3-level merge example"
+            title={{ tr: "3 seviyeli birleştirme örneği", en: "3-level merge example" }}
             code={`import { deepMerge } from "${SYS.basePath}";
 
                     const merged = deepMerge(oldData, newData);`}
@@ -62,19 +65,19 @@ const X = () => (
             args="const merged = deepMerge(oldData, newData);"
             props={{
                 oldData: {
-                    description: "Base value.",
+                    description: { tr: "Temel değer.", en: "Base value." },
                     type: "any",
                     required: true,
                 },
                 newData: {
-                    description: "Incoming value to merge.",
+                    description: { tr: "Birleştirilecek gelen değer.", en: "Incoming value to merge." },
                     type: "any",
                     required: true,
                 },
             }}
             returnProps={{
                 merged: {
-                    description: "Deep-merged plain object or array result.",
+                    description: { tr: "Derinlemesine birleştirilmiş düz nesne veya dizi sonucu.", en: "Deep-merged plain object or array result." },
                     type: "any",
                 },
             }}

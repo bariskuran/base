@@ -3,6 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { Flag } from ".";
 import { Flex } from "../Flex";
 import { Button } from "../Button";
+import { t } from "../getText";
 
 const X = () => (
     <Ds.page
@@ -10,21 +11,18 @@ const X = () => (
         releasedOn="1.0.0"
         description={
             <>
-                Flag component renders country/region flags via internal flag library and Icon
-                renderer. If a flag code is missing, it falls back to <code>global</code>.
+                {t({ tr: "Flag componenti ülke/bölge bayraklarını dahili bayrak kütüphanesi ve Icon renderer üzerinden gösterir. Bir bayrak kodu bulunamazsa ", en: "The Flag component renders country and region flags through the internal flag library and Icon renderer. When a flag code is missing, it falls back to " })}<code>global</code>{t({ tr: " değerine döner.", en: "." })}
                 <br />
-                Check out <Button.string to="/design-system/flagLibrary" label="Flag Library" />.
+                {t({ tr: "Şuraya bakın: ", en: "See " })}<Button.string to="/design-system/flagLibrary" label="Flag Library" />.
                 <br />
                 <br />
-                Flag component is built on top of the 'Icon' component. Check out{" "}
-                <Button.string to="/design-system/icon" label="Icon" /> for props. But keep in mind
-                style props like color, hoverColor, activeColor, etc. doesn't work with Flag. And
-                instead of 'icon' prop, use 'flag' prop.
+                {t({ tr: "Flag componenti Icon componenti üzerine kuruludur. Prop ayrıntıları için ", en: "Flag is built on top of the Icon component. See " })}
+                <Button.string to="/design-system/icon" label="Icon" />{t({ tr: " sayfasına bakın. Ancak color, hoverColor, activeColor gibi stil propları Flag ile çalışmaz; icon yerine flag propunu kullanın.", en: " for its props. Note that style props such as color, hoverColor, and activeColor do not work with Flag; use the flag prop instead of icon." })}
             </>
         }
     >
         <Ds.block
-            title="Basic usage"
+            title={{ tr: "Temel kullanım", en: "Basic usage" }}
             code={`import { Flag } from "${SYS.basePath}";
 
                    <Flag flag="tr" />
@@ -39,7 +37,7 @@ const X = () => (
             }
         />
         <Ds.block
-            title="Size"
+            title={{ tr: "Boyut", en: "Size" }}
             code={`import { Flag } from "${SYS.basePath}";
 
                    <Flag flag="tr" width={18} />
@@ -54,9 +52,9 @@ const X = () => (
             }
         />
         <Ds.block
-            title="Fallback behavior"
+            title={{ tr: "Geri dönüş davranışı", en: "Fallback behavior" }}
             lastBlock
-            description="When an unknown flag key is provided, Flag falls back to 'global'."
+            description={{ tr: "Bilinmeyen bir bayrak anahtarı verildiğinde Flag, global değerine döner.", en: "When an unknown flag key is provided, Flag falls back to global." }}
             code={`import { Flag } from "${SYS.basePath}";
 
                       <Flag flag="unknown-code" width={18} />

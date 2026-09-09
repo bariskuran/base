@@ -18,7 +18,7 @@ const X = () => {
                         You can use colorGet via direct import from base, or via the theme helper in styled usage (theme.colorGet).`}
         >
             <Ds.block
-                title="Interactive"
+                title={{ tr: "Etkileşimli", en: "Interactive" }}
                 code={`import { colorGet } from "${SYS.basePath}";
 
                        colorGet("primary");
@@ -76,20 +76,20 @@ const X = () => {
                 args="const result = colorGet(color);"
                 props={{
                     color: {
-                        description: "Input color token/path/css color.",
+                        description: { tr: "Girdi renk token'ı/yolu/CSS rengi.", en: "Input color token/path/css color." },
                         type: "string",
                         required: true,
                     },
                 }}
                 returnProps={{
-                    color: { description: "Resolved color string.", type: "string" },
+                    color: { description: { tr: "Çözümlenen renk string'i.", en: "Resolved color string." }, type: "string" },
                     colorApi: {
-                        description: "Helper API for the resolved color (tint, shade, etc.).",
+                        description: { tr: "Çözümlenen renk için yardımcı API (tint, shade vb.).", en: "Helper API for the resolved color (tint, shade, etc.)." },
                         type: "object",
                     },
-                    opposite: { description: "Accessible opposite color string.", type: "string" },
+                    opposite: { description: { tr: "Erişilebilir karşıt renk string'i.", en: "Accessible opposite color string." }, type: "string" },
                     oppositeApi: {
-                        description: "Helper API for the opposite color.",
+                        description: { tr: "Karşıt renk için yardımcı API.", en: "Helper API for the opposite color." },
                         type: "object",
                     },
                 }}

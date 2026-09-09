@@ -22,7 +22,7 @@ const X = () => {
 You can use colorFind via direct import from base, or via the theme helper in styled usage (theme.colorFind).`}
         >
             <Ds.block
-                title="Interactive"
+                title={{ tr: "Etkileşimli", en: "Interactive" }}
                 code={`import { colorFind } from "${SYS.basePath}";
 
                        colorFind("primary");
@@ -92,18 +92,18 @@ You can use colorFind via direct import from base, or via the theme helper in st
                         required: true,
                     },
                     output: {
-                        description: "Output format for resolved color.",
+                        description: { tr: "Çözümlenen renk için çıktı formatı.", en: "Output format for resolved color." },
                         type: '"hex6" | "hex8"',
                         defaultValue: '"hex6"',
                     },
                     theme: {
-                        description: "Optional theme override object for lookup.",
+                        description: { tr: "Arama için isteğe bağlı theme override nesnesi.", en: "Optional theme override object for lookup." },
                         type: "object",
                     },
                 }}
                 returnProps={{
                     hex: {
-                        description: "Resolved hex color string, or undefined when not found.",
+                        description: { tr: "Çözümlenen hex renk string'i; bulunamazsa undefined.", en: "Resolved hex color string, or undefined when not found." },
                         type: "string | undefined",
                     },
                 }}

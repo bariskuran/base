@@ -52,10 +52,10 @@ const X = () => {
                 }
             />
             <Ds.block
-                title={{ tr: "Catalog Thumb", en: "" }}
+                title={{ tr: "Katalog Thumb", en: "Catalog Thumb" }}
                 description={{
                     tr: "catalogSet verildiğinde Card, Image komponentini thumb variantı ile kullanır. Katalogda thumb yoksa Image normal seçim akışına geri döner.",
-                    en: "",
+                    en: "When catalogSet is provided, Card uses Image with its thumb variant. If the catalog has no thumb, Image falls back to its normal selection flow.",
                 }}
                 code={`<Card
     catalogSet="i0030"
@@ -69,14 +69,14 @@ const X = () => {
                     thumb: {
                         description: {
                             tr: "String src veya React node olarak görsel alanı.",
-                            en: "",
+                            en: "Image area as a string src or React node.",
                         },
                         type: "string | ReactNode",
                     },
                     catalogSet: {
                         description: {
                             tr: "Image catalog set adı. Thumb variantı seçilir.",
-                            en: "",
+                            en: "Image catalog set name. The thumb variant is selected.",
                         },
                         type: "string",
                     },
@@ -102,7 +102,7 @@ const X = () => {
                         type: "string | object",
                     },
                     title: {
-                        description: { tr: "Kart başlığı.", en: "" },
+                        description: { tr: "Kart başlığı.", en: "Card title." },
                         type: "string | object",
                     },
                     supTitle: {
@@ -120,11 +120,11 @@ const X = () => {
                         type: "string",
                     },
                     subtitle: {
-                        description: { tr: "Kart alt başlığı.", en: "" },
+                        description: { tr: "Kart alt başlığı.", en: "Card subtitle." },
                         type: "string | object",
                     },
                     description: {
-                        description: { tr: "Kart açıklaması.", en: "" },
+                        description: { tr: "Kart açıklaması.", en: "Card description." },
                         type: "string | object",
                     },
                     ctaLabel: {
@@ -135,7 +135,7 @@ const X = () => {
                         type: "string | object",
                     },
                     to: {
-                        description: { tr: "Internal route.", en: "" },
+                        description: { tr: "Dahili route.", en: "Internal route." },
                         type: "string",
                     },
                     state: {
@@ -146,11 +146,11 @@ const X = () => {
                         type: "object",
                     },
                     href: {
-                        description: { tr: "External veya direct URL.", en: "" },
+                        description: { tr: "Harici veya doğrudan URL.", en: "External or direct URL." },
                         type: "string",
                     },
                     onClick: {
-                        description: { tr: "Kart tıklama callback'i.", en: "" },
+                        description: { tr: "Kart tıklama callback'i.", en: "Card click callback." },
                         type: "function",
                     },
                     target: {

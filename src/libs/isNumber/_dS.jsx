@@ -8,9 +8,9 @@ const X = () => {
     const { outputButtonProps, Output } = Ds.useOutputViewer();
 
     return (
-        <Ds.page title="isNumber()" releasedOn="1.0.0" description="Checks finite numeric values.">
+        <Ds.page title="isNumber()" releasedOn="1.0.0" description={{ tr: "Sonlu sayısal değerleri kontrol eder.", en: "Checks finite numeric values." }}>
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel kullanım", en: "Basic Usage" }}
                 code={`import { isNumber } from "${SYS.basePath}";
 
                         isNumber(12);
@@ -52,14 +52,14 @@ const X = () => {
                 args="const ok = isNumber(data);"
                 props={{
                     data: {
-                        description: "Value to check.",
+                        description: { tr: "Kontrol edilecek değer.", en: "Value to check." },
                         type: "any",
                         required: true,
                     },
                 }}
                 returnProps={{
                     ok: {
-                        description: "True for finite numeric-like values.",
+                        description: { tr: "Sonlu, sayısal benzeri değerlerde true.", en: "True for finite numeric-like values." },
                         type: "boolean",
                     },
                 }}

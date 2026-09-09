@@ -14,10 +14,10 @@ const X = () => {
         <Ds.page
             title="scrollLock()"
             releasedOn="1.0.0"
-            description="Locks/unlocks document scrolling."
+            description={{ tr: "Document scroll'unu kilitler/açar.", en: "Locks/unlocks document scrolling." }}
         >
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel kullanım", en: "Basic Usage" }}
                 code={`import { scrollLock } from "${SYS.basePath}";
 
                         scrollLock(true);
@@ -55,7 +55,7 @@ const X = () => {
                 returns="void."
                 props={{
                     boo: {
-                        description: "True to lock scroll, false to restore.",
+                        description: { tr: "Scroll'u kilitlemek için true, geri açmak için false.", en: "True to lock scrolling, false to restore it." },
                         type: "boolean",
                         required: true,
                     },

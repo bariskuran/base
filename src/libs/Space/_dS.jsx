@@ -5,9 +5,9 @@ import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 
 const X = () => (
-    <Ds.page title="<Space>" releasedOn="1.0.0" description="Vertical spacer component.">
+    <Ds.page title="<Space>" releasedOn="1.0.0" description={{ tr: "Dikey boşluk componenti.", en: "Vertical spacer component." }}>
         <Ds.block
-            title="Preset and Custom Size"
+            title={{ tr: "Ön ayarlı ve özel boyut", en: "Preset and Custom Size" }}
             code={`import { Space } from "${SYS.basePath}";
 
                         <Typo>Top</Typo>
@@ -31,7 +31,7 @@ const X = () => (
             args="<Space />"
             props={{
                 size: {
-                    description: "Spacer size token or css size value.",
+                    description: { tr: "Spacer boyut token'ı veya CSS boyut değeri.", en: "Spacer size token or CSS size value." },
                     type: `"xs" | "s" | "m" | "l" | "xl" | "xxl" | "xxxl" | "xxxxl" | string | number`,
                     defaultValue: '"m"',
                 },

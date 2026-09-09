@@ -19,6 +19,8 @@ const KNOWN_VARIANT_ORDER = [
 ];
 const IMAGE_CATALOG_DIR_NAME = "imageCatalog";
 const ARATIO_DECIMALS = 1;
+// Keep generated catalog modules comfortably below Vite's default chunk warning.
+const IMAGE_CATALOG_CHUNK_SIZE_LIMIT = 220 * 1024;
 
 function getARatio(naturalWidth, naturalHeight) {
     if (!naturalWidth || !naturalHeight) return null;
@@ -579,6 +581,184 @@ function updateCatalogIndex(imagesDir, imageFolders) {
     return writeTextIfChanged(indexPath, createCatalogIndexContent(imageFolders));
 }
 
+function findCatalogExportObject(source) {
+    const marker = "export default";
+    const exportIndex = source.indexOf(marker);
+    if (exportIndex < 0) return null;
+
+    const openIndex = source.indexOf("{", exportIndex);
+    if (openIndex < 0) return null;
+
+    let depth = 0;
+    let quote = null;
+    let inLineComment = false;
+    let inBlockComment = false;
+    let escaped = false;
+
+    for (let index = openIndex; index < source.length; index += 1) {
+        const char = source[index];
+        const next = source[index + 1];
+
+        if (inLineComment) {
+            if (char === "\n") inLineComment = false;
+            continue;
+        }
+        if (inBlockComment) {
+            if (char === "*" && next === "/") {
+                inBlockComment = false;
+                index += 1;
+            }
+            continue;
+        }
+        if (quote) {
+            if (escaped) escaped = false;
+            else if (char === "\\") escaped = true;
+            else if (char === quote) quote = null;
+            continue;
+        }
+        if (char === "/" && next === "/") {
+            inLineComment = true;
+            index += 1;
+            continue;
+        }
+        if (char === "/" && next === "*") {
+            inBlockComment = true;
+            index += 1;
+            continue;
+        }
+        if (char === '"' || char === "'" || char === "`") {
+            quote = char;
+            continue;
+        }
+        if (char === "{") depth += 1;
+        if (char === "}") {
+            depth -= 1;
+            if (depth === 0) {
+                return { prefix: source.slice(0, exportIndex), body: source.slice(openIndex + 1, index) };
+            }
+        }
+    }
+
+    return null;
+}
+
+function splitCatalogEntries(body) {
+    const entries = [];
+    let start = 0;
+    let depth = 0;
+    let quote = null;
+    let inLineComment = false;
+    let inBlockComment = false;
+    let escaped = false;
+
+    for (let index = 0; index < body.length; index += 1) {
+        const char = body[index];
+        const next = body[index + 1];
+
+        if (inLineComment) {
+            if (char === "\n") inLineComment = false;
+            continue;
+        }
+        if (inBlockComment) {
+            if (char === "*" && next === "/") {
+                inBlockComment = false;
+                index += 1;
+            }
+            continue;
+        }
+        if (quote) {
+            if (escaped) escaped = false;
+            else if (char === "\\") escaped = true;
+            else if (char === quote) quote = null;
+            continue;
+        }
+        if (char === "/" && next === "/") {
+            inLineComment = true;
+            index += 1;
+            continue;
+        }
+        if (char === "/" && next === "*") {
+            inBlockComment = true;
+            index += 1;
+            continue;
+        }
+        if (char === '"' || char === "'" || char === "`") {
+            quote = char;
+            continue;
+        }
+        if (char === "{" || char === "[" || char === "(") depth += 1;
+        if (char === "}" || char === "]" || char === ")") depth -= 1;
+        if (char === "," && depth === 0) {
+            const entry = body.slice(start, index).trim();
+            if (entry) entries.push(entry);
+            start = index + 1;
+        }
+    }
+
+    const lastEntry = body.slice(start).trim();
+    if (lastEntry) entries.push(lastEntry);
+    return entries;
+}
+
+function removeCatalogChunks(chunksDir) {
+    if (!fs.existsSync(chunksDir)) return;
+    for (const fileName of fs.readdirSync(chunksDir)) {
+        if (/^catalog_\d+\.js$/.test(fileName)) fs.unlinkSync(path.join(chunksDir, fileName));
+    }
+}
+
+function splitImageCatalog(imagesDir, chunkSizeLimit = IMAGE_CATALOG_CHUNK_SIZE_LIMIT) {
+    const indexPath = path.join(imagesDir, "index.js");
+    const source = readText(indexPath);
+    const chunksDir = path.join(imagesDir, "_chunks");
+
+    if (!source || Buffer.byteLength(source, "utf8") <= chunkSizeLimit) {
+        removeCatalogChunks(chunksDir);
+        return { split: false, chunkCount: 0 };
+    }
+
+    const parsed = findCatalogExportObject(source);
+    if (!parsed) throw new Error(`Could not split generated image catalog: ${indexPath}`);
+
+    const entries = splitCatalogEntries(parsed.body);
+    if (entries.length === 0) return { split: false, chunkCount: 0 };
+
+    const chunks = [];
+    let currentEntries = [];
+    let currentSize = 0;
+
+    for (const entry of entries) {
+        const entrySize = Buffer.byteLength(entry, "utf8");
+        if (currentEntries.length > 0 && currentSize + entrySize > chunkSizeLimit) {
+            chunks.push(currentEntries);
+            currentEntries = [];
+            currentSize = 0;
+        }
+        currentEntries.push(entry);
+        currentSize += entrySize;
+    }
+    if (currentEntries.length > 0) chunks.push(currentEntries);
+
+    ensureDir(chunksDir);
+    removeCatalogChunks(chunksDir);
+
+    chunks.forEach((chunkEntries, index) => {
+        const usesPlaceholder = chunkEntries.some((entry) => /\b_placeholder\b/.test(entry));
+        const imports = usesPlaceholder
+            ? `${GENERATED_HEADER}\nimport _placeholder from "../_placeholder";\n\n`
+            : `${GENERATED_HEADER}\n\n`;
+        const content = `${imports}export default {\n${chunkEntries.map((entry) => `    ${entry}`).join(",\n")}\n};\n`;
+        writeTextIfChanged(path.join(chunksDir, `catalog_${index}.js`), content);
+    });
+
+    const imports = chunks.map((_, index) => `import catalog_${index} from "./_chunks/catalog_${index}.js";`);
+    const entriesContent = chunks.map((_, index) => `    ...catalog_${index},`);
+    const nextIndex = `${GENERATED_HEADER}\n${imports.join("\n")}\n\nexport default {\n${entriesContent.join("\n")}\n};\n`;
+    writeTextIfChanged(indexPath, nextIndex);
+
+    return { split: true, chunkCount: chunks.length };
+}
+
 function generateImageIndexes(projectRoot) {
     const srcCatalogDir = getSrcImageCatalogDir(projectRoot);
     const publicCatalogDir = getPublicImageCatalogDir(projectRoot);
@@ -608,6 +788,7 @@ function generateImageIndexes(projectRoot) {
     }
 
     const catalogChanged = updateCatalogIndex(srcCatalogDir, imageFolders);
+    const catalogSplit = splitImageCatalog(srcCatalogDir);
 
     return {
         imagesDir: srcCatalogDir,
@@ -617,6 +798,7 @@ function generateImageIndexes(projectRoot) {
         changedFolders,
         totalImages,
         catalogChanged,
+        catalogSplit,
     };
 }
 
@@ -688,5 +870,6 @@ module.exports = {
     getImageSize,
     getShape,
     normalizeShape,
+    splitImageCatalog,
     setupImageCatalog,
 };

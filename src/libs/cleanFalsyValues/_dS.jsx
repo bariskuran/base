@@ -26,8 +26,17 @@ const X = () => {
         <Ds.page
             title="cleanFalsyValues()"
             releasedOn="1.0.0"
-            description={
-                <>
+            description={{
+                tr: <>
+                    Varsayılan: deep true, tüm falsy türler kaldırılır. Hariç tutmak için except, izin listesi
+                    için only kullanın (only, except'e göre önceliklidir). Türler: {FALSY_TYPES.join(", ")}.
+                    <br />
+                    <br />
+                    Test örneği:
+                    <br />
+                    <Typo.code>sample = {stringifyForPreview(testSample)}</Typo.code>
+                </>,
+                en: <>
                     Default: deep true, all falsy types removed. Use except to opt out, or only for
                     an allowlist (only wins over except). Types: {FALSY_TYPES.join(", ")}.
                     <br />
@@ -35,12 +44,12 @@ const X = () => {
                     Test sample:
                     <br />
                     <Typo.code>sample = {stringifyForPreview(testSample)}</Typo.code>
-                </>
-            }
+                </>,
+            }}
         >
             <Ds.block
-                title="Basic Usage"
-                description="No settings: deep walk, all types stripped."
+                title={{ tr: "Temel Kullanım", en: "Basic Usage" }}
+                description={{ tr: "Ayar verilmezse derin dolaşım yapılır ve tüm türler ayıklanır.", en: "No settings: deep walk, all types stripped." }}
                 code={`import { cleanFalsyValues } from "${SYS.basePath}";
 
                        const cleaned = cleanFalsyValues(sample);`}
@@ -60,7 +69,10 @@ const X = () => {
             />
             <Ds.block
                 title="deep: false"
-                description="Top level only; nested levels stays."
+                description={{
+                    tr: "Yalnızca üst seviyeyi işler; iç içe seviyeler olduğu gibi kalır.",
+                    en: "Processes the top level only; nested levels remain unchanged.",
+                }}
                 code="cleanFalsyValues(sample, { deep: false });"
                 example={
                     <Flex.column gap={10} padding={10} full>
@@ -80,7 +92,10 @@ const X = () => {
             />
             <Ds.block
                 title="except"
-                description="Opt out of types. Example keeps zeroNumber. 'except' array supports 'zeroNumber', 'numberNan', 'emptyString', 'false', 'undefined', 'null'."
+                description={{
+                    tr: "Türleri hariç tutar. Örnek zeroNumber değerini korur. except dizisi zeroNumber, numberNan, emptyString, false, undefined ve null değerlerini destekler.",
+                    en: "Excludes selected types. This example keeps zeroNumber. The except array supports zeroNumber, numberNan, emptyString, false, undefined, and null.",
+                }}
                 code="cleanFalsyValues(sample, { except: ['zeroNumber'] })"
                 example={
                     <Flex.column gap={10} padding={10} full>
@@ -98,7 +113,10 @@ const X = () => {
             />
             <Ds.block
                 title="only"
-                description="Allowlist only; except is ignored when only is non-empty. 'only' array supports 'zeroNumber', 'numberNan', 'emptyString', 'false', 'undefined', 'null'."
+                description={{
+                    tr: "Yalnızca izin listesindeki türleri hedefler; only boş değilse except yok sayılır. only dizisi zeroNumber, numberNan, emptyString, false, undefined ve null değerlerini destekler.",
+                    en: "Targets only the allowlisted types; except is ignored when only is non-empty. The only array supports zeroNumber, numberNan, emptyString, false, undefined, and null.",
+                }}
                 code="cleanFalsyValues(sample, { only: ['undefined']});"
                 example={
                     <Flex.column gap={10} padding={10} full>
@@ -131,31 +149,33 @@ const X = () => {
                 args="const cleaned = cleanFalsyValues(arg, { deep, except, only });"
                 props={{
                     arg: {
-                        description: "Plain object or array to clean.",
+                        description: { tr: "Temizlenecek sade nesne veya dizi.", en: "Plain object or array to clean." },
                         type: "object | array",
                         required: true,
                     },
                     deep: {
-                        description: "Recurses into nested objects and arrays.",
+                        description: { tr: "İç içe nesne ve dizilere özyinelemeli olarak iner.", en: "Recurses into nested objects and arrays." },
                         type: "boolean",
                         defaultValue: "true",
                     },
                     except: {
-                        description:
-                            "Types to keep (opt-out). Ignored when only is non-empty. Values: " +
-                            FALSY_TYPES.join(", "),
+                        description: {
+                            tr: "Korunacak türler (opt-out). only boş değilse yok sayılır. Değerler: " + FALSY_TYPES.join(", "),
+                            en: "Types to keep (opt-out). Ignored when only is non-empty. Values: " + FALSY_TYPES.join(", "),
+                        },
                         type: "string[]",
                     },
                     only: {
-                        description:
-                            "Types to strip (allowlist). Non-empty only overrides except. Values: " +
-                            FALSY_TYPES.join(", "),
+                        description: {
+                            tr: "Ayıklanacak türler (izin listesi). Boş olmayan only, except'i ezer. Değerler: " + FALSY_TYPES.join(", "),
+                            en: "Types to strip (allowlist). Non-empty only overrides except. Values: " + FALSY_TYPES.join(", "),
+                        },
                         type: "string[]",
                     },
                 }}
                 returnProps={{
                     cleaned: {
-                        description: "New object or array with matching keys or items removed.",
+                        description: { tr: "Eşleşen anahtarları veya öğeleri kaldırılmış yeni nesne ya da dizi.", en: "New object or array with matching keys or items removed." },
                         type: "object | array",
                     },
                 }}

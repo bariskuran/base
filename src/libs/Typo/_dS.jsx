@@ -16,21 +16,21 @@ const codeFormatSample = `const obj = {
 };`;
 
 const apiProps = {
-    children: { description: "Text content.", type: "ReactNode", defaultValue: "null" },
-    content: { description: "Alternative text content.", type: "ReactNode", defaultValue: "null" },
+    children: { description: { tr: "Metin içeriği.", en: "Text content." }, type: "ReactNode", defaultValue: "null" },
+    content: { description: { tr: "Alternatif metin içeriği.", en: "Alternative text content." }, type: "ReactNode", defaultValue: "null" },
     contentGroup: {
-        description: "Renders one host element per item (e.g. multiple <p> when as is p).",
+        description: { tr: "Her item için bir host element render eder (ör. as p iken birden fazla <p>).", en: "Renders one host element per item (e.g. multiple <p> when as is p)." },
         type: "any[]",
         defaultValue: "[]",
     },
     full: {
-        description: 'Shorthand for width="100%" when width is omitted.',
+        description: { tr: 'width verilmediğinde width="100%" için kısaltma.', en: 'Shorthand for width="100%" when width is omitted.' },
         type: "boolean",
         defaultValue: "false",
     },
-    as: { description: "HTML tag override.", type: "string", defaultValue: '"span"' },
+    as: { description: { tr: "HTML tag ezmesi.", en: "HTML tag override." }, type: "string", defaultValue: '"span"' },
     responsive: {
-        description: "Breakpoint-based prop overrides.",
+        description: { tr: "Breakpoint tabanlı prop ezmeleri.", en: "Breakpoint-based prop overrides." },
         type: "object",
         defaultValue: "{}",
     },
@@ -40,71 +40,71 @@ const apiProps = {
         type: "string | number",
         defaultValue: "theme/body default",
     },
-    fontSize: { description: "Alias for size.", type: "string | number" },
+    fontSize: { description: { tr: "size için alias.", en: "Alias for size." }, type: "string | number" },
     fontFamily: {
         description:
             'Named font key from PROJECT_SETTINGS.styledSettings.fonts, e.g. "montserrat". When omitted, Typo inherits fonts.primaryFont.',
         type: "string",
     },
-    weight: { description: "Font weight.", type: "number | string", defaultValue: "400" },
-    color: { description: "Text color.", type: "string", defaultValue: "inherit" },
-    highlight: { description: "Highlight background color.", type: "string" },
+    weight: { description: { tr: "Font ağırlığı.", en: "Font weight." }, type: "number | string", defaultValue: "400" },
+    color: { description: { tr: "Metin rengi.", en: "Text color." }, type: "string", defaultValue: "inherit" },
+    highlight: { description: { tr: "Vurgu arka plan rengi.", en: "Highlight background color." }, type: "string" },
     width: {
         description: 'Component width. Ignored when full is true and width is omitted.',
         type: "string | number",
         defaultValue: "auto",
     },
-    maxWidth: { description: "Maximum width.", type: "string | number", defaultValue: "none" },
-    disableMaxWidthLock: { description: "Disables default max-width lock.", type: "boolean" },
+    maxWidth: { description: { tr: "Maksimum genişlik.", en: "Maximum width." }, type: "string | number", defaultValue: "none" },
+    disableMaxWidthLock: { description: { tr: "Varsayılan max-width kilidini kapatır.", en: "Disables default max-width lock." }, type: "boolean" },
     ellipsis: {
-        description: "Single-line overflow ellipsis, or 'base' for DOM-measured truncation.",
+        description: { tr: "Tek satırlı overflow ellipsis veya DOM ile ölçülen kırpma için base.", en: "Single-line overflow ellipsis, or base for DOM-measured truncation." },
         type: "boolean | 'base'",
     },
-    clamp: { description: "Multi-line line-clamp count.", type: "number" },
-    align: { description: "Text alignment.", type: "string", defaultValue: "inherit" },
+    clamp: { description: { tr: "Çok satırlı line-clamp sayısı.", en: "Multi-line line-clamp count." }, type: "number" },
+    align: { description: { tr: "Metin hizalaması.", en: "Text alignment." }, type: "string", defaultValue: "inherit" },
     selfAlign: {
         description:
             'Grid/flex self alignment: "left" | "center" | "right". When omitted, parent alignment applies.',
         type: "string",
     },
-    wrap: { description: "Wrap behavior.", type: "boolean | string", defaultValue: "true" },
-    whiteSpace: { description: "white-space CSS value.", type: "string", defaultValue: '"normal"' },
-    overflow: { description: "overflow CSS value.", type: "string", defaultValue: '"visible"' },
+    wrap: { description: { tr: "Satır kırma davranışı.", en: "Wrap behavior." }, type: "boolean | string", defaultValue: "true" },
+    whiteSpace: { description: { tr: "white-space CSS değeri.", en: "white-space CSS value." }, type: "string", defaultValue: '"normal"' },
+    overflow: { description: { tr: "overflow CSS değeri.", en: "overflow CSS value." }, type: "string", defaultValue: '"visible"' },
     letterSpacing: {
-        description: "letter-spacing value.",
+        description: { tr: "letter-spacing değeri.", en: "letter-spacing value." },
         type: "string | number",
         defaultValue: "0",
     },
-    lineHeight: { description: "line-height value.", type: "string | number", defaultValue: "1.7" },
-    unselectable: { description: "Disables text selection.", type: "boolean" },
-    copy: { description: "Shows copy-to-clipboard control.", type: "boolean" },
-    italic: { description: "Italic text.", type: "boolean" },
-    bold: { description: "Bold text.", type: "boolean" },
-    underline: { description: "Underline text.", type: "boolean" },
-    strikethrough: { description: "Line-through text.", type: "boolean" },
-    uppercase: { description: "Uppercase transform.", type: "boolean" },
-    lowercase: { description: "Lowercase transform.", type: "boolean" },
-    capitalize: { description: "Capitalize transform.", type: "boolean" },
-    disabled: { description: "Disabled style state.", type: "boolean" },
+    lineHeight: { description: { tr: "line-height değeri.", en: "line-height value." }, type: "string | number", defaultValue: "1.7" },
+    unselectable: { description: { tr: "Metin seçimini kapatır.", en: "Disables text selection." }, type: "boolean" },
+    copy: { description: { tr: "Panoya kopyalama kontrolünü gösterir.", en: "Shows copy-to-clipboard control." }, type: "boolean" },
+    italic: { description: { tr: "İtalik metin.", en: "Italic text." }, type: "boolean" },
+    bold: { description: { tr: "Kalın metin.", en: "Bold text." }, type: "boolean" },
+    underline: { description: { tr: "Altı çizili metin.", en: "Underline text." }, type: "boolean" },
+    strikethrough: { description: { tr: "Üstü çizili metin.", en: "Line-through text." }, type: "boolean" },
+    uppercase: { description: { tr: "Büyük harf dönüşümü.", en: "Uppercase transform." }, type: "boolean" },
+    lowercase: { description: { tr: "Küçük harf dönüşümü.", en: "Lowercase transform." }, type: "boolean" },
+    capitalize: { description: { tr: "Kelime başlarını büyütme dönüşümü.", en: "Capitalize transform." }, type: "boolean" },
+    disabled: { description: { tr: "Disabled stil durumu.", en: "Disabled style state." }, type: "boolean" },
     margin: {
-        description: "Margin shorthand or per-side props.",
+        description: { tr: "Margin kısaltması veya kenar başına proplar.", en: "Margin shorthand or per-side props." },
         type: "string | number | object",
         defaultValue: "0",
     },
     padding: {
-        description: "Padding shorthand or per-side props.",
+        description: { tr: "Padding kısaltması veya kenar başına proplar.", en: "Padding shorthand or per-side props." },
         type: "string | number | object",
         defaultValue: "0",
     },
-    fitContent: { description: "Fits width to content.", type: "boolean" },
-    enableQuoteMarks: { description: "Adds decorative quote marks.", type: "boolean" },
-    balance: { description: "Enables text-wrap: balance.", type: "boolean" },
+    fitContent: { description: { tr: "Genişliği içeriğe uydurur.", en: "Fits width to content." }, type: "boolean" },
+    enableQuoteMarks: { description: { tr: "Dekoratif tırnak işaretleri ekler.", en: "Adds decorative quote marks." }, type: "boolean" },
+    balance: { description: { tr: "text-wrap: balance özelliğini açar.", en: "Enables text-wrap: balance." }, type: "boolean" },
     codeFormat: {
-        description: "Dedents and formats string content for code display.",
+        description: { tr: "String içeriğini code gösterimi için girintiden arındırır ve formatlar.", en: "Dedents and formats string content for code display." },
         type: "boolean",
     },
     codeFormatJsxProps: {
-        description: "When codeFormat is on, splits JSX opening tags across lines.",
+        description: { tr: "codeFormat açıkken JSX açılış tag'lerini satırlara böler.", en: "When codeFormat is on, splits JSX opening tags across lines." },
         type: "boolean",
     },
     codeFormatCalls: {
@@ -112,18 +112,18 @@ const apiProps = {
             "When codeFormat is on, breaks function calls and object/array literals across lines.",
         type: "boolean",
     },
-    exportData: { description: "Debug/export passthrough.", type: "boolean | function | object" },
+    exportData: { description: { tr: "Debug/export yardımcısı aktarımı.", en: "Debug/export helper passthrough." }, type: "boolean | function | object" },
 };
 
 const X = () => (
     <Ds.page
         title="<Typo>"
         releasedOn="1.0.0"
-        description="Text component with variants, typography props, truncation, copy, responsive overrides, and nested HTML guards."
+        description={{ tr: "Varyantları, tipografi propları, kırpma, kopyalama, responsive ezmeleri ve iç içe HTML korumaları olan metin componenti.", en: "Text component with variants, typography props, truncation, copy, responsive overrides, and nested HTML guards." }}
     >
         <Ds.block
-            title="Variants"
-            description="Shortcut components for common tags and styles."
+            title={{ tr: "Varyantlar", en: "Variants" }}
+            description={{ tr: "Yaygın tag'ler ve stiller için kısayol componentleri.", en: "Shortcut components for common tags and styles." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo.h1>Heading 1</Typo.h1>
@@ -154,8 +154,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="size, weight & color"
-            description="fontSize/size, weight, and theme color path."
+            title={{ tr: "size, weight ve color", en: "size, weight & color" }}
+            description={{ tr: "fontSize/size, weight ve theme color path kullanımı.", en: "fontSize/size, weight, and theme color path." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo size={26} weight={700} color="primary">
@@ -176,7 +176,7 @@ const X = () => (
 
         <Ds.block
             title="fontFamily"
-            description="Select a named font from PROJECT_SETTINGS.styledSettings.fonts."
+            description={{ tr: "PROJECT_SETTINGS.styledSettings.fonts içinden adlandırılmış font seçer.", en: "Selects a named font from PROJECT_SETTINGS.styledSettings.fonts." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo content="Primary font" />
@@ -190,8 +190,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="bold & italic"
-            description="weight prop or Typo.bold / Typo.italic variants."
+            title={{ tr: "bold ve italic", en: "bold & italic" }}
+            description={{ tr: "weight prop'u veya Typo.bold / Typo.italic varyantları.", en: "weight prop or Typo.bold / Typo.italic variants." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo.span weight={700}>Bold</Typo.span>
@@ -207,8 +207,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="underline & strikethrough"
-            description="Underline and line-through styles."
+            title={{ tr: "underline ve strikethrough", en: "underline & strikethrough" }}
+            description={{ tr: "Altı çizili ve üstü çizili stiller.", en: "Underline and line-through styles." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo underline>Underline</Typo>
@@ -223,7 +223,7 @@ const X = () => (
 
         <Ds.block
             title="highlight"
-            description="Background highlight color."
+            description={{ tr: "Arka plan vurgu rengi.", en: "Background highlight colour." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo highlight="warning" content="Highlighted text" />`}
@@ -231,8 +231,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="clamp, ellipsis & copy"
-            description="clamp limits lines; ellipsis is single-line overflow without clamp; copy adds a button (inline for short text, overlay top-right for clamped or code blocks)."
+            title={{ tr: "clamp, ellipsis ve copy", en: "clamp, ellipsis & copy" }}
+            description={{ tr: "clamp satırları sınırlar; ellipsis clamp olmadan tek satırlı overflow sağlar; copy buton ekler (kısa metinde inline, clamp veya code bloklarında sağ üst overlay).", en: "clamp limits lines; ellipsis is single-line overflow without clamp; copy adds a button (inline for short text, overlay top-right for clamped or code blocks)." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo clamp={2} maxWidth={220} content={longText} />
@@ -251,7 +251,7 @@ const X = () => (
 
         <Ds.block
             title="Typo.code"
-            description="Typo.code enables codeFormat on string content (dedent, optional JSX/call breaking)."
+            description={{ tr: "Typo.code, string içerikte codeFormat'ı açar (dedent, isteğe bağlı JSX/call bölme).", en: "Typo.code enables codeFormat on string content (dedent, optional JSX/call breaking)." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo.code copy content={\`const obj = { ... };\`} />`}
@@ -260,7 +260,7 @@ const X = () => (
 
         <Ds.block
             title="responsive"
-            description="Override props per breakpoint key."
+            description={{ tr: "Breakpoint anahtarı başına prop ezmesi.", en: "Override props per breakpoint key." }}
             code={`<Typo.span
                     responsive={{
                         xs: { size: 12, color: "danger" },
@@ -280,8 +280,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="content & contentGroup"
-            description="Use content for a single value. contentGroup renders multiple block hosts (e.g. several <p> elements)."
+            title={{ tr: "content ve contentGroup", en: "content & contentGroup" }}
+            description={{ tr: "Tek değer için content kullanın. contentGroup birden fazla block host render eder (ör. birden çok <p> elementi).", en: "Use content for a single value. contentGroup renders multiple block hosts (e.g. several <p> elements)." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo.p content="Paragraph one." />
@@ -304,28 +304,28 @@ const X = () => (
 
         <Ds.block
             title="as"
-            description="Override the rendered HTML tag."
+            description={{ tr: "Render edilen HTML tag'ini ezer.", en: "Overrides the rendered HTML tag." }}
             code='<Typo as="label" size={15} content="Label text" />'
             example={<Typo as="label" size={15} content="Label text" />}
         />
 
         <Ds.block
             title="disabled"
-            description="Muted disabled appearance."
+            description={{ tr: "Soluk disabled görünümü.", en: "Muted disabled appearance." }}
             code='<Typo.span disabled content="Disabled text" />'
             example={<Typo.span disabled content="Disabled text" />}
         />
 
         <Ds.block
             title="unselectable"
-            description="Prevents text selection."
+            description={{ tr: "Metin seçimini engeller.", en: "Prevents text selection." }}
             code='<Typo.span unselectable content="Cannot select this" />'
             example={<Typo.span unselectable content="Cannot select this" />}
         />
 
         <Ds.block
-            title="text transform"
-            description="uppercase, lowercase, capitalize."
+            title={{ tr: "metin dönüşümü", en: "Text Transform" }}
+            description={{ tr: "uppercase, lowercase, capitalize.", en: "uppercase, lowercase, capitalize." }}
             code={`<Typo.span uppercase>uppercase</Typo.span>
                     <Typo.span lowercase>LOWERCASE</Typo.span>
                     <Typo.span capitalize>capitalize words</Typo.span>`}
@@ -339,8 +339,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="spacing"
-            description="margin, padding, and lineHeight examples."
+            title={{ tr: "boşluk", en: "Spacing" }}
+            description={{ tr: "margin, padding ve lineHeight örnekleri.", en: "margin, padding, and lineHeight examples." }}
             code={`import { Typo } from "${SYS.basePath}";
 
                     <Typo.p marginBottom={16} content="marginBottom={16}" />
@@ -356,8 +356,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="align & selfAlign"
-            description="Text alignment and flex/grid self alignment."
+            title={{ tr: "align ve selfAlign", en: "align & selfAlign" }}
+            description={{ tr: "Metin hizalaması ve flex/grid self hizalaması.", en: "Text alignment and flex/grid self alignment." }}
             code={`<Typo.p align="center" content="align=center" />
                     <Typo.span selfAlign="right" content="selfAlign=right" />`}
             example={
@@ -369,8 +369,8 @@ const X = () => (
         />
 
         <Ds.block
-            title="fitContent & balance"
-            description="fit-content width and text-wrap balance."
+            title={{ tr: "fitContent ve balance", en: "fitContent & balance" }}
+            description={{ tr: "fit-content genişliği ve text-wrap balance.", en: "fit-content width and text-wrap balance." }}
             code="<Typo.p fitContent balance maxWidth={200} content={longText} />"
             example={<Typo.p fitContent balance maxWidth={200} content={longText} />}
         />

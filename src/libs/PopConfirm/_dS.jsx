@@ -2,7 +2,7 @@ import Ds from "../DesignSystem";
 import { SYS } from "../../constants/SYS";
 import { PopConfirm } from ".";
 import { Button } from "../Button";
-import { getText } from "../getText";
+import { getText, t } from "../getText";
 import { notifier } from "../notifier";
 import { Flex } from "../Flex";
 import { DEFAULT_TRIGGER_DELAY_MS } from "./tools/defaultPopConfirmProps";
@@ -13,17 +13,13 @@ const X = () => (
         releasedOn="1.0.0"
         description={
             <>
-                PopConfirm is a component used to confirm an action. After the initial action is
-                triggered, it is halted; it will only be executed upon confirmation or ignored if
-                cancelled.
+                {t({ tr: "PopConfirm, bir action'ı onaylamak için kullanılan componenttir. İlk action tetiklendikten sonra durdurulur; yalnızca onay verildiğinde çalışır, iptal edildiğinde yok sayılır.", en: "PopConfirm is a component used to confirm an action. After the initial action is triggered, it is held; it executes only after confirmation and is ignored when cancelled." })}
                 <br />
                 <br />
-                PopConfirm is built on top of PopOver and Button components. The three buttons are
-                managed with 'contentButtonProps', 'confirmButtonProps', and 'cancelButtonProps'.
-                All other props are passed to PopOver.
+                {t({ tr: "PopConfirm, PopOver ve Button componentleri üzerine kuruludur. Üç buton contentButtonProps, confirmButtonProps ve cancelButtonProps ile yönetilir. Diğer tüm proplar PopOver'a aktarılır.", en: "PopConfirm is built on PopOver and Button. Its three buttons are managed through contentButtonProps, confirmButtonProps, and cancelButtonProps. All other props are passed to PopOver." })}
                 <br />
                 <br />
-                Detailed usage examples:
+                {t({ tr: "Ayrıntılı kullanım örnekleri:", en: "Detailed usage examples:" })}
                 <br />
                 <Button.string to="/design-system/popOver" label="PopOver" />
                 <br />
@@ -32,7 +28,7 @@ const X = () => (
         }
     >
         <Ds.block
-            title="Basic Usage"
+            title={{ tr: "Temel Kullanım", en: "Basic Usage" }}
             code={`import { PopConfirm } from "${SYS.basePath}";
 
                    <PopConfirm
@@ -63,7 +59,7 @@ const X = () => (
             }
         />
         <Ds.block
-            title="Advanced Usage"
+            title={{ tr: "Gelişmiş Kullanım", en: "Advanced Usage" }}
             code={`import { PopConfirm } from "${SYS.basePath}";
 
                    <PopConfirm
@@ -117,36 +113,31 @@ const X = () => (
             args="<PopConfirm />"
             props={{
                 content: {
-                    description: "The confirmation message to be displayed.",
+                    description: { tr: "Gösterilecek onay mesajı.", en: "The confirmation message to display." },
                     type: "React Node",
                     defaultValue: getText("areYouSure"),
                 },
                 contentButtonProps: {
-                    description:
-                        "Props for the trigger <Button> component. See <Button> API for details.",
+                    description: { tr: "Tetikleyici Button componentinin propları. Ayrıntılar için Button API'sine bakın.", en: "Props for the trigger Button component. See the Button API for details." },
                     type: "object",
                 },
                 confirmButtonProps: {
-                    description:
-                        "Confirm button. The onClick is merged with the trigger; if both href/to/url and a trigger are set, the trigger takes precedence.",
+                    description: { tr: "Onay butonu. onClick tetikleyiciyle birleştirilir; hem href/to/url hem de tetikleyici verilirse tetikleyici önceliklidir.", en: "Confirm button. Its onClick is merged with the trigger; if both href/to/url and a trigger are set, the trigger takes precedence." },
                     type: "object",
                     defaultValue: '{ label: "Confirm", prefix: { icon: "check" } }',
                 },
                 cancelButtonProps: {
-                    description:
-                        "Cancel button. Closes the panel when clicked. When clicking outside, onClick/href/to/url props here are triggered.",
+                    description: { tr: "İptal butonu. Tıklandığında paneli kapatır. Dışarı tıklanınca buradaki onClick/href/to/url propları tetiklenir.", en: "Cancel button. Closes the panel when clicked. On outside clicks, its onClick/href/to/url props are triggered." },
                     type: "object",
                     defaultValue: '{ label: "Cancel", prefix: { icon: "close" } }',
                 },
                 triggerDelayMs: {
-                    description:
-                        "After confirm, how long (ms) the content button plays its click animation before deferred actions run and the panel closes.",
+                    description: { tr: "Onaydan sonra ertelenmiş action'lar çalışıp panel kapanmadan önce content butonunun click animasyonunu oynatacağı süre (ms).", en: "After confirmation, how long (ms) the content button plays its click animation before deferred actions run and the panel closes." },
                     type: "number",
                     defaultValue: String(DEFAULT_TRIGGER_DELAY_MS),
                 },
                 _rest: {
-                    description:
-                        "All other props are passed to PopOver. See the PopOver API for more details.",
+                    description: { tr: "Diğer tüm proplar PopOver'a aktarılır. Ayrıntılar için PopOver API'sine bakın.", en: "All other props are passed to PopOver. See the PopOver API for details." },
                     type: "object",
                 },
             }}

@@ -22,10 +22,13 @@ const X = () => {
         <Ds.page
             title="byPath()"
             releasedOn="1.0.0"
-            description="Path-based get/set/delete helpers. This function is not suitable for React components or state management. For state management, I recommend using 'baseStore', which integrates byPath directly. This function is more appropriate as a utility helper for use within isolated functions."
+            description={{
+                tr: "Yola dayalı get/set/delete yardımcılarıdır. Bu fonksiyon React componentleri veya state yönetimi için uygun değildir. State yönetiminde byPath'i doğrudan kullanan baseStore önerilir. Daha çok bağımsız fonksiyonlarda kullanılacak bir yardımcı olarak tasarlanmıştır.",
+                en: "Path-based get/set/delete helpers. This function is not suitable for React components or state management. For state management, use baseStore, which integrates byPath directly. It is intended as a utility helper inside isolated functions.",
+            }}
         >
             <Ds.block
-                title="Get / Set / Delete"
+                title={{ tr: "Get / Set / Delete", en: "Get / Set / Delete" }}
                 code={`import { byPath } from "${SYS.basePath}";
 
                        const result = byPath.get(data, 'user.profile.name');
@@ -86,8 +89,11 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Mapping"
-                description="Mapping is a helper function that allows you to pick/rename values from an object by paths. Shortly, it creates a new object with the mapped values."
+                title={{ tr: "Mapping", en: "Mapping" }}
+                description={{
+                    tr: "Mapping, bir nesneden yollar aracılığıyla değer seçmenizi veya yeniden adlandırmanızı sağlayan yardımcı fonksiyondur. Kısaca eşlenen değerlerden yeni bir nesne üretir.",
+                    en: "Mapping is a helper that lets you pick or rename values from an object by paths. In short, it creates a new object from the mapped values.",
+                }}
                 code={`import { byPath } from "${SYS.basePath}";
 
                        const mapped = byPath.mapping(data, {
@@ -119,19 +125,19 @@ const X = () => {
                 args="const value = byPath.get(object, path);"
                 props={{
                     object: {
-                        description: "Source object.",
+                        description: { tr: "Kaynak nesne.", en: "Source object." },
                         type: "object",
                         required: true,
                     },
                     path: {
-                        description: "Dot-separated path.",
+                        description: { tr: "Noktayla ayrılmış yol.", en: "Dot-separated path." },
                         type: "string",
                         required: true,
                     },
                 }}
                 returnProps={{
                     value: {
-                        description: "Value at path, or undefined when missing.",
+                        description: { tr: "Yoldaki değer; bulunamazsa undefined.", en: "Value at path, or undefined when missing." },
                         type: "any",
                     },
                 }}
@@ -142,29 +148,29 @@ const X = () => {
                 args="const next = byPath.set(object, path, value, enableDirectUpdate);"
                 props={{
                     object: {
-                        description: "Source object or draft.",
+                        description: { tr: "Kaynak nesne veya draft.", en: "Source object or draft." },
                         type: "any",
                         required: true,
                     },
                     path: {
-                        description: "Dot-separated path.",
+                        description: { tr: "Noktayla ayrılmış yol.", en: "Dot-separated path." },
                         type: "string",
                         required: true,
                     },
                     value: {
-                        description: "Value to write.",
+                        description: { tr: "Yazılacak değer.", en: "Value to write." },
                         type: "any",
                         required: true,
                     },
                     enableDirectUpdate: {
-                        description: "Mutates object in place when true.",
+                        description: { tr: "true olduğunda nesneyi yerinde değiştirir.", en: "Mutates object in place when true." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                 }}
                 returnProps={{
                     next: {
-                        description: "Updated object or state after the write.",
+                        description: { tr: "Yazma işleminden sonraki güncellenmiş nesne veya state.", en: "Updated object or state after the write." },
                         type: "any",
                     },
                 }}
@@ -175,24 +181,24 @@ const X = () => {
                 args="const next = byPath.delete(object, path, enableDirectUpdate);"
                 props={{
                     object: {
-                        description: "Source object or draft.",
+                        description: { tr: "Kaynak nesne veya draft.", en: "Source object or draft." },
                         type: "any",
                         required: true,
                     },
                     path: {
-                        description: "Dot-separated path.",
+                        description: { tr: "Noktayla ayrılmış yol.", en: "Dot-separated path." },
                         type: "string",
                         required: true,
                     },
                     enableDirectUpdate: {
-                        description: "Mutates object in place when true.",
+                        description: { tr: "true olduğunda nesneyi yerinde değiştirir.", en: "Mutates object in place when true." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                 }}
                 returnProps={{
                     next: {
-                        description: "Updated object or state after delete.",
+                        description: { tr: "Silme işleminden sonraki güncellenmiş nesne veya state.", en: "Updated object or state after delete." },
                         type: "any",
                     },
                 }}
@@ -202,19 +208,19 @@ const X = () => {
                 args="const picked = byPath.mapping(object, mappingObject);"
                 props={{
                     object: {
-                        description: "Source object.",
+                        description: { tr: "Kaynak nesne.", en: "Source object." },
                         type: "object",
                         required: true,
                     },
                     mappingObject: {
-                        description: "Map of outputKey → sourcePath.",
+                        description: { tr: "outputKey → sourcePath eşleme nesnesi.", en: "Map of outputKey → sourcePath." },
                         type: "object",
                         required: true,
                     },
                 }}
                 returnProps={{
                     picked: {
-                        description: "Object with values picked and renamed by mapping paths.",
+                        description: { tr: "Eşleme yollarıyla seçilip yeniden adlandırılan değerleri içeren nesne.", en: "Object with values picked and renamed by mapping paths." },
                         type: "object",
                     },
                 }}

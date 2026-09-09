@@ -1,7 +1,7 @@
 import Ds from "../DesignSystem";
 
 const X = () => (
-    <Ds.page title="Table" releasedOn="Beta" description="Planned to build." />
+    <Ds.page title="Table" releasedOn="Beta" description={{ tr: "Geliştirilmesi planlanıyor.", en: "Planned to build." }} />
 );
 
 export default X;

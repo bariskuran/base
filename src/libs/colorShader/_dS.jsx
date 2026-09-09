@@ -23,7 +23,7 @@ const X = () => {
                 You can use colorShader via direct import from base, or via the theme helper in styled usage (theme.colorShader).`}
         >
             <Ds.block
-                title="Interactive shade"
+                title={{ tr: "Etkileşimli Gölgeleme", en: "Interactive shade" }}
                 code={`import { colorShader } from "${SYS.basePath}";
 
                         colorShader("#4f46e5", 20);
@@ -87,18 +87,18 @@ const X = () => {
                 args="const shaded = colorShader(color, percent);"
                 props={{
                     color: {
-                        description: "Input color (hex/rgb/css name/theme token/path).",
+                        description: { tr: "Girdi rengi (hex/rgb/CSS adı/theme token/yol).", en: "Input color (hex/rgb/css name/theme token/path)." },
                         type: "string | object",
                     },
                     percent: {
-                        description: "Shade amount (0..100). 100 is equal to black.",
+                        description: { tr: "Gölgeleme miktarı (0..100). 100 siyaha eşittir.", en: "Shade amount (0..100). 100 is equal to black." },
                         type: "number",
                         defaultValue: "0",
                     },
                 }}
                 returnProps={{
                     shaded: {
-                        description: "Shaded color string (hex6 or hex8 depending on source).",
+                        description: { tr: "Gölgelendirilmiş renk string'i (kaynağa göre hex6 veya hex8).", en: "Shaded color string (hex6 or hex8 depending on source)." },
                         type: "string",
                     },
                 }}

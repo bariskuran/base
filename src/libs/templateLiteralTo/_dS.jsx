@@ -14,14 +14,17 @@ const X = () => (
     <Ds.page
         title="templateLiteralTo()"
         releasedOn="1.0.0"
-        description={templateLiteralTo.p(`Strips shared indentation from template literals so you can
+        description={{ tr: templateLiteralTo.p(`Template literal'lardan ortak girintiyi temizler; böylece
+            çıktıyı etkilemeden string'leri kaynakta hizalayabilirsiniz.
+
+            Code tarzı metin için .pre, sayfa açıklamaları için .p, inline yığınlar için .span kullanın.`), en: templateLiteralTo.p(`Strips shared indentation from template literals so you can
             align strings in source without affecting output.
 
-            Use .pre for code-style text, .p for page descriptions, and .span for inline stacks.`)}
+            Use .pre for code-style text, .p for page descriptions, and .span for inline stacks.`) }}
     >
         <Ds.block
             title=".pre"
-            description="Returns a dedented string (same logic as CodeViewer / Typo.code)."
+            description={{ tr: "Girintisi temizlenmiş string döndürür (CodeViewer / Typo.code ile aynı mantık).", en: "Returns a dedented string (same logic as CodeViewer / Typo.code)." }}
             code={`import { templateLiteralTo } from "${SYS.basePath}";
 
                     const code = templateLiteralTo.pre(\`
@@ -40,7 +43,7 @@ const X = () => (
 
         <Ds.block
             title=".p"
-            description="Dedents and wraps each paragraph in Typo.p nodes. Used by Ds.page and Ds.block descriptions."
+            description={{ tr: "Girintiyi temizler ve her paragrafı Typo.p node'larıyla sarar. Ds.page ve Ds.block açıklamalarında kullanılır.", en: "Dedents and wraps each paragraph in Typo.p nodes. Used by Ds.page and Ds.block descriptions." }}
             code={`import { templateLiteralTo } from "${SYS.basePath}";
 
                     <Typo as="div">{templateLiteralTo.p(description)}</Typo>`}
@@ -49,7 +52,7 @@ const X = () => (
 
         <Ds.block
             title=".span"
-            description="Dedents and renders each paragraph as Typo.span inside a vertical Flex stack."
+            description={{ tr: "Girintiyi temizler ve her paragrafı dikey Flex yığını içinde Typo.span olarak render eder.", en: "Dedents and renders each paragraph as Typo.span inside a vertical Flex stack." }}
             code={`import { templateLiteralTo } from "${SYS.basePath}";
 
                     {templateLiteralTo.span(sample)}`}
@@ -59,16 +62,16 @@ const X = () => (
         <Ds.api
             args="const result = templateLiteralTo(text, mode);"
             props={{
-                text: { description: "Template literal string (or any string).", type: "string" },
+                text: { description: { tr: "Template literal string'i (veya herhangi bir string).", en: "Template literal string (or any string)." }, type: "string" },
                 mode: {
-                    description: 'Optional shorthand: "pre" | "p" | "span".',
+                    description: { tr: 'İsteğe bağlı kısaltma: "pre" | "p" | "span".', en: 'Optional shorthand: "pre" | "p" | "span".' },
                     type: "string",
                     defaultValue: '"pre"',
                 },
             }}
             returnProps={{
                 result: {
-                    description: 'Dedented string for "pre", or React nodes for "p" / "span".',
+                    description: { tr: "pre için girintisi temizlenmiş string, p / span için React node'ları.", en: 'Dedented string for "pre", or React nodes for "p" / "span".' },
                     type: "string | ReactNode",
                 },
             }}

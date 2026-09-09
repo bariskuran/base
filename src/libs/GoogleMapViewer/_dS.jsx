@@ -10,10 +10,10 @@ const X = () => (
     <Ds.page
         title="<GoogleMapViewer>"
         releasedOn="1.0.0"
-        description="Renders a Google Maps embed iframe from a pb value (the segment after pb=, including the leading !)."
+        description={{ tr: "pb değerinden (pb= sonrasındaki, başındaki ! dahil bölüm) bir Google Maps embed iframe'i render eder.", en: "Renders a Google Maps embed iframe from a pb value (the segment after pb=, including the leading !)." }}
     >
         <Ds.block
-            title="Basic Usage"
+            title={{ tr: "Temel Kullanım", en: "Basic Usage" }}
             code={`import { GoogleMapViewer } from "${SYS.basePath}";
 
                         <GoogleMapViewer pb={content.googleMapsLinkPb} />`}
@@ -24,8 +24,8 @@ const X = () => (
             }
         />
         <Ds.block
-            title="Custom Size"
-            description="w and h accept numbers (→ rem) or css size strings. Defaults match Google's embed defaults (600 × 450)."
+            title={{ tr: "Özel Boyut", en: "Custom Size" }}
+            description={{ tr: "w ve h; sayıları (→ rem) veya CSS boyut string'lerini kabul eder. Varsayılanlar Google'ın embed varsayılanlarıyla aynıdır (600 × 450).", en: "w and h accept numbers (→ rem) or CSS size strings. Defaults match Google's embed defaults (600 × 450)." }}
             code={`import { GoogleMapViewer } from "${SYS.basePath}";
 
                         <GoogleMapViewer pb={pb} w={600} h={450} />
@@ -47,17 +47,17 @@ const X = () => (
                     required: true,
                 },
                 w: {
-                    description: "Iframe width. Number → rem; string → css size.",
+                    description: { tr: "Iframe genişliği. Sayı → rem; string → CSS boyutu.", en: "Iframe width. Number → rem; string → CSS size." },
                     type: "number | string",
                     defaultValue: "600",
                 },
                 h: {
-                    description: "Iframe height. Number → rem; string → css size.",
+                    description: { tr: "Iframe yüksekliği. Sayı → rem; string → CSS boyutu.", en: "Iframe height. Number → rem; string → CSS size." },
                     type: "number | string",
                     defaultValue: "450",
                 },
                 title: {
-                    description: "Accessible iframe title.",
+                    description: { tr: "Erişilebilir iframe başlığı.", en: "Accessible iframe title." },
                     type: "string",
                     defaultValue: '"Google Map"',
                 },

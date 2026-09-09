@@ -21,7 +21,7 @@ const X = () => {
                 You can use colorAlpha via direct import from base, or via the theme helper in styled usage (theme.colorAlpha).`}
         >
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel Kullanım", en: "Basic usage" }}
                 code={`import { colorAlpha } from "${SYS.basePath}";
 
                        colorAlpha("#0077ff", 50);
@@ -102,18 +102,18 @@ const X = () => {
                 args="const hex8 = colorAlpha(color, alpha);"
                 props={{
                     color: {
-                        description: "Input color (hex/rgb/rgba/css name/theme token/path).",
+                        description: { tr: "Girdi rengi (hex/rgb/rgba/CSS adı/theme token/yol).", en: "Input color (hex/rgb/rgba/css name/theme token/path)." },
                         type: "string | object",
                         required: true,
                     },
                     alpha: {
-                        description: "Opacity ratio (0..1) or percent (1..100).",
+                        description: { tr: "Opacity oranı (0..1) veya yüzde (1..100).", en: "Opacity ratio (0..1) or percent (1..100)." },
                         type: "number",
                         defaultValue: "50",
                     },
                 }}
                 returnProps={{
-                    hex8: { description: "Hex8 color string with alpha.", type: "string" },
+                    hex8: { description: { tr: "Alpha içeren Hex8 renk string'i.", en: "Hex8 color string with alpha." }, type: "string" },
                 }}
             />
         </Ds.page>

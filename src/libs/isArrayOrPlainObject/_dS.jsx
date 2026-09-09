@@ -11,10 +11,10 @@ const X = () => {
         <Ds.page
             title="isArrayOrPlainObject()"
             releasedOn="1.0.0"
-            description="Checks array or plain object."
+            description={{ tr: "Dizi veya düz nesneyi kontrol eder.", en: "Checks an array or plain object." }}
         >
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel kullanım", en: "Basic Usage" }}
                 code={`import { isArrayOrPlainObject } from "${SYS.basePath}";
 
                         isArrayOrPlainObject([]);
@@ -56,14 +56,14 @@ const X = () => {
                 args="const ok = isArrayOrPlainObject(v);"
                 props={{
                     v: {
-                        description: "Value to test.",
+                        description: { tr: "Test edilecek değer.", en: "Value to test." },
                         type: "any",
                         required: true,
                     },
                 }}
                 returnProps={{
                     ok: {
-                        description: "True if v is a non-null array or plain object.",
+                        description: { tr: "v null olmayan dizi veya düz nesneyse true.", en: "True if v is a non-null array or plain object." },
                         type: "boolean",
                     },
                 }}

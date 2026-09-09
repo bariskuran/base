@@ -15,19 +15,19 @@ const X = () => {
                     <Typo.p>
                         {t({
                             tr: "useCatalogImage, createImageCatalog ile globalData içine yazılmış tek bir image setinin katalog datasını okumak için kullanılan hooktur. Image komponenti bu datayı kendi içinde kullanır; hook ise aynı veriye component dışındaki kararlar, filtreler ve custom UI ihtiyaçları için erişim sağlar.",
-                            en: "",
+                            en: "useCatalogImage is a hook for reading the catalog data of one image set written into globalData by createImageCatalog. Image uses this data internally; the hook exposes it for decisions outside the component, filters, and custom UI needs.",
                         })}
                     </Typo.p>
                     <Typo.p>
                         {t({
                             tr: "Dönen obje, src/images altındaki ilgili klasörün index.js dosyasında duran kullanıcı datasını ve script tarafından üretilen imageSet metadata'sını birlikte taşır. Böylece alt, keywords, shape, imageSet.thumb.sizeBytes veya herhangi bir custom alan aynı kaynaktan okunabilir.",
-                            en: "",
+                            en: "The returned object contains both user data from the relevant index.js file under src/images and script-generated imageSet metadata. This lets you read alt, keywords, shape, imageSet.thumb.sizeBytes, or any custom field from the same source.",
                         })}
                     </Typo.p>
                     <Typo.p>
                         {t({
                             tr: "useCatalogImage görsel render etmek zorunda değildir. Listeleme, filtreleme, grid oranı seçme veya tasarım varyantı kararları için kullanılabilir.",
-                            en: "",
+                            en: "useCatalogImage does not have to render an image. Use it for listing, filtering, grid-ratio selection, or design-variant decisions.",
                         })}
                     </Typo.p>
                     <Flex gap={8} wrap marginTop={14}>
@@ -41,10 +41,10 @@ const X = () => {
             }
         >
             <Ds.block
-                title={{ tr: "Temel Kullanım", en: "" }}
+                title={{ tr: "Temel Kullanım", en: "Basic Usage" }}
                 description={{
                     tr: "Hook set adını alır. Katalog henüz oluşturulmadıysa veya set bulunamazsa null döner.",
-                    en: "",
+                    en: "The hook receives a set name. It returns null when the catalog has not been created yet or the set cannot be found.",
                 }}
                 code={`import { useCatalogImage } from "${SYS.basePath}";
 
@@ -53,10 +53,10 @@ const image = useCatalogImage("i0030");
 if (!image) return null;`}
             />
             <Ds.block
-                title={{ tr: "Katalog Datası Okuma", en: "" }}
+                title={{ tr: "Katalog Datası Okuma", en: "Reading Catalog Data" }}
                 description={{
                     tr: "Kullanıcı tarafından eklenen alanlar ve otomatik üretilen teknik metadata aynı obje içinde korunur.",
-                    en: "",
+                    en: "User-added fields and automatically generated technical metadata are preserved in the same object.",
                 }}
                 code={`const image = useCatalogImage("i0030");
 
@@ -70,7 +70,7 @@ const thumbSize = image?.imageSet?.thumb?.sizeKBytes;`}
                     set: {
                         description: {
                             tr: "createImageCatalog içinde kaydedilmiş katalog set adı.",
-                            en: "",
+                            en: "Catalog set name registered through createImageCatalog.",
                         },
                         type: "string",
                         required: true,
@@ -80,14 +80,14 @@ const thumbSize = image?.imageSet?.thumb?.sizeKBytes;`}
                     image: {
                         description: {
                             tr: "Katalog objesi veya set bulunamazsa null.",
-                            en: "",
+                            en: "Null when the catalog object or set cannot be found.",
                         },
                         type: "object | null",
                     },
                     imageSet: {
                         description: {
                             tr: "Set içindeki variant dosyalarının src ve metadata kayıtları.",
-                            en: "",
+                            en: "src and metadata records for variant files in the set.",
                         },
                         type: "object",
                     },

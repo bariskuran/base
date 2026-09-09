@@ -15,10 +15,10 @@ const X = () => {
         <Ds.page
             title="getPageRrdInfo()"
             releasedOn="1.0.0"
-            description="Reads the active route from globalData (_preparedRoutes + current pathname). Use instead of wiring preparedRoutes and pathname manually."
+            description={{ tr: "Aktif route'u globalData'dan okur (_preparedRoutes + güncel pathname). preparedRoutes ve pathname'i elle bağlamak yerine kullanın.", en: "Reads the active route from globalData (_preparedRoutes + current pathname). Use it instead of wiring preparedRoutes and pathname manually." }}
         >
             <Ds.block
-                title="Usage"
+            title={{ tr: "Kullanım", en: "Usage" }}
                 code={`import { getPageRrdInfo } from "${SYS.basePath}";
 
                    const { route, handle, relatives, pathname, preparedRoutesForLanguage } = getPageRrdInfo();
@@ -36,38 +36,37 @@ const X = () => {
                 args="getPageRrdInfo(pathnameOverride?)"
                 props={{
                     pathnameOverride: {
-                        description:
-                            "Optional pathname. Defaults to globalData._reactRouterDom.location.pathname.",
+                        description: { tr: "İsteğe bağlı pathname. Varsayılan globalData._reactRouterDom.location.pathname değeridir.", en: "Optional pathname. Defaults to globalData._reactRouterDom.location.pathname." },
                         type: "string",
                         defaultValue: null,
                     },
                 }}
                 returns={{
-                    pathname: { description: "Normalized active pathname.", type: "string" },
-                    language: { description: "Active globalData.language.", type: "string" },
+                    pathname: { description: { tr: "Normalize edilmiş aktif pathname.", en: "Normalized active pathname." }, type: "string" },
+                    language: { description: { tr: "Aktif globalData.language.", en: "Active globalData.language." }, type: "string" },
                     route: {
-                        description: "Matched prepared route object or null.",
+                        description: { tr: "Eşleşen hazırlanmış route nesnesi veya null.", en: "Matched prepared route object or null." },
                         type: "object | null",
                     },
-                    handle: { description: "route.handle or null.", type: "object | null" },
+                    handle: { description: { tr: "route.handle veya null.", en: "route.handle or null." }, type: "object | null" },
                     relatives: {
-                        description: "handle.relatives map for language switching.",
+                        description: { tr: "Dil değiştirme için handle.relatives map'i.", en: "handle.relatives map for language switching." },
                         type: "object | null",
                     },
                     categories: {
-                        description: "Breadcrumb category stack from prepareRoutes.",
+                        description: { tr: "prepareRoutes'tan gelen breadcrumb kategori yığını.", en: "Breadcrumb category stack from prepareRoutes." },
                         type: "array | null",
                     },
                     languageRoute: {
-                        description: "Snapshot used by setLanguage (_languageRoute).",
+                        description: { tr: "setLanguage tarafından kullanılan snapshot (_languageRoute).", en: "Snapshot used by setLanguage (_languageRoute)." },
                         type: "object | null",
                     },
                     preparedRoutes: {
-                        description: "Full flattened route list.",
+                        description: { tr: "Tam düzleştirilmiş route listesi.", en: "Full flattened route list." },
                         type: "array",
                     },
                     preparedRoutesForLanguage: {
-                        description: "Routes filtered by active language.",
+                        description: { tr: "Aktif dile göre filtrelenmiş route'lar.", en: "Routes filtered by active language." },
                         type: "array",
                     },
                 }}

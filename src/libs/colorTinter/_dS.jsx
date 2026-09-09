@@ -23,7 +23,7 @@ const X = () => {
 You can use colorTinter via direct import from base, or via the theme helper in styled usage (theme.colorTinter).`}
         >
             <Ds.block
-                title="Interactive tint"
+                title={{ tr: "Etkileşimli Açma", en: "Interactive tint" }}
                 code={`import { colorTinter } from "${SYS.basePath}";
 
                        colorTinter("#4f46e5", 20);`}
@@ -84,18 +84,18 @@ You can use colorTinter via direct import from base, or via the theme helper in 
                 args="const tinted = colorTinter(color, percent);"
                 props={{
                     color: {
-                        description: "Input color (hex/rgb/css name/theme token/path).",
+                        description: { tr: "Girdi rengi (hex/rgb/CSS adı/theme token/yol).", en: "Input color (hex/rgb/css name/theme token/path)." },
                         type: "string | object",
                     },
                     percent: {
-                        description: "Tint amount (0..100). 100 is equal to white.",
+                        description: { tr: "Açma miktarı (0..100). 100 beyaza eşittir.", en: "Tint amount (0..100). 100 is equal to white." },
                         type: "number",
                         defaultValue: "0",
                     },
                 }}
                 returnProps={{
                     tinted: {
-                        description: "Tinted color string (hex6 or hex8 depending on source).",
+                        description: { tr: "Açılmış renk string'i (kaynağa göre hex6 veya hex8).", en: "Tinted color string (hex6 or hex8 depending on source)." },
                         type: "string",
                     },
                 }}

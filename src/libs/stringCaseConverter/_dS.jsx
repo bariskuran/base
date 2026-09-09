@@ -83,11 +83,11 @@ const X = () => (
     <Ds.page
         title="stringCaseConverter()"
         releasedOn="1.0.0"
-        description="Converts strings across case formats. Input case is auto-detected."
+        description={{ tr: "String'leri farklı case formatları arasında dönüştürür. Girdi case'i otomatik algılanır.", en: "Converts strings across case formats. Input case is auto-detected." }}
     >
         <Ds.block
-            title="Basic Usage"
-            description="Used to convert technical string formats. Input type is auto-detected."
+            title={{ tr: "Temel Kullanım", en: "Basic Usage" }}
+            description={{ tr: "Teknik string formatlarını dönüştürmek için kullanılır. Girdi tipi otomatik algılanır.", en: "Used to convert technical string formats. Input type is auto-detected." }}
             code={`import { stringCaseConverter } from "${SYS.basePath}";
 
                     stringCaseConverter("helloWorld", "kebab");`}
@@ -97,20 +97,19 @@ const X = () => (
             args='const converted = stringCaseConverter(string, outputType);'
             props={{
                 string: {
-                    description: "Input text.",
+                    description: { tr: "Girdi metni.", en: "Input text." },
                     type: "string",
                     required: true,
                 },
                 outputType: {
-                    description:
-                        "Target format (camel, pascal, kebab, snake, constant, dot, path, lower, sentence, title, spaced).",
+                    description: { tr: "Hedef format (camel, pascal, kebab, snake, constant, dot, path, lower, sentence, title, spaced).", en: "Target format (camel, pascal, kebab, snake, constant, dot, path, lower, sentence, title, spaced)." },
                     type: "string",
                     defaultValue: '"camel"',
                 },
             }}
             returnProps={{
                 converted: {
-                    description: "Input string in the requested case format.",
+                    description: { tr: "İstenen case formatındaki girdi string'i.", en: "Input string in the requested case format." },
                     type: "string",
                 },
             }}

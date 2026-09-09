@@ -23,11 +23,11 @@ const X = () => {
         <Ds.page
             title="downloadAsCsv()"
             releasedOn="1.0.0"
-            description="Downloads table data as CSV."
+            description={{ tr: "Tablo verisini CSV olarak indirir.", en: "Downloads table data as CSV." }}
         >
             <Ds.block
-                title="Data structure"
-                description="The data parameter must be a 2D array of rows and columns. Check out code section for an example"
+                title={{ tr: "Veri Yapısı", en: "Data structure" }}
+                description={{ tr: "data parametresi satır ve sütunlardan oluşan iki boyutlu bir dizi olmalıdır. Örnek için kod bölümüne bakın.", en: "The data parameter must be a 2D array of rows and columns. Check out code section for an example" }}
                 code={`const data = [
                             ["id", "name", "score"],
                             [1, "Ada", 95],
@@ -35,7 +35,7 @@ const X = () => {
                         ];`}
             />
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel Kullanım", en: "Basic usage" }}
                 code={`import { downloadAsCsv } from "${SYS.basePath}";
 
                        downloadAsCsv(data, "users");`}
@@ -55,7 +55,7 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="With options"
+                title={{ tr: "Seçeneklerle Kullanım", en: "With options" }}
                 code={`import { downloadAsCsv } from "${SYS.basePath}";
 
                         downloadAsCsv(data, "users", {
@@ -86,52 +86,52 @@ const X = () => {
                 args="const ok = downloadAsCsv(data, fileName, { includeBom, onError, onSuccess, preventExcelInjection, separator });"
                 props={{
                     data: {
-                        description: "2D array rows/columns.",
+                        description: { tr: "Satır/sütunlardan oluşan iki boyutlu dizi.", en: "2D array rows/columns." },
                         type: "any[][]",
                         required: true,
                     },
                     fileName: {
-                        description: "Output file name (without extension).",
+                        description: { tr: "Çıktı dosyası adı (uzantısız).", en: "Output file name (without extension)." },
                         type: "string",
                         defaultValue: '"data"',
                     },
                     onSuccess: {
-                        description: "Called when the download is successful.",
+                        description: { tr: "İndirme başarılı olduğunda çağrılır.", en: "Called when the download is successful." },
                         type: "fn",
                     },
                     onError: {
-                        description: "Called when the download fails.",
+                        description: { tr: "İndirme başarısız olduğunda çağrılır.", en: "Called when the download fails." },
                         type: "fn",
                     },
                     separator: {
-                        description: "CSV separator.",
+                        description: { tr: "CSV ayıracı.", en: "CSV separator." },
                         type: "string",
                         defaultValue: ",",
                     },
                     includeBom: {
-                        description: "Adds UTF-8 BOM for Excel compatibility.",
+                        description: { tr: "Excel uyumluluğu için UTF-8 BOM ekler.", en: "Adds UTF-8 BOM for Excel compatibility." },
                         type: "boolean",
                         defaultValue: true,
                     },
                     preventExcelInjection: {
-                        description: "Prevents Excel injection.",
+                        description: { tr: "Excel injection'ı önler.", en: "Prevents Excel injection." },
                         type: "boolean",
                         defaultValue: true,
                     },
                 }}
                 returnProps={{
                     ok: {
-                        description: "True when the CSV download was triggered successfully.",
+                        description: { tr: "CSV indirmesi başarıyla tetiklendiğinde true olur.", en: "True when the CSV download was triggered successfully." },
                         type: "boolean",
                     },
                 }}
             />
             <Ds.api
-                title="onError"
+                title={{ tr: "onError", en: "onError" }}
                 args="onError(error);"
                 props={{
                     error: {
-                        description: "Caught error.",
+                        description: { tr: "Yakalanan hata.", en: "Caught error." },
                         type: "Error",
                     },
                 }}

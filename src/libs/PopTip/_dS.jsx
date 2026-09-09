@@ -3,6 +3,7 @@ import { SYS } from "../../constants/SYS";
 import { Flex } from "../Flex";
 import { PopTip } from "./";
 import { Button } from "../Button";
+import { t } from "../getText";
 
 const Template = ({ children }) => (
     <Flex padding={10} bgColor="foregrounds.tint80" color="foreground">
@@ -17,22 +18,19 @@ const X = () => {
             releasedOn="1.0.0"
             description={
                 <>
-                    FloatingUi renders floating content relative to a trigger element, with
-                    controllable position and style. FloatingUi receives its open state from the
-                    outside, making it a helper component. For detailed usage examples, you can
-                    review components such as PopOver, PopTip, PopConfirm, and Button.
+                    {t({ tr: "PopTip, tetikleyici elemana göre konumlanan kayan içeriği; konum ve stil denetimiyle render eder. Açık durumu dışarıdan da yönetilebildiği için yardımcı bir componenttir. Ayrıntılı kullanım için PopOver, PopConfirm ve Button gibi componentlere bakabilirsiniz.", en: "PopTip renders floating content relative to a trigger element, with controllable position and style. Its open state can be managed externally, making it a helper component. For detailed usage, review components such as PopOver, PopConfirm, and Button." })}
                     <br />
                     <br />
-                    Check out <Button.string
+                    {t({ tr: "Ayrıntılar için ", en: "See " })}<Button.string
                         to="/design-system/floatingUi"
                         label="FloatingUi"
                     />{" "}
-                    for more details.
+                    {t({ tr: " sayfasına bakın.", en: " for more details." })}
                 </>
             }
         >
             <Ds.block
-                title="Basic Usage"
+                title={{ tr: "Temel Kullanım", en: "Basic Usage" }}
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip content="floating content">Content</PopTip>`}
@@ -43,8 +41,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Positioning"
-                description="The position option defaults to 'auto', which determines the placement based on the element's position on the screen and the floating content. However, you can override its position if you wish."
+                title={{ tr: "Konumlandırma", en: "Positioning" }}
+                description={{ tr: "position seçeneği varsayılan olarak auto'dur; yerleşimi elemanın ekrandaki konumuna ve kayan içeriğe göre belirler. Gerektiğinde kendiniz ezebilirsiniz.", en: "The position option defaults to auto, which determines placement from the element's position on screen and the floating content. You can override it when needed." }}
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip content="Top / Left" alignX="left" alignY="top">
@@ -89,8 +87,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Styling"
-                description="bgColor prop is used to set the background color of the PopTip. It can be a theme color, a theme path, or a css color. color calculates automatically but you can override it via 'color' prop."
+                title={{ tr: "Stil", en: "Styling" }}
+                description={{ tr: "bgColor prop'u PopTip arka plan rengini belirler. Theme rengi, theme path'i veya CSS rengi olabilir. color otomatik hesaplanır; color prop'u ile ezebilirsiniz.", en: "The bgColor prop sets the PopTip background. It can be a theme color, theme path, or CSS color. color is calculated automatically but can be overridden through color." }}
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip content="theme" bgColor="success">
@@ -129,8 +127,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Enable Escaping"
-                description="'esc' button closes the PopTip even if mouse is still on the PopTip."
+                title={{ tr: "Escape ile Kapatma", en: "Enable Escaping" }}
+                description={{ tr: "Esc tuşu, imleç hâlâ PopTip üzerindeyken bile PopTip'i kapatır.", en: "The Esc key closes the PopTip even when the pointer is still over it." }}
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip content="enable escaping" enableEscaping>
@@ -145,8 +143,8 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Max Width"
-                description="By default the tip grows with its content (capped at viewport). Pass maxWidth to constrain long content; numbers become rem."
+                title={{ tr: "Maksimum Genişlik", en: "Max Width" }}
+                description={{ tr: "Tip varsayılan olarak içeriğiyle birlikte büyür (viewport ile sınırlıdır). Uzun içeriği sınırlamak için maxWidth verin; sayılar rem'e dönüşür.", en: "By default the tip grows with its content (capped by the viewport). Pass maxWidth to constrain long content; numbers become rem." }}
                 code={`import { PopTip } from "${SYS.basePath}";
 
                         <PopTip
@@ -170,95 +168,90 @@ const X = () => {
                 args='<PopTip content="">{React.Node}</PopTip>'
                 props={{
                     children: {
-                        description: "Trigger element.",
+                        description: { tr: "Tetikleyici element.", en: "Trigger element." },
                         type: "ReactNode",
                         required: true,
                     },
                     content: {
-                        description: "Floating panel body.",
+                        description: { tr: "Kayan panel gövdesi.", en: "Floating panel body." },
                         type: "ReactNode",
                         required: true,
                     },
                     variant: {
-                        description: "FloatingUi visual variant.",
+                        description: { tr: "FloatingUi görsel varyantı.", en: "FloatingUi visual variant." },
                         type: "string | component",
                         defaultValue: '"default"',
                     },
                     alignX: {
-                        description: "Horizontal placement passed to FloatingUi.",
+                        description: { tr: "FloatingUi'a aktarılan yatay yerleşim.", en: "Horizontal placement passed to FloatingUi." },
                         type: "string",
                         defaultValue: '"center"',
                     },
                     alignY: {
-                        description: "Vertical placement passed to FloatingUi (top | bottom).",
+                        description: { tr: "FloatingUi'a aktarılan dikey yerleşim (top | bottom).", en: "Vertical placement passed to FloatingUi (top | bottom)." },
                         type: "string",
                         defaultValue: '"top"',
                     },
                     disableArrow: {
-                        description: "Hides the floating arrow.",
+                        description: { tr: "Kayan oku gizler.", en: "Hides the floating arrow." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     bgColor: {
-                        description: "Floating background color or theme token.",
+                        description: { tr: "Kayan arka plan rengi veya theme token'ı.", en: "Floating background colour or theme token." },
                         type: "string",
                     },
                     color: {
-                        description: "Floating text color override.",
+                        description: { tr: "Kayan metin rengi ezmesi.", en: "Floating text colour override." },
                         type: "string",
                     },
                     padding: {
-                        description: "FloatingUi padding shorthand.",
+                        description: { tr: "FloatingUi padding kısaltması.", en: "FloatingUi padding shorthand." },
                         type: "number | string",
                     },
                     maxWidth: {
-                        description:
-                            "Floating panel max-width. Number → rem; string → css (px/%/vw…). Default remains calc(100vw - 40rem).",
+                        description: { tr: "Kayan panel max-width değeri. Sayı → rem; string → CSS (px/%/vw…). Varsayılan calc(100vw - 40rem) kalır.", en: "Floating panel max-width. Number → rem; string → CSS (px/%/vw…). The default remains calc(100vw - 40rem)." },
                         type: "number | string",
                     },
                     paddingTop: {
-                        description: "Overrides top edge of padding shorthand.",
+                        description: { tr: "Padding kısaltmasının üst kenarını ezer.", en: "Overrides the top edge of the padding shorthand." },
                         type: "number | string",
                     },
                     paddingRight: {
-                        description: "Overrides right edge of padding shorthand.",
+                        description: { tr: "Padding kısaltmasının sağ kenarını ezer.", en: "Overrides the right edge of the padding shorthand." },
                         type: "number | string",
                     },
                     paddingBottom: {
-                        description: "Overrides bottom edge of padding shorthand.",
+                        description: { tr: "Padding kısaltmasının alt kenarını ezer.", en: "Overrides the bottom edge of the padding shorthand." },
                         type: "number | string",
                     },
                     paddingLeft: {
-                        description: "Overrides left edge of padding shorthand.",
+                        description: { tr: "Padding kısaltmasının sol kenarını ezer.", en: "Overrides the left edge of the padding shorthand." },
                         type: "number | string",
                     },
                     enableEscaping: {
-                        description:
-                            "When true, Escape closes the tip while pointer may still be over it (FloatingUi).",
+                        description: { tr: "true olduğunda Escape, imleç hâlâ üzerinde olsa bile tip'i kapatır (FloatingUi).", en: "When true, Escape closes the tip while the pointer may still be over it (FloatingUi)." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     open: {
-                        description:
-                            "Optional controlled open state (otherwise hover-driven internal state).",
+                        description: { tr: "İsteğe bağlı kontrollü açık durumu (aksi halde hover ile yönetilen dahili durum).", en: "Optional controlled open state (otherwise hover-driven internal state)." },
                         type: "boolean",
                     },
                     closeHandler: {
-                        description: "Optional close callback when using controlled open.",
+                        description: { tr: "Kontrollü open kullanılırken isteğe bağlı close callback'i.", en: "Optional close callback when using controlled open." },
                         type: "fn",
                     },
                     onMouseEnter: {
-                        description:
-                            "Trigger mouse/pointer enter; PopTip defaults open behavior if omitted.",
+                        description: { tr: "Tetikleyici mouse/pointer enter olayı; verilmezse PopTip varsayılan açılma davranışını kullanır.", en: "Trigger mouse/pointer enter; PopTip uses default open behaviour when omitted." },
                         type: "fn",
                     },
                     onMouseLeave: {
-                        description:
-                            "Trigger mouse/pointer leave; PopTip defaults close behavior if omitted.",
+                        description: { tr: "Tetikleyici mouse/pointer leave olayı; verilmezse PopTip varsayılan kapanma davranışını kullanır.", en: "Trigger mouse/pointer leave; PopTip uses default close behaviour when omitted." },
                         type: "fn",
                     },
                     exportData: {
-                        description: "Debug/export passthrough.",
+                        description: { tr: "Debug/export yardımcısı aktarımı.", en: "Debug/export helper passthrough." },
                         type: "boolean | function | object",
                         defaultValue: "false",
                     },

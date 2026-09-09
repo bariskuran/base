@@ -11,10 +11,10 @@ const X = () => {
         <Ds.page
             title="typeOf()"
             releasedOn="1.0.0"
-            description="Extended type detector helper. Supports multiple arguments. Detects 'number', 'string', 'boolean', 'undefined', 'function', 'object', 'null', 'array', 'date', 'regexp', 'map', 'set', 'error', 'promise'."
+            description={{ tr: "Genişletilmiş tip algılama yardımcısıdır. Birden fazla argümanı destekler. number, string, boolean, undefined, function, object, null, array, date, regexp, map, set, error ve promise tiplerini algılar.", en: "Extended type detector helper. Supports multiple arguments. Detects number, string, boolean, undefined, function, object, null, array, date, regexp, map, set, error, and promise." }}
         >
             <Ds.block
-                title="Single and multi input"
+            title={{ tr: "Tekli ve çoklu girdi", en: "Single and Multi Input" }}
                 code={`import { typeOf } from "${SYS.basePath}";
 
                         typeOf(null);
@@ -48,17 +48,17 @@ const X = () => {
                 args={["const type = typeOf(arg);", "const types = typeOf(arg1, arg2, ...argN);"]}
                 props={{
                     "...args": {
-                        description: "One or more values to inspect.",
+                        description: { tr: "İncelenecek bir veya daha fazla değer.", en: "One or more values to inspect." },
                         type: "any || any[]",
                     },
                 }}
                 returnProps={{
                     type: {
-                        description: "Detected type string for a single argument.",
+                        description: { tr: "Tek argüman için algılanan tip string'i.", en: "Detected type string for a single argument." },
                         type: "string",
                     },
                     types: {
-                        description: "Array of type strings when multiple arguments are passed.",
+                        description: { tr: "Birden fazla argüman verildiğinde tip string'leri dizisi.", en: "Array of type strings when multiple arguments are passed." },
                         type: "string[]",
                     },
                 }}

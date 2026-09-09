@@ -10,9 +10,9 @@ const X = () => {
     const { label, set } = baseStore.useLocal({ label: "Ready" });
 
     return (
-        <Ds.page title="sleep()" releasedOn="1.0.0" description="Promise based delay helper.">
+        <Ds.page title="sleep()" releasedOn="1.0.0" description={{ tr: "Promise tabanlı gecikme yardımcısı.", en: "Promise-based delay helper." }}>
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel kullanım", en: "Basic Usage" }}
                 code={`import { sleep } from "${SYS.basePath}";
 
                         await sleep(200);`}
@@ -41,7 +41,7 @@ const X = () => {
                 returns="void"
                 props={{
                     ms: {
-                        description: "Delay duration in milliseconds.",
+                        description: { tr: "Milisaniye cinsinden gecikme süresi.", en: "Delay duration in milliseconds." },
                         type: "number",
                         required: true,
                     },

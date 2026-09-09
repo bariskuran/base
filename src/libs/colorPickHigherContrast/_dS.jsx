@@ -22,7 +22,7 @@ const X = () => {
 You can use colorPickHigherContrast via direct import from base, or via the theme helper in styled usage (theme.colorPickHigherContrast).`}
         >
             <Ds.block
-                title="Interactive comparison"
+                title={{ tr: "Etkileşimli Karşılaştırma", en: "Interactive comparison" }}
                 code={`import { colorPickHigherContrast } from "${SYS.basePath}";
 
                        colorPickHigherContrast("#ffffff", "#111111", "#3b82f6");`}
@@ -108,25 +108,25 @@ You can use colorPickHigherContrast via direct import from base, or via the them
                 args="const { winner, ratioA, ratioB } = colorPickHigherContrast(optionA, optionB, background);"
                 props={{
                     optionA: {
-                        description: "First candidate color.",
+                        description: { tr: "İlk aday renk.", en: "First candidate color." },
                         type: "string | object | null",
                         defaultValue: "theme.foreground",
                     },
                     optionB: {
-                        description: "Second candidate color.",
+                        description: { tr: "İkinci aday renk.", en: "Second candidate color." },
                         type: "string | object | null",
                         defaultValue: "theme.background",
                     },
                     background: {
-                        description: "Background color.",
+                        description: { tr: "Arka plan rengi.", en: "Background color." },
                         type: "string | object",
                         required: true,
                     },
                 }}
                 returnProps={{
-                    winner: { description: "Winning candidate color string.", type: "string" },
-                    ratioA: { description: "Contrast ratio for optionA.", type: "number" },
-                    ratioB: { description: "Contrast ratio for optionB.", type: "number" },
+                    winner: { description: { tr: "Kazanan aday renk string'i.", en: "Winning candidate color string." }, type: "string" },
+                    ratioA: { description: { tr: "optionA için kontrast oranı.", en: "Contrast ratio for optionA." }, type: "number" },
+                    ratioB: { description: { tr: "optionB için kontrast oranı.", en: "Contrast ratio for optionB." }, type: "number" },
                 }}
             />
         </Ds.page>

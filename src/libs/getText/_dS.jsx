@@ -63,7 +63,7 @@ const X = () => {
             }
         >
             <Ds.block
-                title="Basic usage"
+            title={{ tr: "Temel kullanım", en: "Basic Usage" }}
                 code={`import { getText } from "${SYS.basePath}";
 
                         getText("copyContent");
@@ -106,7 +106,7 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Using a custom library"
+            title={{ tr: "Özel kütüphane kullanımı", en: "Using a Custom Library" }}
                 code={`import { getText } from "${SYS.basePath}";
 
                         getText("save", customLib);`}
@@ -129,7 +129,7 @@ const X = () => {
                 }
             />
             <Ds.block
-                title="Using a custom object"
+            title={{ tr: "Özel nesne kullanımı", en: "Using a Custom Object" }}
                 code={`import { getText } from "${SYS.basePath}";
 
                         getText(customObj);`}
@@ -156,26 +156,26 @@ const X = () => {
                 args="const text = getText(keyOrEntry, overrideLibrary);"
                 props={{
                     keyOrEntry: {
-                        description: "Text key string or language object.",
+                        description: { tr: "Metin anahtarı string'i veya dil nesnesi.", en: "Text key string or language object." },
                         type: "string | object",
                         required: true,
                     },
                     overrideLibrary: {
-                        description: "Optional text library override.",
+                        description: { tr: "İsteğe bağlı metin kütüphanesi ezmesi.", en: "Optional text library override." },
                         type: "object",
                     },
                 }}
                 returnProps={{
                     text: {
-                        description: "Resolved localized string for the current language.",
+                        description: { tr: "Geçerli dil için çözümlenmiş lokalize string.", en: "Resolved localized string for the current language." },
                         type: "string",
                     },
                 }}
             />
             <Ds.block
                 lastBlock
-                title="Current textLibrary"
-                description="The merged text library from the project settings and the global data."
+                title={{ tr: "Geçerli textLibrary", en: "Current textLibrary" }}
+                description={{ tr: "Proje ayarları ve global veriden birleştirilmiş metin kütüphanesi.", en: "The merged text library from project settings and global data." }}
                 code={`import { baseStore } from "${SYS.basePath}";
 
                        // in react

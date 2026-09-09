@@ -60,7 +60,7 @@ const X = () => {
                         You can use colorWcagValue via direct import from base, or via the theme helper in styled usage (theme.colorWcagValue).`}
         >
             <Ds.block
-                title="Basic usage"
+                title={{ tr: "Temel Kullanım", en: "Basic usage" }}
                 code={`import { colorWcagValue } from "${SYS.basePath}";`}
                 example={
                     <Flex.column gap={10}>
@@ -96,19 +96,19 @@ const X = () => {
                 args="const ratio = colorWcagValue(colorA, colorB);"
                 props={{
                     colorA: {
-                        description: "First color input.",
+                        description: { tr: "İlk renk girdisi.", en: "First color input." },
                         type: "string | object",
                         required: true,
                     },
                     colorB: {
-                        description: "Second color input.",
+                        description: { tr: "İkinci renk girdisi.", en: "Second color input." },
                         type: "string | object",
                         required: true,
                     },
                 }}
                 returnProps={{
                     ratio: {
-                        description: "WCAG contrast ratio (0 if input missing or invalid).",
+                        description: { tr: "WCAG kontrast oranı (girdi yoksa veya geçersizse 0).", en: "WCAG contrast ratio (0 if input missing or invalid)." },
                         type: "number",
                     },
                 }}

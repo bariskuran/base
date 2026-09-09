@@ -6,6 +6,7 @@ import { Flex } from "../Flex";
 import { Typo } from "../Typo";
 import { baseStore } from "../baseStore";
 import { notifier } from "../notifier";
+import { t } from "../getText";
 
 const X = () => {
     const { count, throttleCount, set, ex2, ex3, ex4, ex5 } = baseStore.useLocal({
@@ -83,20 +84,23 @@ const X = () => {
             releasedOn="1.0.0"
             description={
                 <>
-                    Creates debounced or throttled function wrappers.
+                    {t({
+                        tr: "Debounce veya throttle davranışına sahip fonksiyon sarmalayıcıları oluşturur.",
+                        en: "Creates function wrappers with debounce or throttle behaviour.",
+                    })}
                     <br />
                     <br />
-                    Check out{" "}
+                    {t({ tr: "Hook kullanımını görmek için ", en: "See " })}
                     <Button.string
                         to="/design-system/useDebouncedFunction"
                         label="useDebouncedFunction"
                     />{" "}
-                    to see hook usage.
+                    {t({ tr: " sayfasına bakın.", en: " for hook usage." })}
                 </>
             }
         >
             <Ds.block
-                title="Basic Debounce & Throttle"
+                title={{ tr: "Temel Debounce ve Throttle", en: "Basic Debounce & Throttle" }}
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
                         const debounced = debouncedFunction(callback, {
@@ -134,9 +138,10 @@ const X = () => {
             />
             <Ds.block
                 title="getFirst & functionName"
-                description={`getFirst: Triggers immediately on first call window. Works in debounce mode only.
-
-                    functionName: Shared key for the internal debounce state. In some cases, you may want multiple instances of the same function to share the same debounce/throttle lock. By default, the function reference is used to generate the functionName automatically, but you can provide a unique key if needed in certain scenarios.`}
+                description={{
+                    tr: "getFirst: İlk çağrı penceresinde fonksiyonu hemen tetikler. Yalnızca debounce modunda çalışır.\n\nfunctionName: Dahili debounce durumu için ortak anahtar. Bazı durumlarda aynı fonksiyonun birden fazla örneğinin aynı debounce/throttle kilidini paylaşmasını isteyebilirsiniz. Varsayılan olarak fonksiyon referansından otomatik üretilir; gerektiğinde benzersiz bir anahtar verebilirsiniz.",
+                    en: "getFirst: Triggers immediately in the first call window. Works only in debounce mode.\n\nfunctionName: A shared key for internal debounce state. In some cases you may want multiple instances of the same function to share the same debounce/throttle lock. It is generated automatically from the function reference by default, but you can provide a unique key when needed.",
+                }}
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
                         const example2 = debouncedFunction(callback, {
@@ -171,9 +176,10 @@ const X = () => {
             />
             <Ds.block
                 title="onStart & onEnd"
-                description={`onStart: Called when wait window starts.
-
-                    onEnd: Called when wait window ends.`}
+                description={{
+                    tr: "onStart: Bekleme penceresi başladığında çağrılır.\n\nonEnd: Bekleme penceresi sona erdiğinde çağrılır.",
+                    en: "onStart: Called when the wait window starts.\n\nonEnd: Called when the wait window ends.",
+                }}
                 code={`import { debouncedFunction } from "${SYS.basePath}";
 
                         const example4 = debouncedFunction(
@@ -231,43 +237,45 @@ const X = () => {
                 args="const debounced = debouncedFunction(fn, { delay, functionName, getFirst, isThrottle, onEnd, onStart });"
                 props={{
                     fn: {
-                        description: "Function to wrap.",
+                        description: { tr: "Sarmalanacak fonksiyon.", en: "Function to wrap." },
                         type: "fn",
                         required: true,
                     },
                     delay: {
-                        description: "Wait duration in milliseconds.",
+                        description: { tr: "Milisaniye cinsinden bekleme süresi.", en: "Wait duration in milliseconds." },
                         type: "number",
                         defaultValue: "500",
                     },
                     isThrottle: {
-                        description: "Switches to throttle behavior.",
+                        description: { tr: "Throttle davranışını etkinleştirir.", en: "Switches to throttle behavior." },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     getFirst: {
-                        description:
-                            "Triggers immediately on first call window (ignored in throttle mode).",
+                        description: {
+                            tr: "İlk çağrı penceresinde hemen tetikler (throttle modunda yok sayılır).",
+                            en: "Triggers immediately in the first call window (ignored in throttle mode).",
+                        },
                         type: "boolean",
                         defaultValue: "false",
                     },
                     functionName: {
-                        description: "Shared key for internal debounce state.",
+                        description: { tr: "Dahili debounce durumu için ortak anahtar.", en: "Shared key for internal debounce state." },
                         type: "string",
                         defaultValue: "auto-generated per function reference",
                     },
                     onStart: {
-                        description: "Called when wait window starts.",
+                        description: { tr: "Bekleme penceresi başladığında çağrılır.", en: "Called when the wait window starts." },
                         type: "fn",
                     },
                     onEnd: {
-                        description: "Called when wait window ends.",
+                        description: { tr: "Bekleme penceresi bittiğinde çağrılır.", en: "Called when the wait window ends." },
                         type: "fn",
                     },
                 }}
                 returnProps={{
                     debounced: {
-                        description: "Debounced or throttled wrapper; call with the same args as fn.",
+                        description: { tr: "Debounce veya throttle uygulanmış sarmalayıcı; fn ile aynı argümanlarla çağrılır.", en: "Debounced or throttled wrapper; call with the same args as fn." },
                         type: "fn",
                     },
                 }}
@@ -278,7 +286,7 @@ const X = () => {
                 args="onStart(...args);"
                 props={{
                     args: {
-                        description: "Same arguments passed to the debounced/throttled call.",
+                        description: { tr: "Debounce/throttle çağrısına iletilen aynı argümanlar.", en: "Same arguments passed to the debounced/throttled call." },
                         type: "any[]",
                     },
                 }}
@@ -288,7 +296,7 @@ const X = () => {
                 args="debounced(...args);"
                 props={{
                     args: {
-                        description: "Forwarded to fn unchanged.",
+                        description: { tr: "Değiştirilmeden fn fonksiyonuna iletilir.", en: "Forwarded to fn unchanged." },
                         type: "any[]",
                     },
                 }}
