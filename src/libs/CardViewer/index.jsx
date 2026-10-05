@@ -19,6 +19,7 @@ const BaseCardViewer = ({
     getItemProps,
     gap = 20,
     minColumnWidth = 280,
+    phoneColumns,
     alignX = "center",
     autoWidth = false,
     page = 1,
@@ -62,6 +63,7 @@ const BaseCardViewer = ({
                     <S.Grid
                         $gap={gap}
                         $minColumnWidth={minColumnWidth}
+                        $phoneColumns={phoneColumns}
                         $alignX={alignX}
                         $autoWidth={autoWidth && visibleItems.length > 1}
                     >

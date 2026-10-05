@@ -7,6 +7,7 @@ const DEV_WARNING_PREFIX = "[base/Image]";
 const VIEWPORT_ROOT_MARGIN = "100px";
 const ARATIO_DECIMALS = 1;
 const ARATIO_TOLERANCE = 0.02;
+const WIDTH_STRETCH_TOLERANCE = 0.1;
 
 const warn = (message) => {
     if (!baseStore.globalData.get?.()?.isDevMode) return;
@@ -130,22 +131,18 @@ const getPlaceholderPreview = (items, targetItem) => {
 const getBestByTargetWidth = (items, targetWidth) => {
     if (items.length === 0) return null;
     const sorted = sortByWidth(items);
-    if (!targetWidth) return sorted[sorted.length - 1];
-    return sorted.find((item) => getNaturalWidth(item) >= targetWidth) || sorted[sorted.length - 1];
+    if (!targetWidth) return null;
+    return (
+        sorted.find(
+            (item) => getNaturalWidth(item) * (1 + WIDTH_STRETCH_TOLERANCE) >= targetWidth,
+        ) || sorted[sorted.length - 1]
+    );
 };
 
-const resolveDisplayWidth = ({ explicitWidth, measuredWidth, clientData }) => {
-    const numericWidth = toNumber(explicitWidth);
-    if (numericWidth) return numericWidth;
-
-    // Non-numeric width ("auto", "100%", …): never fall back to viewport width.
-    // Using winW here made thumbs briefly pick full-bleed sources, then flip after
-    // measure — a visible left/right layout thrash on some DPR/Chrome combos.
-    const hasNonNumericWidth = explicitWidth != null && explicitWidth !== "";
-    if (hasNonNumericWidth) return measuredWidth;
-
+const resolveDisplayWidth = ({ explicitWidth, measuredWidth }) => {
+    // Measure the rendered element: CSS can constrain even an explicit width.
     if (measuredWidth) return measuredWidth;
-    return clientData?.winW || clientData?.windowWidth || null;
+    return toNumber(explicitWidth) || null;
 };
 
 const hasUsableDimensions = (items) => {
@@ -240,7 +237,9 @@ export const useVars = ({
             const raw = wrapperRef.current?.getBoundingClientRect?.().width || 0;
             if (!raw) return;
             const nextWidth = Math.round(raw);
-            setMeasuredWidth((prev) => (prev != null && Math.abs(prev - nextWidth) < 1 ? prev : nextWidth));
+            setMeasuredWidth((prev) =>
+                prev != null && Math.abs(prev - nextWidth) < 1 ? prev : nextWidth,
+            );
         };
 
         update();
@@ -312,12 +311,15 @@ export const useVars = ({
             ? displayWidth * (clientData?.dpr || clientData?.devicePixelRatio || browserDpr)
             : null;
         const final = getBestByTargetWidth(normalizedItems, targetWidth);
-        const preview = progressive ? getPlaceholderPreview(normalizedItems, final) : null;
+        // Before layout is measured, show only a lightweight preview. Never
+        // start an ultra request based on an unknown or viewport-sized width.
+        const previewTarget = final || sortByWidth(normalizedItems).at(-1);
+        const preview = progressive ? getPlaceholderPreview(normalizedItems, previewTarget) : null;
 
         return {
             final,
             preview: preview?.src !== final?.src ? preview : null,
-            aspectRatio: getAspectRatio(final),
+            aspectRatio: getAspectRatio(previewTarget),
         };
     }, [
         source.type,

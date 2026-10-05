@@ -184,6 +184,16 @@ const S = {
         display: flex;
         flex-direction: column-reverse;
         background: ${({ theme }) => theme.background};
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    height: 100vh;
+                    height: 100svh;
+                    min-height: 0;
+                    flex-direction: column;
+                `,
+            )};
     `,
     sliderArea: styled.div`
         position: absolute;
@@ -193,6 +203,17 @@ const S = {
         height: 100%;
         overflow: hidden;
         background: ${({ theme }) => theme.background};
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    position: relative;
+                    inset: auto;
+                    flex: 0 0 auto;
+                    height: 60vh;
+                    height: 60svh;
+                `,
+            )};
     `,
     slidesLayer: styled.div`
         position: absolute;
@@ -204,6 +225,15 @@ const S = {
         inset: 0;
         z-index: 3;
         pointer-events: none;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    bottom: auto;
+                    height: 60vh;
+                    height: 60svh;
+                `,
+            )};
     `,
     slideStack: styled.div`
         position: absolute;
@@ -271,6 +301,23 @@ const S = {
         margin-bottom: ${({ $bottomMargin }) => $bottomMargin}rem;
         display: flex;
         align-items: flex-start;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    margin-bottom: 0;
+                    height: 40%;
+                    min-height: 0;
+                    flex: 1 1 40%;
+                    color: ${({ theme }) => theme.foreground};
+                    & h4,
+                    & p,
+                    & a,
+                    & button {
+                        color: ${({ theme }) => theme.foreground} !important;
+                    }
+                `,
+            )};
     `,
     area1: styled.div`
         flex: 0 0 150rem;
@@ -279,6 +326,13 @@ const S = {
         background: ${({ theme }) => theme.colorAlpha(theme.background, 10)};
         backdrop-filter: blur(3rem);
         -webkit-backdrop-filter: blur(3rem);
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    display: none;
+                `,
+            )};
     `,
     area3: styled.div`
         flex: 1 1 auto;
@@ -287,6 +341,13 @@ const S = {
         backdrop-filter: blur(3rem);
         -webkit-backdrop-filter: blur(3rem);
         margin-top: 60rem;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    display: none;
+                `,
+            )};
     `,
     sliderInfo: styled.div`
         flex: 0 0 50%;
@@ -295,6 +356,22 @@ const S = {
         backdrop-filter: blur(25rem);
         -webkit-backdrop-filter: blur(25rem);
         margin-bottom: 30rem;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    flex: 1 1 100%;
+                    height: 100%;
+                    min-height: 0;
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0;
+                    margin-bottom: 0;
+                    background: ${({ theme }) => theme.background};
+                    backdrop-filter: none;
+                    -webkit-backdrop-filter: none;
+                `,
+            )};
     `,
     topBarArea: styled.div`
         width: 100%;
@@ -315,12 +392,31 @@ const S = {
         display: flex;
         gap: 20rem;
         align-items: stretch;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    gap: 0;
+                    flex: 1;
+                    min-height: 0;
+                `,
+            )};
     `,
     infoArea: styled.div`
         flex: 1 1 auto;
         min-width: 0;
         padding: 24rem 36rem 30rem 36rem;
         overflow-x: hidden;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    padding: 24rem 54rem;
+                    display: flex;
+                    align-items: center;
+                    overflow-y: auto;
+                `,
+            )};
     `,
     contentWrap: styled.div`
         position: relative;
@@ -382,6 +478,17 @@ const S = {
         justify-content: center;
         gap: 6rem;
         padding: 12rem 10rem 12rem 0;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    position: absolute;
+                    right: 15rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    padding: 0;
+                `,
+            )};
     `,
     bulletButton: styled.button`
         appearance: none;
@@ -412,6 +519,13 @@ const S = {
             height 0.35s ease,
             fill 0.35s ease;
         fill: ${({ theme, $active }) => ($active ? theme.primary : "#fff")};
+        ${({ theme, $active }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    fill: ${$active ? theme.primary : theme.colorAlpha(theme.foreground, 0.4)};
+                `,
+            )};
     `,
 };
 

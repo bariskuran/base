@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { baseStore } from "../../baseStore";
 import { useLayout } from "../../Layout";
 import { useManageSearchParams } from "../../useSearchParams";
 
@@ -28,6 +29,9 @@ export const normalizeSlideNumber = (value, slideCount) => {
 };
 
 export const useVars = ({ stories = [] } = {}) => {
+    const isPhone = baseStore.useGlobal((state) =>
+        Boolean(state._clientData?.isMobile || state._clientData?.isOutOfRatio),
+    );
     const storyList = Array.isArray(stories) ? stories : [];
     const slideCount = storyList.length;
     const navigate = useNavigate();
@@ -57,6 +61,7 @@ export const useVars = ({ stories = [] } = {}) => {
           ].filter(({ story }) => Boolean(story))
         : [];
     const canFullscreen =
+        !isPhone &&
         typeof document !== "undefined" &&
         typeof document.documentElement?.requestFullscreen === "function";
 
@@ -93,12 +98,12 @@ export const useVars = ({ stories = [] } = {}) => {
     ]);
 
     useEffect(() => {
-        if (typeof document === "undefined") return undefined;
+        if (isPhone || typeof document === "undefined") return undefined;
         const onFullscreenChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
         onFullscreenChange();
         document.addEventListener("fullscreenchange", onFullscreenChange);
         return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
-    }, []);
+    }, [isPhone]);
 
     const goToSlide = useCallback(
         (nextSlideNumber) => {
@@ -108,6 +113,12 @@ export const useVars = ({ stories = [] } = {}) => {
         [setSearchParams, slideCount],
     );
 
+    // A new mobile slide starts at the top of the document, not at the
+    // previous slide's scroll offset. Desktop retains its viewport layout.
+    useEffect(() => {
+        if (isPhone) rootRef.current?.scrollIntoView?.({ block: "start", behavior: "instant" });
+    }, [isPhone, slideNumber]);
+
     const goPrevious = useCallback(() => goToSlide(slideNumber - 1), [goToSlide, slideNumber]);
     const goNext = useCallback(() => goToSlide(slideNumber + 1), [goToSlide, slideNumber]);
     const handleActiveImageLoad = useCallback(
@@ -116,7 +127,7 @@ export const useVars = ({ stories = [] } = {}) => {
     );
 
     useEffect(() => {
-        if (slideCount <= 1) return undefined;
+        if (isPhone || slideCount <= 1) return undefined;
 
         const onKeyDown = (event) => {
             if (
@@ -141,7 +152,7 @@ export const useVars = ({ stories = [] } = {}) => {
 
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [canGoNext, canGoPrevious, goNext, goPrevious, slideCount]);
+    }, [canGoNext, canGoPrevious, goNext, goPrevious, slideCount, isPhone]);
 
     const toggleFullscreen = useCallback(async () => {
         if (!canFullscreen || typeof document === "undefined") return;
@@ -166,7 +177,7 @@ export const useVars = ({ stories = [] } = {}) => {
     }, [navigate]);
 
     useEffect(() => {
-        if (slideCount < 1 || typeof window === "undefined") return undefined;
+        if (isPhone || slideCount < 1 || typeof window === "undefined") return undefined;
 
         const onKeyDown = (event) => {
             if (event.defaultPrevented || event.key !== "Escape") return;
@@ -176,7 +187,7 @@ export const useVars = ({ stories = [] } = {}) => {
 
         window.addEventListener("keydown", onKeyDown, true);
         return () => window.removeEventListener("keydown", onKeyDown, true);
-    }, [close, slideCount]);
+    }, [close, slideCount, isPhone]);
 
     return {
         rootRef,

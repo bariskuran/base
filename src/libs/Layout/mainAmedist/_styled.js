@@ -55,6 +55,23 @@ export const S = {
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
 
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    /* Phone: the menu is a full screen surface that scrolls its own
+                       content, so no dead band is ever left at the bottom. */
+                    position: fixed;
+                    inset: 0;
+                    min-height: 0;
+                    overflow-y: auto;
+                    overscroll-behavior: contain;
+                    -webkit-overflow-scrolling: touch;
+                    padding: 25rem;
+                    padding-top: calc(var(--layout-header-extended-height) + 25rem);
+                `,
+            )};
+
         ${({ $closing }) =>
             $closing &&
             css`

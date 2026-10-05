@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const S = {
     container: styled.div`
@@ -48,6 +48,24 @@ const S = {
                 min-width: 100%;
             }
         }
+
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    &[data-paralax-axis="y"] {
+                        > span {
+                            width: 100%;
+                            height: 125%;
+                        }
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+                `,
+            )};
 
         @media (prefers-reduced-motion: reduce) {
             img {

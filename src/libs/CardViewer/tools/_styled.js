@@ -39,6 +39,18 @@ const Grid = styled.div`
             }
         `;
     }}
+    ${({ theme, $phoneColumns }) =>
+        Number.isInteger($phoneColumns) &&
+        $phoneColumns > 0 &&
+        theme.responsive(
+            "phone",
+            css`
+                grid-template-columns: repeat(${$phoneColumns}, minmax(0, 1fr));
+                & > * {
+                    min-width: 0;
+                }
+            `,
+        )};
 `;
 
 const Masonry = styled.div`

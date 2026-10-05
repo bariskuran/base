@@ -1,5 +1,5 @@
 import { Image } from "../../Image";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { normalizeStoryText, normalizeStoryTextItem, StoryTextList } from "../textItems";
 
 const S = {
@@ -17,6 +17,20 @@ const S = {
         pointer-events: auto;
         isolation: isolate;
         background: ${({ theme }) => theme.background};
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    position: relative;
+                    inset: auto;
+                    display: flex;
+                    flex-direction: column;
+                    height: auto;
+                    min-height: 0;
+                    overflow: visible;
+                    overscroll-behavior: auto;
+                `,
+            )};
     `,
     textArea: styled.div`
         grid-column: 1;
@@ -34,6 +48,17 @@ const S = {
         & > * {
             flex-shrink: 0;
         }
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    width: 100%;
+                    min-height: 0;
+                    height: auto;
+                    padding: 35rem 25px;
+                    justify-content: flex-start;
+                `,
+            )};
     `,
     textArea2: styled.div`
         grid-column: 3;
@@ -51,6 +76,17 @@ const S = {
         & > * {
             flex-shrink: 0;
         }
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    width: 100%;
+                    min-height: 0;
+                    height: auto;
+                    padding: 35rem 25px;
+                    justify-content: flex-start;
+                `,
+            )};
     `,
     imageArea: styled.div`
         position: sticky;
@@ -81,6 +117,26 @@ const S = {
             max-height: 100%;
             object-fit: contain !important;
         }
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    position: relative;
+                    top: auto;
+                    width: 100%;
+                    height: auto;
+                    min-height: 0;
+                    && > span {
+                        width: 100%;
+                        height: auto;
+                    }
+                    && img {
+                        width: 100%;
+                        height: auto;
+                        max-height: none;
+                    }
+                `,
+            )};
     `,
     largeSlideNumber: styled.span`
         position: absolute;
@@ -95,6 +151,13 @@ const S = {
         font-size: 1250%;
         line-height: 0.7;
         letter-spacing: -0.05em;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    display: none;
+                `,
+            )};
     `,
 };
 

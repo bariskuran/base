@@ -369,10 +369,12 @@ const useVars = (p) => {
             isWindowLike,
         });
 
+        // Preserve native document scrolling. Forcing containment on html/body
+        // alongside non-passive wheel listeners can freeze scrolling in WebKit.
         const shouldApplyOverscrollContain =
-            isWindowLike ||
-            (!disableX && overflowNow.isOverflowingX) ||
-            (!disableY && overflowNow.isOverflowingY);
+            !isWindowLike &&
+            ((!disableX && overflowNow.isOverflowingX) ||
+                (!disableY && overflowNow.isOverflowingY));
 
         targets.forEach((target, index) => {
             if (!target?.style) return;
@@ -568,6 +570,7 @@ const useVars = (p) => {
     };
 
     useEventListener("wheel", onWheelPreventDisabledAxes, {
+        enabled: !!resolvedHost && (disableX || disableY),
         delay: 0,
         passive: false,
         source: resolvedHost ? normalizedScrollSource : undefined,
@@ -628,6 +631,12 @@ const useVars = (p) => {
     };
 
     useEventListener("wheel", onWheelTranslateYToX, {
+        enabled:
+            !!resolvedHost &&
+            !isWindowLike &&
+            !disableX &&
+            x.isOverflowing &&
+            (!y.isOverflowing || disableY),
         delay: 0,
         passive: false,
         source: resolvedHost && !isWindowLike ? normalizedScrollSource : undefined,

@@ -83,6 +83,27 @@ export const S = {
             gap: 30rem;
             padding-right: 30rem;
         }
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    justify-content: space-between;
+                    & > div:nth-child(1) {
+                        flex: 1 1 auto;
+                        min-width: 0;
+                        justify-content: flex-start;
+                        padding-left: 15rem;
+                        padding-right: 15rem;
+                    }
+                    & > div:nth-child(2),
+                    & > div:nth-child(3) {
+                        display: none;
+                    }
+                    & > div:nth-child(4) > :last-child {
+                        transform: scale(1.25);
+                    }
+                `,
+            )};
     `,
     logoButton: styled.button`
         all: unset;

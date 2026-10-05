@@ -34,7 +34,10 @@ export const StoryTextList = ({ items = [], ...commonSettings }) => {
         const Component = Typo[as] || Typo.p;
         const resolved = t(data);
         const nextItem = normalizedItems[itemIndex + 1];
-        const shouldAddTitleDivider = DIVIDER_TITLE_TAGS.has(as) && nextItem?.as !== "storySubTitle";
+        // A subtitle owns its divider only when it actually renders content.
+        // Empty subtitle records must not suppress the h1/h2 divider.
+        const hasVisibleSubtitle = nextItem?.as === "storySubTitle" && Boolean(t(nextItem.data));
+        const shouldAddTitleDivider = DIVIDER_TITLE_TAGS.has(as) && !hasVisibleSubtitle;
 
         return (
             <Fragment key={itemIndex}>

@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 
 const enterForward = keyframes`
     from { opacity: 0; transform: translateX(24rem); }
@@ -24,6 +24,19 @@ export const S = {
         isolation: isolate;
         overflow: hidden;
         background: ${({ theme }) => theme.background};
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    position: relative;
+                    inset: auto;
+                    width: 100%;
+                    min-height: 100svh;
+                    overflow: visible;
+                    padding: 65rem 0 75rem;
+                    box-sizing: border-box;
+                `,
+            )};
     `,
     slideLayer: styled.div`
         position: absolute;
@@ -32,6 +45,14 @@ export const S = {
         pointer-events: none;
         animation: ${({ $direction }) => ($direction === "backward" ? enterBackward : enterForward)}
             180ms ease both;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    position: relative;
+                    inset: auto;
+                `,
+            )};
     `,
     preloadLayer: styled.div`
         position: absolute;
@@ -40,6 +61,13 @@ export const S = {
         visibility: hidden;
         pointer-events: none;
         overflow: hidden;
+        ${({ theme }) =>
+            theme.responsive(
+                "phone",
+                css`
+                    display: none;
+                `,
+            )};
     `,
     controls: styled.div`
         position: absolute;

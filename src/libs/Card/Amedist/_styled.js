@@ -18,6 +18,10 @@ const Wrapper = styled.article`
         transition: all 1s ease;
         position: relative;
 
+        &:focus-visible {
+            outline: 2px solid ${theme.primary};
+            outline-offset: -2px;
+        }
         ${$isHovered &&
         css`
             background: ${theme.backgrounds.tint90};
@@ -26,6 +30,18 @@ const Wrapper = styled.article`
             }
         `}
     `}
+    ${({ theme }) =>
+        theme.responsive(
+            "phone,tablet",
+            css`
+                background: ${theme.backgrounds.shade10};
+                transition: none;
+                [data-slot="thumb-image"] {
+                    transform: none;
+                    transition: none;
+                }
+            `,
+        )};
 `;
 
 const Thumb = styled.div`
@@ -108,6 +124,14 @@ const Cta = styled.span`
     background: ${({ theme, $isHovered }) => ($isHovered ? theme.primarys.shade20 : theme.primary)};
     pointer-events: none;
     transition: background 0.2s ease;
+    ${({ theme }) =>
+        theme.responsive(
+            "phone,tablet",
+            css`
+                background: ${theme.primary};
+                transition: none;
+            `,
+        )};
 `;
 
 const line = styled.div`

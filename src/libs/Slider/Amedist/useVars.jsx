@@ -5,6 +5,7 @@ import { useTimer } from "../../useTimer";
 import { useLayout } from "../../Layout";
 import { getLayoutController } from "../../Layout/controllerRegistry";
 import S from "./_styled";
+import { useTrackpadNavigation } from "./useTrackpadNavigation";
 
 const BULLET_INACTIVE = 8;
 const BULLET_ACTIVE = 28;
@@ -555,6 +556,12 @@ export const useVars = ({
         [count, getDurationMsForIndex, restartSlideTimer, set],
     );
 
+    const sliderRootRef = useTrackpadNavigation({
+        onRootChange: rootRef,
+        enabled: isPlaybackActive && count > 1,
+        onNavigate: (direction) => changeSlide(activeIndex + direction),
+    });
+
     useEffect(() => {
         if (!isPlaybackActive || count <= 1) return undefined;
 
@@ -642,7 +649,7 @@ export const useVars = ({
 
     /* Return */
     return {
-        rootRef,
+        rootRef: sliderRootRef,
         timeBarKey,
         durationSec,
         enterMs,
