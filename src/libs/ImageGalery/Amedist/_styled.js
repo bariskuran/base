@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { PopUp } from "../../PopUp";
 
 const controlPositions = {
     previous: css`
@@ -16,6 +17,13 @@ const controlPositions = {
 };
 
 const S = {
+    dialog: styled(PopUp)`
+        @media (max-width: 700px) {
+            /* Reserve an extra control height (36rem) at each viewport edge. */
+            height: calc(100svh - 122rem) !important;
+            max-height: calc(100svh - 122rem) !important;
+        }
+    `,
     root: styled.section`
         position: relative;
         width: 100%;

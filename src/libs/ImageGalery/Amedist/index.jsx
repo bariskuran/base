@@ -1,7 +1,6 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "../../Button";
 import { Image } from "../../Image";
-import { PopUp } from "../../PopUp";
 import { ScrollFlex } from "../../ScrollFlex";
 import { t } from "../../getText";
 import S from "./_styled";
@@ -234,7 +233,7 @@ const Amedist = ({
                 </S.alignedRow>
             )}
 
-            <PopUp
+            <S.dialog
                 open={isOpen}
                 onClose={onClose}
                 hideCloseButton
@@ -278,7 +277,7 @@ const Amedist = ({
                         {selectedIndex + 1} / {images.length}
                     </S.counter>
                 </S.stage>
-            </PopUp>
+            </S.dialog>
         </S.root>
     );
 };

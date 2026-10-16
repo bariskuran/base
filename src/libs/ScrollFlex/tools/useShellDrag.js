@@ -44,7 +44,8 @@ export const useShellDrag = ({ enabled, shellRef, contentRef }) => {
     const shellPointerDown = useCallback(
         (e) => {
             if (!enabled) return;
-            if (e.pointerType === "mouse" && e.button !== 0) return;
+            // Touch and pen use native scrolling, including gestures on buttons.
+            if (e.pointerType !== "mouse" || e.button !== 0) return;
 
             const el = shellRef.current;
             const surfaceEl = contentRef.current;
@@ -128,7 +129,7 @@ export const useShellDrag = ({ enabled, shellRef, contentRef }) => {
 
         return {
             cursor: shellDragging ? "grabbing" : "grab",
-            touchAction: "none",
+            touchAction: "auto",
         };
     }, [enabled, shellDragging]);
 
