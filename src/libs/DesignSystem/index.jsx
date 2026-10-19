@@ -79,6 +79,7 @@ const publicSitemap = [
     ["Layout.footer", "layout_footer", l(() => import("../Layout/_dS_footerAmedist"))],
     ["useLayout", "useLayout", l(() => import("../Layout/_dS_useLayout"))],
     ["IdleManager", "idleManager", l(() => import("../IdleManager/_dS"))],
+    ["LottiePlayer", "lottiePlayer", l(() => import("../LottiePlayer/_ds"))],
     ["iconLibrary", "iconLibrary", l(() => import("../Icon/_dSLibrary"))],
     ["isArray", "isArray", l(() => import("../isArray/_dS"))],
     [

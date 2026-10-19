@@ -71,8 +71,6 @@ const S = styled.span`
 
         ${$isActivated &&
         css`
-            pointer-events: none;
-
             &::after {
                 background: ${theme.foreground};
                 left: 0;

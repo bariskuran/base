@@ -1,99 +1,115 @@
 # @bariskuran/base
 
-Advanced hooks, functions, components for React projects.
+**A comprehensive React framework, UI library, and design system.**
 
-```js
+## Installation
+
+### Automatic Setup
+
+To create a new project with Base:
+
+```bash
+npx @bariskuran/create-base
+```
+
+### Manual Installation
+
+To add Base to an existing React project:
+
+**npm**
+
+```bash
 npm install @bariskuran/base
 ```
 
-or
+**Yarn**
 
-```js
+```bash
 yarn add @bariskuran/base
 ```
 
-**Required dependencies:**
-• react >=17.0.0
-• react-dom >=17.0.0
-• react-router-dom >=6.0.0
-• styled-components >=6.0.0
+### Getting Started
 
-## <Base>
+Once the automatic setup is complete, start the development server:
 
-Base uygulamanı tek bir yerde toplayan bir app shelldir. Error Boundary, App Suspense, Styled-components, global context api, global styling, loading yönetimlerini barındırır.
-
-```js
-import { Base } from "@bariskuran/base";
-
-export default function App() {
-    return (
-        <Base>
-            <YourApp />
-        </Base>
-    );
-}
+```bash
+yarn start
 ```
 
-Çalışan akordiyon örneği:
+The application runs at `http://localhost:3000` by default.
 
-<details><summary><strong>Error Boundary:</strong> Async error wrapper. ErrorFallback verilmezse wrapper devreye girmez.</summary>
+The integrated Design System is available at `http://localhost:3000/design-system`.
 
-| Prop            | Type        | Description            |
-| --------------- | ----------- | ---------------------- |
-| `ErrorFallback` | `ReactNode` | Error boundary wrapper |
-| `OTHER_`        | `ReactNode` | Suspense wrapper       |
+## Purpose
 
-</details>
+Base is a comprehensive, largely self-contained development framework that brings together the essential tools, systems, and UI components needed to build modern React applications.
 
-1- Error Boundary: Async error wrapper. ErrorFallback verilmezse wrapper devreye girmez.
+With over 100 utility functions, React hooks, and UI components, Base covers a wide range of development needs, from icons and flags to data handling, state management, date and time utilities, and image management.
 
-```js
-import { Base } from "base";
+**Base is not a collection of third-party libraries bundled together.** Its core systems and components are developed entirely in-house, following a unified architecture. The only third-party library used within Base's own functional modules is the Lottie animation engine.
 
-function AppError() {
-    return <div>Something went wrong.</div>;
-}
+Instead of installing, configuring, integrating, and maintaining numerous independent packages for common development tasks, Base provides a cohesive and consistent environment.
 
-export default function App() {
-    return (
-        <Base ErrorFallback={<AppError />}>
-            <YourApp />
-        </Base>
-    );
-}
+Its purpose goes beyond simplifying project setup: **Base aims to provide the shared infrastructure, tools, and components that React applications need, all within a single, standardized ecosystem.**
 
-ErrorFallback - ReactNode - Optional;
-OTHER_ERROR_BOUNDARY_PROPS - Object - Optional;
-```
+## Features
 
-```js
-<Base
-    /** A React Suspense wrapper. Async. Optional */
-    SuspenseFallback={<SuspenceFallback />}
-    /** Error boundary wrapper. Async. Optional */
-    ErrorFallback={<ErrorFallback />}
-    /** Mandatory if you want to use styled-components.
-    {
-        background: "#17181c",
-        foreground: "#E0E0E0",
-        grey: "#3A3A3A",
-        ...
-    }
-    To access theme, 
+### Core Libraries & Systems
 
-    const Styled = styled.div`
-        ${({ theme }) => css`
-            color: ${theme.background};
-            ...
-     * */
-    STYLED_COMPONENTS_THEME={THEME}
-    /* Styling için kullanılan maximum aspect ratio. Default value is 1/2 */
-    MAX_ASP_RATIO
-    /* Styling için kullanılan minimum aspect ratio. Default value is 3/1 */
-    MIN_ASP_RATIO
-    /* Styling sisteminin responsive sistemi için kullandığı viewport ayarları. Optional. */
-    SYSTEM_BREAKPOINTS
->
-    {yourApp}
-</Base>
-```
+Base provides built-in solutions for many features that would otherwise require separate third-party dependencies.
+
+- **UI Components & Templates:** Reusable interface components and ready-to-use UI templates.
+- **Icons & Flags:** Built-in icon and country flag libraries.
+- **Fetch & Data Management:** Tools for API requests and data handling.
+- **State Management:** An integrated system for managing application state.
+- **CSS & Styling Utilities:** Utilities for styling, design variables, and CSS operations.
+- **Date & Time:** Functions for date, time, and time-related calculations.
+- **Image Management:** Tools for image processing and management.
+- **Timers:** Utilities for timers and time-based operations.
+- **React Hooks:** Custom hooks for reusable React behaviors and application logic.
+- **Utility Functions:** General-purpose functions for everyday development tasks.
+- **Animations:** Lottie-based animation support.
+
+These are not unrelated solutions assembled into a single package. They are interconnected parts of a unified library, built around a consistent development philosophy.
+
+### UI & Design System
+
+Base provides more than functional utilities. It also establishes a shared visual language and a consistent standard for interface development.
+
+Components, UI templates, styles, and design rules are developed within the same system, making it easier to create consistent interfaces across different projects.
+
+### Ready-to-Use Project Infrastructure
+
+Starting a React project may take only a few commands, but preparing a complete development environment can take days.
+
+Setting up the project architecture, routing, styling system, icons, shared components, development tools, and configurations is often a repetitive process.
+
+Base provides this infrastructure out of the box.
+
+A project structure built on the latest React, React DOM, React Router DOM, and Vite comes with the necessary development configurations, design system, and application integrations already in place.
+
+**This allows you to focus on building your application instead of spending time on initial setup.**
+
+## Design System
+
+Base includes an integrated **Design System** environment where components, functions, and hooks can be explored, tested, and documented through their APIs.
+
+It serves both as a documentation resource and as a live development and testing environment.
+
+After automatic setup, it is accessible at:
+
+**http://localhost:3000/design-system**
+
+## Development Philosophy
+
+Base was built around the idea of solving common development needs within its own architecture rather than introducing a new dependency for every feature.
+
+This approach is guided by three core principles:
+
+**Independence.** Keeping third-party dependencies to a minimum while maintaining full control over the core systems.
+
+**Consistency.** Bringing functions, utilities, and UI components together under a shared development standard.
+
+**Efficiency.** Reducing repetitive infrastructure work and accelerating the development process.
+
+Base is designed not just to help you start a project, but to **provide a shared development foundation throughout the entire application lifecycle.**

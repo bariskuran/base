@@ -115,6 +115,7 @@ export { Icon } from "./libs/Icon";
 export { Image } from "./libs/Image";
 export { ImageGalery, ImageGallery } from "./libs/ImageGalery";
 export { Layout, useLayout } from "./libs/Layout";
+export { LottiePlayer } from "./libs/LottiePlayer";
 export { Visibility } from "./libs/Visibility";
 export { isArray } from "./libs/isArray";
 export { isArrayOrPlainObject } from "./libs/isArrayOrPlainObject";
